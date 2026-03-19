@@ -1,0 +1,1201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hall 7 — Reporting Atrium | FCCS EPM Cloud Study Tour</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,700;1,9..144,300&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    /* ─── DESIGN TOKENS ─────────────────────────────── */
+    :root {
+      --bg:#07090e;--surface:#0c1018;--surface-2:#111825;--surface-3:#172030;
+      --border:#1a2535;--border-light:#233044;
+      --accent:#ec4899;--accent-2:#f472b6;
+      --accent-teal:#2dd4bf;--accent-sky:#38bdf8;--accent-gold:#fbbf24;
+      --accent-green:#34d399;--accent-rose:#f87171;--accent-purple:#c084fc;
+      --accent-orange:#fb923c;--accent-violet:#a78bfa;--accent-red:#ef4444;
+      --text:#e2e8f0;--text-muted:#64748b;--text-dim:#94a3b8;
+      --radius:8px;--radius-lg:14px;
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:15px;line-height:1.72;min-height:100vh}
+ 
+    /* HEADER */
+    .site-header{background:rgba(7,9,14,.95);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;padding:0 2rem}
+    .header-inner{max-width:1300px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:58px;gap:1rem}
+    .site-logo{font-family:'Fraunces',serif;font-size:1.1rem;font-weight:600;color:var(--text);text-decoration:none;white-space:nowrap;flex-shrink:0}
+    .site-logo span{color:var(--accent-2)}
+    .hall-nav{display:flex;gap:.2rem;flex-wrap:wrap}
+    .hall-nav a{font-family:'DM Mono',monospace;font-size:.68rem;color:var(--text-muted);text-decoration:none;padding:.28rem .6rem;border:1px solid transparent;border-radius:var(--radius);transition:all .2s;white-space:nowrap}
+    .hall-nav a:hover{color:var(--text);border-color:var(--border-light);background:var(--surface-2)}
+    .hall-nav a.active{color:var(--accent-2);border-color:rgba(244,114,182,.45);background:rgba(236,72,153,.1)}
+    .hall-nav a.next-hall{color:var(--accent-sky);border-color:rgba(56,189,248,.35);background:rgba(56,189,248,.07)}
+ 
+    /* HERO */
+    .hero{background:linear-gradient(145deg,#07090e 0%,#130a1a 50%,#080d18 100%);border-bottom:1px solid var(--border);padding:3.5rem 2rem 2.5rem;position:relative;overflow:hidden}
+    .hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 60% at 75% 30%,rgba(236,72,153,.1) 0%,transparent 65%),radial-gradient(ellipse 35% 40% at 18% 80%,rgba(45,212,191,.07) 0%,transparent 60%);pointer-events:none}
+    .hero::after{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(236,72,153,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(236,72,153,.025) 1px,transparent 1px);background-size:44px 44px;pointer-events:none}
+    .hero-inner{max-width:1300px;margin:0 auto;position:relative;z-index:1}
+    .hero-eyebrow{font-family:'DM Mono',monospace;font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent-2);margin-bottom:.85rem;display:flex;align-items:center;gap:.6rem}
+    .hero-eyebrow::before{content:'';display:inline-block;width:22px;height:1px;background:var(--accent-2)}
+    .hero h1{font-family:'Fraunces',serif;font-size:clamp(2.1rem,4.5vw,3.2rem);font-weight:700;line-height:1.12;color:#fff;margin-bottom:1.1rem}
+    .hero h1 em{font-style:italic;color:var(--accent-2)}
+    .hero-desc{color:var(--text-dim);max-width:740px;font-size:.96rem;margin-bottom:1.5rem;line-height:1.75}
+    .hero-meta{display:flex;gap:.65rem;flex-wrap:wrap}
+    .hero-badge{font-family:'DM Mono',monospace;font-size:.67rem;padding:.28rem .72rem;border-radius:999px;border:1px solid;letter-spacing:.04em}
+    .b-rose{color:var(--accent-2);border-color:rgba(244,114,182,.4);background:rgba(236,72,153,.09)}
+    .b-teal{color:var(--accent-teal);border-color:rgba(45,212,191,.4);background:rgba(45,212,191,.08)}
+    .b-sky{color:var(--accent-sky);border-color:rgba(56,189,248,.4);background:rgba(56,189,248,.08)}
+    .b-gold{color:var(--accent-gold);border-color:rgba(251,191,36,.4);background:rgba(251,191,36,.08)}
+    .b-green{color:var(--accent-green);border-color:rgba(52,211,153,.4);background:rgba(52,211,153,.08)}
+    .b-purple{color:var(--accent-purple);border-color:rgba(192,132,252,.4);background:rgba(192,132,252,.08)}
+    .b-orange{color:var(--accent-orange);border-color:rgba(251,146,60,.4);background:rgba(251,146,60,.08)}
+ 
+    /* TOUR MAP */
+    .tour-map-section{max-width:1300px;margin:0 auto;padding:1.5rem 2rem 0}
+    .tour-map-label{font-family:'DM Mono',monospace;font-size:.63rem;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:.85rem}
+    .tour-map{display:flex;align-items:center;gap:0;overflow-x:auto;padding-bottom:1rem}
+    .map-stop{display:flex;align-items:center;gap:0;flex-shrink:0}
+    .stop-wrap{display:flex;flex-direction:column;align-items:center}
+    .stop-dot{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:.68rem;font-weight:500;cursor:pointer;transition:transform .15s;text-decoration:none;flex-shrink:0}
+    .stop-dot:hover{transform:scale(1.12)}
+    .stop-dot.done{background:rgba(52,211,153,.15);color:var(--accent-green);border:1.5px solid rgba(52,211,153,.4)}
+    .stop-dot.active{background:rgba(236,72,153,.18);color:var(--accent-2);border:2px solid rgba(244,114,182,.5)}
+    .stop-dot.future{background:var(--surface-2);color:var(--text-muted);border:1px solid var(--border)}
+    .stop-dot.future:hover{background:var(--surface-3);color:var(--text-dim);border-color:var(--border-light)}
+    .stop-label{font-family:'DM Mono',monospace;font-size:.58rem;color:var(--text-muted);text-align:center;margin-top:.35rem;max-width:58px;line-height:1.3}
+    .stop-connector{width:24px;height:1px;background:var(--border);flex-shrink:0}
+ 
+    /* LAYOUT */
+    .main-wrap{max-width:1300px;margin:0 auto;padding:2rem 2rem 5rem;display:grid;grid-template-columns:1fr 315px;gap:2.25rem;align-items:start}
+    @media(max-width:920px){.main-wrap{grid-template-columns:1fr}.sidebar{order:-1}}
+ 
+    /* TABS */
+    .tab-bar{display:flex;border-bottom:1px solid var(--border);margin-bottom:2.25rem;overflow-x:auto}
+    .tab-btn{font-family:'DM Mono',monospace;font-size:.71rem;letter-spacing:.07em;text-transform:uppercase;padding:.8rem 1.3rem;background:transparent;border:none;border-bottom:2px solid transparent;color:var(--text-muted);cursor:pointer;transition:all .2s;white-space:nowrap}
+    .tab-btn:hover{color:var(--text-dim)}
+    .tab-btn.active{color:var(--accent-2);border-bottom-color:var(--accent-2)}
+    .tab-panel{display:none;animation:fadeUp .2s ease}
+    .tab-panel.active{display:block}
+    @keyframes fadeUp{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+ 
+    /* SECTIONS */
+    .section{margin-bottom:2.75rem}
+    .section-title{font-family:'Fraunces',serif;font-size:1.2rem;font-weight:600;color:#fff;margin-bottom:.35rem;display:flex;align-items:center;gap:.5rem}
+    .section-sub{font-size:.81rem;color:var(--text-muted);margin-bottom:1.35rem;font-family:'DM Mono',monospace;letter-spacing:.03em}
+    .section-divider{height:1px;background:var(--border);margin:2.5rem 0}
+    p{color:var(--text-dim);margin-bottom:.9rem;line-height:1.75}
+    p:last-child{margin-bottom:0}
+    strong{color:var(--text);font-weight:600}
+    code{font-family:'DM Mono',monospace;font-size:.8em;background:rgba(236,72,153,.1);color:var(--accent-2);padding:.1em .42em;border-radius:3px;border:1px solid rgba(236,72,153,.22)}
+ 
+    /* CALLOUT */
+    .callout{border-radius:var(--radius);padding:1.1rem 1.3rem;margin-bottom:1.3rem;border-left:3px solid;font-size:.86rem}
+    .callout p{margin-bottom:.4rem;font-size:.86rem}
+    .callout p:last-child{margin-bottom:0}
+    .co-rose{background:rgba(236,72,153,.07);border-left-color:var(--accent)}
+    .co-teal{background:rgba(45,212,191,.07);border-left-color:var(--accent-teal)}
+    .co-sky{background:rgba(56,189,248,.07);border-left-color:var(--accent-sky)}
+    .co-gold{background:rgba(251,191,36,.07);border-left-color:var(--accent-gold)}
+    .co-green{background:rgba(52,211,153,.07);border-left-color:var(--accent-green)}
+    .co-purple{background:rgba(192,132,252,.07);border-left-color:var(--accent-purple)}
+    .co-red{background:rgba(239,68,68,.07);border-left-color:var(--accent-red)}
+    .co-orange{background:rgba(251,146,60,.07);border-left-color:var(--accent-orange)}
+    .callout-label{font-family:'DM Mono',monospace;font-size:.61rem;letter-spacing:.11em;text-transform:uppercase;margin-bottom:.45rem;font-weight:500}
+    .co-rose .callout-label{color:var(--accent-2)}.co-teal .callout-label{color:var(--accent-teal)}.co-sky .callout-label{color:var(--accent-sky)}.co-gold .callout-label{color:var(--accent-gold)}.co-green .callout-label{color:var(--accent-green)}.co-purple .callout-label{color:var(--accent-purple)}.co-red .callout-label{color:var(--accent-red)}.co-orange .callout-label{color:var(--accent-orange)}
+ 
+    /* FEATURE GRID */
+    .feature-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1rem;margin-bottom:1.5rem}
+    .feature-card{background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius);padding:1.1rem 1.2rem;border-top:3px solid;transition:background .2s}
+    .feature-card:hover{background:var(--surface-3)}
+    .fc-rose{border-top-color:var(--accent)}.fc-teal{border-top-color:var(--accent-teal)}.fc-sky{border-top-color:var(--accent-sky)}.fc-gold{border-top-color:var(--accent-gold)}.fc-green{border-top-color:var(--accent-green)}.fc-purple{border-top-color:var(--accent-purple)}.fc-orange{border-top-color:var(--accent-orange)}
+    .feature-icon{font-size:1.3rem;margin-bottom:.5rem;display:block}
+    .feature-name{font-family:'DM Mono',monospace;font-size:.71rem;font-weight:500;letter-spacing:.06em;text-transform:uppercase;margin-bottom:.35rem}
+    .fc-rose .feature-name{color:var(--accent-2)}.fc-teal .feature-name{color:var(--accent-teal)}.fc-sky .feature-name{color:var(--accent-sky)}.fc-gold .feature-name{color:var(--accent-gold)}.fc-green .feature-name{color:var(--accent-green)}.fc-purple .feature-name{color:var(--accent-purple)}.fc-orange .feature-name{color:var(--accent-orange)}
+    .feature-desc{font-size:.81rem;color:var(--text-dim);line-height:1.55}
+ 
+    /* CONCEPT CARD */
+    .concept-card{background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.3rem;margin-bottom:1.25rem}
+    .concept-card-hd{display:flex;align-items:flex-start;gap:.75rem;font-size:.92rem;font-weight:600;color:var(--text);margin-bottom:.75rem}
+    .concept-icon{width:24px;height:24px;border-radius:5px;display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:.7rem;font-weight:500;flex-shrink:0;margin-top:.05rem}
+    .ci-rose{background:rgba(236,72,153,.15);color:var(--accent-2)}.ci-teal{background:rgba(45,212,191,.15);color:var(--accent-teal)}.ci-sky{background:rgba(56,189,248,.15);color:var(--accent-sky)}.ci-green{background:rgba(52,211,153,.15);color:var(--accent-green)}.ci-orange{background:rgba(251,146,60,.15);color:var(--accent-orange)}.ci-purple{background:rgba(192,132,252,.15);color:var(--accent-purple)}.ci-gold{background:rgba(251,191,36,.15);color:var(--accent-gold)}
+    .concept-card-body{font-size:.855rem;color:var(--text-dim);line-height:1.72}
+    .concept-card-body p{font-size:.855rem;margin-bottom:.65rem;color:var(--text-dim)}
+    .concept-card-body p:last-child{margin-bottom:0}
+    .concept-card-body strong{color:var(--text)}
+ 
+    /* CDIM GRID */
+    .cdim-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.3rem}
+    @media(max-width:580px){.cdim-grid{grid-template-columns:1fr}}
+    .cdim-card{background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius);padding:1rem 1.2rem;border-left:3px solid}
+    .cdim-card.entity-input{border-left-color:var(--accent-sky)}.cdim-card.proportion{border-left-color:var(--accent-teal)}.cdim-card.elimination{border-left-color:var(--accent-rose)}.cdim-card.contribution{border-left-color:var(--accent-green)}
+    .cdim-member{font-family:'DM Mono',monospace;font-size:.72rem;font-weight:500;margin-bottom:.3rem;letter-spacing:.04em}
+    .cdim-card.entity-input .cdim-member{color:var(--accent-sky)}.cdim-card.proportion .cdim-member{color:var(--accent-teal)}.cdim-card.elimination .cdim-member{color:var(--accent-rose)}.cdim-card.contribution .cdim-member{color:var(--accent-green)}
+    .cdim-desc{font-size:.81rem;color:var(--text-dim);line-height:1.55;margin-bottom:.4rem}
+    .cdim-example{font-family:'DM Mono',monospace;font-size:.68rem;color:var(--text-muted)}
+ 
+    /* THREE-LANE DATA SOURCE */
+    .ds-three{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.85rem;margin-bottom:1.3rem}
+    @media(max-width:640px){.ds-three{grid-template-columns:1fr}}
+    .ds-lane{border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
+    .ds-lane-header{padding:.7rem 1rem;border-bottom:1px solid var(--border);font-family:'DM Mono',monospace;font-size:.68rem;letter-spacing:.07em;text-transform:uppercase;font-weight:500}
+    .ds-lane.managed .ds-lane-header{background:rgba(56,189,248,.08);color:var(--accent-sky)}
+    .ds-lane.input   .ds-lane-header{background:rgba(236,72,153,.08);color:var(--accent-2)}
+    .ds-lane.journal .ds-lane-header{background:rgba(45,212,191,.08);color:var(--accent-teal)}
+    .ds-lane-body{padding:.85rem 1rem}
+    .ds-item{display:flex;align-items:center;gap:.6rem;font-size:.8rem;color:var(--text-dim);padding:.4rem 0;border-bottom:1px solid var(--border)}
+    .ds-item:last-child{border-bottom:none}
+    .ds-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+    .ds-lane.managed .ds-dot{background:var(--accent-sky)}.ds-lane.input .ds-dot{background:var(--accent-2)}.ds-lane.journal .ds-dot{background:var(--accent-teal)}
+ 
+    /* REPORT MOCK */
+    .report-mock{background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;margin-bottom:1.3rem}
+    .rm-header{padding:.85rem 1.25rem;border-bottom:1px solid var(--border);background:rgba(236,72,153,.06);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.5rem}
+    .rm-title{font-family:'DM Mono',monospace;font-size:.72rem;font-weight:500;color:var(--accent-2);letter-spacing:.06em;text-transform:uppercase}
+    .rm-pov{display:flex;gap:.4rem;flex-wrap:wrap}
+    .rm-pov-chip{font-family:'DM Mono',monospace;font-size:.6rem;padding:.12rem .45rem;border-radius:999px;border:1px solid}
+    .rpc-rose{color:var(--accent-2);border-color:rgba(244,114,182,.35);background:rgba(236,72,153,.08)}.rpc-teal{color:var(--accent-teal);border-color:rgba(45,212,191,.35);background:rgba(45,212,191,.08)}.rpc-sky{color:var(--accent-sky);border-color:rgba(56,189,248,.35);background:rgba(56,189,248,.08)}.rpc-gold{color:var(--accent-gold);border-color:rgba(251,191,36,.35);background:rgba(251,191,36,.08)}.rpc-green{color:var(--accent-green);border-color:rgba(52,211,153,.35);background:rgba(52,211,153,.08)}.rpc-orange{color:var(--accent-orange);border-color:rgba(251,146,60,.35);background:rgba(251,146,60,.08)}
+    .rm-table{width:100%;border-collapse:collapse}
+    .rm-table thead th{font-family:'DM Mono',monospace;font-size:.61rem;letter-spacing:.07em;text-transform:uppercase;color:var(--text-muted);padding:.55rem 1rem;background:var(--surface-3);border-bottom:1px solid var(--border);text-align:right}
+    .rm-table thead th:first-child{text-align:left}
+    .rm-table tbody tr{border-bottom:1px solid var(--border);transition:background .15s}
+    .rm-table tbody tr:last-child{border-bottom:none}
+    .rm-table tbody tr:hover{background:var(--surface-3)}
+    .rm-table td{padding:.6rem 1rem;font-size:.82rem;text-align:right;vertical-align:middle}
+    .rm-table td:first-child{text-align:left;color:var(--text);font-weight:500}
+    .num-pos{color:var(--accent-green);font-family:'DM Mono',monospace}.num-neg{color:var(--accent-rose);font-family:'DM Mono',monospace}.num-grey{color:var(--text-dim);font-family:'DM Mono',monospace}.num-gold{color:var(--accent-gold);font-family:'DM Mono',monospace;font-weight:600}
+    .label-jv{color:var(--accent-purple);font-size:.78rem;font-style:italic}
+    .rm-table tr.subtotal td{border-top:1px solid var(--border-light)}.rm-table tr.subtotal td:first-child{color:var(--text-dim);font-weight:600}
+    .rm-table tr.total td{border-top:2px solid var(--border-light)}.rm-table tr.total td:first-child{color:var(--text);font-weight:700}
+ 
+    /* DATA FORM MOCKUP */
+    .form-mock{background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;margin-bottom:1.3rem}
+    .form-mock-header{padding:.75rem 1.1rem;border-bottom:1px solid var(--border);background:rgba(251,146,60,.06);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.5rem}
+    .form-mock-title{font-family:'DM Mono',monospace;font-size:.7rem;font-weight:500;color:var(--accent-orange);letter-spacing:.07em;text-transform:uppercase}
+    .form-page-axis{display:flex;gap:.4rem;flex-wrap:wrap;margin-bottom:.85rem;padding:.75rem 1.1rem;border-bottom:1px solid var(--border);background:var(--surface-3)}
+    .page-chip{font-family:'DM Mono',monospace;font-size:.6rem;padding:.14rem .5rem;border-radius:999px;border:1px solid}
+    .pc-locked{color:var(--text-muted);border-color:var(--border-light);background:var(--surface-2)}
+    .pc-entity{color:var(--accent-teal);border-color:rgba(45,212,191,.35);background:rgba(45,212,191,.08)}
+    .pc-scenario{color:var(--accent-sky);border-color:rgba(56,189,248,.35);background:rgba(56,189,248,.08)}
+    .pc-year{color:var(--accent-gold);border-color:rgba(251,191,36,.35);background:rgba(251,191,36,.08)}
+    .form-grid{width:100%;border-collapse:collapse}
+    .form-grid thead th{font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.07em;text-transform:uppercase;color:var(--text-muted);padding:.5rem .9rem;background:var(--surface-3);border-bottom:1px solid var(--border);text-align:right}
+    .form-grid thead th:first-child{text-align:left}
+    .form-grid tbody tr{border-bottom:1px solid var(--border)}
+    .form-grid tbody tr:last-child{border-bottom:none}
+    .form-grid td{padding:.55rem .9rem;font-size:.81rem;color:var(--text-dim);text-align:right;vertical-align:middle}
+    .form-grid td:first-child{text-align:left;font-family:'DM Mono',monospace;font-size:.75rem;color:var(--text)}
+    .cell-readonly{color:var(--text-muted);font-family:'DM Mono',monospace}
+    .cell-input{background:var(--surface);border:1px solid var(--border-light);border-radius:4px;padding:.25rem .5rem;font-family:'DM Mono',monospace;font-size:.75rem;color:var(--text);text-align:right;width:90px;display:inline-block}
+    .cell-input.entered{background:rgba(251,146,60,.1);border-color:rgba(251,146,60,.4);color:var(--accent-orange)}
+    .cell-input.entered.neg{background:rgba(239,68,68,.08);border-color:rgba(239,68,68,.3);color:var(--accent-rose)}
+    .cell-input.entered.pos{background:rgba(52,211,153,.08);border-color:rgba(52,211,153,.3);color:var(--accent-green)}
+    .form-footer{display:flex;justify-content:flex-end;gap:.6rem;padding:.75rem 1.1rem;border-top:1px solid var(--border);background:var(--surface-3)}
+    .form-btn{font-family:'DM Mono',monospace;font-size:.67rem;letter-spacing:.06em;text-transform:uppercase;padding:.38rem .9rem;border-radius:var(--radius);border:1px solid;cursor:default}
+    .form-btn.cancel{color:var(--text-muted);border-color:var(--border-light);background:none}
+    .form-btn.save{color:#000;background:var(--accent-orange);border-color:var(--accent-orange)}
+ 
+    /* SMART VIEW MOCKUP */
+    .sv-mock{background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;margin-bottom:1.3rem}
+    .sv-ribbon{background:var(--surface-3);border-bottom:1px solid var(--border);padding:.6rem 1rem;display:flex;align-items:center;gap:1rem;flex-wrap:wrap}
+    .sv-ribbon-label{font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.08em;text-transform:uppercase;color:var(--text-muted);margin-right:.25rem}
+    .sv-btn{font-family:'DM Mono',monospace;font-size:.63rem;padding:.25rem .65rem;border-radius:4px;border:1px solid var(--border-light);background:var(--surface-2);color:var(--text-dim);cursor:default}
+    .sv-btn.active{background:rgba(52,211,153,.1);border-color:rgba(52,211,153,.3);color:var(--accent-green)}
+    .sv-btn.primary{background:rgba(56,189,248,.1);border-color:rgba(56,189,248,.3);color:var(--accent-sky)}
+    .sv-pov{background:rgba(56,189,248,.05);border-bottom:1px solid var(--border);padding:.6rem 1rem;display:flex;gap:.5rem;align-items:center;flex-wrap:wrap}
+    .sv-pov-label{font-family:'DM Mono',monospace;font-size:.6rem;color:var(--text-muted);letter-spacing:.06em}
+    .sv-pov-item{display:flex;flex-direction:column;gap:.1rem}
+    .sv-pov-dim{font-family:'DM Mono',monospace;font-size:.57rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:.06em}
+    .sv-pov-val{font-family:'DM Mono',monospace;font-size:.7rem;padding:.15rem .45rem;border-radius:4px;border:1px solid}
+    .sv-pov-val.entity{color:var(--accent-teal);border-color:rgba(45,212,191,.35);background:rgba(45,212,191,.08)}
+    .sv-pov-val.scenario{color:var(--accent-sky);border-color:rgba(56,189,248,.35);background:rgba(56,189,248,.08)}
+    .sv-pov-val.period{color:var(--accent-gold);border-color:rgba(251,191,36,.35);background:rgba(251,191,36,.08)}
+    .sv-pov-val.consol{color:var(--accent-green);border-color:rgba(52,211,153,.35);background:rgba(52,211,153,.08)}
+    .sv-pov-val.currency{color:var(--accent-purple);border-color:rgba(192,132,252,.35);background:rgba(192,132,252,.08)}
+    .sv-grid{width:100%;border-collapse:collapse}
+    .sv-grid thead th{font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.06em;text-transform:uppercase;color:var(--text-muted);padding:.5rem .9rem;background:var(--surface-3);border-bottom:1px solid var(--border);text-align:right}
+    .sv-grid thead th:first-child{text-align:left}
+    .sv-grid tbody tr{border-bottom:1px solid var(--border);transition:background .15s}
+    .sv-grid tbody tr:last-child{border-bottom:none}
+    .sv-grid tbody tr:hover{background:var(--surface-3)}
+    .sv-grid td{padding:.55rem .9rem;font-size:.81rem;color:var(--text-dim);text-align:right}
+    .sv-grid td:first-child{text-align:left;font-family:'DM Mono',monospace;font-size:.75rem;color:var(--text)}
+    .sv-grid td.drillable{color:var(--accent-sky);cursor:pointer;text-decoration:underline;text-decoration-style:dotted;text-underline-offset:2px}
+    .sv-grid td.drillable:hover{color:var(--accent-2)}
+    .sv-footer{padding:.6rem 1rem;border-top:1px solid var(--border);background:var(--surface-3);display:flex;justify-content:space-between;align-items:center}
+    .sv-status{font-family:'DM Mono',monospace;font-size:.6rem;color:var(--accent-green)}
+    .sv-actions{display:flex;gap:.4rem}
+ 
+    /* COMPARISON TABLE */
+    .comp-table{width:100%;border-collapse:collapse;font-size:.83rem;margin-bottom:1.3rem}
+    .comp-table thead th{font-family:'DM Mono',monospace;font-size:.63rem;letter-spacing:.08em;text-transform:uppercase;color:var(--text-muted);text-align:left;padding:.55rem .9rem;background:var(--surface-2);border-bottom:1px solid var(--border)}
+    .comp-table thead th:first-child{border-radius:var(--radius) 0 0 0}
+    .comp-table thead th:last-child{border-radius:0 var(--radius) 0 0}
+    .comp-table tbody tr{border-bottom:1px solid var(--border);transition:background .15s}
+    .comp-table tbody tr:last-child{border-bottom:none}
+    .comp-table tbody tr:hover{background:var(--surface-2)}
+    .comp-table td{padding:.65rem .9rem;color:var(--text-dim);vertical-align:top;line-height:1.55}
+    .comp-table td:first-child{color:var(--text);font-weight:600;font-family:'DM Mono',monospace;font-size:.75rem}
+    .comp-table td strong{color:var(--text)}
+ 
+    /* STEP LIST */
+    .step-list{list-style:none;margin-bottom:1.3rem}
+    .step-list li{display:flex;gap:1rem;padding:.8rem 0;border-bottom:1px solid var(--border);align-items:flex-start}
+    .step-list li:last-child{border-bottom:none}
+    .step-num{font-family:'DM Mono',monospace;font-size:.63rem;font-weight:500;color:var(--accent-2);background:rgba(236,72,153,.12);border:1px solid rgba(236,72,153,.3);border-radius:4px;width:28px;height:22px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:.15rem}
+    .step-text{font-size:.855rem;color:var(--text-dim);line-height:1.6}
+    .step-text strong{color:var(--text)}
+ 
+    /* BURST FLOW */
+    .burst-flow{display:flex;flex-direction:column;gap:0;border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;margin-bottom:1.3rem}
+    .bf-row{display:flex;align-items:stretch;border-bottom:1px solid var(--border)}
+    .bf-row:last-child{border-bottom:none}
+    .bf-icon{width:52px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0;background:var(--surface-2);border-right:1px solid var(--border)}
+    .bf-content{padding:.85rem 1.1rem;flex:1}
+    .bf-label{font-family:'DM Mono',monospace;font-size:.67rem;font-weight:500;letter-spacing:.07em;text-transform:uppercase;margin-bottom:.2rem}
+    .bf-row.source .bf-label{color:var(--accent-2)}.bf-row.engine .bf-label{color:var(--accent-teal)}.bf-row.security .bf-label{color:var(--accent-gold)}.bf-row.deliver .bf-label{color:var(--accent-green)}
+    .bf-desc{font-size:.82rem;color:var(--text-dim);line-height:1.55}
+    .bf-connector{display:flex;justify-content:center;padding:.2rem 0;background:var(--bg);font-size:.9rem;color:var(--text-muted)}
+ 
+    /* CF TREE */
+    .cf-tree{font-family:'DM Mono',monospace;font-size:.78rem;background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius);padding:1.1rem 1.25rem;line-height:2.1;margin-bottom:1.3rem;overflow-x:auto}
+    .cf-tree .t0{color:#fff;font-weight:500}.cf-tree .t1{color:var(--accent-2);padding-left:1.4rem}.cf-tree .t2{color:var(--text-dim);padding-left:2.8rem}
+    .cf-tree .tag{display:inline-block;font-size:.58rem;padding:.04rem .38rem;border-radius:3px;margin-left:.5rem;vertical-align:middle;border:1px solid}
+    .tag-sys{color:var(--accent-sky);border-color:rgba(56,189,248,.35);background:rgba(56,189,248,.08)}.tag-jv{color:var(--accent-purple);border-color:rgba(192,132,252,.35);background:rgba(192,132,252,.08)}.tag-div{color:var(--accent-gold);border-color:rgba(251,191,36,.35);background:rgba(251,191,36,.08)}
+ 
+    /* EXAM */
+    .exam-q{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-bottom:1.3rem}
+    .exam-q-label{font-family:'DM Mono',monospace;font-size:.61rem;letter-spacing:.11em;text-transform:uppercase;color:var(--text-muted);margin-bottom:.55rem}
+    .exam-q-text{font-size:.91rem;color:var(--text);margin-bottom:1.1rem;font-weight:500;line-height:1.65}
+    .exam-options{list-style:none;display:flex;flex-direction:column;gap:.5rem}
+    .exam-option{display:flex;align-items:flex-start;gap:.75rem;padding:.6rem .9rem;border-radius:var(--radius);border:1px solid var(--border);font-size:.84rem;color:var(--text-dim);background:var(--surface-2);transition:all .2s}
+    .exam-option:hover{border-color:var(--accent-2);color:var(--text)}
+    .exam-option.correct{border-color:var(--accent-green);background:rgba(52,211,153,.09);color:var(--text)}
+    .opt-key{font-family:'DM Mono',monospace;font-size:.63rem;font-weight:500;color:var(--text-muted);border:1px solid var(--border-light);border-radius:3px;padding:.05rem .38rem;flex-shrink:0;margin-top:.12rem}
+    .reveal-btn{font-family:'DM Mono',monospace;font-size:.67rem;letter-spacing:.06em;text-transform:uppercase;color:var(--accent-2);background:rgba(236,72,153,.1);border:1px solid rgba(236,72,153,.3);border-radius:var(--radius);padding:.38rem .9rem;cursor:pointer;transition:all .2s;margin-top:.8rem;display:inline-block}
+    .reveal-btn:hover{background:rgba(236,72,153,.2)}
+    .exam-reveal{margin-top:.9rem;display:none}
+    .exam-reveal.show{display:block}
+    .exam-answer-box{background:rgba(52,211,153,.08);border:1px solid rgba(52,211,153,.25);border-radius:var(--radius);padding:.9rem 1.1rem;font-size:.84rem;color:var(--text-dim);line-height:1.65}
+    .exam-answer-box strong{color:var(--accent-green)}
+ 
+    /* SIDEBAR */
+    .sidebar{display:flex;flex-direction:column;gap:1.2rem}
+    .tour-guide-widget{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden}
+    .tg-header{background:linear-gradient(135deg,#130a1a,#0c1018);border-bottom:1px solid var(--border);padding:1rem 1.25rem;display:flex;align-items:center;gap:.75rem}
+    .tg-avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent-teal));display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0}
+    .tg-name{font-family:'DM Mono',monospace;font-size:.7rem;letter-spacing:.07em;text-transform:uppercase;color:var(--accent-2);margin-bottom:.1rem}
+    .tg-title{font-size:.77rem;color:var(--text-muted)}
+    .tg-body{padding:1.1rem 1.25rem}
+    .tg-messages{max-height:200px;overflow-y:auto;display:flex;flex-direction:column;gap:.5rem;margin-bottom:.65rem}
+    .tg-msg{font-size:.8rem;line-height:1.55;padding:.55rem .8rem;border-radius:var(--radius)}
+    .tg-msg.bot{background:var(--surface-2);color:var(--text-dim);border:1px solid var(--border)}
+    .tg-msg.user{background:rgba(236,72,153,.12);color:var(--text);border:1px solid rgba(236,72,153,.25);text-align:right}
+    .tg-input-wrap{display:flex;gap:.45rem}
+    .tg-input{flex:1;background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius);padding:.5rem .75rem;color:var(--text);font-family:'Inter',sans-serif;font-size:.8rem;outline:none;transition:border-color .2s}
+    .tg-input:focus{border-color:var(--accent-2)}
+    .tg-input::placeholder{color:var(--text-muted)}
+    .tg-send{background:var(--accent);border:none;border-radius:var(--radius);padding:.5rem .85rem;color:#fff;font-size:.8rem;cursor:pointer;transition:background .2s;font-family:'DM Mono',monospace}
+    .tg-send:hover{background:#be185d}
+    .tg-quick{display:flex;flex-direction:column;gap:.32rem;margin-top:.7rem}
+    .tg-quick-btn{background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius);padding:.42rem .7rem;font-size:.76rem;color:var(--text-muted);cursor:pointer;transition:all .2s;text-align:left;font-family:'Inter',sans-serif}
+    .tg-quick-btn:hover{border-color:var(--accent-2);color:var(--text)}
+    .side-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.2rem}
+    .side-card-title{font-family:'DM Mono',monospace;font-size:.63rem;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:.9rem}
+    .kv-row{display:flex;justify-content:space-between;align-items:flex-start;padding:.4rem 0;border-bottom:1px solid var(--border);gap:.5rem}
+    .kv-row:last-child{border-bottom:none}
+    .kv-key{color:var(--text-muted);font-size:.77rem}
+    .kv-val{color:var(--text);font-family:'DM Mono',monospace;font-size:.72rem;text-align:right}
+    .kv-val.rose{color:var(--accent-2)}.kv-val.teal{color:var(--accent-teal)}.kv-val.green{color:var(--accent-green)}.kv-val.gold{color:var(--accent-gold)}.kv-val.sky{color:var(--accent-sky)}.kv-val.purple{color:var(--accent-purple)}.kv-val.red{color:var(--accent-red)}.kv-val.orange{color:var(--accent-orange)}
+    .entity-list{display:flex;flex-direction:column;gap:.52rem}
+    .entity-row{display:flex;align-items:center;gap:.6rem;padding:.5rem .7rem;background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius);font-size:.79rem}
+    .e-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}.e-name{color:var(--text);flex:1}.e-tag{font-family:'DM Mono',monospace;font-size:.6rem;color:var(--text-muted)}.e-pct{font-family:'DM Mono',monospace;font-size:.68rem;font-weight:500}
+    .hall-pills{display:flex;flex-direction:column;gap:.38rem}
+    .hall-pill{display:flex;align-items:center;gap:.6rem;padding:.52rem .85rem;border-radius:var(--radius);text-decoration:none;font-size:.81rem;color:var(--text-muted);border:1px solid transparent;transition:all .2s}
+    .hall-pill:hover{background:var(--surface-2);border-color:var(--border);color:var(--text)}
+    .hall-pill.done{color:var(--accent-green)}.hall-pill.current{background:rgba(236,72,153,.1);border-color:rgba(244,114,182,.35);color:var(--accent-2)}.hall-pill.next{background:rgba(56,189,248,.08);border-color:rgba(56,189,248,.3);color:var(--accent-sky)}
+    .hall-pill-num{font-family:'DM Mono',monospace;font-size:.62rem;width:20px;text-align:center}
+    .site-footer{border-top:1px solid var(--border);padding:1.5rem 2rem;text-align:center;font-family:'DM Mono',monospace;font-size:.67rem;color:var(--text-muted);letter-spacing:.04em}
+    @media(max-width:640px){.hero{padding:2rem 1.25rem 1.75rem}.main-wrap{padding:1.5rem 1.25rem 3rem}.feature-grid{grid-template-columns:1fr 1fr}}
+  </style>
+</head>
+<body>
+ 
+<!-- HEADER -->
+<header class="site-header">
+  <div class="header-inner">
+    <a href="../index.html" class="site-logo">FCCS <span>EPM</span> Study Tour</a>
+    <nav class="hall-nav">
+      <a href="hall-1.html">Hall 1 · Orientation</a>
+      <a href="hall-2.html">Hall 2 · Metadata</a>
+      <a href="hall-3.html">Hall 3 · Data Integration</a>
+      <a href="hall-4.html">Hall 4 · Consolidation</a>
+      <a href="hall-5.html">Hall 5 · Calc Studio</a>
+      <a href="hall-6.html">Hall 6 · Journals</a>
+      <a href="hall-7.html" class="active">Hall 7 · Reporting</a>
+      <a href="hall-8.html">Hall 8 · Security</a>
+      <a href="hall-9.html" class="next-hall">Hall 9 · Exam Prep</a>
+    </nav>
+  </div>
+</header>
+ 
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-eyebrow">Hall 7 of 9 — FCCS EPM Cloud Study Tour</div>
+    <h1>Reporting <em>Atrium</em></h1>
+    <p class="hero-desc">The modern Reports framework, Data Forms for structured manual entry, and Smart View for Excel-based analysis and submission — three distinct surfaces, one critical data separation principle. Where data lands and what Replace mode can and cannot touch depends entirely on which surface you used.</p>
+    <div class="hero-meta">
+      <span class="hero-badge b-rose">Reports Framework</span>
+      <span class="hero-badge b-teal">Books &amp; Bursting</span>
+      <span class="hero-badge b-sky">Consolidation Dimension POV</span>
+      <span class="hero-badge b-orange">Data Forms</span>
+      <span class="hero-badge b-green">Smart View</span>
+      <span class="hero-badge b-purple">FCCS_Data Input vs Managed Data</span>
+      <span class="hero-badge b-gold">Wrong POV Trap</span>
+    </div>
+  </div>
+</section>
+ 
+<!-- TOUR MAP -->
+<div class="tour-map-section">
+  <div class="tour-map-label">Your Tour Route — 9 Halls</div>
+  <div class="tour-map">
+    <div class="map-stop"><div class="stop-wrap"><a href="hall-1.html" class="stop-dot done">1</a><div class="stop-label">Orientation</div></div><div class="stop-connector"></div></div>
+    <div class="map-stop"><div class="stop-wrap"><a href="hall-2.html" class="stop-dot done">2</a><div class="stop-label">Metadata</div></div><div class="stop-connector"></div></div>
+    <div class="map-stop"><div class="stop-wrap"><a href="hall-3.html" class="stop-dot done">3</a><div class="stop-label">Data Integration</div></div><div class="stop-connector"></div></div>
+    <div class="map-stop"><div class="stop-wrap"><a href="hall-4.html" class="stop-dot done">4</a><div class="stop-label">Consolidation</div></div><div class="stop-connector"></div></div>
+    <div class="map-stop"><div class="stop-wrap"><a href="hall-5.html" class="stop-dot done">5</a><div class="stop-label">Calc Studio</div></div><div class="stop-connector"></div></div>
+    <div class="map-stop"><div class="stop-wrap"><a href="hall-6.html" class="stop-dot done">6</a><div class="stop-label">Journals</div></div><div class="stop-connector"></div></div>
+    <div class="map-stop"><div class="stop-wrap"><a href="hall-7.html" class="stop-dot active">7</a><div class="stop-label">Reporting</div></div><div class="stop-connector"></div></div>
+    <div class="map-stop"><div class="stop-wrap"><a href="hall-8.html" class="stop-dot future">8</a><div class="stop-label">Security</div></div><div class="stop-connector"></div></div>
+    <div class="map-stop"><div class="stop-wrap"><a href="hall-9.html" class="stop-dot future">9</a><div class="stop-label">Exam Prep</div></div></div>
+  </div>
+</div>
+ 
+<!-- MAIN -->
+<div class="main-wrap">
+  <main>
+    <div class="tab-bar" role="tablist">
+      <button class="tab-btn active" role="tab" data-tab="conceptual">📐 Conceptual</button>
+      <button class="tab-btn" role="tab" data-tab="technical">⚙️ Technical</button>
+      <button class="tab-btn" role="tab" data-tab="lab">🔬 Lab</button>
+      <button class="tab-btn" role="tab" data-tab="exam">📝 Exam Prep</button>
+    </div>
+ 
+    <!-- ══════════════ CONCEPTUAL ══════════════ -->
+    <div class="tab-panel active" id="tab-conceptual">
+ 
+      <div class="section">
+        <div class="section-title"><span>📊</span> The Reports Framework — Not Financial Reporting</div>
+        <div class="section-sub">Cloud-native browser designer replacing the legacy FR Studio</div>
+        <p>Oracle FCCS ships with the modern <strong>Reports framework</strong> as its strategic reporting surface — cloud-native, drag-and-drop, no client installation required. Financial Reporting (FR) Studio required a Windows client, ran on a separate server tier, and Oracle has confirmed it is being retired. New implementations should not build on FR Studio. The exam tests the Reports framework exclusively.</p>
+        <div class="callout co-gold">
+          <div class="callout-label">⚠️ FR Studio Sunset</div>
+          <p>If an exam question describes a "drag-and-drop report designer embedded in FCCS cloud" — that is the Reports framework. If it mentions a Windows client download or a standalone BI reporting server — that is the legacy FR Studio. Expect the exam to include FR Studio as a distractor against the correct Reports framework answer.</p>
+        </div>
+        <div class="feature-grid">
+          <div class="feature-card fc-rose"><span class="feature-icon">🎨</span><div class="feature-name">Report Designer</div><div class="feature-desc">Drag-and-drop canvas. Data grids, charts, text boxes. Each grid binds to its own POV. Browser-native — no client install.</div></div>
+          <div class="feature-card fc-teal"><span class="feature-icon">📚</span><div class="feature-name">Books</div><div class="feature-desc">Bundle multiple reports into one PDF or Excel. A board pack Book generates P&L, Balance Sheet, and Cash Flow from a single run.</div></div>
+          <div class="feature-card fc-sky"><span class="feature-icon">📤</span><div class="feature-name">Bursting</div><div class="feature-desc">Automated distribution by Entity POV. One template, one output per entity per recipient. Silently excludes entities the recipient cannot access — dimension security is enforced.</div></div>
+          <div class="feature-card fc-gold"><span class="feature-icon">🎯</span><div class="feature-name">POV Selectors</div><div class="feature-desc">Interactive dimension selectors in the report. Switch Scenario, Year, Period, or Entity without regenerating — the grid refreshes in place.</div></div>
+          <div class="feature-card fc-green"><span class="feature-icon">🔍</span><div class="feature-name">Drill-Through</div><div class="feature-desc">Click any consolidated figure to trace down through entity contributions into source data — FCCS_Managed Data, FCCS_Data Input, or FCCS_Journal Input.</div></div>
+          <div class="feature-card fc-purple"><span class="feature-icon">🌍</span><div class="feature-name">Multi-GAAP</div><div class="feature-desc">IFRS, US GAAP, and local GAAP stored in separate Scenario members. One template, any framework — just switch the Scenario POV.</div></div>
+        </div>
+      </div>
+ 
+      <!-- CONSOLIDATION DIMENSION -->
+      <div class="section">
+        <div class="section-title"><span>🔬</span> The Consolidation Dimension — Four POV Members</div>
+        <div class="section-sub">The most consequential POV decision in any FCCS report</div>
+        <p>The Consolidation dimension POV determines which stage of the consolidation engine's output a report is reading. Setting it incorrectly is the most common source of "my report doesn't match the signed accounts" support calls.</p>
+        <div class="cdim-grid">
+          <div class="cdim-card entity-input"><div class="cdim-member">FCCS_Entity Input</div><div class="cdim-desc">Raw input data — exactly what landed from Data Integration, Data Forms, or Smart View submissions. No ownership weighting. No eliminations. Pre-consolidation.</div><div class="cdim-example">Use: source reconciliation, DI load validation</div></div>
+          <div class="cdim-card proportion"><div class="cdim-member">FCCS_Proportion</div><div class="cdim-desc">Entity Input weighted by PCON%. DeutschWerk PCON=100%, so Proportion = Entity Input here. For proportional consolidation entities, this is where ownership weighting is visible. Eliminations not yet applied.</div><div class="cdim-example">Use: see ownership-weighted figures before eliminations</div></div>
+          <div class="cdim-card elimination"><div class="cdim-member">FCCS_Elimination</div><div class="cdim-desc">Only the elimination entries — IC revenue, NCI adjustments, unrealised profit eliminations, custom Groovy rule postings, journal eliminations. Isolates exactly what the engine removed.</div><div class="cdim-example">Use: IC elimination audit, diagnose unexpected eliminations</div></div>
+          <div class="cdim-card contribution"><div class="cdim-member">FCCS_Contribution</div><div class="cdim-desc">The final consolidated result — Proportion plus Elimination combined. This is the number in statutory accounts and board packs. Always use this member for external-facing reports.</div><div class="cdim-example">Use: external reporting, board packs, statutory accounts</div></div>
+        </div>
+        <div class="callout co-rose">
+          <div class="callout-label">📌 The Most Common Report Trap — FCCS_Entity Input vs FCCS_Contribution</div>
+          <p>A report set to <strong>FCCS_Entity Input</strong> for DeutschWerk shows 100% of the raw trial balance — even though DeutschWerk is 80% owned and has IC eliminations applied. The numbers look plausible but are wrong for group reporting. <strong>Always confirm the Consolidation dimension member is FCCS_Contribution</strong> before distributing any external report. This is the single most common cause of restatements from FCCS implementations.</p>
+        </div>
+      </div>
+ 
+      <!-- JV TREATMENT -->
+      <div class="section">
+        <div class="section-title"><span>🔗</span> JV &amp; Equity Method Entities in Reports</div>
+        <div class="section-sub">AsiaLink and NovaTech — single lines only, dividend treatment in Cash Flow</div>
+        <p>Entities accounted for under the <strong>equity method</strong> — AsiaLink (50% JV) and NovaTech (30%) — do not contribute individual revenue, expense, asset, or liability lines to the consolidated group statements. In the group P&amp;L they appear as a <strong>single line: "Share of income from associates and JVs."</strong> A report showing AsiaLink's revenue line in the group P&amp;L means either the entity is incorrectly configured as Full consolidation, or the Consolidation POV is set to FCCS_Entity Input which bypasses the engine's equity method logic.</p>
+        <div class="callout co-purple">
+          <div class="callout-label">📌 Cash Flow Treatment for Equity Method Entities — IAS 7</div>
+          <p>The equity pickup line ("Share of income") that appears in the group P&amp;L is a <strong>non-cash item</strong> — it represents GlobalMerge's share of AsiaLink's earnings, not cash received. In the Cash Flow statement, this line must be <strong>reversed out</strong> from Operating Activities (added back as a non-cash deduction from net income).</p>
+          <p style="margin-top:.5rem">When AsiaLink actually distributes a cash dividend, GlobalMerge receives real cash. That inflow appears as a cash inflow under <strong>Investing Activities</strong> in <code>FCCS_DividendsReceived</code>. The net effect: equity pickup disappears from Operating Activities, actual cash appears in Investing Activities. This matches IAS 7 treatment precisely and FCCS handles it automatically via the FCCS_CashFlow Movement hierarchy.</p>
+        </div>
+      </div>
+ 
+      <!-- DATA FORMS CONCEPTUAL -->
+      <div class="section-divider"></div>
+      <div class="section">
+        <div class="section-title"><span>📋</span> Data Forms — Structured Manual Entry</div>
+        <div class="section-sub">Why they exist alongside Data Integration and what they can do that DI cannot</div>
+        <div class="concept-card">
+          <div class="concept-card-hd"><div class="concept-icon ci-orange">D</div>What Data Forms are and why they exist</div>
+          <div class="concept-card-body">
+            <p>Data Forms are browser-based grid interfaces for structured manual data entry. They sit alongside Data Integration — not as a replacement for it, but as the tool for controlled human-authored adjustments that don't belong in the ERP-to-FCCS pipeline. While Hall 3 handles bulk trial balance loading from SAP and Oracle Financials, <strong>Data Forms handle the judgement layer</strong>: a controller correcting a misclassification, a finance team posting a supplemental disclosure schedule, or a group CFO entering a management-only adjustment.</p>
+            <p>Forms enforce dimension security. The DeutschWerk Controller, scoped to DeutschWerk only, opens a Data Form and sees only DeutschWerk's accounts — BritEdge and AsiaLink rows simply do not appear. Forms can also include validation rules that prevent obviously incorrect entries from reaching the cube — a controller cannot accidentally post to a locked period or enter a value outside a defined tolerance range.</p>
+          </div>
+        </div>
+        <div class="feature-grid">
+          <div class="feature-card fc-orange"><span class="feature-icon">📏</span><div class="feature-name">Row / Column / Page Axes</div><div class="feature-desc">Rows are typically Account members. Columns are Periods or Scenarios. Page axis holds Entity, Scenario, Year — the fixed dimensions that define the form's context and do not scroll.</div></div>
+          <div class="feature-card fc-sky"><span class="feature-icon">🚀</span><div class="feature-name">Smart Push</div><div class="feature-desc"><strong>Direction: parent to children only.</strong> Pushes a value entered at a parent entity level down to child entities proportionally. Used for top-down allocations — distributing a group budget target to subsidiaries. Does not aggregate upward.</div></div>
+          <div class="feature-card fc-gold"><span class="feature-icon">🚫</span><div class="feature-name">Suppression Options</div><div class="feature-desc">Suppress rows or columns with no data, zero values, or missing members. Controllers see only relevant accounts — no scrolling through hundreds of empty rows on a chart of accounts form.</div></div>
+          <div class="feature-card fc-green"><span class="feature-icon">✅</span><div class="feature-name">Validation Rules</div><div class="feature-desc">Form-level rules check submitted values before save. Can warn (allow save with warning) or block (prevent save until corrected). Prevents obviously wrong entries — wrong sign, wrong magnitude, wrong period.</div></div>
+        </div>
+        <div class="callout co-orange">
+          <div class="callout-label">🔑 Where Data Form Entry Lands — The Critical Principle</div>
+          <p>Manual form entry writes to <strong>FCCS_Data Input</strong>. Not <code>FCCS_Managed Data</code>. Not <code>FCCS_Journal Input</code>. This is its own separate data source partition in the Data Source dimension.</p>
+          <p style="margin-top:.5rem">A Replace-mode Data Integration reload of the same entity/period combination does <strong>not</strong> touch <code>FCCS_Data Input</code>. The controller's manual reclassification survives the reload completely intact. Both data sources coexist and are read together by the consolidation engine.</p>
+          <p style="margin-top:.5rem">After form submission, the entity moves to <strong>Impacted (status 6)</strong>. Consolidation must be rerun to incorporate the manually entered data into consolidated results. This is correct expected behaviour, not an error.</p>
+        </div>
+      </div>
+ 
+      <!-- SMART VIEW CONCEPTUAL -->
+      <div class="section-divider"></div>
+      <div class="section">
+        <div class="section-title"><span>📊</span> Smart View — Office Add-In for Analysis and Entry</div>
+        <div class="section-sub">Live FCCS data in Excel, Word, and PowerPoint — analysis, drill-through, and controlled submission</div>
+        <div class="concept-card">
+          <div class="concept-card-hd"><div class="concept-icon ci-green">S</div>What Smart View is and what it is not</div>
+          <div class="concept-card-body">
+            <p>Oracle Smart View for Office is an add-in that connects Microsoft Excel, Word, and PowerPoint directly to FCCS (and other EPM cloud applications). It gives Finance teams live access to FCCS data in their preferred working environment — no browser navigation, no report regeneration. Pull a DeutschWerk P&amp;L into Excel, pivot across periods and scenarios, double-click to drill down, and submit corrections without leaving the spreadsheet.</p>
+            <p>Smart View is not a Data Integration replacement. It is an <strong>analysis, review, and controlled entry tool</strong> — suited for individual entity review, ad-hoc drill-through during close, and targeted manual adjustments. Bulk trial balance loading — 10,000 rows of GL data from SAP — belongs in Hall 3 (Data Management / EPM Automate) where mapping rules, transformation logic, and governance controls exist. Submitting bulk data through Smart View bypasses all of that and is slow, error-prone, and inappropriate for production close cycles.</p>
+          </div>
+        </div>
+        <div class="feature-grid">
+          <div class="feature-card fc-green"><span class="feature-icon">🔎</span><div class="feature-name">Ad-Hoc Analysis</div><div class="feature-desc">Free-form queries in Excel — place any dimension on rows or columns, double-click to drill down or up, pivot freely. Best for unstructured exploration and period-end review.</div></div>
+          <div class="feature-card fc-teal"><span class="feature-icon">⚡</span><div class="feature-name">Function Grids</div><div class="feature-desc">HsGetValue() and other EPM functions retrieve specific intersection values into fixed cells. Best for structured management packs where the layout must stay constant but values need to refresh from live FCCS data.</div></div>
+          <div class="feature-card fc-sky"><span class="feature-icon">🎯</span><div class="feature-name">POV Bar</div><div class="feature-desc">The master context selector — sets Scenario, Year, Period, Entity, Consolidation, Currency for all grids on the sheet. Every grid refreshes when POV changes. Critical to verify before any submission.</div></div>
+          <div class="feature-card fc-purple"><span class="feature-icon">🔍</span><div class="feature-name">Drill-Through</div><div class="feature-desc">Right-click any data cell → Drill-Through → navigate to source transactions. Traces a consolidated balance back to FCCS_Managed Data (DI loads), FCCS_Data Input (forms/SV), or FCCS_Journal Input (Hall 6 journals).</div></div>
+        </div>
+        <div class="callout co-green">
+          <div class="callout-label">🔑 Smart View Submission → FCCS_Data Input</div>
+          <p>Smart View retrieval is read-only by default. When a user explicitly submits data from a Smart View grid (Submit Data action), it writes to <strong>FCCS_Data Input</strong> — the same data source partition as Data Form manual entry. A Replace-mode DI reload does <strong>not</strong> clear <code>FCCS_Data Input</code> entries made via Smart View, just as it doesn't clear Data Form entries. Both are protected from bulk reload operations by design.</p>
+        </div>
+        <div class="callout co-red">
+          <div class="callout-label">⚠️ Smart View Is Not a Bulk Loading Tool</div>
+          <p>Smart View cannot and should not replace Data Integration for bulk trial balance loading. <strong>Bulk loading = Data Integration (Hall 3) → FCCS_Managed Data. Ad-hoc entry and analysis = Smart View → FCCS_Data Input.</strong> The exam tests this boundary explicitly in multiple question variants.</p>
+        </div>
+      </div>
+ 
+      <!-- THREE LANES -->
+      <div class="section">
+        <div class="section-title"><span>🗂️</span> Three Data Source Lanes — The Complete Separation</div>
+        <div class="section-sub">Where data lands, what Replace mode touches, and how the consolidation engine reads all three</div>
+        <div class="ds-three">
+          <div class="ds-lane managed">
+            <div class="ds-lane-header">FCCS_Managed Data</div>
+            <div class="ds-lane-body">
+              <div class="ds-item"><div class="ds-dot"></div>ERP trial balance via Data Integration</div>
+              <div class="ds-item"><div class="ds-dot"></div>EPM Automate runDataRule writes here</div>
+              <div class="ds-item"><div class="ds-dot"></div>File-based .dat loads</div>
+              <div class="ds-item"><div class="ds-dot"></div><strong style="color:var(--accent-rose)">Replace mode clears &amp; reloads this lane only</strong></div>
+              <div class="ds-item"><div class="ds-dot"></div>Bulk trial balance — Hall 3</div>
+            </div>
+          </div>
+          <div class="ds-lane input">
+            <div class="ds-lane-header">FCCS_Data Input</div>
+            <div class="ds-lane-body">
+              <div class="ds-item"><div class="ds-dot"></div>Data Form manual entry</div>
+              <div class="ds-item"><div class="ds-dot"></div>Smart View submissions</div>
+              <div class="ds-item"><div class="ds-dot"></div><strong style="color:var(--accent-green)">Replace mode does NOT touch this lane</strong></div>
+              <div class="ds-item"><div class="ds-dot"></div>Protected from all DI reloads</div>
+              <div class="ds-item"><div class="ds-dot"></div>Cleared only by explicit overwrite or deletion</div>
+            </div>
+          </div>
+          <div class="ds-lane journal">
+            <div class="ds-lane-header">FCCS_Journal Input</div>
+            <div class="ds-lane-body">
+              <div class="ds-item"><div class="ds-dot"></div>Approved Standard Journals</div>
+              <div class="ds-item"><div class="ds-dot"></div>Approved Enterprise Journals</div>
+              <div class="ds-item"><div class="ds-dot"></div><strong style="color:var(--accent-green)">Replace mode does NOT touch this lane</strong></div>
+              <div class="ds-item"><div class="ds-dot"></div>Protected from all DI reloads</div>
+              <div class="ds-item"><div class="ds-dot"></div>Cleared only by unposting journal — Hall 6</div>
+            </div>
+          </div>
+        </div>
+        <p>The consolidation engine reads all three sources together at every consolidation run. The group P&amp;L figure for DeutschWerk Revenue = <code>FCCS_Managed Data</code> (SAP trial balance) + <code>FCCS_Data Input</code> (€15,000 freight reclassification) + <code>FCCS_Journal Input</code> (any journal entries). Reports can expose the Data Source dimension as a column axis to show the full breakdown — essential for audit trail reviews.</p>
+      </div>
+ 
+    </div><!-- /conceptual -->
+ 
+ 
+    <!-- ══════════════ TECHNICAL ══════════════ -->
+    <div class="tab-panel" id="tab-technical">
+ 
+      <!-- CONSOLIDATED P&L MOCK -->
+      <div class="section">
+        <div class="section-title"><span>📋</span> Consolidated P&amp;L — Actual vs Budget</div>
+        <div class="section-sub">GlobalMerge Corp · Q1 FY2025 · FCCS_Contribution · USD · POV: all entities consolidated</div>
+        <div class="report-mock">
+          <div class="rm-header">
+            <div class="rm-title">GlobalMerge Corp — Consolidated Income Statement</div>
+            <div class="rm-pov">
+              <span class="rm-pov-chip rpc-rose">GlobalMerge</span>
+              <span class="rm-pov-chip rpc-teal">FCCS_Contribution</span>
+              <span class="rm-pov-chip rpc-sky">Q1 FY2025</span>
+              <span class="rm-pov-chip rpc-gold">USD</span>
+            </div>
+          </div>
+          <table class="rm-table">
+            <thead><tr><th>Line Item</th><th>Actual USD</th><th>Budget USD</th><th>Variance</th><th>Var %</th></tr></thead>
+            <tbody>
+              <tr><td>Revenue — BritEdge Ltd (GBP 100%)</td><td class="num-pos">1,875,000</td><td class="num-grey">1,800,000</td><td class="num-pos">75,000</td><td class="num-pos">4.2%</td></tr>
+              <tr><td>Revenue — DeutschWerk GmbH (EUR 80%)</td><td class="num-pos">1,455,000</td><td class="num-grey">1,500,000</td><td class="num-neg">(45,000)</td><td class="num-neg">-3.0%</td></tr>
+              <tr><td>IC Revenue elimination (DW→BE)</td><td class="num-neg">(547,000)</td><td class="num-grey">(520,000)</td><td class="num-neg">(27,000)</td><td class="num-neg">-5.2%</td></tr>
+              <tr class="subtotal"><td>Total External Revenue</td><td class="num-gold">2,783,000</td><td class="num-grey">2,780,000</td><td class="num-pos">3,000</td><td class="num-pos">0.1%</td></tr>
+              <tr><td>Cost of Sales — BritEdge</td><td class="num-neg">(1,020,000)</td><td class="num-grey">(990,000)</td><td class="num-neg">(30,000)</td><td class="num-neg">-3.0%</td></tr>
+              <tr><td>Cost of Sales — DeutschWerk</td><td class="num-neg">(792,000)</td><td class="num-grey">(810,000)</td><td class="num-pos">18,000</td><td class="num-pos">2.2%</td></tr>
+              <tr><td>Unrealised profit elimination (inventory)</td><td class="num-neg">(30,000)</td><td class="num-grey">—</td><td class="num-neg">(30,000)</td><td class="num-neg">n/m</td></tr>
+              <tr class="subtotal"><td>Gross Profit</td><td class="num-gold">941,000</td><td class="num-grey">980,000</td><td class="num-neg">(39,000)</td><td class="num-neg">-4.0%</td></tr>
+              <tr><td class="label-jv">Share of income — AsiaLink Pte (50% JV equity method)</td><td class="num-pos">48,000</td><td class="num-grey">45,000</td><td class="num-pos">3,000</td><td class="num-pos">6.7%</td></tr>
+              <tr><td class="label-jv">Share of income — NovaTech Inc (30% equity method)</td><td class="num-pos">21,000</td><td class="num-grey">18,000</td><td class="num-pos">3,000</td><td class="num-pos">16.7%</td></tr>
+              <tr class="total"><td>Operating Profit / PBT</td><td class="num-gold">789,000</td><td class="num-grey">802,000</td><td class="num-neg">(13,000)</td><td class="num-neg">-1.6%</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="callout co-purple">
+          <div class="callout-label">💡 Reading This Report</div>
+          <p>DeutschWerk Revenue ($1,455,000) reflects the SAP trial balance ($1,440,000 from FCCS_Managed Data) plus the €15,000 Data Form reclassification ($15,000 from FCCS_Data Input). AsiaLink and NovaTech appear as single equity-pickup lines — no revenue, no costs, no assets or liabilities in the group statements. The unrealised profit elimination ($30,000) came from the Enterprise Journal in Hall 6 (FCCS_Journal Input).</p>
+        </div>
+      </div>
+ 
+      <!-- DATA SOURCE AUDIT TRAIL -->
+      <div class="section">
+        <div class="section-title"><span>🗂️</span> Data Source Audit Trail — Three Lanes as Columns</div>
+        <div class="section-sub">Expose the Data Source dimension on columns to see exactly where every balance came from</div>
+        <p>A standard FCCS report shows the aggregated total. An audit trail report exposes the <strong>Data Source dimension as a column axis</strong>, showing the breakdown across all three lanes side by side. This is the primary tool for Finance Controllers and auditors who need to understand the composition of any consolidated figure — and for proving that a DI reload did not overwrite a manual adjustment.</p>
+        <div class="report-mock">
+          <div class="rm-header">
+            <div class="rm-title">DeutschWerk — Revenue &amp; Adjustments Audit Trail · Q1 FY2025</div>
+            <div class="rm-pov">
+              <span class="rm-pov-chip rpc-sky">DeutschWerk</span>
+              <span class="rm-pov-chip rpc-teal">FCCS_Contribution</span>
+              <span class="rm-pov-chip rpc-rose">Data Source on columns</span>
+            </div>
+          </div>
+          <table class="rm-table">
+            <thead><tr><th>Account</th><th>FCCS_Managed Data</th><th>FCCS_Data Input</th><th>FCCS_Journal Input</th><th>Total</th></tr></thead>
+            <tbody>
+              <tr><td>Revenue</td><td class="num-pos">1,440,000</td><td class="num-pos">15,000</td><td class="num-grey">—</td><td class="num-gold">1,455,000</td></tr>
+              <tr><td>OtherExpenses</td><td class="num-neg">(65,000)</td><td class="num-pos">15,000</td><td class="num-grey">—</td><td class="num-gold">(50,000)</td></tr>
+              <tr><td>CostOfSales</td><td class="num-neg">(660,000)</td><td class="num-neg">(15,000)</td><td class="num-grey">—</td><td class="num-gold">(675,000)</td></tr>
+              <tr><td>FCCS_Inventory (BS)</td><td class="num-grey">480,000</td><td class="num-grey">—</td><td class="num-neg">(30,000)</td><td class="num-gold">450,000</td></tr>
+              <tr><td>FCCS_ICSales</td><td class="num-pos">500,000</td><td class="num-grey">—</td><td class="num-grey">—</td><td class="num-gold">500,000</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>The <code>FCCS_Data Input</code> column makes the DeutschWerk Controller's reclassification fully traceable. The <code>FCCS_Journal Input</code> column shows the unrealised profit elimination from Hall 6. The <code>FCCS_Managed Data</code> column is the unmodified SAP extract. Total is the consolidated figure that appears in external reports.</p>
+      </div>
+ 
+      <!-- DATA FORMS TECHNICAL -->
+      <div class="section-divider"></div>
+      <div class="section">
+        <div class="section-title"><span>📋</span> Data Forms — Technical Configuration &amp; Mockup</div>
+        <div class="section-sub">Row / column / page axis setup · Smart Push direction · what the controller actually sees</div>
+ 
+        <div class="concept-card">
+          <div class="concept-card-hd"><div class="concept-icon ci-orange">A</div>Axis configuration — how the form designer maps dimensions to the grid</div>
+          <div class="concept-card-body">
+            <p><strong>Row axis</strong> typically holds Account dimension members — a defined range like all P&amp;L accounts, or a specific sub-set such as ReclassificationAccounts. The form designer can restrict which accounts are visible and editable, hiding system accounts that should not receive manual input.</p>
+            <p><strong>Column axis</strong> holds Period members (Jan, Feb, Mar, Q1) or Scenario members (Actual vs Budget in a comparison form). Columns can be set read-only for prior locked periods and editable only for the current open period.</p>
+            <p><strong>Page axis</strong> holds the dimensions that define the form's fixed context — Entity, Scenario, Year. These do not scroll; they define what the entire form is about. A form with Entity on the page axis, scoped to DeutschWerk, shows only DeutschWerk data regardless of which user opens it. Dimension security then further restricts which users can even see that form.</p>
+          </div>
+        </div>
+ 
+        <p>Below is a mockup of the DeutschWerk Q1 Actual reclassification form as the controller sees it — page axis locked, Account on rows, Q1 on columns, with the freight reclassification already entered:</p>
+ 
+        <div class="form-mock">
+          <div class="form-mock-header">
+            <div class="form-mock-title">DeutschWerk · Manual Adjustments · Q1 Actual</div>
+            <span style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--accent-orange)">DATA FORM</span>
+          </div>
+          <div class="form-page-axis">
+            <span style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--text-muted);margin-right:.4rem">PAGE AXIS (LOCKED):</span>
+            <span class="page-chip pc-entity">Entity: DeutschWerk</span>
+            <span class="page-chip pc-scenario">Scenario: Actual</span>
+            <span class="page-chip pc-year">Year: FY2025</span>
+            <span class="page-chip pc-locked">Currency: EUR</span>
+          </div>
+          <table class="form-grid">
+            <thead>
+              <tr>
+                <th style="text-align:left">Account</th>
+                <th>Jan</th>
+                <th>Feb</th>
+                <th>Q1 (editable)</th>
+                <th>YTD</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Revenue</td>
+                <td><span class="cell-readonly">480,000</span></td>
+                <td><span class="cell-readonly">510,000</span></td>
+                <td><span class="cell-input entered pos">15,000</span></td>
+                <td><span class="cell-readonly">1,455,000</span></td>
+              </tr>
+              <tr>
+                <td>CostOfSales</td>
+                <td><span class="cell-readonly">(198,000)</span></td>
+                <td><span class="cell-readonly">(221,000)</span></td>
+                <td><span class="cell-input entered neg">(15,000)</span></td>
+                <td><span class="cell-readonly">(675,000)</span></td>
+              </tr>
+              <tr>
+                <td>OtherExpenses</td>
+                <td><span class="cell-readonly">(18,000)</span></td>
+                <td><span class="cell-readonly">(21,000)</span></td>
+                <td><span class="cell-input">—</span></td>
+                <td><span class="cell-readonly">(50,000)</span></td>
+              </tr>
+              <tr>
+                <td>FCCS_OperatingProfit</td>
+                <td><span class="cell-readonly">264,000</span></td>
+                <td><span class="cell-readonly">268,000</span></td>
+                <td><span class="cell-readonly" style="color:var(--accent-gold)">✦ calc</span></td>
+                <td><span class="cell-readonly">730,000</span></td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="form-footer">
+            <span style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--accent-green)">✓ Validation passed — net change = 0</span>
+            <div style="display:flex;gap:.5rem">
+              <span class="form-btn cancel">Cancel</span>
+              <span class="form-btn save">Save &amp; Submit</span>
+            </div>
+          </div>
+        </div>
+ 
+        <div class="callout co-sky">
+          <div class="callout-label">💡 Smart Push — Parent to Children</div>
+          <p>Smart Push is configured at the form level by the Service Administrator. When triggered, it takes the value entered at a <strong>parent entity</strong> and distributes it proportionally down to its child entities. Direction is always <strong>parent → children</strong> — never upward. A typical use case: the Group Finance Manager enters a Q2 group revenue target of $12m at the GlobalMerge level, triggers Smart Push, and FCCS distributes $4.5m to BritEdge, $3.6m to DeutschWerk, and so on based on the configured weighting. Smart Push writes to FCCS_Data Input on all child entities it touches.</p>
+        </div>
+      </div>
+ 
+      <!-- SMART VIEW TECHNICAL -->
+      <div class="section-divider"></div>
+      <div class="section">
+        <div class="section-title"><span>📊</span> Smart View — Technical Mechanics</div>
+        <div class="section-sub">POV bar configuration · ad-hoc vs function grids · drill-through to source · submission mechanics</div>
+ 
+        <div class="concept-card">
+          <div class="concept-card-hd"><div class="concept-icon ci-green">A</div>Ad-Hoc Analysis vs Function Grids — when to use each</div>
+          <div class="concept-card-body">
+            <p><strong>Ad-Hoc Analysis</strong> is a free-form query builder. You connect to an FCCS application, place dimensions on rows and columns however you want, double-click any member to drill down one level, and use the Smart View toolbar to pivot, zoom in/out, and switch POV. The output is a live-connected Excel grid that refreshes from FCCS on demand. Ideal for period-end review, variance investigation, and unstructured exploration where you don't know in advance which accounts matter.</p>
+            <p><strong>Function Grids</strong> use EPM functions — primarily <code>HsGetValue(connection, POV_string)</code> — embedded directly in Excel cells to retrieve specific FCCS data point values. The workbook layout is fixed by the designer; the data refreshes but the structure does not change. Used for structured management reporting packs and board templates where the CFO's preferred layout must be preserved exactly. HsGetValue requires an explicit POV string: <code>HsGetValue("FCCS","S#Actual;Y#FY2025;P#Q1;E#DeutschWerk;A#Revenue;C1#USD;C2#FCCS_Contribution")</code>.</p>
+          </div>
+        </div>
+ 
+        <table class="comp-table" style="margin-bottom:1.3rem">
+          <thead>
+            <tr>
+              <th>Capability</th>
+              <th>Ad-Hoc Analysis</th>
+              <th>Function Grids (HsGetValue)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Layout</td><td>Flexible, drag dimensions freely</td><td>Fixed by designer, cannot be moved</td></tr>
+            <tr><td>Best for</td><td>Exploration, variance investigation, drill-through</td><td>Management packs, board templates, fixed reports</td></tr>
+            <tr><td>Refresh method</td><td>Smart View Refresh button</td><td>Standard Excel Refresh or HsRefreshAll</td></tr>
+            <tr><td>Drill-through</td><td>✓ Right-click any cell</td><td>Limited — context-dependent</td></tr>
+            <tr><td>Submission</td><td>✓ Submit Data writes to FCCS_Data Input</td><td>✓ Submit Data writes to FCCS_Data Input</td></tr>
+            <tr><td>Learning curve</td><td>Low — intuitive drag-and-drop</td><td>Higher — requires EPM function syntax</td></tr>
+          </tbody>
+        </table>
+ 
+        <p>Below is a Smart View mockup showing the Group Finance Manager's ad-hoc session — DeutschWerk Q1 Actual P&amp;L pulled at FCCS_Contribution, with FCCS_Inventory highlighted as the drill-through target:</p>
+ 
+        <div class="sv-mock">
+          <div class="sv-ribbon">
+            <span class="sv-ribbon-label">Smart View</span>
+            <span class="sv-btn active">Connected ✓</span>
+            <span class="sv-btn primary">Refresh</span>
+            <span class="sv-btn">Zoom In</span>
+            <span class="sv-btn">Zoom Out</span>
+            <span class="sv-btn">Submit Data</span>
+            <span class="sv-btn">Drill-Through</span>
+          </div>
+          <div class="sv-pov">
+            <span class="sv-pov-label">POV:</span>
+            <div class="sv-pov-item"><span class="sv-pov-dim">Entity</span><span class="sv-pov-val entity">DeutschWerk</span></div>
+            <div class="sv-pov-item"><span class="sv-pov-dim">Scenario</span><span class="sv-pov-val scenario">Actual</span></div>
+            <div class="sv-pov-item"><span class="sv-pov-dim">Period</span><span class="sv-pov-val period">Q1 FY2025</span></div>
+            <div class="sv-pov-item"><span class="sv-pov-dim">Consolidation</span><span class="sv-pov-val consol">FCCS_Contribution</span></div>
+            <div class="sv-pov-item"><span class="sv-pov-dim">Currency</span><span class="sv-pov-val currency">USD</span></div>
+          </div>
+          <table class="sv-grid">
+            <thead><tr><th style="text-align:left">Account</th><th>Q1 Actual</th><th>Q1 Budget</th><th>Variance</th></tr></thead>
+            <tbody>
+              <tr><td>Revenue</td><td class="num-pos">1,455,000</td><td class="num-grey">1,500,000</td><td class="num-neg">(45,000)</td></tr>
+              <tr><td>CostOfSales</td><td class="num-neg">(675,000)</td><td class="num-grey">(720,000)</td><td class="num-pos">45,000</td></tr>
+              <tr><td>OtherExpenses</td><td class="num-neg">(50,000)</td><td class="num-grey">(55,000)</td><td class="num-pos">5,000</td></tr>
+              <tr><td>FCCS_GrossProfit</td><td class="num-gold">730,000</td><td class="num-grey">725,000</td><td class="num-pos">5,000</td></tr>
+              <tr>
+                <td>FCCS_Inventory</td>
+                <td class="drillable" title="Right-click → Drill-Through to see source breakdown">450,000 ↗</td>
+                <td class="num-grey">480,000</td>
+                <td class="num-neg">(30,000)</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="sv-footer">
+            <span class="sv-status">● Data retrieved from FCCS — Q1 FY2025 Actual · Last refresh: now</span>
+            <div class="sv-actions">
+              <span class="sv-btn">Save to Excel</span>
+              <span class="sv-btn primary">Submit Data</span>
+            </div>
+          </div>
+        </div>
+ 
+        <div class="callout co-teal">
+          <div class="callout-label">💡 Drill-Through on FCCS_Inventory</div>
+          <p>Right-clicking the FCCS_Inventory cell (marked ↗) and selecting Drill-Through reveals the three data source contributions: <code>FCCS_Managed Data</code> = $480,000 (SAP balance), <code>FCCS_Journal Input</code> = -$30,000 (the unrealised profit elimination Enterprise Journal from Hall 6, with the approver name and timestamp visible). <code>FCCS_Data Input</code> = $0 for this account. Total = $450,000. The Finance Manager can click through to the journal to see the full entry detail and the supporting BritEdge inventory schedule.</p>
+        </div>
+      </div>
+ 
+      <!-- WRONG SCENARIO POV TRAP -->
+      <div class="section-divider"></div>
+      <div class="section">
+        <div class="section-title"><span>⚠️</span> The Wrong Scenario POV Trap — Silent Failure</div>
+        <div class="section-sub">One of the most dangerous and hardest-to-detect data errors in FCCS — no error is raised</div>
+ 
+        <div class="concept-card">
+          <div class="concept-card-hd"><div class="concept-icon ci-rose">!</div>What happens when you submit to the wrong Scenario in Smart View or a Data Form</div>
+          <div class="concept-card-body">
+            <p>The DeutschWerk Controller opens Smart View and sets the POV bar to what they intend to be Actual / Q1 / FY2025 — but accidentally leaves the Scenario set to <strong>Budget</strong> from a prior session. They enter the €15,000 freight reclassification and click Submit Data.</p>
+            <p>FCCS accepts the submission without error. The data is written to <code>FCCS_Data Input</code> for <strong>DeutschWerk / Budget / Q1 / FY2025</strong>. The controller's intended Actual scenario is completely untouched. No warning is raised. No error log entry appears. The submission was syntactically valid — it just went to the wrong Scenario member.</p>
+            <p><strong>The consequence:</strong> The Q1 Actual consolidation runs without the reclassification. Budget figures are corrupted by an unexpected adjustment. The controller cannot understand why their Actual figures don't reflect the change. The audit trail report shows the FCCS_Data Input lane is empty for Actual — but has an unexpected entry under Budget.</p>
+          </div>
+        </div>
+ 
+        <div class="callout co-red">
+          <div class="callout-label">⚠️ Exam Trap — Wrong Scenario POV Posts Silently</div>
+          <p>The exam tests whether you understand that FCCS will accept a submission to any valid Scenario member that the user has write access to — even if it is not the intended one. <strong>No error is raised. No warning appears.</strong> The only way to detect this is to check the Data Source audit trail report and verify which Scenario the FCCS_Data Input entry landed in.</p>
+          <p style="margin-top:.5rem">The fix: always verify the full POV bar — every dimension — before any Smart View submission or Data Form save. A mismatched Scenario is the most common wrong-POV error because it is easy to carry over from a prior session.</p>
+        </div>
+ 
+        <div class="callout co-gold">
+          <div class="callout-label">💡 Same Trap in Data Forms — Wrong Scenario on Page Axis</div>
+          <p>A Data Form with Scenario on the page axis can present the same risk if the page axis selector is not locked by the form designer. Best practice: lock the Scenario and Year on the page axis in Data Forms used for close-cycle entry. The controller should not be able to accidentally navigate to Budget or Forecast when the form is intended for Actual data entry only.</p>
+        </div>
+      </div>
+ 
+      <!-- BURSTING -->
+      <div class="section">
+        <div class="section-title"><span>📤</span> Bursting — Security-Enforced Distribution</div>
+        <div class="section-sub">One definition · personalised outputs per entity · silently scoped by dimension security</div>
+        <div class="burst-flow">
+          <div class="bf-row source"><div class="bf-icon">📋</div><div class="bf-content"><div class="bf-label">Report Template</div><div class="bf-desc">Single template with parameterised Entity POV. The same P&L or balance sheet template serves all four GlobalMerge entities — only the Entity member changes per burst output. No separate templates needed per subsidiary.</div></div></div>
+          <div class="bf-connector">↓</div>
+          <div class="bf-row engine"><div class="bf-icon">⚙️</div><div class="bf-content"><div class="bf-label">Bursting Definition</div><div class="bf-desc">Specifies: the report to burst, the Entity member list (BritEdge, DeutschWerk, AsiaLink, NovaTech), output format (PDF or Excel), delivery method (EPM inbox or email), and a recipient mapping — which user receives each entity's output.</div></div></div>
+          <div class="bf-connector">↓</div>
+          <div class="bf-row security"><div class="bf-icon">🔒</div><div class="bf-content"><div class="bf-label">Dimension Security Filter — Silent Exclusion</div><div class="bf-desc">Before generating each entity's output, FCCS checks whether the designated recipient has data access to that entity. If they do not — the output is <strong>not generated and not delivered</strong>. No error is raised. No redacted document is sent. The entity is silently excluded. The DeutschWerk Controller receives exactly one output — DeutschWerk. The Group Finance Manager with full entity access receives all four.</div></div></div>
+          <div class="bf-connector">↓</div>
+          <div class="bf-row deliver"><div class="bf-icon">✉️</div><div class="bf-content"><div class="bf-label">Personalised Delivery</div><div class="bf-desc">Each recipient's EPM inbox or email contains only the outputs they are authorised to receive. Cross-entity data leakage is structurally impossible. A controller can never accidentally receive another subsidiary's confidential figures.</div></div></div>
+        </div>
+      </div>
+ 
+      <!-- CASH FLOW -->
+      <div class="section">
+        <div class="section-title"><span>💸</span> Movement Dimension &amp; Cash Flow Reports</div>
+        <div class="section-sub">FCCS_CashFlow hierarchy drives the IAS 7 cash flow statement automatically</div>
+        <div class="cf-tree">
+          <div class="t0">▸ FCCS_CashFlow <span class="tag tag-sys">system hierarchy — Movement dimension</span></div>
+          <div class="t1">▸ FCCS_OperatingActivities</div>
+          <div class="t2">FCCS_NetIncome <span class="tag tag-sys">from P&L consolidation</span></div>
+          <div class="t2">FCCS_DepreciationAmortisation</div>
+          <div class="t2">FCCS_WorkingCapitalChanges</div>
+          <div class="t2">FCCS_ShareOfAssociateIncome <span class="tag tag-jv">AsiaLink + NovaTech — reversed out (non-cash)</span></div>
+          <div class="t1">▸ FCCS_InvestingActivities</div>
+          <div class="t2">FCCS_CapitalExpenditures</div>
+          <div class="t2">FCCS_Acquisitions</div>
+          <div class="t2">FCCS_DividendsReceived <span class="tag tag-div">actual cash from AsiaLink / NovaTech dividends lands here</span></div>
+          <div class="t1">▸ FCCS_FinancingActivities</div>
+          <div class="t2">FCCS_DebtDrawdown / FCCS_DebtRepayment</div>
+          <div class="t2">FCCS_DividendsPaid</div>
+          <div class="t2">FCCS_EquityIssuance</div>
+        </div>
+        <div class="callout co-teal">
+          <div class="callout-label">💡 AsiaLink Dividend — the Operating / Investing Split</div>
+          <p>When AsiaLink distributes a Q1 cash dividend and GlobalMerge receives SGD cash, two Cash Flow movements happen simultaneously: <code>FCCS_ShareOfAssociateIncome</code> in Operating Activities is reversed out as a non-cash deduction (the equity pickup is P&amp;L income but not cash). <code>FCCS_DividendsReceived</code> in Investing Activities is a positive cash inflow — the actual SGD cash GlobalMerge received, translated to USD at the relevant rate. Net effect matches IAS 7: equity pickup disappears from Operating; real cash appears in Investing.</p>
+        </div>
+      </div>
+ 
+    </div><!-- /technical -->
+ 
+ 
+    <!-- ══════════════ LAB ══════════════ -->
+    <div class="tab-panel" id="tab-lab">
+ 
+      <div class="section">
+        <div class="section-title"><span>🔬</span> Lab — Day 4 Close Activities</div>
+        <div class="section-sub">Data Form reclassification · Smart View review &amp; drill-through · board pack generation · burst distribution</div>
+        <p>It is Day 4 of the GlobalMerge 5-day close. All four entities are Consolidated (status 2) for Actual Q1 FY2025. Three activities run in parallel: DeutschWerk Controller needs to post a manual reclassification; the Group Finance Manager is reviewing consolidated figures in Smart View; and the CFO has requested the Q1 board pack with entity-level burst outputs.</p>
+        <div class="callout co-sky">
+          <div class="callout-label">🧰 Setup</div>
+          <p>FCCS sandbox · Reports framework enabled · All four entities Consolidated (2) Actual Q1 FY2025 · DeutschWerk Controller: DeutschWerk-only Entity dimension security, Actual write + Budget read Scenario security · Group Finance Manager: all-entity access, all scenarios · Smart View connected to FCCS in Excel.</p>
+        </div>
+      </div>
+ 
+      <div class="section">
+        <div class="section-title"><span>1️⃣</span> Exercise 1 — DeutschWerk Controller: Manual Reclassification via Data Form</div>
+        <div class="section-sub">€15,000 freight from OtherExpenses → CostOfSales · FCCS_Data Input · entity moves to Impacted</div>
+        <p>The DeutschWerk Controller identifies that €15,000 of freight costs were incorrectly classified as OtherExpenses in the SAP extract loaded on Day 1. The correct account is CostOfSales. This is too small to justify a full DI reload but must be corrected before consolidation sign-off. She opens the DeutschWerk Data Form.</p>
+        <ol class="step-list">
+          <li><span class="step-num">01</span><span class="step-text"><strong>Navigate to Data Forms → DeutschWerk Q1 Actual form.</strong> Account on rows, Q1 Period on columns. Page axis is locked: Entity = DeutschWerk, Scenario = Actual, Year = FY2025. The controller sees only DeutschWerk rows — dimension security prevents any other entity appearing.</span></li>
+          <li><span class="step-num">02</span><span class="step-text"><strong>Enter the reclassification.</strong> OtherExpenses row → Q1 column: enter <code>−15,000</code> (reducing OtherExpenses). CostOfSales row → Q1 column: enter <code>+15,000</code> (increasing CostOfSales). The form's validation rule verifies the net change = 0 before allowing save.</span></li>
+          <li><span class="step-num">03</span><span class="step-text"><strong>Click Save &amp; Submit.</strong> FCCS writes both entries to <code>FCCS_Data Input</code> for DeutschWerk / Q1 / Actual. The SAP trial balance in <code>FCCS_Managed Data</code> is completely untouched. Both data sources now coexist for DeutschWerk.</span></li>
+          <li><span class="step-num">04</span><span class="step-text"><strong>Observe entity status change.</strong> Navigate to Consolidation → System Check. DeutschWerk flips from <strong>Consolidated (2)</strong> to <strong>Impacted (6)</strong>. The form submission changed entity data — Consolidation must rerun. This is correct expected behaviour, not a problem.</span></li>
+          <li><span class="step-num">05</span><span class="step-text"><strong>Rerun Consolidation for DeutschWerk.</strong> Action: Consolidate → Actual / Q1 / FY2025. After completion, status returns to Consolidated (2). The €15,000 reclassification flows through the consolidation engine (translation → proportion 80% → elimination → contribution) into the group P&amp;L.</span></li>
+          <li><span class="step-num">06</span><span class="step-text"><strong>DI reload test — confirm FCCS_Data Input is protected.</strong> The data team reruns the DeutschWerk data load rule in Replace mode with a minor correction to the SAP extract. After the reload completes, open the Data Source audit trail report. Confirm: FCCS_Managed Data updated to new values. FCCS_Data Input still shows the €15,000 reclassification — completely untouched by the Replace mode reload.</span></li>
+        </ol>
+        <div class="callout co-orange">
+          <div class="callout-label">⚠️ Design Principle — Manual Adjustments Are Protected</div>
+          <p>This protection is by design. In a real close cycle, the ERP may send multiple corrected trial balance files during the close window. FCCS_Data Input entries — whether from Data Forms or Smart View submissions — must survive all of them. The Finance Controller's reclassification is not an ERP-sourced adjustment; it is a human judgement that should not be overwritten by any automated data pipeline.</p>
+        </div>
+      </div>
+ 
+      <div class="section">
+        <div class="section-title"><span>2️⃣</span> Exercise 2 — Group Finance Manager: Smart View Ad-Hoc Review &amp; Drill-Through</div>
+        <div class="section-sub">Connect Smart View · pull DeutschWerk Q1 P&amp;L · drill to the Hall 6 unrealised profit journal</div>
+        <p>The Group Finance Manager has received an alert that DeutschWerk's Q1 FCCS_Inventory balance is lower than expected. She opens Smart View in Excel to investigate without leaving her spreadsheet environment.</p>
+        <ol class="step-list">
+          <li><span class="step-num">01</span><span class="step-text"><strong>Connect Smart View to FCCS.</strong> In Excel → Smart View ribbon → Panel → Connect → select the GlobalMerge FCCS connection URL. Authenticate. The Smart View POV bar appears at the top of the worksheet.</span></li>
+          <li><span class="step-num">02</span><span class="step-text"><strong>Set the POV bar — verify every dimension.</strong> Entity = DeutschWerk · Scenario = <strong>Actual</strong> (confirm — not Budget) · Year = FY2025 · Period = Q1 · Consolidation = <strong>FCCS_Contribution</strong> (not Entity Input) · Currency = USD. The wrong Scenario or wrong Consolidation member would give misleading results.</span></li>
+          <li><span class="step-num">03</span><span class="step-text"><strong>Pull the ad-hoc P&amp;L grid.</strong> Select Ad-Hoc Analysis. Place Account dimension on rows, Period on columns (Jan, Feb, Q1, YTD). Refresh. DeutschWerk's full P&amp;L appears, translated to USD, with all eliminations applied. FCCS_Inventory shows $450,000 — lower than the $480,000 SAP balance she expected.</span></li>
+          <li><span class="step-num">04</span><span class="step-text"><strong>Drill-through on FCCS_Inventory.</strong> Right-click the Q1 FCCS_Inventory cell → Drill-Through → Source Data. The drill-through view opens, showing the Data Source breakdown: FCCS_Managed Data = $480,000, FCCS_Data Input = $0, FCCS_Journal Input = −$30,000. Total = $450,000.</span></li>
+          <li><span class="step-num">05</span><span class="step-text"><strong>Navigate to the journal entry.</strong> Click the FCCS_Journal Input row to expand the journal detail. The drill-through shows the Enterprise Journal from Hall 6 — journal reference, approver (Group Finance Manager), approval timestamp, and the attached BritEdge inventory schedule confirming the unrealised profit amount. The Finance Manager confirms this is the expected elimination and closes the investigation.</span></li>
+          <li><span class="step-num">06</span><span class="step-text"><strong>Smart View read-only confirmation.</strong> Confirm no Submit Data action was triggered — the investigation was read-only throughout. The FCCS cube is unchanged. No entity status was affected.</span></li>
+        </ol>
+        <div class="callout co-green">
+          <div class="callout-label">✅ If a Correction Had Been Needed</div>
+          <p>If the Finance Manager had found an error and entered a correction value directly in a Smart View grid cell, clicking <strong>Submit Data</strong> would write the entry to <code>FCCS_Data Input</code> — identical to a Data Form entry. DeutschWerk would move from Consolidated (2) to Impacted (6). Consolidation must rerun. The submission would appear in the Data Source audit trail under FCCS_Data Input, alongside the Data Form reclassification from Exercise 1.</p>
+        </div>
+      </div>
+ 
+      <div class="section">
+        <div class="section-title"><span>3️⃣</span> Exercise 3 — Q1 Board Pack Book &amp; Entity Burst</div>
+        <div class="section-sub">Generate the CFO board pack · configure entity-level burst · verify security enforcement</div>
+        <ol class="step-list">
+          <li><span class="step-num">01</span><span class="step-text"><strong>Reports → Books → New Book.</strong> Name: <em>GlobalMerge_Q1_BoardPack_FY2025</em>. Add three reports in order: (1) Consolidated P&amp;L Actual vs Budget · (2) Consolidated Balance Sheet · (3) Cash Flow Statement. Set Book-level POV: Entity = GlobalMerge, Consolidation = FCCS_Contribution, Q1, FY2025, Currency = USD.</span></li>
+          <li><span class="step-num">02</span><span class="step-text"><strong>Generate as PDF and verify content.</strong> Confirm: DeutschWerk Revenue reflects the €15,000 Data Form reclassification. AsiaLink and NovaTech appear as single equity-pickup lines in the P&amp;L. Cash Flow shows AsiaLink dividends under Investing Activities. The unrealised profit elimination appears in COGS.</span></li>
+          <li><span class="step-num">03</span><span class="step-text"><strong>Configure the entity-level Bursting definition.</strong> Name: <em>Q1_EntityPL_Burst_FY2025</em>. Report: entity P&amp;L template with parameterised Entity POV. Burst dimension: Entity. Members: BritEdge, DeutschWerk, AsiaLink, NovaTech. Map each member to the relevant controller's EPM inbox. Format: PDF.</span></li>
+          <li><span class="step-num">04</span><span class="step-text"><strong>Run the Bursting job and verify security enforcement.</strong> After completion, check DeutschWerk Controller's inbox — confirm only the DeutschWerk PDF is present. BritEdge, AsiaLink, and NovaTech outputs were silently excluded by dimension security. Group Finance Manager's inbox contains all four entity outputs. No errors in the job log.</span></li>
+        </ol>
+      </div>
+ 
+    </div><!-- /lab -->
+ 
+ 
+    <!-- ══════════════ EXAM ══════════════ -->
+    <div class="tab-panel" id="tab-exam">
+ 
+      <div class="section">
+        <div class="section-title"><span>📝</span> Exam Preparation</div>
+        <div class="section-sub">Hall 7 — Reports, Data Forms, Smart View &amp; Data Source Separation · Oracle FCCS 1Z0-1081-25</div>
+        <p>The exam reliably tests: Reports framework features vs FR Studio (sunset), Consolidation dimension POV traps, Bursting security, the three data source lanes (especially what Replace mode can and cannot clear), Smart View submission destination, the wrong Scenario POV silent failure, and Smart Push direction. The data source separation questions have appeared in multiple exam variants.</p>
+      </div>
+ 
+      <!-- Q1 -->
+      <div class="exam-q">
+        <div class="exam-q-label">Question 1 of 11 · Data Forms — Where Data Lands</div>
+        <div class="exam-q-text">The DeutschWerk Controller submits a manual reclassification via a Data Form for Q1 Actual. One hour later the data team reruns the DeutschWerk data load rule in Replace mode with a corrected trial balance. What happens to the controller's manual entry?</div>
+        <ul class="exam-options">
+          <li class="exam-option"><span class="opt-key">A</span>The manual entry is overwritten — Replace mode clears all data for the entity/period/scenario combination before loading new values.</li>
+          <li class="exam-option correct"><span class="opt-key">B</span>The manual entry is completely unaffected — it is in FCCS_Data Input; Replace mode operates only on FCCS_Managed Data and cannot reach FCCS_Data Input.</li>
+          <li class="exam-option"><span class="opt-key">C</span>The manual entry is flagged as conflicting and suspended until an administrator resolves the conflict manually.</li>
+          <li class="exam-option"><span class="opt-key">D</span>The manual entry merges with the reloaded data — Accumulate mode adds to existing values in FCCS_Data Input.</li>
+        </ul>
+        <button class="reveal-btn" onclick="toggleReveal(this)">Reveal Answer</button>
+        <div class="exam-reveal"><div class="exam-answer-box"><strong>Correct: B.</strong> Data Form entry writes exclusively to <code>FCCS_Data Input</code>. Data Integration Replace mode operates exclusively on <code>FCCS_Managed Data</code>. These are separate data source partitions. Replace mode has no access to and no effect on <code>FCCS_Data Input</code>. The manual reclassification is fully protected. Both data sources coexist after the reload and are both read by the consolidation engine when it next runs.</div></div>
+      </div>
+ 
+      <!-- Q2 -->
+      <div class="exam-q">
+        <div class="exam-q-label">Question 2 of 11 · Smart View Submission Destination</div>
+        <div class="exam-q-text">A Group Finance Manager submits a corrected balance directly from a Smart View ad-hoc grid for DeutschWerk Q1 Actual. To which FCCS data source does this submission write?</div>
+        <ul class="exam-options">
+          <li class="exam-option"><span class="opt-key">A</span>FCCS_Managed Data — Smart View writes to the same location as Data Integration loads, allowing it to be cleared by the next Replace mode reload.</li>
+          <li class="exam-option"><span class="opt-key">B</span>FCCS_Journal Input — Smart View submissions are treated as journal entries and follow the journal approval workflow.</li>
+          <li class="exam-option correct"><span class="opt-key">C</span>FCCS_Data Input — Smart View submissions write to the same data source partition as Data Form manual entry.</li>
+          <li class="exam-option"><span class="opt-key">D</span>Smart View is read-only and cannot write back to FCCS under any circumstances — submission requires a Data Form.</li>
+        </ul>
+        <button class="reveal-btn" onclick="toggleReveal(this)">Reveal Answer</button>
+        <div class="exam-reveal"><div class="exam-answer-box"><strong>Correct: C.</strong> Smart View submissions write to <code>FCCS_Data Input</code> — the same partition as Data Form entries. Smart View retrieval is read-only by default; the Submit Data action explicitly triggers the write-back. Once submitted, the entry is protected from Replace-mode DI reloads, just like Data Form entries. Data Form entry and Smart View submission are the same data stream — both write to <code>FCCS_Data Input</code>.</div></div>
+      </div>
+ 
+      <!-- Q3 -->
+      <div class="exam-q">
+        <div class="exam-q-label">Question 3 of 11 · Replace Mode — All Three Lanes</div>
+        <div class="exam-q-text">After DeutschWerk's Q1 close three types of data coexist: (1) SAP trial balance loaded via Data Management Replace mode, (2) a €15,000 reclassification entered via Data Form, (3) a €30,000 unrealised profit elimination posted as an Enterprise Journal. The data team reruns the DeutschWerk load rule in Replace mode with a corrected file. Which data is affected?</div>
+        <ul class="exam-options">
+          <li class="exam-option"><span class="opt-key">A</span>All three are cleared and replaced — Replace mode clears the entire entity/period/scenario intersection before loading new data.</li>
+          <li class="exam-option correct"><span class="opt-key">B</span>Only the SAP trial balance in FCCS_Managed Data is cleared and replaced. The Data Form entry (FCCS_Data Input) and the Enterprise Journal (FCCS_Journal Input) are completely untouched.</li>
+          <li class="exam-option"><span class="opt-key">C</span>The SAP trial balance and Data Form entry are replaced; only the journal is protected from Replace mode.</li>
+          <li class="exam-option"><span class="opt-key">D</span>Nothing is cleared — Replace mode only appends new data on top of existing values without removing anything.</li>
+        </ul>
+        <button class="reveal-btn" onclick="toggleReveal(this)">Reveal Answer</button>
+        <div class="exam-reveal"><div class="exam-answer-box"><strong>Correct: B.</strong> Replace mode operates on <code>FCCS_Managed Data</code> only. Both <code>FCCS_Data Input</code> (Data Forms and Smart View submissions) and <code>FCCS_Journal Input</code> (approved journals) are separate data source partitions that Replace mode cannot access or modify. All three data sources coexist after the reload — the consolidation engine reads all of them together at the next consolidation run.</div></div>
+      </div>
+ 
+      <!-- Q4 -->
+      <div class="exam-q">
+        <div class="exam-q-label">Question 4 of 11 · Wrong Scenario POV — Silent Failure</div>
+        <div class="exam-q-text">The DeutschWerk Controller opens Smart View intending to submit a Q1 Actual correction. The POV bar Scenario is still set to Budget from a prior session. They enter the correction and click Submit Data. What happens?</div>
+        <ul class="exam-options">
+          <li class="exam-option"><span class="opt-key">A</span>FCCS detects the POV mismatch and raises an error — the submission is rejected until the Scenario is corrected.</li>
+          <li class="exam-option"><span class="opt-key">B</span>FCCS prompts the user to confirm the Scenario before writing to prevent accidental wrong-scenario submissions.</li>
+          <li class="exam-option correct"><span class="opt-key">C</span>The submission is accepted without error and writes to FCCS_Data Input for the Budget scenario. The Actual scenario is completely untouched. No warning is raised.</li>
+          <li class="exam-option"><span class="opt-key">D</span>The submission is rejected because the DeutschWerk Controller has read-only access to the Budget scenario.</li>
+        </ul>
+        <button class="reveal-btn" onclick="toggleReveal(this)">Reveal Answer</button>
+        <div class="exam-reveal"><div class="exam-answer-box"><strong>Correct: C.</strong> FCCS does not validate user intent — it writes the submitted data to whatever Scenario the POV bar specifies, as long as the user has write access to it. The DeutschWerk Controller has read-only access to Budget in our security configuration, so this specific example would fail on permission — but if they had Budget write access, the submission would go silently to Budget with no warning. The exam tests the principle: <strong>FCCS never raises an error for a wrong POV submission — the data lands wherever the POV points</strong>. Always verify the complete POV bar before any submission.</div></div>
+      </div>
+ 
+      <!-- Q5 -->
+      <div class="exam-q">
+        <div class="exam-q-label">Question 5 of 11 · Data Form — Entity Status After Submission</div>
+        <div class="exam-q-text">BritEdge Ltd is currently at status Consolidated (2). A Data Form submission posts a manual adjustment to BritEdge Q1 Actual. What is BritEdge's status immediately after the submission, and what action is required to restore Consolidated status?</div>
+        <ul class="exam-options">
+          <li class="exam-option"><span class="opt-key">A</span>BritEdge remains Consolidated (2) — Data Form submissions do not affect consolidation status since they write to a separate data source partition.</li>
+          <li class="exam-option correct"><span class="opt-key">B</span>BritEdge moves to Impacted (6) — the submission changed entity data, so Consolidation must be rerun to incorporate the adjustment into consolidated results.</li>
+          <li class="exam-option"><span class="opt-key">C</span>BritEdge moves to No Data (4) — the Data Form submission resets the entity status before the data is processed.</li>
+          <li class="exam-option"><span class="opt-key">D</span>BritEdge moves to System Changed (SC) — a metadata-level change was detected by the Data Form submission engine.</li>
+        </ul>
+        <button class="reveal-btn" onclick="toggleReveal(this)">Reveal Answer</button>
+        <div class="exam-reveal"><div class="exam-answer-box"><strong>Correct: B.</strong> Any data change to an entity — whether from a DI load, a journal post, a Data Form submission, or a Smart View submission — moves a Consolidated (2) entity to Impacted (6). The system has detected that entity data changed since the last consolidation run. Consolidate must be rerun to incorporate the FCCS_Data Input entry. Status SC is a metadata change (metadata import + cube refresh); Status 4 (No Data) means no data exists at all — neither applies here.</div></div>
+      </div>
+ 
+      <!-- Q6 -->
+      <div class="exam-q">
+        <div class="exam-q-label">Question 6 of 11 · Smart View — Bulk Loading</div>
+        <div class="exam-q-text">A Finance Analyst proposes loading the full Q2 trial balance for all four GlobalMerge entities by copying 15,000 rows of GL data into a Smart View ad-hoc grid and submitting. What is the correct guidance?</div>
+        <ul class="exam-options">
+          <li class="exam-option"><span class="opt-key">A</span>Acceptable — Smart View submissions write to FCCS_Data Input which is the appropriate location for trial balance data from any source.</li>
+          <li class="exam-option"><span class="opt-key">B</span>Requires Power User role minimum — Smart View bulk submission is a privileged operation not available to User-role accounts.</li>
+          <li class="exam-option correct"><span class="opt-key">C</span>Not appropriate — Smart View is an analysis and controlled entry tool. Bulk trial balance loading must use Data Integration (Data Management UI or EPM Automate) which provides mapping, transformation, and governed processing that Smart View does not.</li>
+          <li class="exam-option"><span class="opt-key">D</span>Acceptable for small entities but not applicable to DeutschWerk because SAP requires a dedicated system connector for trial balance extraction.</li>
+        </ul>
+        <button class="reveal-btn" onclick="toggleReveal(this)">Reveal Answer</button>
+        <div class="exam-reveal"><div class="exam-answer-box"><strong>Correct: C.</strong> Smart View is designed for ad-hoc analysis, controlled manual entry, and targeted adjustments. It cannot and should not replace Data Integration for bulk trial balance loading. Beyond performance limitations, Smart View bypasses the Data Management mapping/transformation layer, lacks the governance framework (import formats, mapping tables, load rule definitions), and writes to <code>FCCS_Data Input</code> rather than <code>FCCS_Managed Data</code> — meaning Replace mode reloads would not clear it. Bulk trial balance data belongs in <code>FCCS_Managed Data</code> via the proper Data Integration pipeline.</div></div>
+      </div>
+ 
+      <!-- Q7 -->
+      <div class="exam-q">
+        <div class="exam-q-label">Question 7 of 11 · Smart Push Direction</div>
+        <div class="exam-q-text">A Service Administrator configures Smart Push on a Data Form for the GlobalMerge Corp parent entity. The Group Finance Manager enters a Q2 group revenue target at the GlobalMerge level and triggers Smart Push. What is the direction of data flow?</div>
+        <ul class="exam-options">
+          <li class="exam-option"><span class="opt-key">A</span>Children to parent — Smart Push aggregates the child entity submissions upward to populate the GlobalMerge parent total.</li>
+          <li class="exam-option correct"><span class="opt-key">B</span>Parent to children — Smart Push distributes the value entered at GlobalMerge down to its child entities (BritEdge, DeutschWerk, AsiaLink, NovaTech) proportionally.</li>
+          <li class="exam-option"><span class="opt-key">C</span>Bidirectional — Smart Push synchronises parent and child data simultaneously in both directions.</li>
+          <li class="exam-option"><span class="opt-key">D</span>Entity to Smart View — Smart Push pushes form submission data to connected Smart View sessions for the user to review before final save.</li>
+        </ul>
+        <button class="reveal-btn" onclick="toggleReveal(this)">Reveal Answer</button>
+        <div class="exam-reveal"><div class="exam-answer-box"><strong>Correct: B.</strong> Smart Push flows exclusively from <strong>parent to children</strong>. When a value is entered at the parent level and Smart Push is triggered, FCCS distributes it proportionally to child entities — all of which then receive the pushed data in their FCCS_Data Input. Smart Push does not aggregate upward (normal consolidation handles upward roll-up). It is specifically a top-down allocation mechanism.</div></div>
+      </div>
+ 
+      <!-- Q8 -->
+      <div class="exam-q">
+        <div class="exam-q-label">Question 8 of 11 · Consolidation Dimension POV — PCON vs POWN</div>
+        <div class="exam-q-text">A report for DeutschWerk GmbH (PCON=100%, POWN=80%) is set to Consolidation = FCCS_Entity Input, showing Revenue of €1,800,000. A second version of the same report is set to FCCS_Proportion. What does the Revenue figure show in the second version?</div>
+        <ul class="exam-options">
+          <li class="exam-option"><span class="opt-key">A</span>€1,440,000 — FCCS_Proportion applies POWN% (80%) to weight the balance by GlobalMerge's economic ownership.</li>
+          <li class="exam-option correct"><span class="opt-key">B</span>€1,800,000 — FCCS_Proportion applies PCON% (100%), so the full balance proportionalizes at 100% and is unchanged from FCCS_Entity Input.</li>
+          <li class="exam-option"><span class="opt-key">C</span>€360,000 — FCCS_Proportion shows only the non-controlling interest portion (20% × €1,800,000).</li>
+          <li class="exam-option"><span class="opt-key">D</span>€0 — FCCS_Proportion only shows data after all elimination entries have been applied.</li>
+        </ul>
+        <button class="reveal-btn" onclick="toggleReveal(this)">Reveal Answer</button>
+        <div class="exam-reveal"><div class="exam-answer-box"><strong>Correct: B.</strong> FCCS_Proportion applies <strong>PCON%</strong> (Consolidation percentage), not POWN% (Ownership percentage). DeutschWerk is configured with the Full Consolidation method, giving it PCON=100%. Revenue at FCCS_Proportion = €1,800,000 × 100% = €1,800,000 — identical to FCCS_Entity Input. POWN% (80%) is used for Non-Controlling Interest calculations — it does not reduce the Proportion member balance. This is a frequent exam trap: confusing PCON and POWN.</div></div>
+      </div>
+ 
+      <!-- Q9 -->
+      <div class="exam-q">
+        <div class="exam-q-label">Question 9 of 11 · Bursting Security</div>
+        <div class="exam-q-text">A Bursting definition is configured to deliver Q1 entity P&L reports for all four GlobalMerge entities. The DeutschWerk Controller has Entity dimension security scoped to DeutschWerk only. What does the DeutschWerk Controller's EPM inbox contain after the Bursting job runs?</div>
+        <ul class="exam-options">
+          <li class="exam-option"><span class="opt-key">A</span>All four entity reports — Bursting overrides dimension security to ensure all configured recipients receive all defined outputs.</li>
+          <li class="exam-option correct"><span class="opt-key">B</span>Only the DeutschWerk P&L report — Bursting enforces dimension security and silently excludes entities the recipient cannot access.</li>
+          <li class="exam-option"><span class="opt-key">C</span>All four reports, but BritEdge, AsiaLink, and NovaTech figures are redacted to zero on the DeutschWerk Controller's copies.</li>
+          <li class="exam-option"><span class="opt-key">D</span>The Bursting job fails with an error because the recipient mapping includes entities the DeutschWerk Controller cannot access.</li>
+        </ul>
+        <button class="reveal-btn" onclick="toggleReveal(this)">Reveal Answer</button>
+        <div class="exam-reveal"><div class="exam-answer-box"><strong>Correct: B.</strong> Bursting enforces FCCS dimension security at output generation time. Before generating each entity's report, the engine checks whether the designated recipient has data access to that entity. Entities outside the recipient's dimension security scope are silently excluded — no output generated, no error raised, no redacted document delivered. The DeutschWerk Controller receives exactly one output. The Bursting job does not fail — it simply produces fewer outputs for that recipient.</div></div>
+      </div>
+ 
+      <!-- Q10 -->
+      <div class="exam-q">
+        <div class="exam-q-label">Question 10 of 11 · AsiaLink in Group P&amp;L</div>
+        <div class="exam-q-text">AsiaLink Pte (50% JV, SGD) generates SGD 4,000,000 Revenue and SGD 600,000 Net Income in Q1. SGD/USD average rate: 0.742. A Finance Analyst running the GlobalMerge consolidated P&L at FCCS_Contribution cannot find AsiaLink's revenue line. What is the correct explanation?</div>
+        <ul class="exam-options">
+          <li class="exam-option"><span class="opt-key">A</span>AsiaLink's data has not loaded — the missing revenue line indicates a Data Integration failure for AsiaLink.</li>
+          <li class="exam-option"><span class="opt-key">B</span>The Consolidation POV must be changed from FCCS_Contribution to FCCS_Entity Input to see AsiaLink's individual revenue line.</li>
+          <li class="exam-option correct"><span class="opt-key">C</span>Correct and expected. AsiaLink is accounted for under the equity method — only a single "Share of JV income" line appears ($222,600 = SGD 600,000 × 50% × 0.742). No individual revenue, cost, asset, or liability lines ever appear in the group statements for equity-method entities.</li>
+          <li class="exam-option"><span class="opt-key">D</span>AsiaLink's revenue is eliminated in Stage 3 of the consolidation engine because it is a 50% JV — a proportional elimination removes all revenue lines.</li>
+        </ul>
+        <button class="reveal-btn" onclick="toggleReveal(this)">Reveal Answer</button>
+        <div class="exam-reveal"><div class="exam-answer-box"><strong>Correct: C.</strong> AsiaLink uses the equity method (50% JV, no control). Under IFRS 11 / IAS 28, no line-by-line consolidation occurs. The group P&amp;L shows a single "Share of income from JV" = SGD 600,000 × 50% × 0.742 = $222,660. No AsiaLink revenue, cost, asset, or liability lines appear. Changing the Consolidation POV to FCCS_Entity Input would show AsiaLink's raw data, but it still would not appear in the group P&amp;L because equity-method treatment is a method choice, not a POV issue.</div></div>
+      </div>
+ 
+      <!-- Q11 -->
+      <div class="exam-q">
+        <div class="exam-q-label">Question 11 of 11 · Multi-GAAP Reporting</div>
+        <div class="exam-q-text">GlobalMerge reports under IFRS for the group but one subsidiary also requires a US GAAP consolidated output for an SEC filing. How does the Reports framework support generating both outputs without duplicating report templates or maintaining two separate FCCS applications?</div>
+        <ul class="exam-options">
+          <li class="exam-option"><span class="opt-key">A</span>Two separate FCCS applications are required — one for IFRS statutory consolidation and one for US GAAP SEC filing.</li>
+          <li class="exam-option"><span class="opt-key">B</span>A Bursting definition can generate IFRS and US GAAP outputs simultaneously from one run by targeting two different recipient groups.</li>
+          <li class="exam-option correct"><span class="opt-key">C</span>IFRS and US GAAP data are loaded and stored in separate Scenario members (e.g., Actual_IFRS and Actual_USGAAP). The same report template produces either framework's output by switching the Scenario POV selector — no structural change to the report is needed.</li>
+          <li class="exam-option"><span class="opt-key">D</span>Multi-GAAP reporting requires the legacy Financial Reporting Studio — the modern Reports framework does not support multiple accounting framework outputs from the same template.</li>
+        </ul>
+        <button class="reveal-btn" onclick="toggleReveal(this)">Reveal Answer</button>
+        <div class="exam-reveal"><div class="exam-answer-box"><strong>Correct: C.</strong> FCCS's Multi-GAAP capability stores each accounting framework's data in a separate Scenario member. Data Integration loads IFRS-adjusted data to one Scenario and US GAAP-adjusted data to another. A single report template with an interactive Scenario POV selector produces either framework's output — no duplicate templates, no separate applications. The Reports framework fully supports this pattern. FR Studio (D) is sunset and not the recommended path for any new implementation.</div></div>
+      </div>
+ 
+    </div><!-- /exam -->
+ 
+  </main>
+ 
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="tour-guide-widget">
+      <div class="tg-header">
+        <div class="tg-avatar">🤖</div>
+        <div>
+          <div class="tg-name">Tour Guide AI</div>
+          <div class="tg-title">Reporting · Data Forms · Smart View</div>
+        </div>
+      </div>
+      <div class="tg-body">
+        <div class="tg-messages" id="tgMessages">
+          <div class="tg-msg bot">Welcome to Hall 7. Ask about the Reports framework, Consolidation dimension POV, Data Forms, Smart View data sources, the wrong Scenario POV trap, or JV treatment in reports.</div>
+        </div>
+        <div class="tg-input-wrap">
+          <input class="tg-input" id="tgInput" type="text" placeholder="Ask a reporting question…" onkeydown="if(event.key==='Enter')sendTourMessage()" />
+          <button class="tg-send" onclick="sendTourMessage()">→</button>
+        </div>
+        <div class="tg-quick">
+          <button class="tg-quick-btn" onclick="askQuick('Where does Data Form entry land vs Data Integration?')">Data Form vs DI — where does data land?</button>
+          <button class="tg-quick-btn" onclick="askQuick('Does Replace mode on a DI load clear Smart View submissions?')">Replace mode and Smart View?</button>
+          <button class="tg-quick-btn" onclick="askQuick('What happens if I submit to the wrong Scenario in Smart View?')">Wrong Scenario POV trap?</button>
+          <button class="tg-quick-btn" onclick="askQuick('What is the difference between FCCS_Proportion and FCCS_Contribution?')">Proportion vs Contribution?</button>
+          <button class="tg-quick-btn" onclick="askQuick('Why does AsiaLink not show revenue in the group P&L?')">AsiaLink in group P&L?</button>
+        </div>
+      </div>
+    </div>
+ 
+    <div class="side-card">
+      <div class="side-card-title">Three Data Source Lanes</div>
+      <div class="kv-row"><span class="kv-key">FCCS_Managed Data</span><span class="kv-val sky">DI loads · Replace clears</span></div>
+      <div class="kv-row"><span class="kv-key">FCCS_Data Input</span><span class="kv-val orange">Forms + Smart View · protected</span></div>
+      <div class="kv-row"><span class="kv-key">FCCS_Journal Input</span><span class="kv-val teal">Journals · Hall 6 · protected</span></div>
+      <div class="kv-row"><span class="kv-key">Replace mode scope</span><span class="kv-val red">Managed Data only</span></div>
+    </div>
+ 
+    <div class="side-card">
+      <div class="side-card-title">Consolidation Dimension</div>
+      <div class="kv-row"><span class="kv-key">FCCS_Entity Input</span><span class="kv-val sky">Raw · pre-consol</span></div>
+      <div class="kv-row"><span class="kv-key">FCCS_Proportion</span><span class="kv-val teal">PCON% weighted</span></div>
+      <div class="kv-row"><span class="kv-key">FCCS_Elimination</span><span class="kv-val rose">Eliminations only</span></div>
+      <div class="kv-row"><span class="kv-key">FCCS_Contribution</span><span class="kv-val green">Final — use for reports</span></div>
+    </div>
+ 
+    <div class="side-card">
+      <div class="side-card-title">Data Forms &amp; Smart View</div>
+      <div class="kv-row"><span class="kv-key">Data Form entry</span><span class="kv-val orange">→ FCCS_Data Input</span></div>
+      <div class="kv-row"><span class="kv-key">Smart View submit</span><span class="kv-val orange">→ FCCS_Data Input</span></div>
+      <div class="kv-row"><span class="kv-key">Smart Push direction</span><span class="kv-val sky">Parent → children only</span></div>
+      <div class="kv-row"><span class="kv-key">After submission</span><span class="kv-val gold">→ Impacted · rerun consol</span></div>
+      <div class="kv-row"><span class="kv-key">Wrong Scenario</span><span class="kv-val red">Posts silently · no error</span></div>
+      <div class="kv-row"><span class="kv-key">Smart View bulk load?</span><span class="kv-val red">❌ Not appropriate</span></div>
+    </div>
+ 
+    <div class="side-card">
+      <div class="side-card-title">GlobalMerge Corp</div>
+      <div class="entity-list">
+        <div class="entity-row"><div class="e-dot" style="background:var(--accent-sky)"></div><span class="e-name">BritEdge Ltd</span><span class="e-tag">GBP</span><span class="e-pct" style="color:var(--accent-sky)">100%</span></div>
+        <div class="entity-row"><div class="e-dot" style="background:var(--accent-teal)"></div><span class="e-name">DeutschWerk GmbH</span><span class="e-tag">EUR</span><span class="e-pct" style="color:var(--accent-teal)">80%</span></div>
+        <div class="entity-row"><div class="e-dot" style="background:var(--accent-purple)"></div><span class="e-name">AsiaLink Pte Ltd</span><span class="e-tag">SGD · JV</span><span class="e-pct" style="color:var(--accent-purple)">50%</span></div>
+        <div class="entity-row"><div class="e-dot" style="background:var(--accent-gold)"></div><span class="e-name">NovaTech Inc</span><span class="e-tag">USD · EQ</span><span class="e-pct" style="color:var(--accent-gold)">30%</span></div>
+      </div>
+    </div>
+ 
+    <div class="side-card">
+      <div class="side-card-title">Tour Halls</div>
+      <nav class="hall-pills">
+        <a href="hall-1.html" class="hall-pill done"><span class="hall-pill-num">01</span>Orientation Hall</a>
+        <a href="hall-2.html" class="hall-pill done"><span class="hall-pill-num">02</span>Metadata Gallery</a>
+        <a href="hall-3.html" class="hall-pill done"><span class="hall-pill-num">03</span>Data Integration</a>
+        <a href="hall-4.html" class="hall-pill done"><span class="hall-pill-num">04</span>Consolidation Chamber</a>
+        <a href="hall-5.html" class="hall-pill done"><span class="hall-pill-num">05</span>Calculation Studio</a>
+        <a href="hall-6.html" class="hall-pill done"><span class="hall-pill-num">06</span>Journals &amp; Adjustments</a>
+        <a href="hall-7.html" class="hall-pill current"><span class="hall-pill-num">07</span>Reporting Atrium</a>
+        <a href="hall-8.html" class="hall-pill"><span class="hall-pill-num">08</span>Security Hall</a>
+        <a href="hall-9.html" class="hall-pill next"><span class="hall-pill-num">09</span>Exam Prep Lab →</a>
+      </nav>
+    </div>
+  </aside>
+</div>
+ 
+<footer class="site-footer">
+  FCCS EPM Cloud Study Tour · Hall 7 — Reporting Atrium · Data Forms · Smart View · Wrong POV Trap ·
+  GlobalMerge Corp Case · Oracle FCCS 1Z0-1081-25 Prep
+</footer>
+ 
+<script>
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+    });
+  });
+ 
+  function toggleReveal(btn) {
+    const r = btn.nextElementSibling;
+    if (r.classList.contains('show')) { r.classList.remove('show'); btn.textContent = 'Reveal Answer'; }
+    else { r.classList.add('show'); btn.textContent = 'Hide Answer'; }
+  }
+ 
+  function askQuick(q) { document.getElementById('tgInput').value = q; sendTourMessage(); }
+ 
+  async function sendTourMessage() {
+    const input = document.getElementById('tgInput');
+    const messages = document.getElementById('tgMessages');
+    const question = input.value.trim();
+    if (!question) return;
+    const ub = document.createElement('div'); ub.className = 'tg-msg user'; ub.textContent = question; messages.appendChild(ub);
+    input.value = '';
+    const typing = document.createElement('div'); typing.className = 'tg-msg bot'; typing.textContent = '…'; messages.appendChild(typing);
+    messages.scrollTop = messages.scrollHeight;
+    try {
+      const res = await fetch('/api/tour-guide', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          hall: 7, topic: 'reporting-atrium', question,
+          context: `FCCS Reporting Atrium Hall 7. Reports framework (not FR Studio — sunset): Books, Bursting (silently excludes entities user cannot access), POV Selectors, Drill-through, Multi-GAAP. Consolidation dimension POV: FCCS_Entity Input (raw pre-consol), FCCS_Proportion (PCON% weighted — not POWN%), FCCS_Elimination (eliminations only), FCCS_Contribution (final — always use for external reports). Three data source lanes: FCCS_Managed Data (DI loads, Replace clears ONLY this), FCCS_Data Input (Data Forms + Smart View submissions, Replace does NOT clear), FCCS_Journal Input (journals, Replace does NOT clear). Data Form entry → FCCS_Data Input; after submission entity → Impacted, must rerun Consolidate. Smart View: Office add-in, ad-hoc analysis vs function grids (HsGetValue), POV bar must be verified before submission, drill-through to source, submission → FCCS_Data Input. Wrong Scenario POV: posts silently to wrong Scenario with no error raised — critical trap. Smart View is NOT a bulk loading tool. Smart Push: parent to children direction only. Bursting enforces dimension security silently. AsiaLink/NovaTech equity method: single line group P&L, dividends → Investing Activities, share of income reversed out from Operating as non-cash. GlobalMerge: BritEdge GBP 100%, DeutschWerk EUR 80% (PCON=100% POWN=80%), AsiaLink SGD 50% JV equity method, NovaTech USD 30% equity method.`
+        })
+      });
+      const data = await res.json();
+      typing.textContent = data.answer || data.message || 'No response received.';
+    } catch (e) {
+      typing.textContent = 'Tour guide temporarily unavailable. See the Three Data Source Lanes sidebar card.';
+    }
+    messages.scrollTop = messages.scrollHeight;
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,1795 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hall 5 — Calculation Studio | FCCS EPM Cloud Study Tour</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;0,9..144,700;1,9..144,300&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    /* ─── DESIGN TOKENS ──────────────────────────────────────── */
+    :root {
+      --bg:            #08090f;
+      --surface:       #0f1117;
+      --surface-2:     #161b27;
+      --surface-3:     #1c2333;
+      --border:        #1e2a3a;
+      --border-light:  #273548;
+      --accent:        #7c3aed;       /* violet — Calc Studio */
+      --accent-2:      #a78bfa;
+      --accent-cyan:   #06b6d4;
+      --accent-gold:   #f59e0b;
+      --accent-green:  #10b981;
+      --accent-rose:   #f43f5e;
+      --accent-orange: #f97316;
+      --accent-blue:   #3b82f6;
+      --text:          #e2e8f0;
+      --text-muted:    #64748b;
+      --text-dim:      #94a3b8;
+      --radius:        8px;
+      --radius-lg:     14px;
+    }
+ 
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      font-size: 15px;
+      line-height: 1.7;
+      min-height: 100vh;
+    }
+ 
+    /* ─── HEADER ─────────────────────────────────────────────── */
+    .site-header {
+      background: rgba(8,9,15,0.94);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+      position: sticky; top: 0; z-index: 100;
+      padding: 0 2rem;
+    }
+    .header-inner {
+      max-width: 1300px; margin: 0 auto;
+      display: flex; align-items: center; justify-content: space-between;
+      height: 58px; gap: 1rem;
+    }
+    .site-logo {
+      font-family: 'Fraunces', serif; font-size: 1.1rem; font-weight: 600;
+      color: var(--text); text-decoration: none; white-space: nowrap;
+    }
+    .site-logo span { color: var(--accent-2); }
+    .hall-nav { display: flex; gap: 0.2rem; flex-wrap: wrap; }
+    .hall-nav a {
+      font-family: 'DM Mono', monospace; font-size: 0.68rem;
+      color: var(--text-muted); text-decoration: none;
+      padding: 0.28rem 0.6rem; border: 1px solid transparent;
+      border-radius: var(--radius); transition: all 0.2s; white-space: nowrap;
+    }
+    .hall-nav a:hover { color: var(--text); border-color: var(--border-light); background: var(--surface-2); }
+    .hall-nav a.active { color: var(--accent-2); border-color: rgba(167,139,250,0.45); background: rgba(124,58,237,0.12); }
+ 
+    /* ─── HERO ───────────────────────────────────────────────── */
+    .hero {
+      background: linear-gradient(140deg, #08090f 0%, #110d1f 55%, #0a0e1a 100%);
+      border-bottom: 1px solid var(--border);
+      padding: 3.5rem 2rem 2.5rem;
+      position: relative; overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse 60% 60% at 72% 38%, rgba(124,58,237,0.12) 0%, transparent 65%),
+        radial-gradient(ellipse 35% 45% at 15% 80%, rgba(6,182,212,0.06) 0%, transparent 60%);
+      pointer-events: none;
+    }
+    /* floating grid lines */
+    .hero::after {
+      content: '';
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(124,58,237,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(124,58,237,0.03) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+    }
+    .hero-inner { max-width: 1300px; margin: 0 auto; position: relative; z-index: 1; }
+    .hero-eyebrow {
+      font-family: 'DM Mono', monospace; font-size: 0.68rem;
+      letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent-2);
+      margin-bottom: 0.85rem; display: flex; align-items: center; gap: 0.6rem;
+    }
+    .hero-eyebrow::before {
+      content: ''; display: inline-block; width: 22px; height: 1px; background: var(--accent-2);
+    }
+    .hero h1 {
+      font-family: 'Fraunces', serif;
+      font-size: clamp(2.1rem, 4.5vw, 3.2rem); font-weight: 700;
+      line-height: 1.12; color: #fff; margin-bottom: 1.1rem;
+    }
+    .hero h1 em { font-style: italic; color: var(--accent-2); }
+    .hero-desc { color: var(--text-dim); max-width: 720px; font-size: 0.96rem; margin-bottom: 1.5rem; line-height: 1.75; }
+    .hero-meta { display: flex; gap: 0.65rem; flex-wrap: wrap; }
+    .hero-badge {
+      font-family: 'DM Mono', monospace; font-size: 0.67rem;
+      padding: 0.28rem 0.7rem; border-radius: 999px; border: 1px solid; letter-spacing: 0.04em;
+    }
+    .b-violet { color: var(--accent-2);     border-color: rgba(167,139,250,0.4);  background: rgba(124,58,237,0.1);  }
+    .b-cyan   { color: var(--accent-cyan);  border-color: rgba(6,182,212,0.35);   background: rgba(6,182,212,0.08);  }
+    .b-gold   { color: var(--accent-gold);  border-color: rgba(245,158,11,0.35);  background: rgba(245,158,11,0.08); }
+    .b-green  { color: var(--accent-green); border-color: rgba(16,185,129,0.35);  background: rgba(16,185,129,0.08); }
+    .b-rose   { color: var(--accent-rose);  border-color: rgba(244,63,94,0.35);   background: rgba(244,63,94,0.08);  }
+    .b-orange { color: var(--accent-orange);border-color: rgba(249,115,22,0.35);  background: rgba(249,115,22,0.08); }
+ 
+    /* ─── LAYOUT ─────────────────────────────────────────────── */
+    .main-wrap {
+      max-width: 1300px; margin: 0 auto;
+      padding: 2.5rem 2rem 5rem;
+      display: grid; grid-template-columns: 1fr 310px;
+      gap: 2.25rem; align-items: start;
+    }
+    @media (max-width: 920px) { .main-wrap { grid-template-columns: 1fr; } .sidebar { order: -1; } }
+ 
+    /* ─── TABS ───────────────────────────────────────────────── */
+    .tab-bar {
+      display: flex; border-bottom: 1px solid var(--border);
+      margin-bottom: 2.25rem; overflow-x: auto; gap: 0;
+    }
+    .tab-btn {
+      font-family: 'DM Mono', monospace; font-size: 0.71rem;
+      letter-spacing: 0.07em; text-transform: uppercase;
+      padding: 0.8rem 1.3rem; background: transparent;
+      border: none; border-bottom: 2px solid transparent;
+      color: var(--text-muted); cursor: pointer; transition: all 0.2s; white-space: nowrap;
+    }
+    .tab-btn:hover { color: var(--text-dim); }
+    .tab-btn.active { color: var(--accent-2); border-bottom-color: var(--accent-2); }
+    .tab-panel { display: none; animation: fadeIn 0.2s ease; }
+    .tab-panel.active { display: block; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+ 
+    /* ─── SECTION ─────────────────────────────────────────────── */
+    .section { margin-bottom: 2.75rem; }
+    .section-title {
+      font-family: 'Fraunces', serif; font-size: 1.25rem; font-weight: 600;
+      color: #fff; margin-bottom: 0.35rem; display: flex; align-items: center; gap: 0.5rem;
+    }
+    .section-sub {
+      font-size: 0.81rem; color: var(--text-muted); margin-bottom: 1.35rem;
+      font-family: 'DM Mono', monospace; letter-spacing: 0.03em;
+    }
+    p { color: var(--text-dim); margin-bottom: 0.9rem; }
+    p:last-child { margin-bottom: 0; }
+    strong { color: var(--text); font-weight: 600; }
+    code {
+      font-family: 'DM Mono', monospace; font-size: 0.8em;
+      background: rgba(124,58,237,0.12); color: var(--accent-2);
+      padding: 0.1em 0.4em; border-radius: 3px;
+      border: 1px solid rgba(124,58,237,0.2);
+    }
+ 
+    /* ─── CALLOUT ─────────────────────────────────────────────── */
+    .callout {
+      border-radius: var(--radius); padding: 1.1rem 1.3rem;
+      margin-bottom: 1.3rem; border-left: 3px solid; font-size: 0.855rem;
+    }
+    .callout p { margin-bottom: 0.4rem; font-size: 0.855rem; }
+    .callout p:last-child { margin-bottom: 0; }
+    .co-violet { background: rgba(124,58,237,0.07);  border-left-color: var(--accent); }
+    .co-gold   { background: rgba(245,158,11,0.07);  border-left-color: var(--accent-gold); }
+    .co-green  { background: rgba(16,185,129,0.07);  border-left-color: var(--accent-green); }
+    .co-rose   { background: rgba(244,63,94,0.07);   border-left-color: var(--accent-rose); }
+    .co-cyan   { background: rgba(6,182,212,0.07);   border-left-color: var(--accent-cyan); }
+    .co-orange { background: rgba(249,115,22,0.07);  border-left-color: var(--accent-orange); }
+    .co-blue   { background: rgba(59,130,246,0.07);  border-left-color: var(--accent-blue); }
+    .callout-label {
+      font-family: 'DM Mono', monospace; font-size: 0.61rem;
+      letter-spacing: 0.11em; text-transform: uppercase; margin-bottom: 0.45rem; font-weight: 500;
+    }
+    .co-violet .callout-label { color: var(--accent-2); }
+    .co-gold   .callout-label { color: var(--accent-gold); }
+    .co-green  .callout-label { color: var(--accent-green); }
+    .co-rose   .callout-label { color: var(--accent-rose); }
+    .co-cyan   .callout-label { color: var(--accent-cyan); }
+    .co-orange .callout-label { color: var(--accent-orange); }
+    .co-blue   .callout-label { color: var(--accent-blue); }
+ 
+    /* ─── ENGINE STAGES ──────────────────────────────────────── */
+    .stage-block {
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      margin-bottom: 1.5rem;
+      overflow: hidden;
+    }
+    .stage-header {
+      display: flex; align-items: center; gap: 1rem;
+      padding: 1rem 1.3rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .stage-header.s1 { background: linear-gradient(90deg, rgba(124,58,237,0.12) 0%, rgba(124,58,237,0.04) 100%); }
+    .stage-header.s2 { background: linear-gradient(90deg, rgba(6,182,212,0.1)   0%, rgba(6,182,212,0.03)   100%); }
+    .stage-header.s3 { background: linear-gradient(90deg, rgba(16,185,129,0.1)  0%, rgba(16,185,129,0.03)  100%); }
+    .stage-num {
+      font-family: 'Fraunces', serif; font-size: 1.6rem; font-weight: 700;
+      line-height: 1; flex-shrink: 0;
+    }
+    .s1 .stage-num { color: var(--accent-2); }
+    .s2 .stage-num { color: var(--accent-cyan); }
+    .s3 .stage-num { color: var(--accent-green); }
+    .stage-label {
+      font-family: 'Fraunces', serif; font-size: 1rem; font-weight: 600; color: #fff;
+    }
+    .stage-desc { font-size: 0.8rem; color: var(--text-muted); margin-top: 0.1rem; }
+    .stage-body { padding: 0; }
+ 
+    /* seed point rows */
+    .seed-row {
+      display: grid; grid-template-columns: 16px 1fr auto;
+      gap: 0; align-items: stretch;
+      border-bottom: 1px solid var(--border);
+    }
+    .seed-row:last-child { border-bottom: none; }
+    .seed-connector {
+      display: flex; flex-direction: column; align-items: center;
+      padding: 0.85rem 0; gap: 0;
+    }
+    .seed-line { flex: 1; width: 1px; background: var(--border); }
+    .seed-dot {
+      width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
+      border: 1.5px solid;
+    }
+    .seed-dot.locked      { background: var(--surface-3); border-color: var(--text-muted); }
+    .seed-dot.configurable{ border-color: var(--accent-2); background: rgba(124,58,237,0.3); }
+    .seed-dot.s2cfg       { border-color: var(--accent-cyan); background: rgba(6,182,212,0.3); }
+    .seed-dot.s3cfg       { border-color: var(--accent-green); background: rgba(16,185,129,0.3); }
+ 
+    .seed-content { padding: 0.85rem 1rem 0.85rem 0.5rem; }
+    .seed-name {
+      font-family: 'DM Mono', monospace; font-size: 0.72rem; font-weight: 500;
+      margin-bottom: 0.2rem; letter-spacing: 0.03em;
+    }
+    .seed-name.locked      { color: var(--text-muted); }
+    .seed-name.configurable{ color: var(--accent-2); }
+    .seed-name.s2cfg       { color: var(--accent-cyan); }
+    .seed-name.s3cfg       { color: var(--accent-green); }
+    .seed-desc { font-size: 0.79rem; color: var(--text-muted); line-height: 1.5; }
+    .seed-usecase {
+      font-size: 0.76rem; color: var(--text-dim);
+      margin-top: 0.3rem; font-style: italic;
+    }
+    .seed-badge {
+      align-self: flex-start; margin: 0.85rem 1rem 0 0;
+      font-family: 'DM Mono', monospace; font-size: 0.59rem;
+      padding: 0.15rem 0.5rem; border-radius: 999px; border: 1px solid;
+      white-space: nowrap; letter-spacing: 0.06em;
+    }
+    .badge-locked { color: var(--text-muted); border-color: rgba(100,116,139,0.3); background: rgba(100,116,139,0.07); }
+    .badge-cfg    { color: var(--accent-2);     border-color: rgba(167,139,250,0.35); background: rgba(124,58,237,0.1); }
+    .badge-s2cfg  { color: var(--accent-cyan);  border-color: rgba(6,182,212,0.35);  background: rgba(6,182,212,0.08); }
+    .badge-s3cfg  { color: var(--accent-green); border-color: rgba(16,185,129,0.35); background: rgba(16,185,129,0.08); }
+ 
+    /* ─── RULE TYPE CARDS ─────────────────────────────────────── */
+    .rule-grid {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 1.25rem; margin-bottom: 1.5rem;
+    }
+    @media (max-width: 640px) { .rule-grid { grid-template-columns: 1fr; } }
+    .rule-card {
+      border: 1px solid var(--border); border-radius: var(--radius-lg);
+      overflow: hidden;
+    }
+    .rule-card-header {
+      padding: 1rem 1.25rem; border-bottom: 1px solid var(--border);
+    }
+    .rule-card.consolidation .rule-card-header { background: rgba(124,58,237,0.09); }
+    .rule-card.ondemand      .rule-card-header { background: rgba(245,158,11,0.07); }
+    .rule-card-name {
+      font-family: 'DM Mono', monospace; font-size: 0.73rem; font-weight: 500;
+      letter-spacing: 0.07em; text-transform: uppercase; margin-bottom: 0.2rem;
+    }
+    .rule-card.consolidation .rule-card-name { color: var(--accent-2); }
+    .rule-card.ondemand      .rule-card-name { color: var(--accent-gold); }
+    .rule-card-tag { font-size: 0.78rem; color: var(--text-muted); }
+    .rule-card-body { padding: 1.1rem 1.25rem; }
+    .rule-card-body p { font-size: 0.83rem; color: var(--text-dim); margin-bottom: 0.5rem; }
+    .rule-bullet {
+      font-size: 0.8rem; color: var(--text-muted);
+      display: flex; gap: 0.5rem; margin-bottom: 0.35rem; align-items: flex-start;
+    }
+    .rule-bullet::before { content: '—'; color: var(--border-light); flex-shrink: 0; margin-top: 0.05rem; }
+ 
+    /* ─── TABLE ──────────────────────────────────────────────── */
+    .data-table { width: 100%; border-collapse: collapse; font-size: 0.83rem; margin-bottom: 1.3rem; }
+    .data-table thead th {
+      font-family: 'DM Mono', monospace; font-size: 0.63rem; letter-spacing: 0.08em;
+      text-transform: uppercase; color: var(--text-muted); text-align: left;
+      padding: 0.55rem 0.9rem; background: var(--surface-2); border-bottom: 1px solid var(--border);
+    }
+    .data-table thead th:first-child { border-radius: var(--radius) 0 0 0; }
+    .data-table thead th:last-child  { border-radius: 0 var(--radius) 0 0; }
+    .data-table tbody tr { border-bottom: 1px solid var(--border); transition: background 0.15s; }
+    .data-table tbody tr:last-child { border-bottom: none; }
+    .data-table tbody tr:hover { background: var(--surface-2); }
+    .data-table td { padding: 0.65rem 0.9rem; color: var(--text-dim); vertical-align: top; line-height: 1.55; }
+    .data-table td.mono { font-family: 'DM Mono', monospace; font-size: 0.75rem; }
+    .data-table td strong { color: var(--text); }
+    .data-table td em { color: var(--accent-2); font-style: normal; font-weight: 500; font-size: 0.8rem; }
+ 
+    /* ─── CODE BLOCK ─────────────────────────────────────────── */
+    .code-wrap {
+      background: #050710; border: 1px solid var(--border);
+      border-radius: var(--radius-lg); overflow: hidden; margin-bottom: 1.3rem;
+    }
+    .code-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0.65rem 1.1rem; border-bottom: 1px solid var(--border);
+      background: rgba(124,58,237,0.06);
+    }
+    .code-title {
+      font-family: 'DM Mono', monospace; font-size: 0.68rem;
+      color: var(--accent-2); letter-spacing: 0.06em;
+    }
+    .code-lang {
+      font-family: 'DM Mono', monospace; font-size: 0.6rem;
+      color: var(--text-muted); background: var(--surface-2);
+      padding: 0.15rem 0.5rem; border-radius: 3px; border: 1px solid var(--border);
+    }
+    .code-block {
+      padding: 1.2rem 1.3rem; font-family: 'DM Mono', monospace;
+      font-size: 0.78rem; line-height: 1.85; overflow-x: auto; color: var(--text-dim);
+    }
+    .ck  { color: #c792ea; }   /* keyword */
+    .cs  { color: #c3e88d; }   /* string  */
+    .cn  { color: var(--accent-gold); }  /* number  */
+    .cc  { color: var(--text-muted); font-style: italic; } /* comment */
+    .cf  { color: var(--accent-cyan); } /* function/method */
+    .cv  { color: #82aaff; }   /* variable */
+    .cp  { color: var(--accent-2); }    /* property */
+ 
+    /* ─── STEP LIST ──────────────────────────────────────────── */
+    .step-list { list-style: none; margin-bottom: 1.3rem; }
+    .step-list li {
+      display: flex; gap: 1rem; padding: 0.8rem 0;
+      border-bottom: 1px solid var(--border); align-items: flex-start;
+    }
+    .step-list li:last-child { border-bottom: none; }
+    .step-num {
+      font-family: 'DM Mono', monospace; font-size: 0.63rem; font-weight: 500;
+      color: var(--accent-2); background: rgba(124,58,237,0.13);
+      border: 1px solid rgba(124,58,237,0.3); border-radius: 4px;
+      width: 28px; height: 22px; display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; margin-top: 0.15rem;
+    }
+    .step-text { font-size: 0.855rem; color: var(--text-dim); line-height: 1.6; }
+    .step-text strong { color: var(--text); }
+ 
+    /* ─── DECISION CARD (lab) ─────────────────────────────────── */
+    .decision-card {
+      border: 1px solid var(--border); border-radius: var(--radius-lg);
+      overflow: hidden; margin-bottom: 1.3rem;
+    }
+    .dc-header {
+      padding: 1rem 1.3rem; border-bottom: 1px solid var(--border);
+      display: flex; align-items: flex-start; gap: 1rem;
+    }
+    .dc-num {
+      font-family: 'Fraunces', serif; font-size: 1.4rem; font-weight: 700;
+      line-height: 1.1; flex-shrink: 0;
+    }
+    .dc1 .dc-num { color: var(--accent-2); }
+    .dc2 .dc-num { color: var(--accent-gold); }
+    .dc3 .dc-num { color: var(--accent-green); }
+    .dc1 .dc-header { background: rgba(124,58,237,0.07); }
+    .dc2 .dc-header { background: rgba(245,158,11,0.06); }
+    .dc3 .dc-header { background: rgba(16,185,129,0.06); }
+    .dc-title { font-size: 0.92rem; font-weight: 600; color: var(--text); margin-bottom: 0.2rem; }
+    .dc-sub   { font-size: 0.8rem; color: var(--text-muted); }
+    .dc-body  { padding: 1.2rem 1.3rem; }
+    .dc-body p { font-size: 0.855rem; }
+    .dc-verdict {
+      margin-top: 0.85rem; padding: 0.85rem 1rem;
+      border-radius: var(--radius); border: 1px solid;
+      font-size: 0.835rem;
+    }
+    .dc1 .dc-verdict { background: rgba(124,58,237,0.08); border-color: rgba(167,139,250,0.25); color: var(--text-dim); }
+    .dc2 .dc-verdict { background: rgba(245,158,11,0.07);  border-color: rgba(245,158,11,0.25);  color: var(--text-dim); }
+    .dc3 .dc-verdict { background: rgba(16,185,129,0.07);  border-color: rgba(16,185,129,0.25);  color: var(--text-dim); }
+    .dc-verdict-label {
+      font-family: 'DM Mono', monospace; font-size: 0.61rem; font-weight: 500;
+      letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.4rem;
+    }
+    .dc1 .dc-verdict-label { color: var(--accent-2); }
+    .dc2 .dc-verdict-label { color: var(--accent-gold); }
+    .dc3 .dc-verdict-label { color: var(--accent-green); }
+ 
+    /* ─── REFLECTION QUESTIONS ───────────────────────────────── */
+    .reflection-list { list-style: none; display: flex; flex-direction: column; gap: 0.75rem; margin-bottom: 1.3rem; }
+    .reflection-item {
+      display: flex; gap: 0.9rem; align-items: flex-start;
+      padding: 0.9rem 1.1rem; background: var(--surface-2);
+      border: 1px solid var(--border); border-radius: var(--radius);
+      font-size: 0.84rem; color: var(--text-dim); line-height: 1.6;
+    }
+    .reflection-arrow { color: var(--accent-2); font-size: 1rem; flex-shrink: 0; margin-top: 0.05rem; }
+ 
+    /* ─── EXAM ───────────────────────────────────────────────── */
+    .exam-q {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius-lg); padding: 1.5rem; margin-bottom: 1.3rem;
+    }
+    .exam-q-label {
+      font-family: 'DM Mono', monospace; font-size: 0.61rem;
+      letter-spacing: 0.11em; text-transform: uppercase;
+      color: var(--text-muted); margin-bottom: 0.55rem;
+    }
+    .exam-q-text { font-size: 0.91rem; color: var(--text); margin-bottom: 1.1rem; font-weight: 500; line-height: 1.65; }
+    .exam-options { list-style: none; display: flex; flex-direction: column; gap: 0.5rem; }
+    .exam-option {
+      display: flex; align-items: flex-start; gap: 0.75rem;
+      padding: 0.6rem 0.9rem; border-radius: var(--radius);
+      border: 1px solid var(--border); font-size: 0.84rem;
+      color: var(--text-dim); background: var(--surface-2); transition: all 0.2s;
+    }
+    .exam-option:hover { border-color: var(--accent-2); color: var(--text); }
+    .exam-option.correct { border-color: var(--accent-green); background: rgba(16,185,129,0.09); color: var(--text); }
+    .opt-key {
+      font-family: 'DM Mono', monospace; font-size: 0.63rem; font-weight: 500;
+      color: var(--text-muted); border: 1px solid var(--border-light);
+      border-radius: 3px; padding: 0.05rem 0.38rem; flex-shrink: 0; margin-top: 0.12rem;
+    }
+    .exam-reveal { margin-top: 0.9rem; display: none; }
+    .exam-reveal.show { display: block; }
+    .reveal-btn {
+      font-family: 'DM Mono', monospace; font-size: 0.67rem; letter-spacing: 0.06em;
+      text-transform: uppercase; color: var(--accent-2);
+      background: rgba(124,58,237,0.1); border: 1px solid rgba(124,58,237,0.3);
+      border-radius: var(--radius); padding: 0.38rem 0.9rem;
+      cursor: pointer; transition: all 0.2s; margin-top: 0.8rem; display: inline-block;
+    }
+    .reveal-btn:hover { background: rgba(124,58,237,0.2); }
+    .exam-answer-box {
+      background: rgba(16,185,129,0.08); border: 1px solid rgba(16,185,129,0.25);
+      border-radius: var(--radius); padding: 0.9rem 1.1rem;
+      font-size: 0.84rem; color: var(--text-dim); line-height: 1.65;
+    }
+    .exam-answer-box strong { color: var(--accent-green); }
+ 
+    /* ─── SIDEBAR ────────────────────────────────────────────── */
+    .sidebar { display: flex; flex-direction: column; gap: 1.2rem; }
+    .tour-guide-widget {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius-lg); overflow: hidden;
+    }
+    .tg-header {
+      background: linear-gradient(135deg, #110d1f, #0d1220);
+      border-bottom: 1px solid var(--border); padding: 1rem 1.25rem;
+      display: flex; align-items: center; gap: 0.75rem;
+    }
+    .tg-avatar {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem; flex-shrink: 0;
+    }
+    .tg-name { font-family: 'DM Mono', monospace; font-size: 0.7rem; letter-spacing: 0.07em; text-transform: uppercase; color: var(--accent-2); margin-bottom: 0.1rem; }
+    .tg-title { font-size: 0.77rem; color: var(--text-muted); }
+    .tg-body { padding: 1.1rem 1.25rem; }
+    .tg-messages { max-height: 210px; overflow-y: auto; display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 0.6rem; }
+    .tg-msg { font-size: 0.8rem; line-height: 1.55; padding: 0.55rem 0.8rem; border-radius: var(--radius); }
+    .tg-msg.bot { background: var(--surface-2); color: var(--text-dim); border: 1px solid var(--border); }
+    .tg-msg.user { background: rgba(124,58,237,0.13); color: var(--text); border: 1px solid rgba(124,58,237,0.25); text-align: right; }
+    .tg-input-wrap { display: flex; gap: 0.45rem; }
+    .tg-input {
+      flex: 1; background: var(--surface-2); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 0.5rem 0.75rem; color: var(--text);
+      font-family: 'Inter', sans-serif; font-size: 0.8rem; outline: none; transition: border-color 0.2s;
+    }
+    .tg-input:focus { border-color: var(--accent-2); }
+    .tg-input::placeholder { color: var(--text-muted); }
+    .tg-send {
+      background: var(--accent); border: none; border-radius: var(--radius);
+      padding: 0.5rem 0.85rem; color: #fff; font-size: 0.8rem;
+      cursor: pointer; transition: background 0.2s; font-family: 'DM Mono', monospace;
+    }
+    .tg-send:hover { background: #6d28d9; }
+    /* quick Qs */
+    .tg-quick { display: flex; flex-direction: column; gap: 0.35rem; margin: 0.7rem 0 0; }
+    .tg-quick-btn {
+      background: var(--surface-2); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 0.45rem 0.7rem;
+      font-size: 0.77rem; color: var(--text-muted); cursor: pointer;
+      transition: all 0.2s; text-align: left; font-family: 'Inter', sans-serif;
+    }
+    .tg-quick-btn:hover { border-color: var(--accent-2); color: var(--text); }
+ 
+    .side-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.2rem; }
+    .side-card-title { font-family: 'DM Mono', monospace; font-size: 0.63rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 0.9rem; }
+    .kv-row { display: flex; justify-content: space-between; align-items: flex-start; padding: 0.4rem 0; border-bottom: 1px solid var(--border); font-size: 0.81rem; gap: 0.5rem; }
+    .kv-row:last-child { border-bottom: none; }
+    .kv-key { color: var(--text-muted); font-size: 0.77rem; flex-shrink: 0; }
+    .kv-val { color: var(--text); font-family: 'DM Mono', monospace; font-size: 0.72rem; text-align: right; }
+    .kv-val.violet { color: var(--accent-2); }
+    .kv-val.cyan   { color: var(--accent-cyan); }
+    .kv-val.green  { color: var(--accent-green); }
+    .kv-val.gold   { color: var(--accent-gold); }
+    .kv-val.rose   { color: var(--accent-rose); }
+    .kv-val.orange { color: var(--accent-orange); }
+ 
+    .hall-pills { display: flex; flex-direction: column; gap: 0.38rem; }
+    .hall-pill {
+      display: flex; align-items: center; gap: 0.6rem; padding: 0.52rem 0.85rem;
+      border-radius: var(--radius); text-decoration: none; font-size: 0.81rem;
+      color: var(--text-muted); border: 1px solid transparent; transition: all 0.2s;
+    }
+    .hall-pill:hover { background: var(--surface-2); border-color: var(--border); color: var(--text); }
+    .hall-pill.current { background: rgba(124,58,237,0.1); border-color: rgba(167,139,250,0.35); color: var(--accent-2); }
+    .hall-pill-num { font-family: 'DM Mono', monospace; font-size: 0.62rem; width: 20px; text-align: center; }
+ 
+    /* entity mini-list */
+    .entity-list { display: flex; flex-direction: column; gap: 0.55rem; }
+    .entity-row {
+      display: flex; align-items: center; gap: 0.6rem; padding: 0.5rem 0.7rem;
+      background: var(--surface-2); border: 1px solid var(--border);
+      border-radius: var(--radius); font-size: 0.79rem;
+    }
+    .e-dot  { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+    .e-name { color: var(--text); flex: 1; }
+    .e-tag  { font-family: 'DM Mono', monospace; font-size: 0.6rem; color: var(--text-muted); }
+    .e-pct  { font-family: 'DM Mono', monospace; font-size: 0.68rem; font-weight: 500; }
+ 
+    /* ─── FOOTER ─────────────────────────────────────────────── */
+    .site-footer {
+      border-top: 1px solid var(--border); padding: 1.5rem 2rem;
+      text-align: center; font-family: 'DM Mono', monospace;
+      font-size: 0.67rem; color: var(--text-muted); letter-spacing: 0.04em;
+    }
+ 
+    /* ─── MISC UTILITIES ─────────────────────────────────────── */
+    .divider { border: none; border-top: 1px solid var(--border); margin: 2.25rem 0; }
+    .inline-tag {
+      display: inline-block; font-family: 'DM Mono', monospace; font-size: 0.62rem;
+      padding: 0.1rem 0.45rem; border-radius: 3px; border: 1px solid; margin: 0 0.15rem;
+      vertical-align: middle;
+    }
+    .t-violet { color: var(--accent-2);     border-color: rgba(167,139,250,0.35); background: rgba(124,58,237,0.1);  }
+    .t-gold   { color: var(--accent-gold);  border-color: rgba(245,158,11,0.35);  background: rgba(245,158,11,0.08); }
+    .t-green  { color: var(--accent-green); border-color: rgba(16,185,129,0.35);  background: rgba(16,185,129,0.08); }
+    .t-rose   { color: var(--accent-rose);  border-color: rgba(244,63,94,0.35);   background: rgba(244,63,94,0.08);  }
+    .t-cyan   { color: var(--accent-cyan);  border-color: rgba(6,182,212,0.35);   background: rgba(6,182,212,0.08);  }
+ 
+    @media (max-width: 640px) {
+      .hero { padding: 2rem 1.25rem 1.75rem; }
+      .main-wrap { padding: 1.5rem 1.25rem 3rem; }
+    }
+  </style>
+</head>
+<body>
+ 
+<!-- ─── HEADER ──────────────────────────────────────────────── -->
+<header class="site-header">
+  <div class="header-inner">
+    <a href="../index.html" class="site-logo">FCCS <span>EPM</span> Study Tour</a>
+    <nav class="hall-nav">
+      <a href="hall-1.html">Hall 1 · Consolidation</a>
+      <a href="hall-2.html">Hall 2 · Metadata</a>
+      <a href="hall-3.html">Hall 3 · Data Integration</a>
+      <a href="hall-4.html">Hall 4 · Data Forms</a>
+      <a href="hall-5.html" class="active">Hall 5 · Calc Studio</a>
+      <a href="hall-6.html">Hall 6 · Reporting</a>
+      <a href="hall-7.html">Hall 7 · Journals</a>
+    </nav>
+  </div>
+</header>
+ 
+<!-- ─── HERO ────────────────────────────────────────────────── -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-eyebrow">Hall 5 of the FCCS EPM Cloud Study Tour</div>
+    <h1>Calculation <em>Studio</em></h1>
+    <p class="hero-desc">
+      The workshop where logic is crafted — but only at the six configurable seed points
+      the engine allows. The architecture is fixed. The consolidation process sequence
+      cannot be injected into by on-demand rules. Understanding where your rule belongs
+      in the engine is the first decision, not the last.
+    </p>
+    <div class="hero-meta">
+      <span class="hero-badge b-violet">Three-Stage Engine</span>
+      <span class="hero-badge b-violet">6 Seed Points</span>
+      <span class="hero-badge b-cyan">Groovy Rules</span>
+      <span class="hero-badge b-gold">On-Demand Rules</span>
+      <span class="hero-badge b-green">Rule Placement</span>
+      <span class="hero-badge b-rose">Unrealised Profit Decision</span>
+    </div>
+  </div>
+</section>
+ 
+<!-- ─── MAIN ─────────────────────────────────────────────────── -->
+<div class="main-wrap">
+  <main>
+ 
+    <!-- TAB BAR -->
+    <div class="tab-bar" role="tablist">
+      <button class="tab-btn active" role="tab" data-tab="conceptual">📐 Conceptual</button>
+      <button class="tab-btn" role="tab" data-tab="technical">⚙️ Technical</button>
+      <button class="tab-btn" role="tab" data-tab="lab">🔬 Lab</button>
+      <button class="tab-btn" role="tab" data-tab="exam">📝 Exam</button>
+    </div>
+ 
+    <!-- ═══════════════════════════════════════════════
+         TAB 1 — CONCEPTUAL
+    ════════════════════════════════════════════════ -->
+    <div class="tab-panel active" id="tab-conceptual">
+ 
+      <!-- THE FUNDAMENTAL PRINCIPLE -->
+      <div class="section">
+        <div class="section-title"><span class="icon">🏗️</span> The Architecture Is Fixed — Your Logic Fits Within It</div>
+        <div class="section-sub">The fundamental principle of FCCS calculation design</div>
+ 
+        <p>
+          The FCCS consolidation engine runs in <strong>three stages</strong> — Local Currency,
+          Translated, Consolidated. Each stage has a fixed sequence of system processes that
+          cannot be moved, removed, or reordered. Within each stage, Oracle has designated
+          specific <strong>configurable seed points</strong> where implementer logic can be
+          inserted. These are the only places custom calculation rules run as part of the
+          consolidation cycle.
+        </p>
+        <p>
+          On-demand rules are architecturally separate. They live outside the consolidation
+          process entirely. They cannot be placed into the engine sequence — the system prevents it.
+          They are invoked explicitly, by a user with the right access, at the right moment relative
+          to the close calendar.
+        </p>
+ 
+        <div class="callout co-violet">
+          <div class="callout-label">🔑 The First Question</div>
+          <p><strong>The first question when writing any rule is not "Groovy or Essbase?"</strong>
+          It is: <em>"Does this belong in the consolidation engine cycle, or is it on-demand?"</em>
+          Everything else follows from that answer.</p>
+        </div>
+ 
+        <p>
+          The mess is not a rule accidentally entering the engine — the architecture blocks that.
+          The mess is an on-demand rule triggered at the <strong>wrong point in the close cycle</strong>:
+          before translated data exists, after a period is locked, or twice against the same data state.
+          The close calendar and access controls govern when and by whom on-demand rules are triggered.
+          This is process discipline, not system enforcement.
+        </p>
+      </div>
+ 
+      <!-- THREE-STAGE ENGINE MAP -->
+      <div class="section">
+        <div class="section-title"><span class="icon">⚙️</span> The Three-Stage Engine — Complete Seed Point Map</div>
+        <div class="section-sub">Every process in every stage — locked system steps and configurable insertion points</div>
+ 
+        <!-- STAGE 1 -->
+        <div class="stage-block">
+          <div class="stage-header s1">
+            <div class="stage-num">1</div>
+            <div>
+              <div class="stage-label">Local Currency Stage</div>
+              <div class="stage-desc">Processing of all un-translated Entity Currency data</div>
+            </div>
+          </div>
+          <div class="stage-body">
+ 
+            <div class="seed-row">
+              <div class="seed-connector"><div class="seed-line"></div><div class="seed-dot locked"></div><div class="seed-line"></div></div>
+              <div class="seed-content">
+                <div class="seed-name locked">Opening Balance Carry Forward</div>
+                <div class="seed-desc">Opening balances carried forward from prior period closing balance.</div>
+              </div>
+              <span class="seed-badge badge-locked">System · Locked</span>
+            </div>
+ 
+            <div class="seed-row">
+              <div class="seed-connector"><div class="seed-line"></div><div class="seed-dot locked"></div><div class="seed-line"></div></div>
+              <div class="seed-content">
+                <div class="seed-name locked">Calculate Movements</div>
+                <div class="seed-desc">Default Movement dimension member populated based on required closing balance.</div>
+              </div>
+              <span class="seed-badge badge-locked">System · Locked</span>
+            </div>
+ 
+            <div class="seed-row">
+              <div class="seed-connector"><div class="seed-line"></div><div class="seed-dot configurable"></div><div class="seed-line"></div></div>
+              <div class="seed-content">
+                <div class="seed-name configurable">After Opening Balance Carry Forward ✦</div>
+                <div class="seed-desc">Runs after opening balances are carried forward but before Balance Sheet balancing. Access to Entity Currency data.</div>
+                <div class="seed-usecase">GlobalMerge use case: custom ratio calculations, entity-level adjustments that must run in local currency before translation.</div>
+              </div>
+              <span class="seed-badge badge-cfg">Configurable</span>
+            </div>
+ 
+            <div class="seed-row">
+              <div class="seed-connector"><div class="seed-line"></div><div class="seed-dot locked"></div><div class="seed-line"></div></div>
+              <div class="seed-content">
+                <div class="seed-name locked">Equity Pick-up</div>
+                <div class="seed-desc">Calculates equity method investment value and share of income for AsiaLink and NovaTech. Runs in local currency — the result is then translated in Stage 2.</div>
+              </div>
+              <span class="seed-badge badge-locked">System · Locked</span>
+            </div>
+ 
+            <div class="seed-row">
+              <div class="seed-connector"><div class="seed-line"></div><div class="seed-dot locked"></div><div class="seed-line"></div></div>
+              <div class="seed-content">
+                <div class="seed-name locked">Balance the Balance Sheet</div>
+                <div class="seed-desc">Ensures Total Assets = Total Liabilities + Equity. Posts balancing entry if out of balance.</div>
+              </div>
+              <span class="seed-badge badge-locked">System · Locked</span>
+            </div>
+ 
+            <div class="seed-row">
+              <div class="seed-connector"><div class="seed-line"></div><div class="seed-dot configurable"></div><div class="seed-line"></div></div>
+              <div class="seed-content">
+                <div class="seed-name configurable">Final Calculations ✦</div>
+                <div class="seed-desc">Runs after Balance Sheet is balanced. Last opportunity to adjust local currency data before Stage 2.</div>
+                <div class="seed-usecase">GlobalMerge use case: performance ratios (Days Sales Outstanding, Inventory Days) calculated from local currency inputs.</div>
+              </div>
+              <span class="seed-badge badge-cfg">Configurable</span>
+            </div>
+ 
+            <div class="seed-row">
+              <div class="seed-connector"><div class="seed-line"></div><div class="seed-dot locked"></div><div class="seed-line"></div></div>
+              <div class="seed-content">
+                <div class="seed-name locked">Ratios</div>
+                <div class="seed-desc">Prebuilt ratio calculations including Days Sales in Inventory and Days Sales in Receivables.</div>
+              </div>
+              <span class="seed-badge badge-locked">System · Locked</span>
+            </div>
+ 
+          </div>
+        </div>
+ 
+        <!-- STAGE 2 -->
+        <div class="stage-block">
+          <div class="stage-header s2">
+            <div class="stage-num">2</div>
+            <div>
+              <div class="stage-label">Translated Stage</div>
+              <div class="stage-desc">Processing of translated Parent Currency data</div>
+            </div>
+          </div>
+          <div class="stage-body">
+ 
+            <div class="seed-row">
+              <div class="seed-connector"><div class="seed-line"></div><div class="seed-dot locked"></div><div class="seed-line"></div></div>
+              <div class="seed-content">
+                <div class="seed-name locked">Opening Balance Carry Forward</div>
+                <div class="seed-desc">Locked.</div>
+              </div>
+              <span class="seed-badge badge-locked">System · Locked</span>
+            </div>
+ 
+            <div class="seed-row">
+              <div class="seed-connector"><div class="seed-line"></div><div class="seed-dot locked"></div><div class="seed-line"></div></div>
+              <div class="seed-content">
+                <div class="seed-name locked">Default Translation</div>
+                <div class="seed-desc">Translates all financial data to Parent Currency using default rate and method (PVA for Flow accounts, VAL for Balance accounts).</div>
+              </div>
+              <span class="seed-badge badge-locked">System · Locked</span>
+            </div>
+ 
+            <div class="seed-row">
+              <div class="seed-connector"><div class="seed-line"></div><div class="seed-dot s2cfg"></div><div class="seed-line"></div></div>
+              <div class="seed-content">
+                <div class="seed-name s2cfg">Translation Overrides ✦</div>
+                <div class="seed-desc">Additional translations applied after default translation. Override specific accounts to use different rates — historical, spot, or custom.</div>
+                <div class="seed-usecase">GlobalMerge use case: hedged instruments in DeutschWerk that must translate at the hedge rate (1.05), not the average rate (1.09).</div>
+              </div>
+              <span class="seed-badge badge-s2cfg">Configurable</span>
+            </div>
+ 
+            <div class="seed-row">
+              <div class="seed-connector"><div class="seed-line"></div><div class="seed-dot s2cfg"></div><div class="seed-line"></div></div>
+              <div class="seed-content">
+                <div class="seed-name s2cfg">Before Foreign Exchange (FX) Calculations ✦</div>
+                <div class="seed-desc">Runs after translation but before FX variance and CTA calculations.</div>
+                <div class="seed-usecase">GlobalMerge use case: adjustments to translated balances that must be in place before CTA is calculated — if CTA is to reflect the adjusted position, the adjustment must sit here, not in Final Calculations.</div>
+              </div>
+              <span class="seed-badge badge-s2cfg">Configurable</span>
+            </div>
+ 
+            <div class="seed-row">
+              <div class="seed-connector"><div class="seed-line"></div><div class="seed-dot locked"></div><div class="seed-line"></div></div>
+              <div class="seed-content">
+                <div class="seed-name locked">Foreign Exchange (FX) Calculations</div>
+                <div class="seed-desc">FX variance on opening balance and movements calculated as difference between actual rates applied and ending rate.</div>
+              </div>
+              <span class="seed-badge badge-locked">System · Locked</span>
+            </div>
+ 
+            <div class="seed-row">
+              <div class="seed-connector"><div class="seed-line"></div><div class="seed-dot locked"></div><div class="seed-line"></div></div>
+              <div class="seed-content">
+                <div class="seed-name locked">FX to CTA</div>
+                <div class="seed-desc">For historical accounts, FX variance is transferred to the CTA account.</div>
+              </div>
+              <span class="seed-badge badge-locked">System · Locked</span>
+            </div>
+ 
+            <div class="seed-row">
+              <div class="seed-connector"><div class="seed-line"></div><div class="seed-dot locked"></div><div class="seed-line"></div></div>
+              <div class="seed-content">
+                <div class="seed-name locked">Calculate Movements</div>
+                <div class="seed-desc">Locked.</div>
+              </div>
+              <span class="seed-badge badge-locked">System · Locked</span>
+            </div>
+ 
+            <div class="seed-row">
+              <div class="seed-connector"><div class="seed-line"></div><div class="seed-dot s2cfg"></div><div class="seed-line"></div></div>
+              <div class="seed-content">
+                <div class="seed-name s2cfg">After Opening Balance Carry Forward ✦</div>
+                <div class="seed-desc">Runs after CTA and movements in the Translated stage. Access to fully translated Parent Currency data.</div>
+                <div class="seed-usecase">GlobalMerge use case: translated-basis ratio calculations, FX-adjusted performance metrics.</div>
+              </div>
+              <span class="seed-badge badge-s2cfg">Configurable</span>
+            </div>
+ 
+            <div class="seed-row">
+              <div class="seed-connector"><div class="seed-line"></div><div class="seed-dot locked"></div><div class="seed-line"></div></div>
+              <div class="seed-content">
+                <div class="seed-name locked">Balance the Balance Sheet</div>
+                <div class="seed-desc">Locked.</div>
+              </div>
+              <span class="seed-badge badge-locked">System · Locked</span>
+            </div>
+ 
+          </div>
+        </div>
+ 
+        <!-- STAGE 3 -->
+        <div class="stage-block">
+          <div class="stage-header s3">
+            <div class="stage-num">3</div>
+            <div>
+              <div class="stage-label">Consolidated Stage</div>
+              <div class="stage-desc">Processing of parent-related consolidated and elimination data</div>
+            </div>
+          </div>
+          <div class="stage-body">
+ 
+            <div class="seed-row">
+              <div class="seed-connector"><div class="seed-line"></div><div class="seed-dot locked"></div><div class="seed-line"></div></div>
+              <div class="seed-content">
+                <div class="seed-name locked">Opening Balance Carry Forward</div>
+                <div class="seed-desc">Locked.</div>
+              </div>
+              <span class="seed-badge badge-locked">System · Locked</span>
+            </div>
+ 
+            <div class="seed-row">
+              <div class="seed-connector"><div class="seed-line"></div><div class="seed-dot locked"></div><div class="seed-line"></div></div>
+              <div class="seed-content">
+                <div class="seed-name locked">Proportionalization</div>
+                <div class="seed-desc">All data posted to the Proportion member at the consolidation percentage. DeutschWerk 80%, BritEdge 100%, AsiaLink 50%.</div>
+              </div>
+              <span class="seed-badge badge-locked">System · Locked</span>
+            </div>
+ 
+            <div class="seed-row">
+              <div class="seed-connector"><div class="seed-line"></div><div class="seed-dot locked"></div><div class="seed-line"></div></div>
+              <div class="seed-content">
+                <div class="seed-name locked">Standard Eliminations</div>
+                <div class="seed-desc">Intercompany data eliminated and reclassified in the Elimination member to a designated plug account. The BritEdge/DeutschWerk IC elimination runs here automatically.</div>
+              </div>
+              <span class="seed-badge badge-locked">System · Locked</span>
+            </div>
+ 
+            <div class="seed-row">
+              <div class="seed-connector"><div class="seed-line"></div><div class="seed-dot locked"></div><div class="seed-line"></div></div>
+              <div class="seed-content">
+                <div class="seed-name locked">Opening Balance Ownership Change</div>
+                <div class="seed-desc">Adjusts opening balances for changes in consolidation % period to period.</div>
+              </div>
+              <span class="seed-badge badge-locked">System · Locked</span>
+            </div>
+ 
+            <div class="seed-row">
+              <div class="seed-connector"><div class="seed-line"></div><div class="seed-dot s3cfg"></div><div class="seed-line"></div></div>
+              <div class="seed-content">
+                <div class="seed-name s3cfg">Configurable Consolidation ✦</div>
+                <div class="seed-desc">Consolidation entries posted to the Elimination member as defined by deployed rules. The correct seed point for custom elimination logic.</div>
+                <div class="seed-usecase">GlobalMerge use case: if unrealised profit elimination on BritEdge inventory becomes a systematic quarterly pattern — this is where the rule sits. Posts to Elimination dimension member, runs after Standard Eliminations.</div>
+              </div>
+              <span class="seed-badge badge-s3cfg">Configurable</span>
+            </div>
+ 
+            <div class="seed-row">
+              <div class="seed-connector"><div class="seed-line"></div><div class="seed-dot locked"></div><div class="seed-line"></div></div>
+              <div class="seed-content">
+                <div class="seed-name locked">Calculate Movements</div>
+                <div class="seed-desc">Locked.</div>
+              </div>
+              <span class="seed-badge badge-locked">System · Locked</span>
+            </div>
+ 
+            <div class="seed-row">
+              <div class="seed-connector"><div class="seed-line"></div><div class="seed-dot s3cfg"></div><div class="seed-line"></div></div>
+              <div class="seed-content">
+                <div class="seed-name s3cfg">After Opening Balance Carry Forward ✦</div>
+                <div class="seed-desc">Runs after movements in the Consolidated stage. Access to fully consolidated parent-level data. Post-consolidation adjustments that need consolidated data as input.</div>
+              </div>
+              <span class="seed-badge badge-s3cfg">Configurable</span>
+            </div>
+ 
+            <div class="seed-row">
+              <div class="seed-connector"><div class="seed-line"></div><div class="seed-dot locked"></div><div class="seed-line"></div></div>
+              <div class="seed-content">
+                <div class="seed-name locked">Balance the Balance Sheet</div>
+                <div class="seed-desc">Locked.</div>
+              </div>
+              <span class="seed-badge badge-locked">System · Locked</span>
+            </div>
+ 
+            <div class="seed-row">
+              <div class="seed-connector"><div class="seed-line"></div><div class="seed-dot s3cfg"></div><div class="seed-line"></div></div>
+              <div class="seed-content">
+                <div class="seed-name s3cfg">Final Calculations ✦</div>
+                <div class="seed-desc">Additional calculations after Balance Sheet is balanced at consolidated level. Last configurable point in the entire engine.</div>
+                <div class="seed-usecase">GlobalMerge use case: consolidated-level KPI calculations, group-level metrics that can only be computed after full consolidation completes.</div>
+              </div>
+              <span class="seed-badge badge-s3cfg">Configurable</span>
+            </div>
+ 
+          </div>
+        </div>
+ 
+        <div class="callout co-violet">
+          <div class="callout-label">📌 Six Configurable Seed Points</div>
+          <p>Across the three stages, there are exactly <strong>six configurable seed points</strong>:
+          Stage 1 — After Opening Balance Carry Forward, Final Calculations ·
+          Stage 2 — Translation Overrides, Before FX Calculations, After Opening Balance Carry Forward ·
+          Stage 3 — Configurable Consolidation, After Opening Balance Carry Forward, Final Calculations.
+          Every implementer-written consolidation rule must be deployed to one of these six points.</p>
+        </div>
+      </div>
+ 
+      <!-- TWO RULE TYPES -->
+      <div class="section">
+        <div class="section-title"><span class="icon">⚖️</span> Two Rule Types — Architecturally Separate</div>
+        <div class="section-sub">Consolidation rules vs. on-demand rules — not interchangeable</div>
+ 
+        <div class="rule-grid">
+          <div class="rule-card consolidation">
+            <div class="rule-card-header">
+              <div class="rule-card-name">Consolidation Rules</div>
+              <div class="rule-card-tag">Deployed to a configurable seed point</div>
+            </div>
+            <div class="rule-card-body">
+              <p>Run automatically as part of every <strong>Consolidate</strong> action. Part of the cycle — they run when the engine runs, at the stage and seed point they are deployed to.</p>
+              <div class="rule-bullet">Cannot be moved between stages after deployment without explicit reconfiguration.</div>
+              <div class="rule-bullet">Cannot be triggered manually outside the engine.</div>
+              <div class="rule-bullet"><strong>Examples:</strong> Translation Override for hedged instruments, Configurable Consolidation for systematic elimination, Final Calculations for group KPIs.</div>
+              <div class="rule-bullet" style="margin-top:0.5rem; color: var(--accent-2)">Use when: the logic runs every period as part of the close cycle.</div>
+            </div>
+          </div>
+          <div class="rule-card ondemand">
+            <div class="rule-card-header">
+              <div class="rule-card-name">On-Demand Rules</div>
+              <div class="rule-card-tag">Live outside the consolidation process</div>
+            </div>
+            <div class="rule-card-body">
+              <p>Deployed and available but live outside the consolidation process entirely. Cannot be placed into the engine sequence — the architecture prevents it. Invoked explicitly by a user with access.</p>
+              <div class="rule-bullet">Cannot be automatically triggered by the Consolidate action.</div>
+              <div class="rule-bullet">Cannot be accidentally injected into the engine sequence.</div>
+              <div class="rule-bullet"><strong>Examples:</strong> Periodic unrealised profit sweep, data correction rules, ad-hoc calculation checks.</div>
+              <div class="rule-bullet" style="margin-top:0.5rem; color: var(--accent-gold)">Use when: the logic runs conditionally or on explicit trigger.</div>
+            </div>
+          </div>
+        </div>
+ 
+        <div class="callout co-rose">
+          <div class="callout-label">⚠️ The Governance Risk with On-Demand Rules</div>
+          <p>The architectural separation is fixed — on-demand rules cannot enter the engine.
+          The risk is <strong>temporal, not structural</strong>. An on-demand rule triggered
+          <em>before translated data exists</em> operates on untranslated local currency data
+          and produces wrong results. Triggered <em>after a period is locked</em> fails or
+          corrupts approved balances. Triggered <em>twice against the same state</em> doubles
+          the adjustment. The close calendar and access controls (Hall 8) govern when and
+          by whom on-demand rules are triggered. This is process discipline, not system enforcement.</p>
+        </div>
+      </div>
+ 
+    </div><!-- /conceptual -->
+ 
+ 
+    <!-- ═══════════════════════════════════════════════
+         TAB 2 — TECHNICAL
+    ════════════════════════════════════════════════ -->
+    <div class="tab-panel" id="tab-technical">
+ 
+      <!-- UNREALISED PROFIT DECISION -->
+      <div class="section">
+        <div class="section-title"><span class="icon">🔀</span> The Unrealised Profit Decision</div>
+        <div class="section-sub">DeutschWerk → BritEdge components: journals, on-demand rule, or consolidation rule?</div>
+ 
+        <p>
+          DeutschWerk sold <strong>€420,000</strong> of components to BritEdge. BritEdge has
+          not sold half of them onward at period end. The <strong>£210,000 unrealised profit</strong>
+          sits in BritEdge's inventory. Standard Eliminations in Stage 3 handled the basic IC
+          revenue/COGS elimination automatically. The unrealised inventory profit is not handled
+          by any system process — it requires judgement and a decision.
+        </p>
+ 
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Situation</th>
+              <th>Correct Approach</th>
+              <th>Where It Runs</th>
+              <th>Who Decides</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>One-off, variable amount, Finance team knows the inventory status</td>
+              <td><strong>Enterprise Journal</strong> with supporting documentation</td>
+              <td><em>Hall 7 — Journals &amp; Approvals</em></td>
+              <td>Finance Controller</td>
+            </tr>
+            <tr>
+              <td>Pattern emerging — same entities, predictable margin, quarterly recurrence but not every period</td>
+              <td><strong>On-demand Groovy rule</strong> — triggered explicitly when the pattern applies</td>
+              <td><em>Outside engine, invoked by authorised user</em></td>
+              <td>Finance Controller + FCCS admin</td>
+            </tr>
+            <tr>
+              <td>Fully systematic — same entities, fixed margin rate, every single period, Finance never needs to judge</td>
+              <td><strong>Configurable Consolidation rule</strong> in Stage 3 — runs every cycle automatically</td>
+              <td><em>Configurable Consolidation seed point, Stage 3</em></td>
+              <td>Implementation team + Finance sign-off</td>
+            </tr>
+          </tbody>
+        </table>
+ 
+        <div class="callout co-gold">
+          <div class="callout-label">💡 The Honest Implementation Answer</div>
+          <p>In practice, unrealised profit elimination is almost always a journal. Finance teams
+          know their inventory positions. The amount varies. The judgment belongs to the Controller.
+          Rules are only warranted when the pattern is so systematic and the volume so high that
+          manual journals introduce more risk than a rule. <strong>That threshold is higher than
+          most implementations assume.</strong></p>
+        </div>
+      </div>
+ 
+      <!-- GROOVY RULE ANATOMY -->
+      <div class="section">
+        <div class="section-title"><span class="icon">📝</span> Groovy Rules — Structure, Context, What They Can Access</div>
+        <div class="section-sub">The primary implementation language for FCCS calculation logic</div>
+ 
+        <p>
+          Groovy rules in FCCS are written in the Groovy scripting language and run within the
+          FCCS runtime context. They can <strong>read and write data cells</strong>, iterate over
+          dimension member combinations, access the current POV (Scenario, Year, Period, Entity),
+          and call FCCS runtime operations.
+        </p>
+        <p>
+          The key distinction from Essbase calc scripts: <strong>Groovy rules are dynamic and
+          context-aware</strong> — they can make decisions based on data values, member properties,
+          and runtime conditions. Essbase calc scripts are batch-oriented, syntax-driven, and run
+          against fixed member selections. For FCCS consolidation rules, Groovy is the standard
+          approach for configurable seed point logic.
+        </p>
+ 
+        <div class="callout co-cyan">
+          <div class="callout-label">⚙️ What a Groovy Rule Can Access</div>
+          <p>Current POV (Scenario, Year, Period, Entity) · Data cells via <code>operation.grid.getCellWithMembers()</code> · Member properties · FCCS runtime operations · Iteration over dimension member lists · Conditional logic based on data values at runtime.</p>
+        </div>
+ 
+        <!-- GROOVY CODE EXAMPLE -->
+        <div class="code-wrap">
+          <div class="code-header">
+            <span class="code-title">Configurable Consolidation Rule — Unrealised Profit Elimination</span>
+            <span class="code-lang">Groovy · Stage 3</span>
+          </div>
+          <div class="code-block"><span class="cc">// Configurable Consolidation rule — Stage 3</span>
+<span class="cc">// Seed point: Configurable Consolidation</span>
+<span class="cc">// Posts to: Elimination Consolidation dimension member</span>
+<span class="cc">// Runs: automatically as part of every Consolidate action</span>
+ 
+<span class="ck">def</span> <span class="cf">getInventoryUnrealisedProfit</span>() {
+ 
+  <span class="cc">// Read BritEdge closing inventory from FCCS_ClosingBalance / Movement dim</span>
+  <span class="ck">def</span> <span class="cv">britEdgeInventory</span> = <span class="cp">operation</span>.<span class="cv">grid</span>
+    .<span class="cf">getCellWithMembers</span>([
+      <span class="cs">"BritEdge"</span>,              <span class="cc">// Entity</span>
+      <span class="cs">"FCCS_Inventory"</span>,       <span class="cc">// Account</span>
+      <span class="cs">"FCCS_ClosingBalance"</span>,   <span class="cc">// Movement</span>
+      <span class="cs">"USD"</span>,                   <span class="cc">// Currency — translated stage data</span>
+      <span class="cs">"Entity Input"</span>          <span class="cc">// Consolidation member</span>
+    ]).<span class="cv">data</span>
+ 
+  <span class="cc">// DeutschWerk gross margin = 25% — agreed with Finance Controller</span>
+  <span class="ck">def</span> <span class="cv">MARGIN_RATE</span> = <span class="cn">0.25</span>
+ 
+  <span class="cc">// Unrealised profit = inventory held × margin rate</span>
+  <span class="ck">def</span> <span class="cv">unrealisedProfit</span> = <span class="cv">britEdgeInventory</span> * <span class="cv">MARGIN_RATE</span>
+ 
+  <span class="cc">// Post elimination entry to Elimination member</span>
+  <span class="cp">operation</span>.<span class="cv">grid</span>
+    .<span class="cf">getCellWithMembers</span>([
+      <span class="cs">"BritEdge"</span>,
+      <span class="cs">"FCCS_Inventory"</span>,
+      <span class="cs">"FCCS_ClosingBalance"</span>,
+      <span class="cs">"USD"</span>,
+      <span class="cs">"FCCS_Elimination"</span>   <span class="cc">// Target: Elimination Consolidation member</span>
+    ]).<span class="cv">data</span> = -<span class="cv">unrealisedProfit</span>
+ 
+  <span class="cc">// Corresponding entry to retained earnings</span>
+  <span class="cp">operation</span>.<span class="cv">grid</span>
+    .<span class="cf">getCellWithMembers</span>([
+      <span class="cs">"GlobalMerge"</span>,
+      <span class="cs">"FCCS_RetainedEarnings"</span>,
+      <span class="cs">"FCCS_ClosingBalance"</span>,
+      <span class="cs">"USD"</span>,
+      <span class="cs">"FCCS_Elimination"</span>
+    ]).<span class="cv">data</span> = -<span class="cv">unrealisedProfit</span>
+}</div>
+        </div>
+ 
+        <div class="callout co-violet">
+          <div class="callout-label">💡 Why This Rule Must Be in Stage 3</div>
+          <p>This rule reads <strong>USD currency data</strong> — it must run in Stage 3 (Consolidated
+          stage) where translated Parent Currency data exists. If this rule were placed in Stage 1
+          (Local Currency), the USD intersection would be empty and the rule would read zero.
+          The seed point is not just a scheduling choice — it determines what the rule can see.</p>
+          <p style="margin-top:0.5rem"><strong>Stage 1 rules see Entity Currency.</strong>
+          <strong>Stage 2 rules see Parent Currency.</strong>
+          <strong>Stage 3 rules see consolidated elimination data.</strong></p>
+        </div>
+      </div>
+ 
+      <!-- SEED POINT DECISION FRAMEWORK -->
+      <div class="section">
+        <div class="section-title"><span class="icon">🧭</span> Seed Point Decision Framework</div>
+        <div class="section-sub">Match what your rule needs to see with the correct stage and seed point</div>
+ 
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>What Your Rule Needs</th>
+              <th>Correct Stage</th>
+              <th>Correct Seed Point</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Entity-level local currency data before translation</td>
+              <td class="mono">Stage 1 — Local Currency</td>
+              <td><em>After Opening Balance Carry Forward or Final Calculations</em></td>
+            </tr>
+            <tr>
+              <td>Override a specific account translation rate</td>
+              <td class="mono">Stage 2 — Translated</td>
+              <td><em>Translation Overrides</em></td>
+            </tr>
+            <tr>
+              <td>Adjust translated data <strong>before</strong> CTA is calculated</td>
+              <td class="mono">Stage 2 — Translated</td>
+              <td><em>Before Foreign Exchange (FX) Calculations</em></td>
+            </tr>
+            <tr>
+              <td>Adjust translated data <strong>after</strong> CTA is calculated</td>
+              <td class="mono">Stage 2 — Translated</td>
+              <td><em>After Opening Balance Carry Forward</em></td>
+            </tr>
+            <tr>
+              <td>Post a custom elimination entry (IC or other)</td>
+              <td class="mono">Stage 3 — Consolidated</td>
+              <td><em>Configurable Consolidation</em></td>
+            </tr>
+            <tr>
+              <td>Calculations using fully consolidated group data</td>
+              <td class="mono">Stage 3 — Consolidated</td>
+              <td><em>Final Calculations</em></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+ 
+    </div><!-- /technical -->
+ 
+ 
+    <!-- ═══════════════════════════════════════════════
+         TAB 3 — LAB
+    ════════════════════════════════════════════════ -->
+    <div class="tab-panel" id="tab-lab">
+ 
+      <div class="section">
+        <div class="section-title"><span class="icon">🔬</span> Lab Scenario — GlobalMerge Q1, Three Rule Decisions</div>
+        <div class="section-sub">Apply the seed point framework to real implementation decisions</div>
+ 
+        <p>
+          Q1 consolidation has run. All entities are at OK status. The Group Finance Director
+          raises three issues that require calculation rule decisions. For each one: identify
+          whether a <strong>consolidation rule</strong>, <strong>on-demand rule</strong>, or
+          <strong>journal</strong> is the right approach, name the correct seed point if a rule
+          is warranted, and explain your reasoning.
+        </p>
+ 
+        <div class="callout co-cyan">
+          <div class="callout-label">🧰 Setup</div>
+          <p>FCCS sandbox with GlobalMerge Corp fully configured · Calculation Studio open ·
+          All four entities (BritEdge GBP 100%, DeutschWerk EUR 80%, AsiaLink SGD 50% JV,
+          NovaTech USD 30%) at Consolidated status for Q1 Actual.</p>
+        </div>
+      </div>
+ 
+      <!-- DECISION 1 -->
+      <div class="decision-card dc1">
+        <div class="dc-header">
+          <div class="dc-num">1</div>
+          <div>
+            <div class="dc-title">DeutschWerk Hedged FX Instruments</div>
+            <div class="dc-sub">Translation Override · every quarter · Stage 2</div>
+          </div>
+        </div>
+        <div class="dc-body">
+          <p>DeutschWerk holds <strong>€2,000,000 of hedged receivables</strong>. Under IAS 39,
+          these must translate at the hedge rate (1.05), not the Q1 average rate (1.09). The
+          default translation engine applies 1.09 to all EUR accounts. This will happen every
+          single quarter for as long as the hedge is in place.</p>
+ 
+          <ol class="step-list" style="margin-top:1rem">
+            <li><span class="step-num">01</span>
+              <span class="step-text">Open Calculation Studio → <strong>New Rule</strong>. Set type: <strong>Consolidation Rule</strong>. Stage: <strong>2 — Translated</strong>. Seed point: <strong>Translation Overrides</strong>.</span>
+            </li>
+            <li><span class="step-num">02</span>
+              <span class="step-text">Write a Groovy rule that reads the HedgedReceivables account for DeutschWerk, re-translates at rate 1.05, and posts the difference to the Translation Adjustment account.</span>
+            </li>
+            <li><span class="step-num">03</span>
+              <span class="step-text">Deploy the rule. Run consolidation. Verify the translated USD balance for HedgedReceivables reflects rate 1.05, not 1.09.</span>
+            </li>
+            <li><span class="step-num">04</span>
+              <span class="step-text">Confirm the rule fires automatically on every subsequent Consolidate action — no user trigger required.</span>
+            </li>
+          </ol>
+ 
+          <div class="dc-verdict">
+            <div class="dc-verdict-label">✦ Correct Approach</div>
+            <strong>Consolidation rule — Translation Overrides seed point in Stage 2.</strong>
+            This is a systematic, every-period requirement. The rule overrides the translation for
+            the specific hedged receivable accounts from the default average rate to the hedge rate 1.05.
+            It runs automatically as part of every Consolidate action via the Translation Overrides
+            seed point — which runs after Default Translation, exactly when override logic is needed.
+          </div>
+        </div>
+      </div>
+ 
+      <!-- DECISION 2 -->
+      <div class="decision-card dc2">
+        <div class="dc-header">
+          <div class="dc-num">2</div>
+          <div>
+            <div class="dc-title">BritEdge Unrealised Inventory Profit (Q1 Only)</div>
+            <div class="dc-sub">One-off adjustment · Finance Controller judgement · Hall 7</div>
+          </div>
+        </div>
+        <div class="dc-body">
+          <p>BritEdge holds <strong>€210,000 of DeutschWerk components</strong> in inventory at period end.
+          The Finance Controller confirms this is a Q1-specific situation — BritEdge typically sells
+          through inventory within the quarter and this is unusual. She wants the adjustment made
+          this quarter but does not expect it to recur.</p>
+ 
+          <ol class="step-list" style="margin-top:1rem">
+            <li><span class="step-num">01</span>
+              <span class="step-text">Navigate to <strong>Hall 7 — Journals &amp; Approvals</strong>. Create a new Enterprise Journal for entity BritEdge, Actual Q1.</span>
+            </li>
+            <li><span class="step-num">02</span>
+              <span class="step-text">Post the elimination: Dr FCCS_Inventory £210,000 / Cr FCCS_RetainedEarnings £210,000 in the Elimination member.</span>
+            </li>
+            <li><span class="step-num">03</span>
+              <span class="step-text">Attach supporting documentation: the BritEdge inventory schedule showing unsold DeutschWerk components as at Q1 end.</span>
+            </li>
+            <li><span class="step-num">04</span>
+              <span class="step-text">Submit for Finance Controller approval. Once approved, the journal posts and feeds into consolidated results.</span>
+            </li>
+          </ol>
+ 
+          <div class="dc-verdict">
+            <div class="dc-verdict-label">✦ Correct Approach</div>
+            <strong>Enterprise Journal — Hall 7.</strong> This is a one-off, judgement-based adjustment.
+            The Finance Controller owns the decision. The amount depends on inventory sell-through
+            status that only she knows. An Enterprise Journal with supporting documentation is the
+            correct tool. No rule warranted for a non-recurring situation — the threshold for a
+            rule is higher than most implementations assume.
+          </div>
+        </div>
+      </div>
+ 
+      <!-- DECISION 3 -->
+      <div class="decision-card dc3">
+        <div class="dc-header">
+          <div class="dc-num">3</div>
+          <div>
+            <div class="dc-title">Group-Level Consolidated EBITDA Ratio</div>
+            <div class="dc-sub">Systematic every-period metric · Final Calculations · Stage 3</div>
+          </div>
+        </div>
+        <div class="dc-body">
+          <p>The CFO wants a <strong>consolidated EBITDA margin ratio</strong> calculated and
+          stored in FCCS after every consolidation — so it appears in dashboards automatically.
+          The ratio uses consolidated Revenue and EBITDA figures that only exist after Stage 3
+          completes.</p>
+ 
+          <ol class="step-list" style="margin-top:1rem">
+            <li><span class="step-num">01</span>
+              <span class="step-text">Open Calculation Studio → <strong>New Rule</strong>. Type: <strong>Consolidation Rule</strong>. Stage: <strong>3 — Consolidated</strong>. Seed point: <strong>Final Calculations</strong>.</span>
+            </li>
+            <li><span class="step-num">02</span>
+              <span class="step-text">Write Groovy to read the consolidated EBITDA account and consolidated Revenue account at GlobalMerge level. Calculate EBITDA / Revenue. Store the result in a dedicated ratio account (e.g., <code>KPI_EBITDA_Margin</code>).</span>
+            </li>
+            <li><span class="step-num">03</span>
+              <span class="step-text">Deploy the rule. Run consolidation. Confirm the KPI account is populated in the GlobalMerge entity after consolidation completes.</span>
+            </li>
+            <li><span class="step-num">04</span>
+              <span class="step-text">Verify the rule cannot access the ratio if run at a Stage 1 or Stage 2 seed point — the consolidated inputs do not exist there. The Final Calculations position in Stage 3 is the only correct placement.</span>
+            </li>
+          </ol>
+ 
+          <div class="dc-verdict">
+            <div class="dc-verdict-label">✦ Correct Approach</div>
+            <strong>Consolidation rule — Final Calculations seed point in Stage 3.</strong>
+            This is a systematic, every-period calculation using fully consolidated group data.
+            It must sit in Stage 3 because the inputs (consolidated Revenue, consolidated EBITDA)
+            only exist after Proportionalization, Standard Eliminations, and Configurable
+            Consolidation have all run. Final Calculations in Stage 3 is the last configurable
+            point — exactly right for a metric that depends on everything upstream being complete.
+          </div>
+        </div>
+      </div>
+ 
+      <!-- REFLECTION QUESTIONS -->
+      <div class="section">
+        <div class="section-title"><span class="icon">💭</span> Reflection Questions</div>
+        <div class="section-sub">Push your understanding beyond the exam checklist</div>
+ 
+        <ul class="reflection-list">
+          <li class="reflection-item">
+            <span class="reflection-arrow">→</span>
+            <span>Equity Pick-up runs in Stage 1 — Local Currency — before translation. AsiaLink's equity method investment value is therefore calculated in SGD first, then translated in Stage 2. What does this mean for the CTA calculation on AsiaLink's investment? Does the investment carrying value produce a CTA, and where in Stage 2 does that CTA appear?</span>
+          </li>
+          <li class="reflection-item">
+            <span class="reflection-arrow">→</span>
+            <span>A junior implementer writes a Groovy rule that reads USD consolidated data and places it in Stage 1 — After Opening Balance Carry Forward — because "that's the first configurable seed point." What will the rule read and why? What is the fix?</span>
+          </li>
+          <li class="reflection-item">
+            <span class="reflection-arrow">→</span>
+            <span>Standard Eliminations in Stage 3 is system-locked. The basic BritEdge/DeutschWerk IC elimination runs there automatically. If GlobalMerge needs a custom elimination for a specific intercompany arrangement — for example, a management fee elimination between GlobalMerge Corp and DeutschWerk — which seed point does that custom rule sit in, and why can it not sit in Standard Eliminations?</span>
+          </li>
+          <li class="reflection-item">
+            <span class="reflection-arrow">→</span>
+            <span>An on-demand Groovy rule for unrealised profit elimination is written and deployed. The close calendar says it should be triggered after Consolidate completes for Q1. A junior analyst triggers it before Consolidate runs — against Impacted data. What does the rule actually operate on, and what result does it produce?</span>
+          </li>
+          <li class="reflection-item">
+            <span class="reflection-arrow">→</span>
+            <span>The CFO asks: "Why can't FCCS just automatically calculate unrealised profit and eliminate it like it does intercompany revenue?" What is the precise technical and accounting reason, and how do you explain it to a non-technical Finance Controller?</span>
+          </li>
+        </ul>
+      </div>
+ 
+    </div><!-- /lab -->
+ 
+ 
+    <!-- ═══════════════════════════════════════════════
+         TAB 4 — EXAM
+    ════════════════════════════════════════════════ -->
+    <div class="tab-panel" id="tab-exam">
+ 
+      <div class="section">
+        <div class="section-title"><span class="icon">📝</span> Exam Preparation</div>
+        <div class="section-sub">Calculation Studio questions mapped to Oracle FCCS Certification objectives</div>
+        <p>
+          Calculation Studio, seed points, and rule type architecture are consistently tested
+          in the Oracle FCCS Implementation Specialist exam. Expect scenario-based questions
+          that require you to correctly identify the stage, seed point, and rule type for
+          a given business requirement.
+        </p>
+      </div>
+ 
+      <!-- Q1 -->
+      <div class="exam-q">
+        <div class="exam-q-label">Question 1 of 8 · Seed Point Placement</div>
+        <div class="exam-q-text">
+          GlobalMerge Corp requires a custom intercompany elimination for a management fee
+          arrangement between GlobalMerge Corp and DeutschWerk GmbH that is not handled
+          by the standard IC elimination logic. Which seed point is correct for this rule?
+        </div>
+        <ul class="exam-options">
+          <li class="exam-option"><span class="opt-key">A</span>Standard Eliminations — this is where all elimination logic runs.</li>
+          <li class="exam-option"><span class="opt-key">B</span>Before Foreign Exchange (FX) Calculations in Stage 2 — eliminations must precede CTA.</li>
+          <li class="exam-option correct"><span class="opt-key">C</span>Configurable Consolidation in Stage 3 — the correct seed point for custom elimination entries, posting to the Elimination member.</li>
+          <li class="exam-option"><span class="opt-key">D</span>Final Calculations in Stage 3 — all custom logic belongs at the end of the engine.</li>
+        </ul>
+        <button class="reveal-btn" onclick="toggleReveal(this)">Reveal Answer</button>
+        <div class="exam-reveal">
+          <div class="exam-answer-box">
+            <strong>Correct: C.</strong> Standard Eliminations is a system-locked process — it cannot be
+            modified and custom rules cannot be placed within it. The correct seed point for custom
+            elimination logic is <strong>Configurable Consolidation</strong> in Stage 3, which runs
+            after Standard Eliminations and posts entries to the Elimination Consolidation member.
+          </div>
+        </div>
+      </div>
+ 
+      <!-- Q2 -->
+      <div class="exam-q">
+        <div class="exam-q-label">Question 2 of 8 · On-Demand vs Consolidation Rule</div>
+        <div class="exam-q-text">
+          A Groovy rule for unrealised profit elimination is deployed as an on-demand rule.
+          A junior analyst triggers it immediately after uploading BritEdge's trial balance
+          but before running Consolidate. What is the likely outcome?
+        </div>
+        <ul class="exam-options">
+          <li class="exam-option"><span class="opt-key">A</span>The system blocks the execution because on-demand rules cannot run before Consolidate.</li>
+          <li class="exam-option correct"><span class="opt-key">B</span>The rule runs against untranslated local currency data and produces incorrect results — the USD intersection it reads is empty or stale.</li>
+          <li class="exam-option"><span class="opt-key">C</span>The rule runs correctly because on-demand rules are always context-aware and wait for the right data state.</li>
+          <li class="exam-option"><span class="opt-key">D</span>The rule is automatically queued and will execute at the correct point after Consolidate completes.</li>
+        </ul>
+        <button class="reveal-btn" onclick="toggleReveal(this)">Reveal Answer</button>
+        <div class="exam-reveal">
+          <div class="exam-answer-box">
+            <strong>Correct: B.</strong> On-demand rules execute immediately when triggered — there is no
+            system check on data state. The rule reads whatever data exists at that moment. Before
+            Consolidate runs, translated (USD) data does not exist for the current period. The rule
+            reads zero or stale values and posts incorrect elimination entries. This is the temporal
+            governance risk of on-demand rules: the architecture cannot prevent it; only process
+            discipline and access controls can.
+          </div>
+        </div>
+      </div>
+ 
+      <!-- Q3 -->
+      <div class="exam-q">
+        <div class="exam-q-label">Question 3 of 8 · Stage Data Visibility</div>
+        <div class="exam-q-text">
+          A Groovy consolidation rule is deployed to Stage 1 — After Opening Balance Carry Forward.
+          The rule attempts to read USD-translated data for BritEdge.
+          What will the rule see?
+        </div>
+        <ul class="exam-options">
+          <li class="exam-option correct"><span class="opt-key">A</span>The USD intersection will be empty — Stage 1 rules operate on Entity Currency (GBP for BritEdge) only; translated data does not exist yet.</li>
+          <li class="exam-option"><span class="opt-key">B</span>The rule will see the prior period's USD translated balance carried forward.</li>
+          <li class="exam-option"><span class="opt-key">C</span>FCCS will automatically translate the GBP data to USD at the current period rate before passing it to the Stage 1 rule.</li>
+          <li class="exam-option"><span class="opt-key">D</span>The rule will see the USD balance from the Default Translation that runs earlier in Stage 1.</li>
+        </ul>
+        <button class="reveal-btn" onclick="toggleReveal(this)">Reveal Answer</button>
+        <div class="exam-reveal">
+          <div class="exam-answer-box">
+            <strong>Correct: A.</strong> Stage 1 is the Local Currency stage. Default Translation does not
+            run until Stage 2. At the Stage 1 — After Opening Balance Carry Forward seed point, only
+            Entity Currency (GBP for BritEdge) data exists. The USD intersection is empty. The fix:
+            move the rule to Stage 2 or Stage 3 where translated data is available.
+          </div>
+        </div>
+      </div>
+ 
+      <!-- Q4 -->
+      <div class="exam-q">
+        <div class="exam-q-label">Question 4 of 8 · Translation Override Placement</div>
+        <div class="exam-q-text">
+          DeutschWerk GmbH holds hedged receivables that must translate at the hedge rate,
+          not the default average rate. The fix must apply automatically every period.
+          Which approach and seed point is correct?
+        </div>
+        <ul class="exam-options">
+          <li class="exam-option"><span class="opt-key">A</span>On-demand rule triggered after Default Translation — so Finance can verify before applying the override.</li>
+          <li class="exam-option"><span class="opt-key">B</span>Before Foreign Exchange (FX) Calculations in Stage 2 — to ensure CTA reflects the override rate.</li>
+          <li class="exam-option correct"><span class="opt-key">C</span>Consolidation rule at the Translation Overrides seed point in Stage 2 — runs after Default Translation, overrides specific accounts, fires automatically every period.</li>
+          <li class="exam-option"><span class="opt-key">D</span>Configurable Consolidation in Stage 3 — all currency adjustments should sit in Stage 3.</li>
+        </ul>
+        <button class="reveal-btn" onclick="toggleReveal(this)">Reveal Answer</button>
+        <div class="exam-reveal">
+          <div class="exam-answer-box">
+            <strong>Correct: C.</strong> Translation Overrides is the seed point specifically designed for
+            post-default-translation rate adjustments. It runs in Stage 2 after Default Translation
+            applies, allowing specific accounts to be re-translated at alternative rates. As a
+            consolidation rule, it fires automatically on every Consolidate action — no user trigger
+            required. This is a systematic, every-period requirement that warrants a consolidation rule.
+          </div>
+        </div>
+      </div>
+ 
+      <!-- Q5 -->
+      <div class="exam-q">
+        <div class="exam-q-label">Question 5 of 8 · Equity Pick-up Stage</div>
+        <div class="exam-q-text">
+          Where in the three-stage engine does the Equity Pick-up process run for
+          NovaTech Inc (30% equity method), and what is the implication for the
+          currency of the calculated value?
+        </div>
+        <ul class="exam-options">
+          <li class="exam-option"><span class="opt-key">A</span>Stage 3 — Consolidated stage — after all eliminations have run, so the equity value is in group currency.</li>
+          <li class="exam-option"><span class="opt-key">B</span>Stage 2 — Translated stage — alongside Default Translation so the equity value is immediately in parent currency.</li>
+          <li class="exam-option correct"><span class="opt-key">C</span>Stage 1 — Local Currency stage — the equity value is first calculated in NovaTech's entity currency (USD), then translated in Stage 2.</li>
+          <li class="exam-option"><span class="opt-key">D</span>Equity Pick-up is an on-demand process that the Finance team triggers after Consolidate completes.</li>
+        </ul>
+        <button class="reveal-btn" onclick="toggleReveal(this)">Reveal Answer</button>
+        <div class="exam-reveal">
+          <div class="exam-answer-box">
+            <strong>Correct: C.</strong> Equity Pick-up is a system-locked process in Stage 1 — Local Currency.
+            The investment value and share of investee income are first calculated in the entity's
+            local currency. For NovaTech (USD), the equity pickup value is in USD from Stage 1.
+            Stage 2 Default Translation then translates that value to the parent currency (also USD
+            for GlobalMerge — but for AsiaLink in SGD, Stage 2 would translate the SGD equity value
+            to USD, and that translation difference would generate a CTA entry in Stage 2's FX to CTA process).
+          </div>
+        </div>
+      </div>
+ 
+      <!-- Q6 -->
+      <div class="exam-q">
+        <div class="exam-q-label">Question 6 of 8 · Final Calculations — Stage 3</div>
+        <div class="exam-q-text">
+          The CFO requires a consolidated EBITDA margin KPI to be stored in FCCS
+          after every consolidation, calculated from consolidated Revenue and EBITDA.
+          At which seed point must this rule be deployed, and why?
+        </div>
+        <ul class="exam-options">
+          <li class="exam-option"><span class="opt-key">A</span>Stage 1 — Final Calculations — to ensure the ratio is available for all subsequent stages.</li>
+          <li class="exam-option"><span class="opt-key">B</span>Stage 2 — After Opening Balance Carry Forward — once translation is complete, consolidated figures are available.</li>
+          <li class="exam-option correct"><span class="opt-key">C</span>Stage 3 — Final Calculations — the last configurable point, where fully consolidated inputs (post-proportionalization, post-elimination) are available.</li>
+          <li class="exam-option"><span class="opt-key">D</span>As an on-demand rule — KPI calculations should never run inside the engine cycle.</li>
+        </ul>
+        <button class="reveal-btn" onclick="toggleReveal(this)">Reveal Answer</button>
+        <div class="exam-reveal">
+          <div class="exam-answer-box">
+            <strong>Correct: C.</strong> Consolidated Revenue and EBITDA only exist after Stage 3's
+            Proportionalization, Standard Eliminations, and Configurable Consolidation have all run.
+            A Stage 1 or Stage 2 seed point would read unconsolidated or un-eliminated data —
+            the ratio would be wrong. Final Calculations in Stage 3 is the last configurable
+            point in the entire engine, and the only seed point where fully consolidated inputs
+            are guaranteed to exist.
+          </div>
+        </div>
+      </div>
+ 
+      <!-- Q7 -->
+      <div class="exam-q">
+        <div class="exam-q-label">Question 7 of 8 · Unrealised Profit — Rule vs Journal</div>
+        <div class="exam-q-text">
+          BritEdge holds inventory purchased from DeutschWerk. The Finance Controller
+          confirms the situation is unusual and will not recur in Q2. What is the
+          correct approach for the unrealised profit elimination?
+        </div>
+        <ul class="exam-options">
+          <li class="exam-option"><span class="opt-key">A</span>Configurable Consolidation rule in Stage 3 — all intercompany eliminations must be rules.</li>
+          <li class="exam-option"><span class="opt-key">B</span>On-demand Groovy rule triggered by the Finance Controller — she controls when it runs.</li>
+          <li class="exam-option correct"><span class="opt-key">C</span>Enterprise Journal in Hall 7 — a one-off, judgement-based adjustment with documented support belongs in the journal layer, not as a rule.</li>
+          <li class="exam-option"><span class="opt-key">D</span>Standard Eliminations handles unrealised profit automatically — no action required.</li>
+        </ul>
+        <button class="reveal-btn" onclick="toggleReveal(this)">Reveal Answer</button>
+        <div class="exam-reveal">
+          <div class="exam-answer-box">
+            <strong>Correct: C.</strong> Standard Eliminations handles IC revenue/COGS elimination, not
+            unrealised profit in inventory. A rule (consolidation or on-demand) is only warranted
+            when the pattern is systematic and recurring. A one-off, variable, judgement-based
+            adjustment belongs in the Enterprise Journal layer — with supporting documentation
+            and the Finance Controller's approval. Rules introduce more risk than journals when
+            the adjustment is non-recurring.
+          </div>
+        </div>
+      </div>
+ 
+      <!-- Q8 -->
+      <div class="exam-q">
+        <div class="exam-q-label">Question 8 of 8 · Before FX Calculations Seed Point</div>
+        <div class="exam-q-text">
+          A GlobalMerge implementer needs to post a translated-basis adjustment to a
+          specific balance sheet account before the CTA calculation runs, so that
+          the CTA reflects the adjusted balance. Which seed point is correct?
+        </div>
+        <ul class="exam-options">
+          <li class="exam-option"><span class="opt-key">A</span>Translation Overrides — this seed point handles all post-translation adjustments.</li>
+          <li class="exam-option correct"><span class="opt-key">B</span>Before Foreign Exchange (FX) Calculations — runs after translation but before FX variance and CTA are calculated, ensuring the adjustment is in the base for CTA.</li>
+          <li class="exam-option"><span class="opt-key">C</span>After Opening Balance Carry Forward in Stage 2 — this is the last Stage 2 configurable point.</li>
+          <li class="exam-option"><span class="opt-key">D</span>Final Calculations in Stage 1 — adjustments must be made before translation begins.</li>
+        </ul>
+        <button class="reveal-btn" onclick="toggleReveal(this)">Reveal Answer</button>
+        <div class="exam-reveal">
+          <div class="exam-answer-box">
+            <strong>Correct: B.</strong> The <strong>Before Foreign Exchange (FX) Calculations</strong>
+            seed point in Stage 2 runs after Default Translation (and Translation Overrides) but
+            <em>before</em> the FX variance and CTA calculations. If an adjustment must be
+            reflected in the CTA calculation, it must be posted here. Posting at After Opening
+            Balance Carry Forward (after FX/CTA has already run) would produce a CTA that
+            does not reflect the adjustment — a common and subtle error in FCCS implementations.
+          </div>
+        </div>
+      </div>
+ 
+    </div><!-- /exam -->
+ 
+  </main>
+ 
+  <!-- ─── SIDEBAR ──────────────────────────────────────────── -->
+  <aside class="sidebar">
+ 
+    <!-- Tour Guide Widget -->
+    <div class="tour-guide-widget">
+      <div class="tg-header">
+        <div class="tg-avatar">🤖</div>
+        <div>
+          <div class="tg-name">Tour Guide AI</div>
+          <div class="tg-title">Ask about Calculation Studio</div>
+        </div>
+      </div>
+      <div class="tg-body">
+        <div class="tg-messages" id="tgMessages">
+          <div class="tg-msg bot">
+            Welcome to Hall 5 — Calculation Studio. Ask me about
+            consolidation rules, on-demand rules, seed point placement,
+            Groovy syntax, or the three-stage engine.
+          </div>
+        </div>
+        <div class="tg-input-wrap">
+          <input class="tg-input" id="tgInput" type="text"
+            placeholder="Ask a calc rule question…"
+            onkeydown="if(event.key==='Enter')sendTourMessage()" />
+          <button class="tg-send" onclick="sendTourMessage()">→</button>
+        </div>
+        <div class="tg-quick">
+          <button class="tg-quick-btn" onclick="askQuick('What is the difference between consolidation rules and on-demand rules?')">Consolidation vs on-demand rules?</button>
+          <button class="tg-quick-btn" onclick="askQuick('Which seed point do I use for a custom elimination?')">Seed point for custom elimination?</button>
+          <button class="tg-quick-btn" onclick="askQuick('Why does Stage matter for what data a rule can see?')">Why does Stage affect data visibility?</button>
+          <button class="tg-quick-btn" onclick="askQuick('When is a journal better than a rule?')">Journal vs rule — when?</button>
+        </div>
+      </div>
+    </div>
+ 
+    <!-- Six Seed Points Quick Ref -->
+    <div class="side-card">
+      <div class="side-card-title">Six Configurable Seed Points</div>
+      <div class="kv-row"><span class="kv-key">S1 — After OB Carry Forward</span><span class="kv-val violet">Local Currency</span></div>
+      <div class="kv-row"><span class="kv-key">S1 — Final Calculations</span><span class="kv-val violet">Local Currency</span></div>
+      <div class="kv-row"><span class="kv-key">S2 — Translation Overrides</span><span class="kv-val cyan">Translated</span></div>
+      <div class="kv-row"><span class="kv-key">S2 — Before FX Calculations</span><span class="kv-val cyan">Translated</span></div>
+      <div class="kv-row"><span class="kv-key">S2 — After OB Carry Forward</span><span class="kv-val cyan">Translated</span></div>
+      <div class="kv-row"><span class="kv-key">S3 — Configurable Consolidation</span><span class="kv-val green">Consolidated</span></div>
+      <div class="kv-row"><span class="kv-key">S3 — After OB Carry Forward</span><span class="kv-val green">Consolidated</span></div>
+      <div class="kv-row"><span class="kv-key">S3 — Final Calculations</span><span class="kv-val green">Consolidated</span></div>
+    </div>
+ 
+    <!-- Data Visible by Stage -->
+    <div class="side-card">
+      <div class="side-card-title">Data Visible by Stage</div>
+      <div class="kv-row"><span class="kv-key">Stage 1</span><span class="kv-val violet">Entity Currency only</span></div>
+      <div class="kv-row"><span class="kv-key">Stage 2</span><span class="kv-val cyan">Parent Currency (translated)</span></div>
+      <div class="kv-row"><span class="kv-key">Stage 3</span><span class="kv-val green">Consolidated + eliminations</span></div>
+    </div>
+ 
+    <!-- Rule Type Decision -->
+    <div class="side-card">
+      <div class="side-card-title">Rule Type Decision</div>
+      <div class="kv-row"><span class="kv-key">Every period, auto</span><span class="kv-val violet">Consolidation Rule</span></div>
+      <div class="kv-row"><span class="kv-key">Conditional / explicit</span><span class="kv-val gold">On-Demand Rule</span></div>
+      <div class="kv-row"><span class="kv-key">One-off, judgement</span><span class="kv-val rose">Journal (Hall 7)</span></div>
+    </div>
+ 
+    <!-- GlobalMerge Entities -->
+    <div class="side-card">
+      <div class="side-card-title">GlobalMerge Corp Entities</div>
+      <div class="entity-list">
+        <div class="entity-row">
+          <div class="e-dot" style="background:var(--accent-blue)"></div>
+          <span class="e-name">BritEdge Ltd</span>
+          <span class="e-tag">GBP</span>
+          <span class="e-pct" style="color:var(--accent-blue)">100%</span>
+        </div>
+        <div class="entity-row">
+          <div class="e-dot" style="background:var(--accent-cyan)"></div>
+          <span class="e-name">DeutschWerk GmbH</span>
+          <span class="e-tag">EUR</span>
+          <span class="e-pct" style="color:var(--accent-cyan)">80%</span>
+        </div>
+        <div class="entity-row">
+          <div class="e-dot" style="background:var(--accent-2)"></div>
+          <span class="e-name">AsiaLink Pte Ltd</span>
+          <span class="e-tag">SGD · JV</span>
+          <span class="e-pct" style="color:var(--accent-2)">50%</span>
+        </div>
+        <div class="entity-row">
+          <div class="e-dot" style="background:var(--accent-gold)"></div>
+          <span class="e-name">NovaTech Inc</span>
+          <span class="e-tag">USD · EQ</span>
+          <span class="e-pct" style="color:var(--accent-gold)">30%</span>
+        </div>
+      </div>
+    </div>
+ 
+    <!-- Hall Navigation -->
+    <div class="side-card">
+      <div class="side-card-title">Tour Halls</div>
+      <nav class="hall-pills">
+        <a href="hall-1.html" class="hall-pill"><span class="hall-pill-num">01</span>Consolidation Overview</a>
+        <a href="hall-2.html" class="hall-pill"><span class="hall-pill-num">02</span>Metadata Gallery</a>
+        <a href="hall-3.html" class="hall-pill"><span class="hall-pill-num">03</span>Data Integration</a>
+        <a href="hall-4.html" class="hall-pill"><span class="hall-pill-num">04</span>Data Forms</a>
+        <a href="hall-5.html" class="hall-pill current"><span class="hall-pill-num">05</span>Calculation Studio</a>
+        <a href="hall-6.html" class="hall-pill"><span class="hall-pill-num">06</span>Reporting</a>
+        <a href="hall-7.html" class="hall-pill"><span class="hall-pill-num">07</span>Journals</a>
+      </nav>
+    </div>
+ 
+  </aside>
+</div>
+ 
+<!-- ─── FOOTER ───────────────────────────────────────────────── -->
+<footer class="site-footer">
+  FCCS EPM Cloud Study Tour · Hall 5 — Calculation Studio ·
+  GlobalMerge Corp Case · Oracle FCCS Implementation Specialist Prep
+</footer>
+ 
+<!-- ─── SCRIPTS ──────────────────────────────────────────────── -->
+<script>
+  // ── Tab switching ─────────────────────────────────────────────
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+    });
+  });
+ 
+  // ── Exam reveal ───────────────────────────────────────────────
+  function toggleReveal(btn) {
+    const reveal = btn.nextElementSibling;
+    if (reveal.classList.contains('show')) {
+      reveal.classList.remove('show');
+      btn.textContent = 'Reveal Answer';
+    } else {
+      reveal.classList.add('show');
+      btn.textContent = 'Hide Answer';
+    }
+  }
+ 
+  // ── Tour Guide quick questions ────────────────────────────────
+  function askQuick(q) {
+    document.getElementById('tgInput').value = q;
+    sendTourMessage();
+  }
+ 
+  // ── Tour Guide → /api/tour-guide ──────────────────────────────
+  async function sendTourMessage() {
+    const input    = document.getElementById('tgInput');
+    const messages = document.getElementById('tgMessages');
+    const question = input.value.trim();
+    if (!question) return;
+ 
+    const userBubble = document.createElement('div');
+    userBubble.className = 'tg-msg user';
+    userBubble.textContent = question;
+    messages.appendChild(userBubble);
+    input.value = '';
+ 
+    const typing = document.createElement('div');
+    typing.className = 'tg-msg bot';
+    typing.textContent = '…';
+    messages.appendChild(typing);
+    messages.scrollTop = messages.scrollHeight;
+ 
+    try {
+      const res = await fetch('/api/tour-guide', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          hall: 5,
+          topic: 'calculation-studio',
+          question,
+          context: `FCCS Calculation Studio. Three-stage engine: Stage 1 Local Currency, Stage 2 Translated, Stage 3 Consolidated. Six configurable seed points. Consolidation rules vs on-demand rules. Groovy scripting. GlobalMerge Corp: BritEdge GBP 100%, DeutschWerk EUR 80% (hedged FX instruments), AsiaLink SGD 50% JV (equity method), NovaTech USD 30% (equity method). Unrealised profit decision: journal vs on-demand rule vs consolidation rule.`
+        })
+      });
+      const data = await res.json();
+      typing.textContent = data.answer || data.message || 'No response received.';
+    } catch (e) {
+      typing.textContent = 'Tour guide is temporarily unavailable. Try the reflection questions in the Lab tab.';
+    }
+    messages.scrollTop = messages.scrollHeight;
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,5 @@
+{
+  "rewrites": [
+    { "source": "/api/tour-guide", "destination": "/api/tour-guide.js" }
+  ]
+}

@@ -1,0 +1,1493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hall 3 — Data Integration Gallery | FCCS EPM Cloud Study Tour</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;0,9..144,700;1,9..144,300&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    /* ─── DESIGN TOKENS ──────────────────────────────────────── */
+    :root {
+      --bg:            #0b0f1a;
+      --surface:       #111827;
+      --surface-2:     #1a2235;
+      --border:        #1f2d45;
+      --border-light:  #2a3f5f;
+      --accent:        #3b82f6;
+      --accent-2:      #06b6d4;
+      --accent-gold:   #f59e0b;
+      --accent-green:  #10b981;
+      --accent-rose:   #f43f5e;
+      --accent-purple: #a855f7;
+      --accent-orange: #f97316;
+      --text:          #e2e8f0;
+      --text-muted:    #64748b;
+      --text-dim:      #94a3b8;
+      --radius:        8px;
+      --radius-lg:     14px;
+    }
+ 
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      font-size: 15px;
+      line-height: 1.7;
+      min-height: 100vh;
+    }
+ 
+    /* ─── HEADER ─────────────────────────────────────────────── */
+    .site-header {
+      background: rgba(11,15,26,0.92);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border);
+      position: sticky; top: 0; z-index: 100;
+      padding: 0 2rem;
+    }
+    .header-inner {
+      max-width: 1280px; margin: 0 auto;
+      display: flex; align-items: center; justify-content: space-between;
+      height: 58px; gap: 1rem;
+    }
+    .site-logo {
+      font-family: 'Fraunces', serif; font-size: 1.1rem; font-weight: 600;
+      color: var(--text); text-decoration: none; white-space: nowrap;
+    }
+    .site-logo span { color: var(--accent); }
+    .hall-nav { display: flex; gap: 0.25rem; flex-wrap: wrap; }
+    .hall-nav a {
+      font-family: 'DM Mono', monospace; font-size: 0.7rem;
+      color: var(--text-muted); text-decoration: none;
+      padding: 0.3rem 0.65rem; border: 1px solid transparent;
+      border-radius: var(--radius); transition: all 0.2s; white-space: nowrap;
+    }
+    .hall-nav a:hover { color: var(--text); border-color: var(--border-light); background: var(--surface); }
+    .hall-nav a.active { color: var(--accent); border-color: var(--accent); background: rgba(59,130,246,0.1); }
+ 
+    /* ─── HERO ───────────────────────────────────────────────── */
+    .hero {
+      background: linear-gradient(135deg, #0b0f1a 0%, #0e1d33 45%, #091520 100%);
+      border-bottom: 1px solid var(--border);
+      padding: 3.5rem 2rem 2.5rem;
+      position: relative; overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse 55% 55% at 75% 40%, rgba(6,182,212,0.09) 0%, transparent 70%),
+        radial-gradient(ellipse 40% 50% at 15% 75%, rgba(249,115,22,0.06) 0%, transparent 60%);
+      pointer-events: none;
+    }
+    .hero-inner { max-width: 1280px; margin: 0 auto; position: relative; }
+    .hero-eyebrow {
+      font-family: 'DM Mono', monospace; font-size: 0.7rem;
+      letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent-2);
+      margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.5rem;
+    }
+    .hero-eyebrow::before {
+      content: ''; display: inline-block; width: 20px; height: 1px; background: var(--accent-2);
+    }
+    .hero h1 {
+      font-family: 'Fraunces', serif;
+      font-size: clamp(2rem, 4vw, 3rem); font-weight: 700;
+      line-height: 1.15; color: #fff; margin-bottom: 1rem;
+    }
+    .hero h1 em { font-style: italic; color: var(--accent-orange); }
+    .hero-desc { color: var(--text-dim); max-width: 700px; font-size: 0.95rem; margin-bottom: 1.5rem; }
+    .hero-meta { display: flex; gap: 0.75rem; flex-wrap: wrap; }
+    .hero-badge {
+      font-family: 'DM Mono', monospace; font-size: 0.68rem;
+      padding: 0.3rem 0.7rem; border-radius: 999px; border: 1px solid; letter-spacing: 0.04em;
+    }
+    .badge-blue   { color: var(--accent);        border-color: rgba(59,130,246,0.4);  background: rgba(59,130,246,0.08);  }
+    .badge-cyan   { color: var(--accent-2);      border-color: rgba(6,182,212,0.4);   background: rgba(6,182,212,0.08);   }
+    .badge-gold   { color: var(--accent-gold);   border-color: rgba(245,158,11,0.4);  background: rgba(245,158,11,0.08);  }
+    .badge-green  { color: var(--accent-green);  border-color: rgba(16,185,129,0.4);  background: rgba(16,185,129,0.08);  }
+    .badge-rose   { color: var(--accent-rose);   border-color: rgba(244,63,94,0.4);   background: rgba(244,63,94,0.08);   }
+    .badge-orange { color: var(--accent-orange); border-color: rgba(249,115,22,0.4);  background: rgba(249,115,22,0.08);  }
+ 
+    /* ─── LAYOUT ─────────────────────────────────────────────── */
+    .main-wrap {
+      max-width: 1280px; margin: 0 auto;
+      padding: 2.5rem 2rem 4rem;
+      display: grid; grid-template-columns: 1fr 320px;
+      gap: 2rem; align-items: start;
+    }
+    @media (max-width: 900px) { .main-wrap { grid-template-columns: 1fr; } .sidebar { order: -1; } }
+ 
+    /* ─── TABS ───────────────────────────────────────────────── */
+    .tab-bar {
+      display: flex; gap: 0; border-bottom: 1px solid var(--border);
+      margin-bottom: 2rem; overflow-x: auto;
+    }
+    .tab-btn {
+      font-family: 'DM Mono', monospace; font-size: 0.72rem;
+      letter-spacing: 0.06em; text-transform: uppercase;
+      padding: 0.75rem 1.25rem; background: transparent;
+      border: none; border-bottom: 2px solid transparent;
+      color: var(--text-muted); cursor: pointer; transition: all 0.2s; white-space: nowrap;
+    }
+    .tab-btn:hover { color: var(--text-dim); }
+    .tab-btn.active { color: var(--accent-2); border-bottom-color: var(--accent-2); }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+ 
+    /* ─── SECTION ────────────────────────────────────────────── */
+    .section { margin-bottom: 2.5rem; }
+    .section-title {
+      font-family: 'Fraunces', serif; font-size: 1.2rem; font-weight: 600;
+      color: #fff; margin-bottom: 0.4rem; display: flex; align-items: center; gap: 0.5rem;
+    }
+    .section-title .icon { font-size: 1rem; opacity: 0.8; }
+    .section-sub {
+      font-size: 0.82rem; color: var(--text-muted); margin-bottom: 1.25rem;
+      font-family: 'DM Mono', monospace; letter-spacing: 0.03em;
+    }
+    p { color: var(--text-dim); margin-bottom: 0.85rem; }
+    p:last-child { margin-bottom: 0; }
+    strong { color: var(--text); font-weight: 600; }
+ 
+    /* ─── CARD ───────────────────────────────────────────────── */
+    .card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius-lg); padding: 1.5rem; margin-bottom: 1.25rem;
+    }
+    .card:last-child { margin-bottom: 0; }
+    .card-title {
+      font-family: 'DM Mono', monospace; font-size: 0.75rem; font-weight: 500;
+      letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent-2);
+      margin-bottom: 0.75rem;
+    }
+    .card-title.gold   { color: var(--accent-gold);   }
+    .card-title.green  { color: var(--accent-green);  }
+    .card-title.rose   { color: var(--accent-rose);   }
+    .card-title.orange { color: var(--accent-orange); }
+    .card-title.blue   { color: var(--accent);        }
+ 
+    /* ─── METHOD GRID ────────────────────────────────────────── */
+    .method-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+      gap: 1rem; margin-bottom: 1.5rem;
+    }
+    .method-card {
+      background: var(--surface-2); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 1.1rem 1.25rem;
+      border-top: 3px solid; transition: background 0.2s;
+    }
+    .method-card:hover { background: #1e2d45; }
+    .method-card.cyan   { border-top-color: var(--accent-2); }
+    .method-card.gold   { border-top-color: var(--accent-gold); }
+    .method-card.green  { border-top-color: var(--accent-green); }
+    .method-card.orange { border-top-color: var(--accent-orange); }
+    .method-card.rose   { border-top-color: var(--accent-rose); }
+    .method-card.blue   { border-top-color: var(--accent); }
+    .method-name {
+      font-family: 'DM Mono', monospace; font-size: 0.72rem; font-weight: 500;
+      letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 0.4rem;
+    }
+    .method-card.cyan   .method-name { color: var(--accent-2); }
+    .method-card.gold   .method-name { color: var(--accent-gold); }
+    .method-card.green  .method-name { color: var(--accent-green); }
+    .method-card.orange .method-name { color: var(--accent-orange); }
+    .method-card.rose   .method-name { color: var(--accent-rose); }
+    .method-card.blue   .method-name { color: var(--accent); }
+    .method-desc { font-size: 0.82rem; color: var(--text-dim); line-height: 1.5; margin-bottom: 0.5rem; }
+    .method-meta { font-family: 'DM Mono', monospace; font-size: 0.65rem; color: var(--text-muted); }
+ 
+    /* ─── TABLE ──────────────────────────────────────────────── */
+    .data-table { width: 100%; border-collapse: collapse; font-size: 0.83rem; margin-bottom: 1.25rem; }
+    .data-table thead th {
+      font-family: 'DM Mono', monospace; font-size: 0.65rem;
+      letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted);
+      text-align: left; padding: 0.5rem 0.85rem;
+      background: var(--surface-2); border-bottom: 1px solid var(--border);
+    }
+    .data-table thead th:first-child { border-radius: var(--radius) 0 0 0; }
+    .data-table thead th:last-child  { border-radius: 0 var(--radius) 0 0; }
+    .data-table tbody tr { border-bottom: 1px solid var(--border); transition: background 0.15s; }
+    .data-table tbody tr:last-child { border-bottom: none; }
+    .data-table tbody tr:hover { background: var(--surface-2); }
+    .data-table td { padding: 0.6rem 0.85rem; color: var(--text-dim); vertical-align: top; }
+    .data-table td.mono { font-family: 'DM Mono', monospace; font-size: 0.75rem; }
+    .data-table td strong { color: var(--text); }
+ 
+    /* ─── FLOW DIAGRAM ───────────────────────────────────────── */
+    .flow-diagram {
+      display: flex; align-items: center; gap: 0;
+      overflow-x: auto; padding: 1.25rem;
+      background: var(--surface-2); border: 1px solid var(--border);
+      border-radius: var(--radius); margin-bottom: 1.25rem; flex-wrap: nowrap;
+    }
+    .flow-node {
+      background: var(--surface); border: 1px solid var(--border-light);
+      border-radius: var(--radius); padding: 0.75rem 1rem;
+      text-align: center; min-width: 110px; flex-shrink: 0;
+    }
+    .flow-node-icon { font-size: 1.4rem; display: block; margin-bottom: 0.3rem; }
+    .flow-node-label { font-family: 'DM Mono', monospace; font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; }
+    .flow-node-name  { font-size: 0.78rem; color: var(--text); margin-top: 0.15rem; font-weight: 500; }
+    .flow-arrow {
+      font-size: 1.1rem; color: var(--accent-2); padding: 0 0.25rem;
+      flex-shrink: 0; user-select: none;
+    }
+    .flow-arrow-label {
+      display: flex; flex-direction: column; align-items: center; gap: 0.15rem;
+      padding: 0 0.3rem; flex-shrink: 0;
+    }
+    .flow-arrow-label .arrow { font-size: 1.1rem; color: var(--accent-2); }
+    .flow-arrow-label .label { font-family: 'DM Mono', monospace; font-size: 0.6rem; color: var(--text-muted); white-space: nowrap; }
+ 
+    /* ─── CODE BLOCK ─────────────────────────────────────────── */
+    .code-block {
+      background: #070c15; border: 1px solid var(--border); border-radius: var(--radius);
+      padding: 1.1rem 1.25rem; font-family: 'DM Mono', monospace; font-size: 0.78rem;
+      line-height: 1.8; overflow-x: auto; margin-bottom: 1.25rem; color: var(--text-dim);
+    }
+    .c-kw   { color: var(--accent); }
+    .c-str  { color: var(--accent-green); }
+    .c-num  { color: var(--accent-gold); }
+    .c-cm   { color: var(--text-muted); font-style: italic; }
+    .c-fn   { color: var(--accent-2); }
+    .c-prop { color: var(--accent-purple); }
+    .c-op   { color: var(--accent-orange); }
+ 
+    /* ─── CALLOUT ────────────────────────────────────────────── */
+    .callout {
+      border-radius: var(--radius); padding: 1rem 1.25rem; margin-bottom: 1.25rem;
+      border-left: 3px solid; font-size: 0.85rem;
+    }
+    .callout p { margin-bottom: 0.4rem; font-size: 0.85rem; }
+    .callout p:last-child { margin-bottom: 0; }
+    .callout-blue   { background: rgba(59,130,246,0.07);  border-left-color: var(--accent); }
+    .callout-gold   { background: rgba(245,158,11,0.07);  border-left-color: var(--accent-gold); }
+    .callout-green  { background: rgba(16,185,129,0.07);  border-left-color: var(--accent-green); }
+    .callout-rose   { background: rgba(244,63,94,0.07);   border-left-color: var(--accent-rose); }
+    .callout-orange { background: rgba(249,115,22,0.07);  border-left-color: var(--accent-orange); }
+    .callout-cyan   { background: rgba(6,182,212,0.07);   border-left-color: var(--accent-2); }
+    .callout-label  {
+      font-family: 'DM Mono', monospace; font-size: 0.62rem;
+      letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.4rem; font-weight: 500;
+    }
+    .callout-blue   .callout-label { color: var(--accent); }
+    .callout-gold   .callout-label { color: var(--accent-gold); }
+    .callout-green  .callout-label { color: var(--accent-green); }
+    .callout-rose   .callout-label { color: var(--accent-rose); }
+    .callout-orange .callout-label { color: var(--accent-orange); }
+    .callout-cyan   .callout-label { color: var(--accent-2); }
+ 
+    /* ─── STEP LIST ──────────────────────────────────────────── */
+    .step-list { list-style: none; margin-bottom: 1.25rem; }
+    .step-list li {
+      display: flex; gap: 1rem; padding: 0.75rem 0;
+      border-bottom: 1px solid var(--border); align-items: flex-start;
+    }
+    .step-list li:last-child { border-bottom: none; }
+    .step-num {
+      font-family: 'DM Mono', monospace; font-size: 0.65rem; font-weight: 500;
+      color: var(--accent-2); background: rgba(6,182,212,0.12);
+      border: 1px solid rgba(6,182,212,0.25); border-radius: 4px;
+      width: 28px; height: 22px; display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; margin-top: 0.1rem;
+    }
+    .step-text { font-size: 0.85rem; color: var(--text-dim); }
+    .step-text strong { color: var(--text); }
+ 
+    /* ─── EXAM ───────────────────────────────────────────────── */
+    .exam-q {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius-lg); padding: 1.4rem 1.5rem; margin-bottom: 1.25rem;
+    }
+    .exam-q-label {
+      font-family: 'DM Mono', monospace; font-size: 0.62rem;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--text-muted); margin-bottom: 0.5rem;
+    }
+    .exam-q-text { font-size: 0.9rem; color: var(--text); margin-bottom: 1rem; font-weight: 500; line-height: 1.6; }
+    .exam-options { list-style: none; display: flex; flex-direction: column; gap: 0.5rem; }
+    .exam-option {
+      display: flex; align-items: flex-start; gap: 0.75rem;
+      padding: 0.55rem 0.85rem; border-radius: var(--radius);
+      border: 1px solid var(--border); font-size: 0.83rem;
+      color: var(--text-dim); cursor: pointer; transition: all 0.2s;
+      background: var(--surface-2);
+    }
+    .exam-option:hover { border-color: var(--accent-2); color: var(--text); }
+    .exam-option.correct { border-color: var(--accent-green); background: rgba(16,185,129,0.08); color: var(--text); }
+    .opt-key {
+      font-family: 'DM Mono', monospace; font-size: 0.65rem; font-weight: 500;
+      color: var(--text-muted); border: 1px solid var(--border-light);
+      border-radius: 3px; padding: 0.05rem 0.35rem; flex-shrink: 0; margin-top: 0.1rem;
+    }
+    .exam-reveal { margin-top: 0.85rem; display: none; }
+    .exam-reveal.show { display: block; }
+    .reveal-btn {
+      font-family: 'DM Mono', monospace; font-size: 0.68rem; letter-spacing: 0.06em;
+      text-transform: uppercase; color: var(--accent-2);
+      background: rgba(6,182,212,0.1); border: 1px solid rgba(6,182,212,0.3);
+      border-radius: var(--radius); padding: 0.35rem 0.85rem;
+      cursor: pointer; transition: all 0.2s; margin-top: 0.75rem;
+    }
+    .reveal-btn:hover { background: rgba(6,182,212,0.18); }
+    .exam-answer-box {
+      background: rgba(16,185,129,0.08); border: 1px solid rgba(16,185,129,0.25);
+      border-radius: var(--radius); padding: 0.85rem 1rem;
+      font-size: 0.83rem; color: var(--text-dim);
+    }
+    .exam-answer-box strong { color: var(--accent-green); }
+ 
+    /* ─── SIDEBAR ────────────────────────────────────────────── */
+    .sidebar { display: flex; flex-direction: column; gap: 1.25rem; }
+    .tour-guide-widget {
+      background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden;
+    }
+    .tg-header {
+      background: linear-gradient(135deg, #0f1e35, #0e2030);
+      border-bottom: 1px solid var(--border); padding: 1rem 1.25rem;
+      display: flex; align-items: center; gap: 0.75rem;
+    }
+    .tg-avatar {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent-2), var(--accent-orange));
+      display: flex; align-items: center; justify-content: center; font-size: 1rem; flex-shrink: 0;
+    }
+    .tg-name { font-family: 'DM Mono', monospace; font-size: 0.72rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--accent-2); margin-bottom: 0.1rem; }
+    .tg-title { font-size: 0.78rem; color: var(--text-muted); }
+    .tg-body { padding: 1.1rem 1.25rem; }
+    .tg-input-wrap { display: flex; gap: 0.5rem; margin-top: 0.85rem; }
+    .tg-input {
+      flex: 1; background: var(--surface-2); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 0.5rem 0.75rem; color: var(--text);
+      font-family: 'Inter', sans-serif; font-size: 0.8rem; outline: none; transition: border-color 0.2s;
+    }
+    .tg-input:focus { border-color: var(--accent-2); }
+    .tg-input::placeholder { color: var(--text-muted); }
+    .tg-send {
+      background: var(--accent-2); border: none; border-radius: var(--radius);
+      padding: 0.5rem 0.85rem; color: #000; font-size: 0.8rem;
+      cursor: pointer; transition: background 0.2s; font-family: 'DM Mono', monospace; font-weight: 500;
+    }
+    .tg-send:hover { background: #0ea5d4; }
+    .tg-messages {
+      max-height: 200px; overflow-y: auto; display: flex;
+      flex-direction: column; gap: 0.5rem; margin-bottom: 0.5rem;
+    }
+    .tg-msg { font-size: 0.81rem; line-height: 1.5; padding: 0.55rem 0.75rem; border-radius: var(--radius); }
+    .tg-msg.bot { background: var(--surface-2); color: var(--text-dim); border: 1px solid var(--border); }
+    .tg-msg.user { background: rgba(6,182,212,0.12); color: var(--text); border: 1px solid rgba(6,182,212,0.2); text-align: right; }
+ 
+    .side-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.25rem; }
+    .side-card-title { font-family: 'DM Mono', monospace; font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 1rem; }
+    .kv-row { display: flex; justify-content: space-between; align-items: center; padding: 0.4rem 0; border-bottom: 1px solid var(--border); font-size: 0.82rem; }
+    .kv-row:last-child { border-bottom: none; }
+    .kv-key { color: var(--text-muted); font-size: 0.78rem; }
+    .kv-val { color: var(--text); font-family: 'DM Mono', monospace; font-size: 0.75rem; }
+    .kv-val.green  { color: var(--accent-green);  }
+    .kv-val.gold   { color: var(--accent-gold);   }
+    .kv-val.rose   { color: var(--accent-rose);   }
+    .kv-val.cyan   { color: var(--accent-2);      }
+    .kv-val.orange { color: var(--accent-orange); }
+ 
+    .hall-pills { display: flex; flex-direction: column; gap: 0.4rem; }
+    .hall-pill {
+      display: flex; align-items: center; gap: 0.6rem; padding: 0.55rem 0.85rem;
+      border-radius: var(--radius); text-decoration: none; font-size: 0.82rem;
+      color: var(--text-muted); border: 1px solid transparent; transition: all 0.2s;
+    }
+    .hall-pill:hover { background: var(--surface-2); border-color: var(--border); color: var(--text); }
+    .hall-pill.current { background: rgba(6,182,212,0.1); border-color: rgba(6,182,212,0.3); color: var(--accent-2); }
+    .hall-pill-num { font-family: 'DM Mono', monospace; font-size: 0.65rem; width: 20px; text-align: center; }
+ 
+    /* ─── ENTITY ROW ─────────────────────────────────────────── */
+    .entity-list { display: flex; flex-direction: column; gap: 0.6rem; }
+    .entity-row {
+      display: flex; align-items: center; gap: 0.65rem; padding: 0.55rem 0.75rem;
+      background: var(--surface-2); border: 1px solid var(--border);
+      border-radius: var(--radius); font-size: 0.8rem;
+    }
+    .entity-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+    .entity-name { color: var(--text); flex: 1; }
+    .entity-tag  { font-family: 'DM Mono', monospace; font-size: 0.62rem; color: var(--text-muted); }
+    .entity-pct  { font-family: 'DM Mono', monospace; font-size: 0.7rem; font-weight: 500; }
+ 
+    /* ─── LOADER STATUS ──────────────────────────────────────── */
+    .loader-status {
+      display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1.25rem;
+    }
+    .ls-row {
+      display: flex; align-items: center; gap: 0.75rem; padding: 0.6rem 0.9rem;
+      background: var(--surface-2); border: 1px solid var(--border); border-radius: var(--radius); font-size: 0.82rem;
+    }
+    .ls-icon { font-size: 0.85rem; flex-shrink: 0; }
+    .ls-text { color: var(--text-dim); flex: 1; }
+    .ls-text strong { color: var(--text); }
+    .ls-badge {
+      font-family: 'DM Mono', monospace; font-size: 0.62rem;
+      padding: 0.15rem 0.5rem; border-radius: 999px; border: 1px solid; white-space: nowrap;
+    }
+    .ls-ok     { color: var(--accent-green);  border-color: rgba(16,185,129,0.4);  background: rgba(16,185,129,0.08); }
+    .ls-warn   { color: var(--accent-gold);   border-color: rgba(245,158,11,0.4);  background: rgba(245,158,11,0.08); }
+    .ls-error  { color: var(--accent-rose);   border-color: rgba(244,63,94,0.4);   background: rgba(244,63,94,0.08);  }
+    .ls-info   { color: var(--accent-2);      border-color: rgba(6,182,212,0.4);   background: rgba(6,182,212,0.08);  }
+    .ls-orange { color: var(--accent-orange); border-color: rgba(249,115,22,0.4);  background: rgba(249,115,22,0.08); }
+ 
+    /* ─── FOOTER ─────────────────────────────────────────────── */
+    .site-footer {
+      border-top: 1px solid var(--border); padding: 1.5rem 2rem;
+      text-align: center; font-family: 'DM Mono', monospace;
+      font-size: 0.68rem; color: var(--text-muted); letter-spacing: 0.04em;
+    }
+ 
+    /* ─── MISC ───────────────────────────────────────────────── */
+    .divider { border: none; border-top: 1px solid var(--border); margin: 2rem 0; }
+    @media (max-width: 640px) {
+      .hero { padding: 2rem 1.25rem 1.75rem; }
+      .main-wrap { padding: 1.5rem 1.25rem 3rem; }
+      .method-grid { grid-template-columns: 1fr; }
+      .flow-diagram { flex-wrap: nowrap; }
+    }
+  </style>
+</head>
+<body>
+ 
+<!-- ─── HEADER ──────────────────────────────────────────────── -->
+<header class="site-header">
+  <div class="header-inner">
+    <a href="../index.html" class="site-logo">FCCS <span>EPM</span> Study Tour</a>
+    <nav class="hall-nav">
+      <a href="hall-1.html">Hall 1 · Consolidation</a>
+      <a href="hall-2.html">Hall 2 · Metadata</a>
+      <a href="hall-3.html" class="active">Hall 3 · Data Integration</a>
+      <a href="hall-4.html">Hall 4 · Data Forms</a>
+      <a href="hall-5.html">Hall 5 · Rules</a>
+    </nav>
+  </div>
+</header>
+ 
+<!-- ─── HERO ────────────────────────────────────────────────── -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-eyebrow">Hall 3 of the FCCS EPM Cloud Study Tour</div>
+    <h1>Data <em>Integration</em> Gallery</h1>
+    <p class="hero-desc">
+      Getting the numbers in. From flat-file CSV loads and Data Management mappings
+      to EPM Automate scripting and REST API calls — every pathway that moves
+      GlobalMerge Corp's trial balances into FCCS and keeps them current.
+    </p>
+    <div class="hero-meta">
+      <span class="hero-badge badge-cyan">Data Management / FDMEE</span>
+      <span class="hero-badge badge-orange">EPM Automate</span>
+      <span class="hero-badge badge-gold">File-Based Load</span>
+      <span class="hero-badge badge-green">REST API</span>
+      <span class="hero-badge badge-blue">Mappings &amp; Transformations</span>
+      <span class="hero-badge badge-rose">Error Handling</span>
+    </div>
+  </div>
+</section>
+ 
+<!-- ─── MAIN ─────────────────────────────────────────────────── -->
+<div class="main-wrap">
+  <main>
+ 
+    <!-- TAB BAR -->
+    <div class="tab-bar" role="tablist">
+      <button class="tab-btn active" role="tab" data-tab="conceptual">📐 Conceptual</button>
+      <button class="tab-btn" role="tab" data-tab="technical">⚙️ Technical</button>
+      <button class="tab-btn" role="tab" data-tab="lab">🔬 Lab</button>
+      <button class="tab-btn" role="tab" data-tab="exam">📝 Exam</button>
+    </div>
+ 
+    <!-- ═══════════════════════════════════════════
+         TAB 1 — CONCEPTUAL
+    ════════════════════════════════════════════ -->
+    <div class="tab-panel active" id="tab-conceptual">
+ 
+      <div class="section">
+        <div class="section-title"><span class="icon">🔌</span> Why Data Integration Matters in FCCS</div>
+        <div class="section-sub">Bridging the gap between source ERPs and the consolidation engine</div>
+        <p>
+          FCCS is a <strong>consolidation and close platform</strong>, not a general ledger.
+          It does not natively hold transactional data. Every balance that enters FCCS — revenue,
+          expenses, assets, liabilities — must be loaded from an external source system such as
+          Oracle ERP Cloud, SAP, NetSuite, or a subsidiary's local accounting package.
+        </p>
+        <p>
+          Data Integration (formerly known as <strong>FDMEE — Financial Data Management
+          Enterprise Edition</strong>) is the Oracle-native ETL layer that sits between
+          source systems and FCCS. It handles extraction, transformation, mapping,
+          validation, and loading in a governed, auditable pipeline.
+        </p>
+        <div class="callout callout-cyan">
+          <div class="callout-label">🔑 Core Concept</div>
+          <p>Data Integration is not optional. Even if you load a flat CSV file, it passes through
+          the Data Management mapping rules before landing in FCCS dimensions. Understanding
+          this pipeline end-to-end is a critical exam topic — and a daily operational reality
+          for every FCCS administrator.</p>
+        </div>
+      </div>
+ 
+      <!-- INTEGRATION PATHWAYS -->
+      <div class="section">
+        <div class="section-title"><span class="icon">🛣️</span> Integration Pathways</div>
+        <div class="section-sub">Four routes to load data into FCCS</div>
+ 
+        <div class="method-grid">
+          <div class="method-card cyan">
+            <div class="method-name">Data Management UI</div>
+            <div class="method-desc">Browser-based wizard for defining data load rules, import formats, and dimension mappings. Best for ad-hoc loads and initial setup.</div>
+            <div class="method-meta">Navigator → Data Exchange → Data Integration</div>
+          </div>
+          <div class="method-card orange">
+            <div class="method-name">EPM Automate</div>
+            <div class="method-desc">Command-line scripting tool. Automates uploads, data rule execution, metadata imports, and consolidation runs. Ideal for month-end schedulers.</div>
+            <div class="method-meta">epmautomate.bat / epmautomate.sh</div>
+          </div>
+          <div class="method-card gold">
+            <div class="method-name">File-Based Load (.dat / .csv)</div>
+            <div class="method-desc">Direct delimited file load via the FCCS Inbox. Bypasses mapping for pre-mapped data; fastest pathway for simple structures.</div>
+            <div class="method-meta">Inbox/Outbox folder · fixed format</div>
+          </div>
+          <div class="method-card green">
+            <div class="method-name">REST API</div>
+            <div class="method-desc">Programmatic access using Oracle REST APIs. Enables custom integrations, middleware orchestration (MuleSoft, OIC), and real-time pushes.</div>
+            <div class="method-meta">POST /jobs/dataRule · Bearer token</div>
+          </div>
+          <div class="method-card blue">
+            <div class="method-name">Oracle Integration (OIC)</div>
+            <div class="method-desc">Low-code integration platform that connects ERP Cloud, FCCS, and other SaaS apps with pre-built adapters and visual workflow design.</div>
+            <div class="method-meta">OIC FCCS Adapter · managed service</div>
+          </div>
+          <div class="method-card rose">
+            <div class="method-name">Smart View (Manual Entry)</div>
+            <div class="method-desc">Excel add-in for ad-hoc data submission directly into data forms. Used for adjustments, supplemental schedules, and journal-style inputs.</div>
+            <div class="method-meta">Oracle Smart View for Office</div>
+          </div>
+        </div>
+      </div>
+ 
+      <!-- THE DATA PIPELINE -->
+      <div class="section">
+        <div class="section-title"><span class="icon">🔄</span> The Data Management Pipeline</div>
+        <div class="section-sub">Five stages from source to consolidated cube</div>
+ 
+        <div class="flow-diagram">
+          <div class="flow-node">
+            <span class="flow-node-icon">🏭</span>
+            <span class="flow-node-label">Stage 1</span>
+            <span class="flow-node-name">Source System</span>
+          </div>
+          <div class="flow-arrow-label">
+            <span class="arrow">→</span>
+            <span class="label">Extract</span>
+          </div>
+          <div class="flow-node">
+            <span class="flow-node-icon">📥</span>
+            <span class="flow-node-label">Stage 2</span>
+            <span class="flow-node-name">Import</span>
+          </div>
+          <div class="flow-arrow-label">
+            <span class="arrow">→</span>
+            <span class="label">Validate</span>
+          </div>
+          <div class="flow-node">
+            <span class="flow-node-icon">🗺️</span>
+            <span class="flow-node-label">Stage 3</span>
+            <span class="flow-node-name">Map</span>
+          </div>
+          <div class="flow-arrow-label">
+            <span class="arrow">→</span>
+            <span class="label">Transform</span>
+          </div>
+          <div class="flow-node">
+            <span class="flow-node-icon">✅</span>
+            <span class="flow-node-label">Stage 4</span>
+            <span class="flow-node-name">Validate</span>
+          </div>
+          <div class="flow-arrow-label">
+            <span class="arrow">→</span>
+            <span class="label">Load</span>
+          </div>
+          <div class="flow-node">
+            <span class="flow-node-icon">🧮</span>
+            <span class="flow-node-label">Stage 5</span>
+            <span class="flow-node-name">FCCS Cube</span>
+          </div>
+        </div>
+ 
+        <p>
+          <strong>Import</strong> pulls raw source data into the Data Management staging area.
+          <strong>Mapping</strong> translates source codes (e.g., SAP GL accounts) into FCCS dimension
+          members. <strong>Validate</strong> checks for unmapped members and data type errors.
+          <strong>Load</strong> pushes clean, mapped data into the FCCS Essbase cube. A failed step
+          at any stage stops the pipeline and generates an error log.
+        </p>
+ 
+        <div class="callout callout-gold">
+          <div class="callout-label">⚠️ Load Mode — Replace vs. Accumulate vs. Subtract</div>
+          <p>When running a data load rule you must select a <strong>load mode</strong>.
+          <strong>Replace</strong> overwrites existing data for the selected entity/period/scenario.
+          <strong>Accumulate</strong> adds incoming values to what's already there — useful for
+          loading multiple files that together make one period's balance.
+          <strong>Subtract</strong> is used to reverse a previously loaded batch.</p>
+        </div>
+      </div>
+ 
+      <!-- GLOBALMERGE SOURCE LANDSCAPE -->
+      <div class="section">
+        <div class="section-title"><span class="icon">🌐</span> GlobalMerge Corp — Source System Landscape</div>
+        <div class="section-sub">Four subsidiaries, four source systems, one consolidation</div>
+ 
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Entity</th>
+              <th>Currency</th>
+              <th>Ownership</th>
+              <th>Source System</th>
+              <th>Integration Method</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>BritEdge Ltd</strong></td>
+              <td class="mono">GBP</td>
+              <td class="mono">100%</td>
+              <td>Oracle ERP Cloud</td>
+              <td>OIC Adapter · automated nightly</td>
+            </tr>
+            <tr>
+              <td><strong>DeutschWerk GmbH</strong></td>
+              <td class="mono">EUR</td>
+              <td class="mono">80%</td>
+              <td>SAP S/4HANA</td>
+              <td>CSV extract → Data Management mapping</td>
+            </tr>
+            <tr>
+              <td><strong>AsiaLink Pte Ltd</strong></td>
+              <td class="mono">SGD</td>
+              <td class="mono">50% JV</td>
+              <td>NetSuite</td>
+              <td>REST API push via EPM Automate script</td>
+            </tr>
+            <tr>
+              <td><strong>NovaTech Inc</strong></td>
+              <td class="mono">USD</td>
+              <td class="mono">30% Equity</td>
+              <td>QuickBooks / Excel</td>
+              <td>Manual .dat file upload via Smart View</td>
+            </tr>
+          </tbody>
+        </table>
+ 
+        <div class="callout callout-orange">
+          <div class="callout-label">💡 NovaTech — Equity Method Note</div>
+          <p>Because NovaTech uses the Equity Method (PCON = 0), only the <strong>Investment in
+          NovaTech</strong> account balance and NovaTech's <strong>net equity share (30%)</strong>
+          need to be loaded into FCCS. Loading the full trial balance would waste storage
+          and create confusing zero-contribution data. Many teams load only the equity
+          pickup journal entry for equity-method investees.</p>
+        </div>
+      </div>
+ 
+    </div><!-- /conceptual -->
+ 
+ 
+    <!-- ═══════════════════════════════════════════
+         TAB 2 — TECHNICAL
+    ════════════════════════════════════════════ -->
+    <div class="tab-panel" id="tab-technical">
+ 
+      <!-- DATA MANAGEMENT SETUP -->
+      <div class="section">
+        <div class="section-title"><span class="icon">🗺️</span> Data Management — Key Configuration Objects</div>
+        <div class="section-sub">The four building blocks of any Data Management integration</div>
+ 
+        <div class="method-grid">
+          <div class="method-card cyan">
+            <div class="method-name">Import Format</div>
+            <div class="method-desc">Defines the structure of the incoming file: delimiter, header rows, which column maps to which FCCS dimension (Entity, Account, Period, Amount…).</div>
+            <div class="method-meta">Setup → Import Format</div>
+          </div>
+          <div class="method-card gold">
+            <div class="method-name">Location</div>
+            <div class="method-desc">A named target point — the combination of entity, category (Scenario), and the import format to use. One location per source/entity combination.</div>
+            <div class="method-meta">Setup → Location</div>
+          </div>
+          <div class="method-card green">
+            <div class="method-name">Data Load Mappings</div>
+            <div class="method-desc">Translation rules converting source codes to FCCS member names. Four types: Explicit, Between, In, and Like. Applied per dimension per location.</div>
+            <div class="method-meta">Setup → Mappings</div>
+          </div>
+          <div class="method-card orange">
+            <div class="method-name">Data Load Rule</div>
+            <div class="method-desc">The execution object. Combines location + period mapping + load method. Running a data load rule triggers the full import → map → validate → load pipeline.</div>
+            <div class="method-meta">Workflow → Data Load Rule</div>
+          </div>
+        </div>
+      </div>
+ 
+      <!-- MAPPING TYPES -->
+      <div class="section">
+        <div class="section-title"><span class="icon">🔀</span> Mapping Rule Types</div>
+        <div class="section-sub">Translating source GL codes to FCCS dimension members</div>
+ 
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Type</th>
+              <th>Source Value</th>
+              <th>Target Member</th>
+              <th>Use Case</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="mono"><strong>Explicit</strong></td>
+              <td class="mono">4001-GBP</td>
+              <td class="mono">Revenue_UK</td>
+              <td>Exact one-to-one match; highest priority</td>
+            </tr>
+            <tr>
+              <td class="mono"><strong>Between</strong></td>
+              <td class="mono">4000–4999</td>
+              <td class="mono">Revenue</td>
+              <td>Range of numeric GL codes to one target</td>
+            </tr>
+            <tr>
+              <td class="mono"><strong>In</strong></td>
+              <td class="mono">5001,5003,5007</td>
+              <td class="mono">DirectCosts</td>
+              <td>Discrete list; non-contiguous codes</td>
+            </tr>
+            <tr>
+              <td class="mono"><strong>Like</strong></td>
+              <td class="mono">IC_*</td>
+              <td class="mono">ICElimAcct</td>
+              <td>Wildcard/pattern match; lowest priority</td>
+            </tr>
+          </tbody>
+        </table>
+ 
+        <div class="callout callout-rose">
+          <div class="callout-label">⚠️ Mapping Priority Order</div>
+          <p>When multiple rules could match the same source value, Data Management applies them
+          in priority order: <strong>Explicit → In → Between → Like</strong>.
+          Explicit always wins. A common exam scenario: an account matches both an Explicit
+          rule and a Like wildcard — the Explicit rule takes precedence regardless of
+          the order rules were created.</p>
+        </div>
+      </div>
+ 
+      <!-- IMPORT FILE FORMAT -->
+      <div class="section">
+        <div class="section-title"><span class="icon">📄</span> Import File Format — .dat Reference</div>
+        <div class="section-sub">Header syntax and column structure for direct file loads</div>
+ 
+        <p>
+          Direct file loads use a <strong>.dat</strong> file (tab-delimited or comma-delimited)
+          that FCCS can accept via the Inbox. The first row must be the header defining
+          dimension column positions. Amount columns must use the correct sign convention
+          based on account type.
+        </p>
+ 
+        <div class="code-block"><span class="c-cm">! GlobalMerge_BritEdge_Actual_Jan25.dat
+! Entity: BritEdge | Scenario: Actual | Year: FY2025 | Period: Jan</span>
+ 
+<span class="c-kw">Scenario</span>,<span class="c-kw">Year</span>,<span class="c-kw">Period</span>,<span class="c-kw">View</span>,<span class="c-kw">Entity</span>,<span class="c-kw">Account</span>,<span class="c-kw">ICP</span>,<span class="c-kw">Movement</span>,<span class="c-kw">Amount</span>
+<span class="c-str">Actual</span>,<span class="c-str">FY2025</span>,<span class="c-str">Jan</span>,<span class="c-str">Periodic</span>,<span class="c-str">BritEdge</span>,<span class="c-str">Revenue</span>,<span class="c-str">ICP_None</span>,<span class="c-str">Periodic</span>,<span class="c-num">1250000</span>
+<span class="c-str">Actual</span>,<span class="c-str">FY2025</span>,<span class="c-str">Jan</span>,<span class="c-str">Periodic</span>,<span class="c-str">BritEdge</span>,<span class="c-str">ICSales</span>,<span class="c-str">ICP_DeutschWerk</span>,<span class="c-str">Periodic</span>,<span class="c-num">500000</span>
+<span class="c-str">Actual</span>,<span class="c-str">FY2025</span>,<span class="c-str">Jan</span>,<span class="c-str">Periodic</span>,<span class="c-str">BritEdge</span>,<span class="c-str">COGS</span>,<span class="c-str">ICP_None</span>,<span class="c-str">Periodic</span>,<span class="c-num">-720000</span>
+<span class="c-str">Actual</span>,<span class="c-str">FY2025</span>,<span class="c-str">Jan</span>,<span class="c-str">Periodic</span>,<span class="c-str">BritEdge</span>,<span class="c-str">Cash</span>,<span class="c-str">ICP_None</span>,<span class="c-str">Movements.Closing</span>,<span class="c-num">3400000</span>
+<span class="c-str">Actual</span>,<span class="c-str">FY2025</span>,<span class="c-str">Jan</span>,<span class="c-str">Periodic</span>,<span class="c-str">BritEdge</span>,<span class="c-str">ICPayables</span>,<span class="c-str">ICP_AsiaLink</span>,<span class="c-str">Movements.Closing</span>,<span class="c-num">-80000</span></div>
+ 
+        <div class="callout callout-blue">
+          <div class="callout-label">💡 Sign Convention</div>
+          <p>FCCS uses <strong>natural sign</strong> for most account types. Revenue is
+          positive when a credit (income). Expenses are negative (debit side outflow).
+          Assets are positive. Liabilities and Equity are negative on the BS.
+          Always confirm the application's sign convention setting before loading —
+          some teams configure <em>Reverse Sign</em> to match their ERP's output.</p>
+        </div>
+      </div>
+ 
+      <!-- EPM AUTOMATE -->
+      <div class="section">
+        <div class="section-title"><span class="icon">🤖</span> EPM Automate — Key Commands</div>
+        <div class="section-sub">Month-end automation commands for the GlobalMerge integration pipeline</div>
+ 
+        <div class="code-block"><span class="c-cm">## ── Step 1: Login ────────────────────────────────────────────</span>
+epmautomate login <span class="c-str">admin@globalmerge.com</span> <span class="c-str">Pa$$w0rd</span> <span class="c-str">https://fccs-a123456.epm.oraclecloud.com</span>
+ 
+<span class="c-cm">## ── Step 2: Upload source file to Inbox ──────────────────────</span>
+epmautomate uploadFile <span class="c-str">"BritEdge_Jan25.dat"</span> <span class="c-str">inbox/BritEdge_Jan25.dat</span>
+ 
+<span class="c-cm">## ── Step 3: Run Data Load Rule (maps + loads to FCCS cube) ───</span>
+epmautomate runDataRule <span class="c-str">"BritEdge_Actual_Monthly"</span> <span class="c-str">Jan</span> <span class="c-str">2025</span> <span class="c-str">Jan</span> <span class="c-str">2025</span> REPLACE
+ 
+<span class="c-cm">## ── Step 4: Import metadata refresh (if new accounts) ────────</span>
+epmautomate importMetadata <span class="c-str">"GlobalMerge_Metadata_v2.csv"</span>
+epmautomate refreshCube
+ 
+<span class="c-cm">## ── Step 5: Run Consolidation for BritEdge ───────────────────</span>
+epmautomate consolidate <span class="c-str">"BritEdge"</span> <span class="c-str">"Actual"</span> <span class="c-str">"FY2025"</span> <span class="c-str">"Jan"</span> <span class="c-str">"YTD"</span>
+ 
+<span class="c-cm">## ── Step 6: Download error/process log ───────────────────────</span>
+epmautomate downloadFile <span class="c-str">"outbox/logs/BritEdge_Jan25_error.log"</span>
+ 
+<span class="c-cm">## ── Step 7: Logout ───────────────────────────────────────────</span>
+epmautomate logout</div>
+ 
+        <div class="callout callout-orange">
+          <div class="callout-label">⚡ Scheduling EPM Automate</div>
+          <p>EPM Automate scripts are typically wrapped in a Shell (.sh) or Batch (.bat) file and
+          scheduled via the OS scheduler (cron on Linux, Task Scheduler on Windows) or an
+          enterprise scheduler like Control-M. Oracle recommends running the month-end
+          script <strong>after the ERP close</strong> and <strong>before the FCCS consolidation
+          deadline</strong>. For GlobalMerge, this means BritEdge (Oracle ERP) loads first
+          via OIC, then DeutschWerk (SAP CSV) and AsiaLink (REST API) in parallel.</p>
+        </div>
+      </div>
+ 
+      <!-- ERROR HANDLING -->
+      <div class="section">
+        <div class="section-title"><span class="icon">⚠️</span> Error Handling &amp; Load Status</div>
+        <div class="section-sub">Common load errors and resolution paths</div>
+ 
+        <div class="loader-status">
+          <div class="ls-row">
+            <span class="ls-icon">🔴</span>
+            <span class="ls-text"><strong>Unmapped Member</strong> — source code has no mapping rule in Data Management</span>
+            <span class="ls-badge ls-error">LOAD_ERROR</span>
+          </div>
+          <div class="ls-row">
+            <span class="ls-icon">🟡</span>
+            <span class="ls-text"><strong>Period Mismatch</strong> — file period header does not match the Data Load Rule period range</span>
+            <span class="ls-badge ls-warn">VALIDATION_WARN</span>
+          </div>
+          <div class="ls-row">
+            <span class="ls-icon">🔴</span>
+            <span class="ls-text"><strong>Invalid ICP</strong> — ICP partner code not found in ICP dimension (entity may have been renamed)</span>
+            <span class="ls-badge ls-error">LOAD_ERROR</span>
+          </div>
+          <div class="ls-row">
+            <span class="ls-icon">🟡</span>
+            <span class="ls-text"><strong>Locked Period</strong> — target entity/period is locked; no data can be written</span>
+            <span class="ls-badge ls-warn">LOAD_BLOCKED</span>
+          </div>
+          <div class="ls-row">
+            <span class="ls-icon">🟢</span>
+            <span class="ls-text"><strong>Load Complete</strong> — all rows mapped and committed to the FCCS cube successfully</span>
+            <span class="ls-badge ls-ok">SUCCESS</span>
+          </div>
+          <div class="ls-row">
+            <span class="ls-icon">🔵</span>
+            <span class="ls-text"><strong>Partial Load</strong> — some rows loaded; unmapped rows written to error file in Outbox</span>
+            <span class="ls-badge ls-info">PARTIAL</span>
+          </div>
+          <div class="ls-row">
+            <span class="ls-icon">🟠</span>
+            <span class="ls-text"><strong>Currency Not Defined</strong> — entity's default currency has no exchange rate for the load period</span>
+            <span class="ls-badge ls-orange">RATE_MISSING</span>
+          </div>
+        </div>
+ 
+        <div class="callout callout-rose">
+          <div class="callout-label">⚠️ GlobalMerge DeutschWerk Scenario — Unmapped Account</div>
+          <p>DeutschWerk's SAP trial balance includes account <strong>491000 (Sonstige Erträge)</strong>
+          — a German-specific miscellaneous income code not yet in the Data Management mapping table.
+          The load will fail with LOAD_ERROR for all rows containing 491000.
+          Resolution: add an Explicit mapping rule <code>491000 → OtherIncome</code> in the
+          DeutschWerk location, then re-run the data load rule with Replace mode.</p>
+        </div>
+      </div>
+ 
+    </div><!-- /technical -->
+ 
+ 
+    <!-- ═══════════════════════════════════════════
+         TAB 3 — LAB
+    ════════════════════════════════════════════ -->
+    <div class="tab-panel" id="tab-lab">
+ 
+      <div class="section">
+        <div class="section-title"><span class="icon">🔬</span> Lab Overview</div>
+        <div class="section-sub">End-to-end data load for GlobalMerge Corp — January 2025</div>
+        <p>
+          In this lab you will configure the complete data integration pipeline for
+          GlobalMerge Corp's January 2025 close cycle. You'll set up Import Formats,
+          define Account and Entity mappings for the DeutschWerk SAP extract, execute
+          a data load via EPM Automate, diagnose and fix an unmapped member error, and
+          confirm successful load by reviewing SC status and spot-checking data in a form.
+        </p>
+        <div class="callout callout-cyan">
+          <div class="callout-label">🧰 Prerequisites</div>
+          <p>Service Administrator role · Data Integration configured in your FCCS sandbox ·
+          Files: <code>DeutschWerk_Jan25.csv</code>, <code>AsiaLink_Jan25.dat</code>,
+          <code>BritEdge_Jan25.dat</code> in your local working directory ·
+          EPM Automate installed and authenticated</p>
+        </div>
+      </div>
+ 
+      <!-- EXERCISE 1 -->
+      <div class="section">
+        <div class="section-title"><span class="icon">1️⃣</span> Exercise 1 — Define Import Format for DeutschWerk SAP CSV</div>
+        <div class="section-sub">Estimated time: 20 minutes</div>
+        <ol class="step-list">
+          <li>
+            <span class="step-num">01</span>
+            <span class="step-text">Navigate to <strong>Navigator → Data Exchange → Data Integration</strong>. Click <strong>Actions → Create Import Format</strong>.</span>
+          </li>
+          <li>
+            <span class="step-num">02</span>
+            <span class="step-text">Name: <code>DeutschWerk_SAP_CSV</code>. File type: <strong>Delimited — Comma</strong>. Header rows to skip: <strong>1</strong>.</span>
+          </li>
+          <li>
+            <span class="step-num">03</span>
+            <span class="step-text">Map columns: Col 1 → <strong>Account</strong>, Col 2 → <strong>Cost Centre</strong> (custom attr), Col 3 → <strong>Amount</strong>, Col 4 → <strong>Currency</strong>. Entity and Period will be set at the Location level.</span>
+          </li>
+          <li>
+            <span class="step-num">04</span>
+            <span class="step-text">Set Amount multiplier to <strong>1</strong> (SAP exports debit-positive, credit-negative — matching FCCS convention). Save.</span>
+          </li>
+          <li>
+            <span class="step-num">05</span>
+            <span class="step-text">Create a <strong>Location</strong> named <code>DeutschWerk_Actual</code>. Link it to: Import Format = <code>DeutschWerk_SAP_CSV</code>, Entity = <code>DeutschWerk</code>, Category = <code>Actual</code>.</span>
+          </li>
+        </ol>
+        <div class="callout callout-green">
+          <div class="callout-label">✅ Expected Outcome</div>
+          <p>Import Format and Location appear in the Data Integration setup table.
+          The Location shows Status = Active and Target Application = your FCCS instance.</p>
+        </div>
+      </div>
+ 
+      <!-- EXERCISE 2 -->
+      <div class="section">
+        <div class="section-title"><span class="icon">2️⃣</span> Exercise 2 — Configure Account Mappings</div>
+        <div class="section-sub">Estimated time: 25 minutes</div>
+        <ol class="step-list">
+          <li>
+            <span class="step-num">01</span>
+            <span class="step-text">Open Location <code>DeutschWerk_Actual</code> → <strong>Mappings</strong> tab. Select dimension: <strong>Account</strong>.</span>
+          </li>
+          <li>
+            <span class="step-num">02</span>
+            <span class="step-text">Add an <strong>Explicit</strong> mapping: Source = <code>491000</code> → Target = <code>OtherIncome</code>. This resolves the DeutschWerk SAP unmapped member error.</span>
+          </li>
+          <li>
+            <span class="step-num">03</span>
+            <span class="step-text">Add a <strong>Between</strong> mapping: Source from <code>400000</code> to <code>499999</code> → Target = <code>Revenue</code>. This covers all SAP revenue GL codes.</span>
+          </li>
+          <li>
+            <span class="step-num">04</span>
+            <span class="step-text">Add a <strong>Between</strong> mapping: Source <code>500000</code>–<code>599999</code> → Target = <code>COGS</code>.</span>
+          </li>
+          <li>
+            <span class="step-num">05</span>
+            <span class="step-text">Add a <strong>Like</strong> mapping: Source = <code>IC_*</code> → Target = <code>ICSales</code>. This catches all SAP intercompany codes.</span>
+          </li>
+          <li>
+            <span class="step-num">06</span>
+            <span class="step-text">Switch to dimension <strong>Entity</strong>. Add Explicit: Source = <code>DE01</code> → Target = <code>DeutschWerk</code>. Save all mappings.</span>
+          </li>
+        </ol>
+        <div class="callout callout-gold">
+          <div class="callout-label">⚠️ Verify Priority Order</div>
+          <p>Account 491000 would also match the Between rule (400000–499999). Confirm that
+          the Explicit rule <code>491000 → OtherIncome</code> takes precedence.
+          In the mapping list, Explicit rules are processed first regardless of row order.
+          You can verify by clicking <strong>Validate</strong> and checking which target
+          member is shown for source value 491000.</p>
+        </div>
+      </div>
+ 
+      <!-- EXERCISE 3 -->
+      <div class="section">
+        <div class="section-title"><span class="icon">3️⃣</span> Exercise 3 — Run the Full Pipeline via EPM Automate</div>
+        <div class="section-sub">Estimated time: 30 minutes</div>
+        <ol class="step-list">
+          <li>
+            <span class="step-num">01</span>
+            <span class="step-text">Open terminal. Run: <code>epmautomate login admin@globalmerge.com [password] [url]</code></span>
+          </li>
+          <li>
+            <span class="step-num">02</span>
+            <span class="step-text">Upload the source file: <code>epmautomate uploadFile "DeutschWerk_Jan25.csv" inbox/DeutschWerk_Jan25.csv</code></span>
+          </li>
+          <li>
+            <span class="step-num">03</span>
+            <span class="step-text">Run the data load rule: <code>epmautomate runDataRule "DeutschWerk_Actual_Monthly" Jan 2025 Jan 2025 REPLACE</code></span>
+          </li>
+          <li>
+            <span class="step-num">04</span>
+            <span class="step-text">Monitor the job in <strong>Jobs → Process Details</strong> in the FCCS UI. Wait for status <strong>Completed</strong>.</span>
+          </li>
+          <li>
+            <span class="step-num">05</span>
+            <span class="step-text">If status = <strong>Error</strong>, download the log: <code>epmautomate downloadFile "outbox/logs/DeutschWerk_Jan25_error.log"</code>. Review the unmapped member list and add missing mappings.</span>
+          </li>
+          <li>
+            <span class="step-num">06</span>
+            <span class="step-text">After successful load, navigate to <strong>Consolidation → System Check</strong>. Verify DeutschWerk for Actual / Jan 2025 shows status <strong>4 (No Data)</strong> → after load it should move to <strong>1 (OK)</strong> (not yet consolidated).</span>
+          </li>
+          <li>
+            <span class="step-num">07</span>
+            <span class="step-text">Open a data form for DeutschWerk. Spot-check: Revenue account should show EUR balance near the source file's GE revenue total. Confirm ICSales has partner <code>ICP_BritEdge</code> tagged.</span>
+          </li>
+        </ol>
+        <div class="callout callout-green">
+          <div class="callout-label">🏆 Lab Challenge — Load All Four Entities</div>
+          <p>Extend the EPM Automate script to load all four GlobalMerge entities in sequence:
+          BritEdge (.dat), DeutschWerk (.csv), AsiaLink (.dat), NovaTech (equity journal entry only).
+          After all four load successfully, run consolidation for the group and confirm
+          SC status moves to <strong>2 (Consolidated)</strong> for GlobalMerge at the
+          group level.</p>
+        </div>
+      </div>
+ 
+    </div><!-- /lab -->
+ 
+ 
+    <!-- ═══════════════════════════════════════════
+         TAB 4 — EXAM
+    ════════════════════════════════════════════ -->
+    <div class="tab-panel" id="tab-exam">
+ 
+      <div class="section">
+        <div class="section-title"><span class="icon">📝</span> Exam Preparation</div>
+        <div class="section-sub">Data Integration questions mapped to Oracle FCCS Certification objectives</div>
+        <p>
+          Data Integration and Data Management are high-weight topics in the Oracle FCCS
+          Implementation Specialist exam. Expect 10–15% of questions to cover load methods,
+          mapping priority, EPM Automate syntax, error codes, and load mode behaviour.
+        </p>
+      </div>
+ 
+      <!-- Q1 -->
+      <div class="exam-q">
+        <div class="exam-q-label">Question 1 of 8 · Mapping Priority</div>
+        <div class="exam-q-text">
+          A Data Management Account mapping table contains the following rules for
+          DeutschWerk: (1) Explicit: 491000 → OtherIncome, (2) Between: 400000–499999 → Revenue,
+          (3) Like: 49* → MiscIncome. When source account 491000 is processed,
+          which target member does Data Management use?
+        </div>
+        <ul class="exam-options">
+          <li class="exam-option correct"><span class="opt-key">A</span>OtherIncome — the Explicit rule takes highest priority.</li>
+          <li class="exam-option"><span class="opt-key">B</span>Revenue — the Between rule was created before the Like rule.</li>
+          <li class="exam-option"><span class="opt-key">C</span>MiscIncome — the Like rule is most specific for 49* pattern.</li>
+          <li class="exam-option"><span class="opt-key">D</span>Data Management returns an error because multiple rules match.</li>
+        </ul>
+        <button class="reveal-btn" onclick="toggleReveal(this)">Reveal Answer</button>
+        <div class="exam-reveal">
+          <div class="exam-answer-box">
+            <strong>Correct: A.</strong> Data Management applies mappings in priority order:
+            Explicit → In → Between → Like. An Explicit rule always wins over Between or Like
+            regardless of creation order. Account 491000 will be mapped to OtherIncome.
+          </div>
+        </div>
+      </div>
+ 
+      <!-- Q2 -->
+      <div class="exam-q">
+        <div class="exam-q-label">Question 2 of 8 · Load Mode</div>
+        <div class="exam-q-text">
+          The DeutschWerk January 2025 data was loaded in REPLACE mode. The finance
+          team then discovers a posting error and needs to load a corrected file.
+          Which load mode should be used for the corrected file?
+        </div>
+        <ul class="exam-options">
+          <li class="exam-option correct"><span class="opt-key">A</span>REPLACE — it will overwrite the erroneous data with the corrected values.</li>
+          <li class="exam-option"><span class="opt-key">B</span>ACCUMULATE — it will add the correction to the existing balance.</li>
+          <li class="exam-option"><span class="opt-key">C</span>SUBTRACT — it will remove the original load before adding the correction.</li>
+          <li class="exam-option"><span class="opt-key">D</span>You must manually zero out all cells before loading the corrected file.</li>
+        </ul>
+        <button class="reveal-btn" onclick="toggleReveal(this)">Reveal Answer</button>
+        <div class="exam-reveal">
+          <div class="exam-answer-box">
+            <strong>Correct: A.</strong> REPLACE mode clears the existing data for the
+            entity/scenario/period combination and loads the new file from scratch.
+            It is the safest correction method when a full restated trial balance is available.
+            ACCUMULATE would double-count; SUBTRACT is used only to reverse a specific batch.
+          </div>
+        </div>
+      </div>
+ 
+      <!-- Q3 -->
+      <div class="exam-q">
+        <div class="exam-q-label">Question 3 of 8 · EPM Automate</div>
+        <div class="exam-q-text">
+          Which EPM Automate command uploads a local file to the FCCS application's Inbox folder?
+        </div>
+        <ul class="exam-options">
+          <li class="exam-option"><span class="opt-key">A</span><code>epmautomate importData "BritEdge_Jan25.dat" inbox</code></li>
+          <li class="exam-option correct"><span class="opt-key">B</span><code>epmautomate uploadFile "BritEdge_Jan25.dat" inbox/BritEdge_Jan25.dat</code></li>
+          <li class="exam-option"><span class="opt-key">C</span><code>epmautomate sendFile "BritEdge_Jan25.dat" --target inbox</code></li>
+          <li class="exam-option"><span class="opt-key">D</span><code>epmautomate pushData "inbox/BritEdge_Jan25.dat"</code></li>
+        </ul>
+        <button class="reveal-btn" onclick="toggleReveal(this)">Reveal Answer</button>
+        <div class="exam-reveal">
+          <div class="exam-answer-box">
+            <strong>Correct: B.</strong> The correct EPM Automate command is
+            <code>uploadFile [localFile] [serverPath]</code>. The server path must include
+            the <code>inbox/</code> prefix. The other options use incorrect command names
+            that do not exist in EPM Automate.
+          </div>
+        </div>
+      </div>
+ 
+      <!-- Q4 -->
+      <div class="exam-q">
+        <div class="exam-q-label">Question 4 of 8 · Integration Methods</div>
+        <div class="exam-q-text">
+          NovaTech Inc uses the Equity Method (PCON = 0, POWN = 30%). The consolidation
+          team asks what data should be loaded into FCCS for NovaTech each month.
+          Which is the correct answer?
+        </div>
+        <ul class="exam-options">
+          <li class="exam-option"><span class="opt-key">A</span>Load NovaTech's full trial balance — FCCS will automatically apply 30% weighting.</li>
+          <li class="exam-option"><span class="opt-key">B</span>Load 30% of each NovaTech balance line by line.</li>
+          <li class="exam-option correct"><span class="opt-key">C</span>Load only the Investment in NovaTech balance and GlobalMerge's share of NovaTech's net equity (30%).</li>
+          <li class="exam-option"><span class="opt-key">D</span>No data load is needed; FCCS calculates equity pickup automatically from metadata.</li>
+        </ul>
+        <button class="reveal-btn" onclick="toggleReveal(this)">Reveal Answer</button>
+        <div class="exam-reveal">
+          <div class="exam-answer-box">
+            <strong>Correct: C.</strong> Under the Equity Method (PCON = 0), FCCS does not
+            aggregate NovaTech's trial balance line by line. The only data needed is the
+            Investment account balance (what GlobalMerge paid / book value) and the equity
+            pickup amount (30% of NovaTech's net equity). FCCS does not auto-calculate
+            this from metadata alone — it must be provided as input.
+          </div>
+        </div>
+      </div>
+ 
+      <!-- Q5 -->
+      <div class="exam-q">
+        <div class="exam-q-label">Question 5 of 8 · Data Management Components</div>
+        <div class="exam-q-text">
+          An administrator needs to configure Data Management to load BritEdge's Oracle ERP
+          Cloud trial balance. They have already created an Import Format. What must be
+          created next before a Data Load Rule can be executed?
+        </div>
+        <ul class="exam-options">
+          <li class="exam-option"><span class="opt-key">A</span>A Mapping Table and a Consolidation Rule.</li>
+          <li class="exam-option correct"><span class="opt-key">B</span>A Location that links the Import Format to the target entity and category.</li>
+          <li class="exam-option"><span class="opt-key">C</span>An Exchange Rate table for GBP to USD translation.</li>
+          <li class="exam-option"><span class="opt-key">D</span>A Smart View data form pointing to the BritEdge entity.</li>
+        </ul>
+        <button class="reveal-btn" onclick="toggleReveal(this)">Reveal Answer</button>
+        <div class="exam-reveal">
+          <div class="exam-answer-box">
+            <strong>Correct: B.</strong> The Data Management setup sequence is:
+            Import Format → <strong>Location</strong> → Mappings → Data Load Rule.
+            The Location is the critical link that ties the Import Format to a specific
+            target entity and scenario (category). Without a Location, you cannot create
+            or run a Data Load Rule.
+          </div>
+        </div>
+      </div>
+ 
+      <!-- Q6 -->
+      <div class="exam-q">
+        <div class="exam-q-label">Question 6 of 8 · File Format</div>
+        <div class="exam-q-text">
+          When loading data via a .dat file directly into FCCS, which dimension column
+          must be included if the account being loaded has IsICP = Y?
+        </div>
+        <ul class="exam-options">
+          <li class="exam-option"><span class="opt-key">A</span>The Currency column — FCCS needs to know the local currency for ICP transactions.</li>
+          <li class="exam-option correct"><span class="opt-key">B</span>The ICP column — every ICP-enabled account row must specify a partner (or ICP_None for third-party).</li>
+          <li class="exam-option"><span class="opt-key">C</span>The Movement column — ICP transactions always affect the cash flow statement.</span></li>
+          <li class="exam-option"><span class="opt-key">D</span>The View column — ICP transactions must specify YTD or Periodic view to resolve correctly.</li>
+        </ul>
+        <button class="reveal-btn" onclick="toggleReveal(this)">Reveal Answer</button>
+        <div class="exam-reveal">
+          <div class="exam-answer-box">
+            <strong>Correct: B.</strong> For any account with IsICP = Y, every data row must
+            include a valid ICP dimension value — either a specific partner entity
+            (e.g., ICP_DeutschWerk) or ICP_None for external transactions. Omitting the
+            ICP column for an ICP-enabled account causes a load error.
+          </div>
+        </div>
+      </div>
+ 
+      <!-- Q7 -->
+      <div class="exam-q">
+        <div class="exam-q-label">Question 7 of 8 · Error Resolution</div>
+        <div class="exam-q-text">
+          An EPM Automate <code>runDataRule</code> command completes with status PARTIAL.
+          What does this mean, and what should the administrator do next?
+        </div>
+        <ul class="exam-options">
+          <li class="exam-option"><span class="opt-key">A</span>The load was successful for all rows; PARTIAL is the normal success status for batch loads.</li>
+          <li class="exam-option"><span class="opt-key">B</span>The load failed completely; all data must be reloaded after fixing the root cause.</li>
+          <li class="exam-option correct"><span class="opt-key">C</span>Some rows loaded successfully; unmapped or invalid rows were written to an error file in the Outbox. Review the error file, fix mappings, and re-run.</li>
+          <li class="exam-option"><span class="opt-key">D</span>The load is still running; PARTIAL means the job is 50% complete and the administrator should wait.</li>
+        </ul>
+        <button class="reveal-btn" onclick="toggleReveal(this)">Reveal Answer</button>
+        <div class="exam-reveal">
+          <div class="exam-answer-box">
+            <strong>Correct: C.</strong> PARTIAL status means Data Management loaded the rows
+            it could map successfully and wrote the problem rows to an error log in the Outbox.
+            The administrator should download the error file
+            (<code>epmautomate downloadFile "outbox/logs/..."</code>), identify unmapped
+            members, add missing mapping rules, and re-run the data load rule using
+            REPLACE mode (which will include the previously-failed rows).
+          </div>
+        </div>
+      </div>
+ 
+      <!-- Q8 -->
+      <div class="exam-q">
+        <div class="exam-q-label">Question 8 of 8 · AsiaLink Proportional Load</div>
+        <div class="exam-q-text">
+          AsiaLink Pte Ltd (50% JV, SGD) loads its full SGD trial balance into FCCS.
+          When the administrator views the GlobalMerge parent entity after consolidation,
+          they notice only SGD 1,000,000 of AsiaLink's SGD 2,000,000 Revenue appears
+          (translated to USD). Is this correct, and why?
+        </div>
+        <ul class="exam-options">
+          <li class="exam-option"><span class="opt-key">A</span>No — this is a data load error. The full SGD 2,000,000 should consolidate into the parent.</li>
+          <li class="exam-option correct"><span class="opt-key">B</span>Yes — FCCS applies PCON% = 50% during consolidation, so only 50% of AsiaLink's data flows to the parent.</li>
+          <li class="exam-option"><span class="opt-key">C</span>No — the SGD-to-USD translation rate is wrong; the full amount should appear in USD equivalent.</li>
+          <li class="exam-option"><span class="opt-key">D</span>Yes — but only because the mapping rules cut the amount in half during the data load.</li>
+        </ul>
+        <button class="reveal-btn" onclick="toggleReveal(this)">Reveal Answer</button>
+        <div class="exam-reveal">
+          <div class="exam-answer-box">
+            <strong>Correct: B.</strong> You always load the <strong>full</strong> trial balance
+            for an entity regardless of its ownership percentage. FCCS applies the PCON% property
+            during the consolidation calculation — not during the data load. Loading only 50%
+            would be incorrect and would require recalculating source data outside FCCS.
+            The proportional weighting is the engine's job, not the loader's.
+          </div>
+        </div>
+      </div>
+ 
+    </div><!-- /exam -->
+ 
+  </main>
+ 
+  <!-- ─── SIDEBAR ──────────────────────────────────────────── -->
+  <aside class="sidebar">
+ 
+    <!-- Tour Guide Widget -->
+    <div class="tour-guide-widget">
+      <div class="tg-header">
+        <div class="tg-avatar">🤖</div>
+        <div>
+          <div class="tg-name">Tour Guide AI</div>
+          <div class="tg-title">Ask about data integration</div>
+        </div>
+      </div>
+      <div class="tg-body">
+        <div class="tg-messages" id="tgMessages">
+          <div class="tg-msg bot">
+            Welcome to Hall 3! Ask me anything about Data Management,
+            EPM Automate, file formats, mapping rules, load modes, or
+            the GlobalMerge integration pipeline.
+          </div>
+        </div>
+        <div class="tg-input-wrap">
+          <input class="tg-input" id="tgInput" type="text"
+            placeholder="e.g. What is REPLACE mode?"
+            onkeydown="if(event.key==='Enter')sendTourMessage()" />
+          <button class="tg-send" onclick="sendTourMessage()">→</button>
+        </div>
+      </div>
+    </div>
+ 
+    <!-- GlobalMerge Source Systems -->
+    <div class="side-card">
+      <div class="side-card-title">GlobalMerge — Source Systems</div>
+      <div class="entity-list">
+        <div class="entity-row">
+          <div class="entity-dot" style="background:var(--accent)"></div>
+          <span class="entity-name">BritEdge Ltd</span>
+          <span class="entity-tag">OIC</span>
+          <span class="entity-pct" style="color:var(--accent)">GBP</span>
+        </div>
+        <div class="entity-row">
+          <div class="entity-dot" style="background:var(--accent-2)"></div>
+          <span class="entity-name">DeutschWerk GmbH</span>
+          <span class="entity-tag">CSV</span>
+          <span class="entity-pct" style="color:var(--accent-2)">EUR</span>
+        </div>
+        <div class="entity-row">
+          <div class="entity-dot" style="background:var(--accent-purple)"></div>
+          <span class="entity-name">AsiaLink Pte Ltd</span>
+          <span class="entity-tag">REST</span>
+          <span class="entity-pct" style="color:var(--accent-purple)">SGD</span>
+        </div>
+        <div class="entity-row">
+          <div class="entity-dot" style="background:var(--accent-gold)"></div>
+          <span class="entity-name">NovaTech Inc</span>
+          <span class="entity-tag">Manual</span>
+          <span class="entity-pct" style="color:var(--accent-gold)">USD</span>
+        </div>
+      </div>
+    </div>
+ 
+    <!-- Load Mode Quick Ref -->
+    <div class="side-card">
+      <div class="side-card-title">Load Mode Quick Reference</div>
+      <div class="kv-row">
+        <span class="kv-key">REPLACE</span>
+        <span class="kv-val green">Overwrite period data</span>
+      </div>
+      <div class="kv-row">
+        <span class="kv-key">ACCUMULATE</span>
+        <span class="kv-val cyan">Add to existing data</span>
+      </div>
+      <div class="kv-row">
+        <span class="kv-key">SUBTRACT</span>
+        <span class="kv-val rose">Reverse a batch</span>
+      </div>
+    </div>
+ 
+    <!-- Mapping Priority -->
+    <div class="side-card">
+      <div class="side-card-title">Mapping Priority (High → Low)</div>
+      <div class="kv-row">
+        <span class="kv-key">1st</span>
+        <span class="kv-val green">Explicit</span>
+      </div>
+      <div class="kv-row">
+        <span class="kv-key">2nd</span>
+        <span class="kv-val cyan">In (list)</span>
+      </div>
+      <div class="kv-row">
+        <span class="kv-key">3rd</span>
+        <span class="kv-val gold">Between (range)</span>
+      </div>
+      <div class="kv-row">
+        <span class="kv-key">4th</span>
+        <span class="kv-val orange">Like (wildcard)</span>
+      </div>
+    </div>
+ 
+    <!-- DM Setup Sequence -->
+    <div class="side-card">
+      <div class="side-card-title">Data Management Setup Order</div>
+      <div class="kv-row">
+        <span class="kv-key">Step 1</span>
+        <span class="kv-val cyan">Import Format</span>
+      </div>
+      <div class="kv-row">
+        <span class="kv-key">Step 2</span>
+        <span class="kv-val gold">Location</span>
+      </div>
+      <div class="kv-row">
+        <span class="kv-key">Step 3</span>
+        <span class="kv-val green">Mappings</span>
+      </div>
+      <div class="kv-row">
+        <span class="kv-key">Step 4</span>
+        <span class="kv-val orange">Data Load Rule</span>
+      </div>
+      <div class="kv-row">
+        <span class="kv-key">Step 5</span>
+        <span class="kv-val rose">Execute &amp; Monitor</span>
+      </div>
+    </div>
+ 
+    <!-- Hall Navigation -->
+    <div class="side-card">
+      <div class="side-card-title">Tour Halls</div>
+      <nav class="hall-pills">
+        <a href="hall-1.html" class="hall-pill">
+          <span class="hall-pill-num">01</span> Consolidation Overview
+        </a>
+        <a href="hall-2.html" class="hall-pill">
+          <span class="hall-pill-num">02</span> Metadata Gallery
+        </a>
+        <a href="hall-3.html" class="hall-pill current">
+          <span class="hall-pill-num">03</span> Data Integration
+        </a>
+        <a href="hall-4.html" class="hall-pill">
+          <span class="hall-pill-num">04</span> Data Forms
+        </a>
+        <a href="hall-5.html" class="hall-pill">
+          <span class="hall-pill-num">05</span> Calculation Rules
+        </a>
+      </nav>
+    </div>
+ 
+  </aside>
+</div>
+ 
+<!-- ─── FOOTER ───────────────────────────────────────────────── -->
+<footer class="site-footer">
+  FCCS EPM Cloud Study Tour · Hall 3 — Data Integration Gallery ·
+  GlobalMerge Corp Case · Oracle FCCS Implementation Specialist Prep
+</footer>
+ 
+<!-- ─── SCRIPTS ──────────────────────────────────────────────── -->
+<script>
+  // ── Tab switching ─────────────────────────────────────────────
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+    });
+  });
+ 
+  // ── Exam reveal ───────────────────────────────────────────────
+  function toggleReveal(btn) {
+    const reveal = btn.nextElementSibling;
+    if (reveal.classList.contains('show')) {
+      reveal.classList.remove('show');
+      btn.textContent = 'Reveal Answer';
+    } else {
+      reveal.classList.add('show');
+      btn.textContent = 'Hide Answer';
+    }
+  }
+ 
+  // ── Tour Guide → /api/tour-guide ──────────────────────────────
+  async function sendTourMessage() {
+    const input    = document.getElementById('tgInput');
+    const messages = document.getElementById('tgMessages');
+    const question = input.value.trim();
+    if (!question) return;
+ 
+    const userBubble = document.createElement('div');
+    userBubble.className = 'tg-msg user';
+    userBubble.textContent = question;
+    messages.appendChild(userBubble);
+    input.value = '';
+ 
+    const typing = document.createElement('div');
+    typing.className = 'tg-msg bot';
+    typing.textContent = '…';
+    messages.appendChild(typing);
+    messages.scrollTop = messages.scrollHeight;
+ 
+    try {
+      const res = await fetch('/api/tour-guide', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          hall: 3,
+          topic: 'data-integration',
+          question,
+          context: 'GlobalMerge Corp: BritEdge GBP 100% (OIC), DeutschWerk EUR 80% (SAP CSV), AsiaLink SGD 50% JV (REST), NovaTech USD 30% Equity (manual). FCCS Data Management, EPM Automate, mapping rules, load modes, error handling.'
+        })
+      });
+      const data = await res.json();
+      typing.textContent = data.answer || data.message || 'No response received.';
+    } catch (e) {
+      typing.textContent = 'Tour guide is temporarily unavailable. Try: What is the correct mapping priority order in Data Management?';
+    }
+    messages.scrollTop = messages.scrollHeight;
+  }
+</script>
+</body>
+</html>

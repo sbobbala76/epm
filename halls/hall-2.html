@@ -1,0 +1,1959 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hall 2 — Metadata Gallery | FCCS EPM Cloud Study Tour</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;0,9..144,700;1,9..144,300&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    /* ─── DESIGN TOKENS ──────────────────────────────────────── */
+    :root {
+      --bg:           #0b0f1a;
+      --surface:      #111827;
+      --surface-2:    #1a2235;
+      --border:       #1f2d45;
+      --border-light: #2a3f5f;
+      --accent:       #3b82f6;
+      --accent-2:     #06b6d4;
+      --accent-gold:  #f59e0b;
+      --accent-green: #10b981;
+      --accent-rose:  #f43f5e;
+      --accent-purple:#a855f7;
+      --text:         #e2e8f0;
+      --text-muted:   #64748b;
+      --text-dim:     #94a3b8;
+      --tag-bg:       rgba(59,130,246,0.12);
+      --tag-border:   rgba(59,130,246,0.3);
+      --radius:       8px;
+      --radius-lg:    14px;
+    }
+ 
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+ 
+    html { scroll-behavior: smooth; }
+ 
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      font-size: 15px;
+      line-height: 1.7;
+      min-height: 100vh;
+    }
+ 
+    /* ─── HEADER ────────────────────────────────────────────── */
+    .site-header {
+      background: rgba(11,15,26,0.92);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      padding: 0 2rem;
+    }
+    .header-inner {
+      max-width: 1280px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 58px;
+      gap: 1rem;
+    }
+    .site-logo {
+      font-family: 'Fraunces', serif;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--text);
+      text-decoration: none;
+      white-space: nowrap;
+    }
+    .site-logo span { color: var(--accent); }
+ 
+    .hall-nav {
+      display: flex;
+      gap: 0.25rem;
+      flex-wrap: wrap;
+    }
+    .hall-nav a {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      text-decoration: none;
+      padding: 0.3rem 0.65rem;
+      border: 1px solid transparent;
+      border-radius: var(--radius);
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+    .hall-nav a:hover {
+      color: var(--text);
+      border-color: var(--border-light);
+      background: var(--surface);
+    }
+    .hall-nav a.active {
+      color: var(--accent);
+      border-color: var(--accent);
+      background: rgba(59,130,246,0.1);
+    }
+ 
+    /* ─── HERO ──────────────────────────────────────────────── */
+    .hero {
+      background: linear-gradient(135deg, #0b0f1a 0%, #0f1e35 50%, #091626 100%);
+      border-bottom: 1px solid var(--border);
+      padding: 3.5rem 2rem 2.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 60% 50% at 70% 50%, rgba(59,130,246,0.08) 0%, transparent 70%),
+        radial-gradient(ellipse 40% 60% at 20% 80%, rgba(6,182,212,0.06) 0%, transparent 60%);
+      pointer-events: none;
+    }
+    .hero-inner {
+      max-width: 1280px;
+      margin: 0 auto;
+      position: relative;
+    }
+    .hero-eyebrow {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .hero-eyebrow::before {
+      content: '';
+      display: inline-block;
+      width: 20px;
+      height: 1px;
+      background: var(--accent);
+    }
+    .hero h1 {
+      font-family: 'Fraunces', serif;
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 700;
+      line-height: 1.15;
+      color: #fff;
+      margin-bottom: 1rem;
+    }
+    .hero h1 em {
+      font-style: italic;
+      color: var(--accent-2);
+    }
+    .hero-desc {
+      color: var(--text-dim);
+      max-width: 680px;
+      font-size: 0.95rem;
+      margin-bottom: 1.5rem;
+    }
+    .hero-meta {
+      display: flex;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+    .hero-badge {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.68rem;
+      padding: 0.3rem 0.7rem;
+      border-radius: 999px;
+      border: 1px solid;
+      letter-spacing: 0.04em;
+    }
+    .badge-blue   { color: var(--accent);   border-color: rgba(59,130,246,0.4);  background: rgba(59,130,246,0.08);  }
+    .badge-cyan   { color: var(--accent-2); border-color: rgba(6,182,212,0.4);   background: rgba(6,182,212,0.08);   }
+    .badge-gold   { color: var(--accent-gold); border-color: rgba(245,158,11,0.4); background: rgba(245,158,11,0.08); }
+    .badge-green  { color: var(--accent-green); border-color: rgba(16,185,129,0.4); background: rgba(16,185,129,0.08);}
+    .badge-rose   { color: var(--accent-rose); border-color: rgba(244,63,94,0.4); background: rgba(244,63,94,0.08);  }
+    .badge-purple { color: var(--accent-purple); border-color: rgba(168,85,247,0.4); background: rgba(168,85,247,0.08);}
+ 
+    /* ─── LAYOUT ─────────────────────────────────────────────── */
+    .main-wrap {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 2.5rem 2rem 4rem;
+      display: grid;
+      grid-template-columns: 1fr 320px;
+      gap: 2rem;
+      align-items: start;
+    }
+    @media (max-width: 900px) {
+      .main-wrap { grid-template-columns: 1fr; }
+      .sidebar { order: -1; }
+    }
+ 
+    /* ─── TABS ───────────────────────────────────────────────── */
+    .tab-bar {
+      display: flex;
+      gap: 0;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 2rem;
+      overflow-x: auto;
+    }
+    .tab-btn {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.72rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 0.75rem 1.25rem;
+      background: transparent;
+      border: none;
+      border-bottom: 2px solid transparent;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+    .tab-btn:hover { color: var(--text-dim); }
+    .tab-btn.active {
+      color: var(--accent);
+      border-bottom-color: var(--accent);
+    }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+ 
+    /* ─── CONTENT BLOCKS ─────────────────────────────────────── */
+    .section {
+      margin-bottom: 2.5rem;
+    }
+    .section-title {
+      font-family: 'Fraunces', serif;
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: #fff;
+      margin-bottom: 0.4rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .section-title .icon {
+      font-size: 1rem;
+      opacity: 0.8;
+    }
+    .section-sub {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      margin-bottom: 1.25rem;
+      font-family: 'DM Mono', monospace;
+      letter-spacing: 0.03em;
+    }
+ 
+    p { color: var(--text-dim); margin-bottom: 0.85rem; }
+    p:last-child { margin-bottom: 0; }
+ 
+    strong { color: var(--text); font-weight: 600; }
+ 
+    /* ─── CARD ───────────────────────────────────────────────── */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+      margin-bottom: 1.25rem;
+    }
+    .card:last-child { margin-bottom: 0; }
+    .card-title {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.75rem;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.75rem;
+    }
+    .card-title.cyan   { color: var(--accent-2);    }
+    .card-title.gold   { color: var(--accent-gold);  }
+    .card-title.green  { color: var(--accent-green); }
+    .card-title.rose   { color: var(--accent-rose);  }
+    .card-title.purple { color: var(--accent-purple);}
+ 
+    /* ─── DIMENSION GRID ─────────────────────────────────────── */
+    .dim-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    .dim-card {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.1rem 1.25rem;
+      border-left: 3px solid;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .dim-card:hover { background: #1e2d45; }
+    .dim-card.blue   { border-left-color: var(--accent); }
+    .dim-card.cyan   { border-left-color: var(--accent-2); }
+    .dim-card.gold   { border-left-color: var(--accent-gold); }
+    .dim-card.green  { border-left-color: var(--accent-green); }
+    .dim-card.rose   { border-left-color: var(--accent-rose); }
+    .dim-card.purple { border-left-color: var(--accent-purple); }
+    .dim-name {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-bottom: 0.3rem;
+    }
+    .dim-card.blue   .dim-name { color: var(--accent); }
+    .dim-card.cyan   .dim-name { color: var(--accent-2); }
+    .dim-card.gold   .dim-name { color: var(--accent-gold); }
+    .dim-card.green  .dim-name { color: var(--accent-green); }
+    .dim-card.rose   .dim-name { color: var(--accent-rose); }
+    .dim-card.purple .dim-name { color: var(--accent-purple); }
+    .dim-desc {
+      font-size: 0.82rem;
+      color: var(--text-dim);
+      line-height: 1.5;
+      margin-bottom: 0.5rem;
+    }
+    .dim-meta {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--text-muted);
+    }
+ 
+    /* ─── TABLE ──────────────────────────────────────────────── */
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.83rem;
+      margin-bottom: 1.25rem;
+    }
+    .data-table thead th {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      text-align: left;
+      padding: 0.5rem 0.85rem;
+      background: var(--surface-2);
+      border-bottom: 1px solid var(--border);
+    }
+    .data-table thead th:first-child { border-radius: var(--radius) 0 0 0; }
+    .data-table thead th:last-child  { border-radius: 0 var(--radius) 0 0; }
+    .data-table tbody tr {
+      border-bottom: 1px solid var(--border);
+      transition: background 0.15s;
+    }
+    .data-table tbody tr:last-child { border-bottom: none; }
+    .data-table tbody tr:hover { background: var(--surface-2); }
+    .data-table td {
+      padding: 0.6rem 0.85rem;
+      color: var(--text-dim);
+      vertical-align: top;
+    }
+    .data-table td.mono {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.75rem;
+    }
+    .data-table td strong { color: var(--text); }
+ 
+    /* ─── HIERARCHY TREE ─────────────────────────────────────── */
+    .tree {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.78rem;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.1rem 1.25rem;
+      line-height: 2;
+      margin-bottom: 1rem;
+      overflow-x: auto;
+    }
+    .tree .t0 { color: #fff; font-weight: 500; }
+    .tree .t1 { color: var(--accent-2);  padding-left: 1.25rem; }
+    .tree .t2 { color: var(--text-dim);  padding-left: 2.5rem; }
+    .tree .t3 { color: var(--text-muted);padding-left: 3.75rem; }
+    .tree .tag {
+      display: inline-block;
+      font-size: 0.6rem;
+      padding: 0.05rem 0.4rem;
+      border-radius: 3px;
+      margin-left: 0.4rem;
+      vertical-align: middle;
+    }
+    .tag-icp  { background: rgba(245,158,11,0.15);  color: var(--accent-gold);  border: 1px solid rgba(245,158,11,0.3);  }
+    .tag-jv   { background: rgba(168,85,247,0.15);  color: var(--accent-purple);border: 1px solid rgba(168,85,247,0.3);  }
+    .tag-elim { background: rgba(244,63,94,0.15);   color: var(--accent-rose);  border: 1px solid rgba(244,63,94,0.3);   }
+    .tag-ar   { background: rgba(16,185,129,0.15);  color: var(--accent-green); border: 1px solid rgba(16,185,129,0.3);  }
+    .tag-sys  { background: rgba(59,130,246,0.15);  color: var(--accent);       border: 1px solid rgba(59,130,246,0.3);  }
+ 
+    /* ─── CALLOUT ────────────────────────────────────────────── */
+    .callout {
+      border-radius: var(--radius);
+      padding: 1rem 1.25rem;
+      margin-bottom: 1.25rem;
+      border-left: 3px solid;
+      font-size: 0.85rem;
+    }
+    .callout p { margin-bottom: 0.4rem; font-size: 0.85rem; }
+    .callout p:last-child { margin-bottom: 0; }
+    .callout-blue   { background: rgba(59,130,246,0.07);  border-left-color: var(--accent); }
+    .callout-gold   { background: rgba(245,158,11,0.07);  border-left-color: var(--accent-gold); }
+    .callout-green  { background: rgba(16,185,129,0.07);  border-left-color: var(--accent-green); }
+    .callout-rose   { background: rgba(244,63,94,0.07);   border-left-color: var(--accent-rose); }
+    .callout-purple { background: rgba(168,85,247,0.07);  border-left-color: var(--accent-purple); }
+    .callout-cyan   { background: rgba(6,182,212,0.07);   border-left-color: var(--accent-2); }
+    .callout-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.62rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 0.4rem;
+      font-weight: 500;
+    }
+    .callout-blue   .callout-label { color: var(--accent); }
+    .callout-gold   .callout-label { color: var(--accent-gold); }
+    .callout-green  .callout-label { color: var(--accent-green); }
+    .callout-rose   .callout-label { color: var(--accent-rose); }
+    .callout-purple .callout-label { color: var(--accent-purple); }
+    .callout-cyan   .callout-label { color: var(--accent-2); }
+ 
+    /* ─── STATUS GRID ────────────────────────────────────────── */
+    .status-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 0.85rem;
+      margin-bottom: 1.25rem;
+    }
+    .status-item {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 0.9rem 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+    }
+    .status-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+    .status-value {
+      font-size: 0.85rem;
+      font-weight: 500;
+    }
+    .status-ok    { color: var(--accent-green); }
+    .status-warn  { color: var(--accent-gold); }
+    .status-error { color: var(--accent-rose); }
+    .status-info  { color: var(--accent-2); }
+    .status-dot {
+      display: inline-block;
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      margin-right: 5px;
+      vertical-align: middle;
+    }
+    .dot-ok    { background: var(--accent-green); }
+    .dot-warn  { background: var(--accent-gold); }
+    .dot-error { background: var(--accent-rose); }
+    .dot-info  { background: var(--accent-2); }
+ 
+    /* ─── CODE BLOCK ─────────────────────────────────────────── */
+    .code-block {
+      background: #070c15;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.1rem 1.25rem;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.78rem;
+      line-height: 1.8;
+      overflow-x: auto;
+      margin-bottom: 1.25rem;
+      color: var(--text-dim);
+    }
+    .code-block .c-kw   { color: var(--accent); }
+    .code-block .c-str  { color: var(--accent-green); }
+    .code-block .c-num  { color: var(--accent-gold); }
+    .code-block .c-cm   { color: var(--text-muted); font-style: italic; }
+    .code-block .c-fn   { color: var(--accent-2); }
+    .code-block .c-prop { color: var(--accent-purple); }
+ 
+    /* ─── STEP LIST ──────────────────────────────────────────── */
+    .step-list { list-style: none; margin-bottom: 1.25rem; }
+    .step-list li {
+      display: flex;
+      gap: 1rem;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid var(--border);
+      align-items: flex-start;
+    }
+    .step-list li:last-child { border-bottom: none; }
+    .step-num {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      font-weight: 500;
+      color: var(--accent);
+      background: rgba(59,130,246,0.12);
+      border: 1px solid rgba(59,130,246,0.25);
+      border-radius: 4px;
+      width: 28px;
+      height: 22px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 0.1rem;
+    }
+    .step-text { font-size: 0.85rem; color: var(--text-dim); }
+    .step-text strong { color: var(--text); }
+ 
+    /* ─── EXAM QUESTION ──────────────────────────────────────── */
+    .exam-q {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 1.4rem 1.5rem;
+      margin-bottom: 1.25rem;
+    }
+    .exam-q-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.62rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 0.5rem;
+    }
+    .exam-q-text {
+      font-size: 0.9rem;
+      color: var(--text);
+      margin-bottom: 1rem;
+      font-weight: 500;
+      line-height: 1.6;
+    }
+    .exam-options { list-style: none; display: flex; flex-direction: column; gap: 0.5rem; }
+    .exam-option {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      padding: 0.55rem 0.85rem;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      font-size: 0.83rem;
+      color: var(--text-dim);
+      cursor: pointer;
+      transition: all 0.2s;
+      background: var(--surface-2);
+    }
+    .exam-option:hover { border-color: var(--accent); color: var(--text); }
+    .exam-option.correct {
+      border-color: var(--accent-green);
+      background: rgba(16,185,129,0.08);
+      color: var(--text);
+    }
+    .exam-option.incorrect {
+      border-color: var(--accent-rose);
+      background: rgba(244,63,94,0.08);
+    }
+    .opt-key {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      border: 1px solid var(--border-light);
+      border-radius: 3px;
+      padding: 0.05rem 0.35rem;
+      flex-shrink: 0;
+      margin-top: 0.1rem;
+    }
+    .exam-reveal {
+      margin-top: 0.85rem;
+      display: none;
+    }
+    .exam-reveal.show { display: block; }
+    .reveal-btn {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.68rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--accent);
+      background: rgba(59,130,246,0.1);
+      border: 1px solid rgba(59,130,246,0.3);
+      border-radius: var(--radius);
+      padding: 0.35rem 0.85rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-top: 0.75rem;
+    }
+    .reveal-btn:hover { background: rgba(59,130,246,0.18); }
+    .exam-answer-box {
+      background: rgba(16,185,129,0.08);
+      border: 1px solid rgba(16,185,129,0.25);
+      border-radius: var(--radius);
+      padding: 0.85rem 1rem;
+      font-size: 0.83rem;
+      color: var(--text-dim);
+    }
+    .exam-answer-box strong { color: var(--accent-green); }
+ 
+    /* ─── SIDEBAR ────────────────────────────────────────────── */
+    .sidebar { display: flex; flex-direction: column; gap: 1.25rem; }
+ 
+    .tour-guide-widget {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+    }
+    .tg-header {
+      background: linear-gradient(135deg, #0f1e35, #112240);
+      border-bottom: 1px solid var(--border);
+      padding: 1rem 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .tg-avatar {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem;
+      flex-shrink: 0;
+    }
+    .tg-name {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.72rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.1rem;
+    }
+    .tg-title { font-size: 0.78rem; color: var(--text-muted); }
+    .tg-body { padding: 1.1rem 1.25rem; }
+    .tg-input-wrap { display: flex; gap: 0.5rem; margin-top: 0.85rem; }
+    .tg-input {
+      flex: 1;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 0.5rem 0.75rem;
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      font-size: 0.8rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .tg-input:focus { border-color: var(--accent); }
+    .tg-input::placeholder { color: var(--text-muted); }
+    .tg-send {
+      background: var(--accent);
+      border: none;
+      border-radius: var(--radius);
+      padding: 0.5rem 0.85rem;
+      color: #fff;
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: background 0.2s;
+      font-family: 'DM Mono', monospace;
+    }
+    .tg-send:hover { background: #2563eb; }
+    .tg-messages {
+      max-height: 200px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
+    .tg-msg {
+      font-size: 0.81rem;
+      line-height: 1.5;
+      padding: 0.55rem 0.75rem;
+      border-radius: var(--radius);
+    }
+    .tg-msg.bot {
+      background: var(--surface-2);
+      color: var(--text-dim);
+      border: 1px solid var(--border);
+    }
+    .tg-msg.user {
+      background: rgba(59,130,246,0.12);
+      color: var(--text);
+      border: 1px solid rgba(59,130,246,0.2);
+      text-align: right;
+    }
+ 
+    /* sidebar cards */
+    .side-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 1.25rem;
+    }
+    .side-card-title {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 1rem;
+    }
+    .kv-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.4rem 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.82rem;
+    }
+    .kv-row:last-child { border-bottom: none; }
+    .kv-key { color: var(--text-muted); font-size: 0.78rem; }
+    .kv-val { color: var(--text); font-family: 'DM Mono', monospace; font-size: 0.75rem; }
+    .kv-val.green  { color: var(--accent-green); }
+    .kv-val.gold   { color: var(--accent-gold); }
+    .kv-val.rose   { color: var(--accent-rose); }
+    .kv-val.purple { color: var(--accent-purple); }
+    .kv-val.cyan   { color: var(--accent-2); }
+ 
+    /* entity pill list */
+    .entity-list { display: flex; flex-direction: column; gap: 0.6rem; }
+    .entity-row {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      padding: 0.55rem 0.75rem;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      font-size: 0.8rem;
+    }
+    .entity-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .entity-name { color: var(--text); flex: 1; }
+    .entity-tag {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.62rem;
+      color: var(--text-muted);
+    }
+    .entity-pct {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.7rem;
+      font-weight: 500;
+    }
+ 
+    /* nav pills */
+    .hall-pills {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+    .hall-pill {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.55rem 0.85rem;
+      border-radius: var(--radius);
+      text-decoration: none;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      border: 1px solid transparent;
+      transition: all 0.2s;
+    }
+    .hall-pill:hover { background: var(--surface-2); border-color: var(--border); color: var(--text); }
+    .hall-pill.current {
+      background: rgba(59,130,246,0.1);
+      border-color: rgba(59,130,246,0.3);
+      color: var(--accent);
+    }
+    .hall-pill-num {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      width: 20px;
+      text-align: center;
+    }
+ 
+    /* ─── FOOTER ─────────────────────────────────────────────── */
+    .site-footer {
+      border-top: 1px solid var(--border);
+      padding: 1.5rem 2rem;
+      text-align: center;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.68rem;
+      color: var(--text-muted);
+      letter-spacing: 0.04em;
+    }
+ 
+    /* ─── UTILITY ────────────────────────────────────────────── */
+    .divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 2rem 0;
+    }
+    .pill {
+      display: inline-block;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      padding: 0.2rem 0.55rem;
+      border-radius: 999px;
+      border: 1px solid;
+      vertical-align: middle;
+      margin: 0 0.2rem;
+    }
+    .inline-blue   { color: var(--accent);       border-color: rgba(59,130,246,0.3);  background: rgba(59,130,246,0.08); }
+    .inline-cyan   { color: var(--accent-2);     border-color: rgba(6,182,212,0.3);   background: rgba(6,182,212,0.08); }
+    .inline-gold   { color: var(--accent-gold);  border-color: rgba(245,158,11,0.3);  background: rgba(245,158,11,0.08); }
+    .inline-green  { color: var(--accent-green); border-color: rgba(16,185,129,0.3);  background: rgba(16,185,129,0.08); }
+    .inline-rose   { color: var(--accent-rose);  border-color: rgba(244,63,94,0.3);   background: rgba(244,63,94,0.08); }
+    .inline-purple { color: var(--accent-purple);border-color: rgba(168,85,247,0.3);  background: rgba(168,85,247,0.08); }
+ 
+    @media (max-width: 640px) {
+      .hero { padding: 2rem 1.25rem 1.75rem; }
+      .main-wrap { padding: 1.5rem 1.25rem 3rem; }
+      .dim-grid { grid-template-columns: 1fr 1fr; }
+      .status-grid { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+ 
+<!-- ─── HEADER ──────────────────────────────────────────────── -->
+<header class="site-header">
+  <div class="header-inner">
+    <a href="../index.html" class="site-logo">FCCS <span>EPM</span> Study Tour</a>
+    <nav class="hall-nav">
+      <a href="hall-1.html">Hall 1 · Consolidation</a>
+      <a href="hall-2.html" class="active">Hall 2 · Metadata</a>
+      <a href="hall-3.html">Hall 3 · Journals</a>
+      <a href="hall-4.html">Hall 4 · Data Forms</a>
+      <a href="hall-5.html">Hall 5 · Rules</a>
+    </nav>
+  </div>
+</header>
+ 
+<!-- ─── HERO ────────────────────────────────────────────────── -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-eyebrow">Hall 2 of the FCCS EPM Cloud Study Tour</div>
+    <h1>Metadata <em>Gallery</em></h1>
+    <p class="hero-desc">
+      The architecture of truth in FCCS. Every dimension, hierarchy, member property,
+      and intercompany profile that drives consolidation logic for
+      GlobalMerge Corp's multi-currency ownership structure.
+    </p>
+    <div class="hero-meta">
+      <span class="hero-badge badge-blue">8 Dimensions</span>
+      <span class="hero-badge badge-cyan">Hierarchies &amp; Alt Rollups</span>
+      <span class="hero-badge badge-gold">ICP Framework</span>
+      <span class="hero-badge badge-green">Metadata Refresh &amp; SC Status</span>
+      <span class="hero-badge badge-rose">GlobalMerge Corp Case</span>
+      <span class="hero-badge badge-purple">Lab + Exam</span>
+    </div>
+  </div>
+</section>
+ 
+<!-- ─── MAIN ─────────────────────────────────────────────────── -->
+<div class="main-wrap">
+  <main>
+ 
+    <!-- TAB BAR -->
+    <div class="tab-bar" role="tablist">
+      <button class="tab-btn active" role="tab" data-tab="conceptual">📐 Conceptual</button>
+      <button class="tab-btn" role="tab" data-tab="technical">⚙️ Technical</button>
+      <button class="tab-btn" role="tab" data-tab="lab">🔬 Lab</button>
+      <button class="tab-btn" role="tab" data-tab="exam">📝 Exam</button>
+    </div>
+ 
+    <!-- ════════════════════════════════════════════════════════
+         TAB 1 — CONCEPTUAL
+    ═════════════════════════════════════════════════════════ -->
+    <div class="tab-panel active" id="tab-conceptual">
+ 
+      <div class="section">
+        <div class="section-title"><span class="icon">🗂️</span> What Is FCCS Metadata?</div>
+        <div class="section-sub">The skeleton of every consolidation application</div>
+        <p>
+          In Oracle FCCS (Financial Consolidation and Close Service), <strong>metadata</strong>
+          is the structural definition of your application — the dimensions, members, hierarchies,
+          aliases, attributes, and consolidation rules that FCCS uses to know <em>how</em> to
+          aggregate, eliminate, and translate data.
+        </p>
+        <p>
+          Unlike a general-purpose EPM cube where you build whatever dimensions you like,
+          FCCS ships with a fixed set of <strong>eight system dimensions</strong> that map
+          directly to consolidation concepts: Entity, Account, Scenario, Year, Period,
+          View, ICP, and Movement. Some dimensions allow custom members; others are
+          partially locked. Understanding which is which — and why — is a cornerstone
+          exam topic.
+        </p>
+        <div class="callout callout-blue">
+          <div class="callout-label">🔑 Core Principle</div>
+          <p>Metadata is not just structure — it <strong>encodes business logic</strong>.
+          The consolidation method (Full/Proportional/Equity), ownership percentage,
+          elimination behaviour, and currency translation rules are all stored as
+          member properties within the metadata.</p>
+        </div>
+      </div>
+ 
+      <!-- EIGHT DIMENSIONS -->
+      <div class="section">
+        <div class="section-title"><span class="icon">📦</span> The Eight Core Dimensions</div>
+        <div class="section-sub">System-defined dimensions in every FCCS application</div>
+ 
+        <div class="dim-grid">
+          <div class="dim-card blue">
+            <div class="dim-name">Entity</div>
+            <div class="dim-desc">Legal entities, business units, and geographic nodes. Defines the consolidation hierarchy and stores currency, method, and ownership properties.</div>
+            <div class="dim-meta">Custom members ✓ · ICP source</div>
+          </div>
+          <div class="dim-card gold">
+            <div class="dim-name">Account</div>
+            <div class="dim-desc">Chart of accounts — P&L, Balance Sheet, Flow, Supplemental. Account type drives sign logic and translation rate (historical vs. current vs. average).</div>
+            <div class="dim-meta">Custom members ✓ · Account type required</div>
+          </div>
+          <div class="dim-card cyan">
+            <div class="dim-name">Scenario</div>
+            <div class="dim-desc">Actual, Budget, Forecast etc. Each scenario carries a default frequency, start year/period, and translation override option.</div>
+            <div class="dim-meta">Custom members ✓ · Translation method per scenario</div>
+          </div>
+          <div class="dim-card green">
+            <div class="dim-name">Year</div>
+            <div class="dim-desc">Fiscal years defined at application creation. FY2020–FY2030 is typical. Fixed range; requires admin action to extend.</div>
+            <div class="dim-meta">System-generated · Application setting</div>
+          </div>
+          <div class="dim-card rose">
+            <div class="dim-name">Period</div>
+            <div class="dim-desc">Monthly periods (Jan–Dec) plus system periods: Prior, First, Q1–Q4. Period frequency is set per application and cannot be changed post-creation.</div>
+            <div class="dim-meta">System members + custom sub-periods</div>
+          </div>
+          <div class="dim-card purple">
+            <div class="dim-name">View</div>
+            <div class="dim-desc">YTD (Year-to-Date), Periodic, and QTD. Controls how period-to-date calculations are derived. You cannot add or remove View members.</div>
+            <div class="dim-meta">Fixed 3 members · No custom additions</div>
+          </div>
+          <div class="dim-card blue">
+            <div class="dim-name">ICP</div>
+            <div class="dim-desc">Intercompany Partner dimension. System auto-populates ICP members from Entity leaf nodes. ICP_Entities is the system parent for all entity-mirrored ICP members.</div>
+            <div class="dim-meta">Auto-populated from Entity · + custom</div>
+          </div>
+          <div class="dim-card cyan">
+            <div class="dim-name">Movement</div>
+            <div class="dim-desc">Tracks roll-forward of Balance Sheet items: OpeningBalance, Additions, Disposals, ClosingBalance. Required for multi-period flow analysis.</div>
+            <div class="dim-meta">System members · Custom members ✓</div>
+          </div>
+        </div>
+      </div>
+ 
+      <!-- ICP SECTION -->
+      <div class="section">
+        <div class="section-title"><span class="icon">🔄</span> Intercompany Partner (ICP) Dimension</div>
+        <div class="section-sub">The elimination engine's address book</div>
+ 
+        <p>
+          ICP is the dimension that makes intercompany elimination possible. When an entity
+          records a transaction <em>with</em> another entity in the group, it tags the
+          balance with the partner's ICP code. FCCS then matches those paired balances
+          and eliminates them during consolidation.
+        </p>
+ 
+        <div class="callout callout-gold">
+          <div class="callout-label">⚠️ Key Rule — ICP vs. Non-ICP Accounts</div>
+          <p>Not every account needs ICP tagging. In FCCS you set the <strong>IsICP</strong>
+          property on an Account member to <code>Y</code> or <code>N</code>. Only
+          ICP-enabled accounts can carry an ICP partner code. Typical ICP accounts:
+          Intercompany Receivables, Payables, Revenue from affiliates, Expenses to affiliates.</p>
+        </div>
+ 
+        <p>
+          The system creates a matching ICP member for every <strong>base (leaf) entity</strong>.
+          So for GlobalMerge Corp's structure, the ICP dimension automatically contains:
+        </p>
+ 
+        <div class="tree">
+          <div class="t0">▸ ICP_Total</div>
+          <div class="t1">▸ ICP_Entities <span class="tag tag-sys">system</span></div>
+          <div class="t2">ICP_GlobalMerge <span class="tag tag-sys">parent — no transactions</span></div>
+          <div class="t2">ICP_BritEdge <span class="tag tag-icp">leaf</span></div>
+          <div class="t2">ICP_DeutschWerk <span class="tag tag-icp">leaf</span></div>
+          <div class="t2">ICP_AsiaLink <span class="tag tag-icp">leaf</span></div>
+          <div class="t2">ICP_NovaTech <span class="tag tag-icp">leaf</span></div>
+          <div class="t1">ICP_[None] <span class="tag tag-sys">external / third party</span></div>
+        </div>
+ 
+        <div class="callout callout-cyan">
+          <div class="callout-label">💡 ICP_[None] vs ICP_Entities</div>
+          <p><strong>ICP_[None]</strong> is used when a transaction has no intercompany partner — i.e.
+          it's with a third party. You must always intersect ICP-enabled accounts with
+          either a specific partner or ICP_[None]; leaving it blank causes a data load error.</p>
+        </div>
+      </div>
+ 
+      <!-- GLOBALMERGE ENTITY HIERARCHY -->
+      <div class="section">
+        <div class="section-title"><span class="icon">🌐</span> GlobalMerge Corp — Entity Hierarchy</div>
+        <div class="section-sub">Ownership structure driving consolidation methods</div>
+ 
+        <p>
+          GlobalMerge Corp is the UK-based holding company. Below it sit four operating
+          subsidiaries across different jurisdictions and ownership levels — each requiring
+          a different consolidation treatment.
+        </p>
+ 
+        <div class="tree">
+          <div class="t0">GlobalMerge Corp <span class="tag tag-sys">Top Parent · USD reporting</span></div>
+          <div class="t1">BritEdge Ltd <span class="tag tag-icp">GBP · 100%</span><span class="tag tag-sys">Full Consolidation</span></div>
+          <div class="t2">Shares in BritEdge: 100 of 100</div>
+          <div class="t1">DeutschWerk GmbH <span class="tag tag-icp">EUR · 80%</span><span class="tag tag-sys">Full Consolidation</span></div>
+          <div class="t2">Shares in DeutschWerk: 80 of 100</div>
+          <div class="t2">Non-controlling Interest: 20%</div>
+          <div class="t1">AsiaLink Pte Ltd <span class="tag tag-jv">SGD · 50% JV</span><span class="tag tag-sys">Proportional</span></div>
+          <div class="t2">Joint venture — neither partner controls</div>
+          <div class="t1">NovaTech Inc <span class="tag tag-icp">USD · 30%</span><span class="tag tag-sys">Equity Method</span></div>
+          <div class="t2">Significant influence; not a subsidiary</div>
+        </div>
+ 
+        <div class="callout callout-purple">
+          <div class="callout-label">📌 Why the Method Matters for Metadata</div>
+          <p>The consolidation method is stored as a <strong>member property on the Entity</strong>
+          (PCON% = percentage consolidation). FCCS reads this property at runtime.
+          Full = 100% of assets/liabilities + NCI elimination.
+          Proportional = only the owned % flows through.
+          Equity = single-line investment only; no line-by-line aggregation.</p>
+        </div>
+      </div>
+ 
+      <!-- ACCOUNT TYPES -->
+      <div class="section">
+        <div class="section-title"><span class="icon">📊</span> Account Types &amp; Translation Rates</div>
+        <div class="section-sub">How account metadata governs currency translation</div>
+ 
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Account Type</th>
+              <th>Examples</th>
+              <th>Translation Rate</th>
+              <th>Sign Behaviour</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="mono"><strong>ASSET</strong></td>
+              <td>Cash, Receivables, PPE</td>
+              <td>Closing Rate</td>
+              <td>Debit increases</td>
+            </tr>
+            <tr>
+              <td class="mono"><strong>LIABILITY</strong></td>
+              <td>Payables, Debt, Provisions</td>
+              <td>Closing Rate</td>
+              <td>Credit increases</td>
+            </tr>
+            <tr>
+              <td class="mono"><strong>EQUITY</strong></td>
+              <td>Share Capital, Retained Earnings</td>
+              <td>Historical Rate</td>
+              <td>Credit increases</td>
+            </tr>
+            <tr>
+              <td class="mono"><strong>REVENUE</strong></td>
+              <td>Sales, Other Income</td>
+              <td>Average Rate</td>
+              <td>Credit increases</td>
+            </tr>
+            <tr>
+              <td class="mono"><strong>EXPENSE</strong></td>
+              <td>COGS, Opex, D&amp;A</td>
+              <td>Average Rate</td>
+              <td>Debit increases</td>
+            </tr>
+            <tr>
+              <td class="mono"><strong>FLOW</strong></td>
+              <td>Cash Flow movements</td>
+              <td>Depends on sub-type</td>
+              <td>Net flow</td>
+            </tr>
+            <tr>
+              <td class="mono"><strong>CURRENCYRATE</strong></td>
+              <td>USD, EUR, GBP exchange rates</td>
+              <td>N/A — stores rates</td>
+              <td>N/A</td>
+            </tr>
+            <tr>
+              <td class="mono"><strong>GROUPLABEL</strong></td>
+              <td>Subtotal headers only</td>
+              <td>N/A — calculated</td>
+              <td>Sum of children</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+ 
+    </div><!-- /conceptual -->
+ 
+ 
+    <!-- ════════════════════════════════════════════════════════
+         TAB 2 — TECHNICAL
+    ═════════════════════════════════════════════════════════ -->
+    <div class="tab-panel" id="tab-technical">
+ 
+      <!-- HIERARCHIES -->
+      <div class="section">
+        <div class="section-title"><span class="icon">🌲</span> Hierarchies &amp; Alternate Rollups</div>
+        <div class="section-sub">Primary vs. alternate hierarchies in Entity and Account dimensions</div>
+ 
+        <p>
+          FCCS supports <strong>alternate hierarchies</strong> (also called alternate rollups)
+          within a dimension. A member can appear in multiple hierarchies simultaneously —
+          this is called <strong>shared membership</strong>. The primary hierarchy determines
+          the default aggregation path; alternate hierarchies enable reporting cuts such as
+          region, product line, or legal vs. management structure.
+        </p>
+ 
+        <div class="callout callout-rose">
+          <div class="callout-label">⚠️ Exam Trap — Shared vs. Duplicate</div>
+          <p>A <strong>shared member</strong> is the same physical member appearing in two hierarchy
+          branches. Data is stored once; the member just rolls up in two places. A
+          <strong>duplicate member</strong> (not supported in FCCS base dimensions) would be
+          two distinct members with the same name — FCCS does not allow this in the
+          Entity dimension.</p>
+        </div>
+ 
+        <div class="section-title" style="margin-top:1.5rem; font-size:1rem;"><span class="icon">🔀</span> Entity Alternate Hierarchies — GlobalMerge Corp</div>
+ 
+        <p>
+          Beyond the legal ownership hierarchy, GlobalMerge uses two alternate rollups
+          in the Entity dimension for management reporting:
+        </p>
+ 
+        <div class="card">
+          <div class="card-title">Primary Hierarchy — Legal Structure</div>
+          <div class="tree" style="margin-bottom:0">
+            <div class="t0">GlobalMerge Corp</div>
+            <div class="t1">BritEdge Ltd <span class="tag tag-sys">100%</span></div>
+            <div class="t1">DeutschWerk GmbH <span class="tag tag-sys">80%</span></div>
+            <div class="t1">AsiaLink Pte Ltd <span class="tag tag-jv">50% JV</span></div>
+            <div class="t1">NovaTech Inc <span class="tag tag-sys">30% Equity</span></div>
+          </div>
+        </div>
+ 
+        <div class="card">
+          <div class="card-title cyan">Alternate Hierarchy 1 — Geographic Rollup</div>
+          <div class="tree" style="margin-bottom:0">
+            <div class="t0">GeoTotal</div>
+            <div class="t1">EMEA</div>
+            <div class="t2">BritEdge Ltd <span class="tag tag-ar">shared</span></div>
+            <div class="t2">DeutschWerk GmbH <span class="tag tag-ar">shared</span></div>
+            <div class="t1">APAC</div>
+            <div class="t2">AsiaLink Pte Ltd <span class="tag tag-ar">shared</span></div>
+            <div class="t1">Americas</div>
+            <div class="t2">NovaTech Inc <span class="tag tag-ar">shared</span></div>
+          </div>
+        </div>
+ 
+        <div class="card">
+          <div class="card-title gold">Alternate Hierarchy 2 — Currency Group</div>
+          <div class="tree" style="margin-bottom:0">
+            <div class="t0">CurrencyTotal</div>
+            <div class="t1">GBP_Entities</div>
+            <div class="t2">BritEdge Ltd <span class="tag tag-ar">shared</span></div>
+            <div class="t1">EUR_Entities</div>
+            <div class="t2">DeutschWerk GmbH <span class="tag tag-ar">shared</span></div>
+            <div class="t1">SGD_Entities</div>
+            <div class="t2">AsiaLink Pte Ltd <span class="tag tag-ar">shared</span></div>
+            <div class="t1">USD_Entities</div>
+            <div class="t2">NovaTech Inc <span class="tag tag-ar">shared</span></div>
+          </div>
+        </div>
+      </div>
+ 
+      <!-- MEMBER PROPERTIES -->
+      <div class="section">
+        <div class="section-title"><span class="icon">🏷️</span> Key Member Properties</div>
+        <div class="section-sub">Properties stored on Entity and Account members that drive logic</div>
+ 
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Property</th>
+              <th>Dimension</th>
+              <th>Values</th>
+              <th>Effect</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="mono"><strong>DefaultCurrency</strong></td>
+              <td>Entity</td>
+              <td>GBP, EUR, SGD, USD…</td>
+              <td>Sets the entity's local currency for data entry and translation</td>
+            </tr>
+            <tr>
+              <td class="mono"><strong>PCON%</strong></td>
+              <td>Entity</td>
+              <td>0–100</td>
+              <td>Consolidation percentage; drives proportional aggregation</td>
+            </tr>
+            <tr>
+              <td class="mono"><strong>POWN%</strong></td>
+              <td>Entity</td>
+              <td>0–100</td>
+              <td>Ownership %; used for equity pickup and NCI calculation</td>
+            </tr>
+            <tr>
+              <td class="mono"><strong>Method</strong></td>
+              <td>Entity</td>
+              <td>Consolidate / Equity / Proportional / None</td>
+              <td>Determines which consolidation logic FCCS applies</td>
+            </tr>
+            <tr>
+              <td class="mono"><strong>IsICP</strong></td>
+              <td>Account</td>
+              <td>Y / N</td>
+              <td>Enables intercompany partner tagging on this account</td>
+            </tr>
+            <tr>
+              <td class="mono"><strong>AccountType</strong></td>
+              <td>Account</td>
+              <td>Asset/Liability/Equity/Revenue/Expense/Flow</td>
+              <td>Governs sign logic and default translation rate type</td>
+            </tr>
+            <tr>
+              <td class="mono"><strong>DataStorageType</strong></td>
+              <td>All dims</td>
+              <td>Store / Dynamic Calc / Never Share</td>
+              <td>Controls whether data is physically stored or calculated on-the-fly</td>
+            </tr>
+            <tr>
+              <td class="mono"><strong>Alias</strong></td>
+              <td>All dims</td>
+              <td>String (language tables)</td>
+              <td>Display labels in forms and reports; does not affect storage</td>
+            </tr>
+            <tr>
+              <td class="mono"><strong>Custom Attributes</strong></td>
+              <td>Entity, Account</td>
+              <td>User-defined</td>
+              <td>Enables filtering, smart lists, and supplemental grouping</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+ 
+      <!-- METADATA REFRESH & SC STATUS -->
+      <div class="section">
+        <div class="section-title"><span class="icon">🔃</span> Metadata Refresh &amp; System Check (SC) Status</div>
+        <div class="section-sub">What happens after you modify metadata — and what to watch for</div>
+ 
+        <p>
+          Any time you add, edit, or delete members, hierarchies, or member properties
+          in the Metadata screen, FCCS marks the application as needing a
+          <strong>Metadata Refresh</strong>. Until the refresh completes, the application
+          may show stale data or refuse to run consolidations.
+        </p>
+ 
+        <div class="callout callout-gold">
+          <div class="callout-label">⚡ Metadata Refresh — Key Behaviours</div>
+          <p>Refresh is triggered from <strong>Application &gt; Consolidation &gt; Refresh</strong>.
+          It rebuilds all dimension caches, rebuilds the dynamic calc script, and
+          invalidates any stored data that is now structurally inconsistent.</p>
+          <p style="margin-top:0.5rem">A refresh does <strong>not</strong> delete existing data — but data at
+          deleted members becomes inaccessible. Members can be disabled ("hidden") without
+          a data-destructive refresh cycle.</p>
+        </div>
+ 
+        <div class="section-title" style="margin-top:1.5rem; font-size:1rem;">SC Status After Metadata Refresh</div>
+        <p>
+          The <strong>System Check (SC)</strong> runs automatically after every metadata
+          refresh and is also available on-demand. It validates structural integrity
+          and reports status per entity-scenario-period intersection.
+        </p>
+ 
+        <div class="status-grid">
+          <div class="status-item">
+            <span class="status-label">OK</span>
+            <span class="status-value status-ok"><span class="status-dot dot-ok"></span>1 — OK</span>
+            <span style="font-size:0.75rem; color:var(--text-muted)">No issues; ready to consolidate</span>
+          </div>
+          <div class="status-item">
+            <span class="status-label">Impacted</span>
+            <span class="status-value status-warn"><span class="status-dot dot-warn"></span>6 — Impacted</span>
+            <span style="font-size:0.75rem; color:var(--text-muted)">Metadata change invalidated data; reconsolidate</span>
+          </div>
+          <div class="status-item">
+            <span class="status-label">Needs Translation</span>
+            <span class="status-value status-info"><span class="status-dot dot-info"></span>3 — Needs Translation</span>
+            <span style="font-size:0.75rem; color:var(--text-muted)">Exchange rates changed; retranslation required</span>
+          </div>
+          <div class="status-item">
+            <span class="status-label">Locked</span>
+            <span class="status-value status-error"><span class="status-dot dot-error"></span>10 — Locked</span>
+            <span style="font-size:0.75rem; color:var(--text-muted)">Period locked by admin; no further input</span>
+          </div>
+          <div class="status-item">
+            <span class="status-label">No Data</span>
+            <span class="status-value status-warn"><span class="status-dot dot-warn"></span>4 — No Data</span>
+            <span style="font-size:0.75rem; color:var(--text-muted)">No input data submitted for this entity/period</span>
+          </div>
+          <div class="status-item">
+            <span class="status-label">Matched</span>
+            <span class="status-value status-ok"><span class="status-dot dot-ok"></span>5 — Matched</span>
+            <span style="font-size:0.75rem; color:var(--text-muted)">IC balances reconcile within tolerance</span>
+          </div>
+          <div class="status-item">
+            <span class="status-label">Unmatched</span>
+            <span class="status-value status-error"><span class="status-dot dot-error"></span>7 — Unmatched</span>
+            <span style="font-size:0.75rem; color:var(--text-muted)">IC mismatch exceeds tolerance; blocks elimination</span>
+          </div>
+          <div class="status-item">
+            <span class="status-label">Consolidated</span>
+            <span class="status-value status-ok"><span class="status-dot dot-ok"></span>2 — Consolidated</span>
+            <span style="font-size:0.75rem; color:var(--text-muted)">Consolidation run successfully completed</span>
+          </div>
+        </div>
+ 
+        <div class="callout callout-rose">
+          <div class="callout-label">⚠️ After Metadata Refresh — GlobalMerge Scenario</div>
+          <p>If an admin adds a new Account member (e.g., <strong>IC_Revenue_AsiaLink</strong>) and runs
+          a refresh, all entities that have already consolidated in the current period will flip
+          from status <strong>2 (Consolidated)</strong> to status <strong>6 (Impacted)</strong>.
+          The admin must notify the consolidation team to re-run the consolidation process.</p>
+          <p style="margin-top:0.5rem">AsiaLink (50% JV, SGD) would additionally show
+          <strong>3 (Needs Translation)</strong> if any FX rates were updated as part of the
+          metadata package refresh.</p>
+        </div>
+      </div>
+ 
+      <!-- METADATA FILE FORMAT -->
+      <div class="section">
+        <div class="section-title"><span class="icon">📄</span> Metadata Load File — Format Reference</div>
+        <div class="section-sub">EPM Automate / Data Management file format for metadata import</div>
+ 
+        <p>
+          Metadata is loaded via a <strong>.csv</strong> or <strong>.xlsx</strong> file through
+          the FCCS Metadata Editor UI, or automated via EPM Automate commands. The
+          header row defines property columns; rows below represent individual members.
+        </p>
+ 
+        <div class="code-block"><span class="c-cm">// Entity metadata CSV — excerpt for GlobalMerge Corp structure</span>
+<span class="c-kw">MemberName</span>,Parent,Alias,DefaultCurrency,PCON%,POWN%,Method,IsICP
+<span class="c-str">GlobalMerge</span>,<span class="c-str">Entity</span>,<span class="c-str">GlobalMerge Corp</span>,<span class="c-str">USD</span>,<span class="c-num">100</span>,<span class="c-num">100</span>,<span class="c-str">Consolidate</span>,<span class="c-str">N</span>
+<span class="c-str">BritEdge</span>,<span class="c-str">GlobalMerge</span>,<span class="c-str">BritEdge Ltd</span>,<span class="c-str">GBP</span>,<span class="c-num">100</span>,<span class="c-num">100</span>,<span class="c-str">Consolidate</span>,<span class="c-str">Y</span>
+<span class="c-str">DeutschWerk</span>,<span class="c-str">GlobalMerge</span>,<span class="c-str">DeutschWerk GmbH</span>,<span class="c-str">EUR</span>,<span class="c-num">100</span>,<span class="c-num">80</span>,<span class="c-str">Consolidate</span>,<span class="c-str">Y</span>
+<span class="c-str">AsiaLink</span>,<span class="c-str">GlobalMerge</span>,<span class="c-str">AsiaLink Pte Ltd</span>,<span class="c-str">SGD</span>,<span class="c-num">50</span>,<span class="c-num">50</span>,<span class="c-str">Proportional</span>,<span class="c-str">Y</span>
+<span class="c-str">NovaTech</span>,<span class="c-str">GlobalMerge</span>,<span class="c-str">NovaTech Inc</span>,<span class="c-str">USD</span>,<span class="c-num">0</span>,<span class="c-num">30</span>,<span class="c-str">Equity</span>,<span class="c-str">N</span></div>
+ 
+        <div class="callout callout-purple">
+          <div class="callout-label">💡 PCON% vs POWN% — DeutschWerk Example</div>
+          <p>DeutschWerk has <strong>POWN% = 80</strong> (we own 80%) but <strong>PCON% = 100</strong>
+          (we consolidate 100% of its balances — full consolidation method). The 20% NCI is then
+          separately calculated and posted as an elimination. This is the key distinction:
+          POWN governs equity and NCI calc; PCON governs how much data flows into the
+          consolidated numbers before eliminations.</p>
+        </div>
+      </div>
+ 
+    </div><!-- /technical -->
+ 
+ 
+    <!-- ════════════════════════════════════════════════════════
+         TAB 3 — LAB
+    ═════════════════════════════════════════════════════════ -->
+    <div class="tab-panel" id="tab-lab">
+ 
+      <div class="section">
+        <div class="section-title"><span class="icon">🔬</span> Lab Overview</div>
+        <div class="section-sub">Hands-on metadata configuration for GlobalMerge Corp</div>
+        <p>
+          In this lab you will build the complete metadata structure for GlobalMerge Corp
+          from scratch using the FCCS Metadata screen. You'll configure Entity members with
+          ownership properties, tag ICP-enabled accounts, define an alternate geographic
+          hierarchy, and observe how SC status changes after each metadata refresh cycle.
+        </p>
+        <div class="callout callout-blue">
+          <div class="callout-label">🧰 Prerequisites</div>
+          <p>Access to an FCCS sandbox application · Service Administrator role ·
+          Navigator &gt; Application &gt; Consolidation open in a separate tab ·
+          GlobalMerge_Metadata_v1.csv available in your EPM Automate workspace</p>
+        </div>
+      </div>
+ 
+      <!-- EXERCISE 1 -->
+      <div class="section">
+        <div class="section-title"><span class="icon">1️⃣</span> Exercise 1 — Load Entity Metadata</div>
+        <div class="section-sub">Estimated time: 15 minutes</div>
+ 
+        <ol class="step-list">
+          <li>
+            <span class="step-num">01</span>
+            <span class="step-text">Navigate to <strong>Application &gt; Overview &gt; Dimensions</strong> and select the <strong>Entity</strong> dimension.</span>
+          </li>
+          <li>
+            <span class="step-num">02</span>
+            <span class="step-text">Click <strong>Import</strong> and upload <code>GlobalMerge_Metadata_v1.csv</code>. Select <em>Update existing members</em> mode.</span>
+          </li>
+          <li>
+            <span class="step-num">03</span>
+            <span class="step-text">After import completes, verify all four subsidiaries appear under GlobalMerge in the hierarchy pane. Confirm <strong>DefaultCurrency</strong> values: BritEdge=GBP, DeutschWerk=EUR, AsiaLink=SGD, NovaTech=USD.</span>
+          </li>
+          <li>
+            <span class="step-num">04</span>
+            <span class="step-text">Check <strong>PCON%</strong> vs <strong>POWN%</strong> for each entity. DeutschWerk should have PCON=100, POWN=80. AsiaLink should have both PCON=50, POWN=50. NovaTech should have PCON=0, POWN=30.</span>
+          </li>
+          <li>
+            <span class="step-num">05</span>
+            <span class="step-text">Click <strong>Refresh Database</strong> and wait for the job to complete. Note the timestamp.</span>
+          </li>
+        </ol>
+ 
+        <div class="callout callout-green">
+          <div class="callout-label">✅ Expected Outcome</div>
+          <p>All four entity members appear correctly. ICP dimension auto-populates with
+          ICP_BritEdge, ICP_DeutschWerk, ICP_AsiaLink, ICP_NovaTech under ICP_Entities.
+          SC Status for all entities in the current open period shows <strong>6 (Impacted)</strong>
+          — because the metadata refresh invalidated any previously consolidated data.</p>
+        </div>
+      </div>
+ 
+      <!-- EXERCISE 2 -->
+      <div class="section">
+        <div class="section-title"><span class="icon">2️⃣</span> Exercise 2 — Configure Alternate Geographic Hierarchy</div>
+        <div class="section-sub">Estimated time: 20 minutes</div>
+ 
+        <ol class="step-list">
+          <li>
+            <span class="step-num">01</span>
+            <span class="step-text">In the Entity dimension editor, click <strong>Add Member</strong> and create three parent-only nodes: <strong>EMEA</strong>, <strong>APAC</strong>, <strong>Americas</strong>. Set DataStorageType = <em>Label Only</em> (no data stored).</span>
+          </li>
+          <li>
+            <span class="step-num">02</span>
+            <span class="step-text">Create a top-level parent <strong>GeoTotal</strong> with EMEA, APAC, Americas as children.</span>
+          </li>
+          <li>
+            <span class="step-num">03</span>
+            <span class="step-text">Add <strong>shared members</strong> of BritEdge and DeutschWerk under EMEA. Right-click each entity &gt; <em>Add Shared Member</em>.</span>
+          </li>
+          <li>
+            <span class="step-num">04</span>
+            <span class="step-text">Add shared members: AsiaLink under APAC, NovaTech under Americas.</span>
+          </li>
+          <li>
+            <span class="step-num">05</span>
+            <span class="step-text">Confirm that shared members show a different icon (ghost/shared indicator) in the hierarchy. Refresh database.</span>
+          </li>
+          <li>
+            <span class="step-num">06</span>
+            <span class="step-text">Open a data form and verify that the GeoTotal hierarchy is available as an alternate row/column selection.</span>
+          </li>
+        </ol>
+ 
+        <div class="callout callout-cyan">
+          <div class="callout-label">💡 Shared Member Behaviour</div>
+          <p>When you run a consolidation for GlobalMerge (primary hierarchy), the data also rolls
+          up through GeoTotal automatically because the same physical data cells underlie both
+          hierarchy paths. No extra consolidation run is needed for the alternate hierarchy.</p>
+        </div>
+      </div>
+ 
+      <!-- EXERCISE 3 -->
+      <div class="section">
+        <div class="section-title"><span class="icon">3️⃣</span> Exercise 3 — ICP Account Setup &amp; SC Status Walkthrough</div>
+        <div class="section-sub">Estimated time: 25 minutes</div>
+ 
+        <ol class="step-list">
+          <li>
+            <span class="step-num">01</span>
+            <span class="step-text">Navigate to the <strong>Account</strong> dimension. Locate <code>IntercompanyReceivables</code> and set <strong>IsICP = Y</strong>. Repeat for <code>IntercompanyPayables</code>, <code>ICSales</code>, <code>ICExpenses</code>.</span>
+          </li>
+          <li>
+            <span class="step-num">02</span>
+            <span class="step-text">Confirm that <code>Cash</code>, <code>Revenue</code>, and <code>COGS</code> have <strong>IsICP = N</strong>. These should never carry intercompany partner tags.</span>
+          </li>
+          <li>
+            <span class="step-num">03</span>
+            <span class="step-text">Run a metadata refresh. Navigate to <strong>Consolidation &gt; System Check</strong>. Observe that all entities now show status <strong>6 (Impacted)</strong>.</span>
+          </li>
+          <li>
+            <span class="step-num">04</span>
+            <span class="step-text">Submit trial balance data for BritEdge (Actual, Jan-25). Set <code>ICSales</code> with partner <code>ICP_DeutschWerk</code> = GBP 500,000. Submit data for DeutschWerk: <code>ICExpenses</code> with partner <code>ICP_BritEdge</code> = EUR 580,000 (approx equal at spot rate).</span>
+          </li>
+          <li>
+            <span class="step-num">05</span>
+            <span class="step-text">Run <strong>IC Matching</strong> from the task flow. If the GBP/EUR difference is within tolerance (±0.5%), status should move to <strong>5 (Matched)</strong>. Run consolidation. Status moves to <strong>2 (Consolidated)</strong>.</span>
+          </li>
+          <li>
+            <span class="step-num">06</span>
+            <span class="step-text">As an admin, add a new Account member <code>IC_Advisory_Fees</code> with IsICP=Y. Refresh metadata. Observe that BritEdge and DeutschWerk flip back to <strong>6 (Impacted)</strong>.</span>
+          </li>
+        </ol>
+ 
+        <div class="callout callout-gold">
+          <div class="callout-label">🏆 Lab Challenge — AsiaLink Proportional</div>
+          <p>AsiaLink has PCON=50%. After consolidation, verify in the parent-level (GlobalMerge)
+          data that only 50% of AsiaLink's balances appear. Check the <code>Contribution</code>
+          member in the View dimension — it shows the entity's proportional share before
+          parent adjustments. Compare this with BritEdge (PCON=100%) to cement the difference.</p>
+        </div>
+      </div>
+ 
+    </div><!-- /lab -->
+ 
+ 
+    <!-- ════════════════════════════════════════════════════════
+         TAB 4 — EXAM
+    ═════════════════════════════════════════════════════════ -->
+    <div class="tab-panel" id="tab-exam">
+ 
+      <div class="section">
+        <div class="section-title"><span class="icon">📝</span> Exam Preparation</div>
+        <div class="section-sub">Practise questions mapped to Oracle FCCS Certification objectives</div>
+        <p>
+          These questions mirror the style, complexity, and trap-setting of the official
+          Oracle FCCS Implementation Specialist examination. Each question covers
+          metadata-related objectives. Click <strong>Reveal Answer</strong> after
+          attempting each question.
+        </p>
+      </div>
+ 
+      <!-- Q1 -->
+      <div class="exam-q">
+        <div class="exam-q-label">Question 1 of 8 · Entity Dimension Properties</div>
+        <div class="exam-q-text">
+          GlobalMerge Corp owns 80% of DeutschWerk GmbH. The administrator sets
+          PCON% = 100 and POWN% = 80 on the DeutschWerk entity member.
+          Which statement is correct?
+        </div>
+        <ul class="exam-options">
+          <li class="exam-option"><span class="opt-key">A</span>FCCS will consolidate only 80% of DeutschWerk's balances into GlobalMerge.</li>
+          <li class="exam-option correct"><span class="opt-key">B</span>FCCS will consolidate 100% of DeutschWerk's balances, and POWN% drives the NCI elimination calculation separately.</li>
+          <li class="exam-option"><span class="opt-key">C</span>PCON% and POWN% must always be set to the same value; setting them differently causes a metadata validation error.</li>
+          <li class="exam-option"><span class="opt-key">D</span>FCCS will apply the equity method because POWN% is less than 100%.</li>
+        </ul>
+        <button class="reveal-btn" onclick="toggleReveal(this)">Reveal Answer</button>
+        <div class="exam-reveal">
+          <div class="exam-answer-box">
+            <strong>Correct: B.</strong> PCON% controls how much of the entity's data flows into the parent —
+            100% means Full Consolidation. POWN% controls ownership-based calculations
+            like NCI (Non-Controlling Interest) eliminations and equity pickup. They
+            can and often do differ for majority-owned subsidiaries.
+          </div>
+        </div>
+      </div>
+ 
+      <!-- Q2 -->
+      <div class="exam-q">
+        <div class="exam-q-label">Question 2 of 8 · ICP Dimension</div>
+        <div class="exam-q-text">
+          Which of the following statements about the ICP dimension in FCCS is TRUE?
+        </div>
+        <ul class="exam-options">
+          <li class="exam-option"><span class="opt-key">A</span>The ICP dimension must be manually populated with member names that match the Entity dimension.</li>
+          <li class="exam-option"><span class="opt-key">B</span>Any account can be used to record intercompany transactions regardless of the IsICP property.</li>
+          <li class="exam-option correct"><span class="opt-key">C</span>FCCS automatically creates ICP members from base (leaf) Entity members; parent entities do not generate ICP members.</li>
+          <li class="exam-option"><span class="opt-key">D</span>ICP_[None] represents a third-party transaction partner and must be manually added to the ICP hierarchy.</li>
+        </ul>
+        <button class="reveal-btn" onclick="toggleReveal(this)">Reveal Answer</button>
+        <div class="exam-reveal">
+          <div class="exam-answer-box">
+            <strong>Correct: C.</strong> FCCS auto-generates ICP members from leaf entities only —
+            parent entities like GlobalMerge Corp do not get an ICP mirror member.
+            ICP_[None] is a built-in system member (no manual creation required) and is used
+            for external/third-party transactions. IsICP must be Y on the Account for a
+            partner tag to be accepted.
+          </div>
+        </div>
+      </div>
+ 
+      <!-- Q3 -->
+      <div class="exam-q">
+        <div class="exam-q-label">Question 3 of 8 · Metadata Refresh &amp; SC Status</div>
+        <div class="exam-q-text">
+          After a metadata refresh that added new account members, an administrator
+          notices that several entity-period intersections that were previously showing
+          status "2 – Consolidated" now show status "6 – Impacted". What is the
+          correct next action?
+        </div>
+        <ul class="exam-options">
+          <li class="exam-option"><span class="opt-key">A</span>Run a System Check to reset the status codes back to Consolidated automatically.</li>
+          <li class="exam-option"><span class="opt-key">B</span>Delete and re-enter all input data for the affected periods.</li>
+          <li class="exam-option correct"><span class="opt-key">C</span>Re-run the consolidation process for the affected entities and periods.</li>
+          <li class="exam-option"><span class="opt-key">D</span>Reverse the metadata change and roll back to the prior metadata version to restore Consolidated status.</li>
+        </ul>
+        <button class="reveal-btn" onclick="toggleReveal(this)">Reveal Answer</button>
+        <div class="exam-reveal">
+          <div class="exam-answer-box">
+            <strong>Correct: C.</strong> Status 6 (Impacted) means the structural change has invalidated
+            the stored consolidated results. The input data is intact — it does not need to be re-entered.
+            Re-running consolidation will recalculate and re-store results against the new metadata
+            structure, returning status to 2 (Consolidated).
+          </div>
+        </div>
+      </div>
+ 
+      <!-- Q4 -->
+      <div class="exam-q">
+        <div class="exam-q-label">Question 4 of 8 · Consolidation Method — AsiaLink</div>
+        <div class="exam-q-text">
+          AsiaLink Pte Ltd is a 50/50 Joint Venture. GlobalMerge Corp uses the
+          Proportional method (PCON% = 50). After consolidation, how much of
+          AsiaLink's SGD 2,000,000 Revenue will appear in GlobalMerge's
+          consolidated P&amp;L (before currency translation)?
+        </div>
+        <ul class="exam-options">
+          <li class="exam-option"><span class="opt-key">A</span>SGD 2,000,000 — full revenue consolidation regardless of ownership.</li>
+          <li class="exam-option correct"><span class="opt-key">B</span>SGD 1,000,000 — proportional share (50%) of AsiaLink's revenue.</li>
+          <li class="exam-option"><span class="opt-key">C</span>SGD 0 — equity method means no line-by-line consolidation.</li>
+          <li class="exam-option"><span class="opt-key">D</span>SGD 600,000 — only the minority portion is eliminated.</li>
+        </ul>
+        <button class="reveal-btn" onclick="toggleReveal(this)">Reveal Answer</button>
+        <div class="exam-reveal">
+          <div class="exam-answer-box">
+            <strong>Correct: B.</strong> Proportional consolidation (PCON = 50%) means exactly 50% of
+            each line item flows into the parent. SGD 2,000,000 × 50% = SGD 1,000,000.
+            This is then translated to USD using the Average Rate for Revenue accounts.
+            No NCI posting is required under the proportional method.
+          </div>
+        </div>
+      </div>
+ 
+      <!-- Q5 -->
+      <div class="exam-q">
+        <div class="exam-q-label">Question 5 of 8 · Alternate Hierarchies</div>
+        <div class="exam-q-text">
+          A user wants BritEdge Ltd to appear in both the primary Legal hierarchy
+          under GlobalMerge Corp AND in an alternate Geographic hierarchy under EMEA.
+          Which member type should the administrator create in the alternate hierarchy?
+        </div>
+        <ul class="exam-options">
+          <li class="exam-option"><span class="opt-key">A</span>A duplicate member with the same name but a different member ID.</li>
+          <li class="exam-option correct"><span class="opt-key">B</span>A shared member of BritEdge under the EMEA parent.</li>
+          <li class="exam-option"><span class="opt-key">C</span>A Label Only member named BritEdge_EMEA with no data storage.</li>
+          <li class="exam-option"><span class="opt-key">D</span>An alias override mapping BritEdge to the EMEA node.</li>
+        </ul>
+        <button class="reveal-btn" onclick="toggleReveal(this)">Reveal Answer</button>
+        <div class="exam-reveal">
+          <div class="exam-answer-box">
+            <strong>Correct: B.</strong> Shared members allow one physical member to appear in multiple
+            hierarchy branches. Data is stored once and aggregates correctly through all
+            hierarchies. FCCS supports shared members in the Entity dimension. Duplicate
+            members (A) would cause data integrity issues and are not supported for
+            system dimensions.
+          </div>
+        </div>
+      </div>
+ 
+      <!-- Q6 -->
+      <div class="exam-q">
+        <div class="exam-q-label">Question 6 of 8 · Account Types &amp; Translation</div>
+        <div class="exam-q-text">
+          DeutschWerk GmbH has Share Capital of EUR 5,000,000 recorded at the
+          historical rate when it was issued. In FCCS, which Account Type property
+          ensures this account is translated using the Historical Rate rather than
+          the Closing Rate?
+        </div>
+        <ul class="exam-options">
+          <li class="exam-option"><span class="opt-key">A</span>ASSET — Assets always use Historical Rate.</li>
+          <li class="exam-option correct"><span class="opt-key">B</span>EQUITY — Equity accounts default to Historical Rate translation.</li>
+          <li class="exam-option"><span class="opt-key">C</span>REVENUE — Revenue accounts are translated at Average Rate.</li>
+          <li class="exam-option"><span class="opt-key">D</span>FLOW — Flow accounts always use the Closing Rate.</li>
+        </ul>
+        <button class="reveal-btn" onclick="toggleReveal(this)">Reveal Answer</button>
+        <div class="exam-reveal">
+          <div class="exam-answer-box">
+            <strong>Correct: B.</strong> EQUITY account type triggers Historical Rate (HR) translation.
+            ASSET and LIABILITY types use Closing Rate (CR). REVENUE and EXPENSE use
+            Average Rate (AR). The account type metadata property is how FCCS knows
+            which exchange rate to apply — no custom rule is needed for standard
+            translation behaviour.
+          </div>
+        </div>
+      </div>
+ 
+      <!-- Q7 -->
+      <div class="exam-q">
+        <div class="exam-q-label">Question 7 of 8 · View Dimension</div>
+        <div class="exam-q-text">
+          Which statement correctly describes the View dimension in FCCS?
+        </div>
+        <ul class="exam-options">
+          <li class="exam-option"><span class="opt-key">A</span>Administrators can add custom View members for quarterly reporting.</li>
+          <li class="exam-option"><span class="opt-key">B</span>The View dimension has 5 fixed members: YTD, Periodic, QTD, MTD, Inception-to-Date.</li>
+          <li class="exam-option correct"><span class="opt-key">C</span>The View dimension has exactly 3 system members (YTD, Periodic, QTD) and cannot be extended with custom members.</li>
+          <li class="exam-option"><span class="opt-key">D</span>The View dimension is optional and can be removed from the application if not needed.</li>
+        </ul>
+        <button class="reveal-btn" onclick="toggleReveal(this)">Reveal Answer</button>
+        <div class="exam-reveal">
+          <div class="exam-answer-box">
+            <strong>Correct: C.</strong> The View dimension in FCCS is fixed at three members:
+            <strong>YTD</strong> (Year-to-Date), <strong>Periodic</strong> (single period), and
+            <strong>QTD</strong> (Quarter-to-Date). You cannot add, remove, or rename View members.
+            It is a required system dimension. This is a common exam question because candidates
+            confuse FCCS's locked View dimension with the more flexible dimensions in HFM or PBCS.
+          </div>
+        </div>
+      </div>
+ 
+      <!-- Q8 -->
+      <div class="exam-q">
+        <div class="exam-q-label">Question 8 of 8 · NovaTech — Equity Method</div>
+        <div class="exam-q-text">
+          NovaTech Inc has PCON% = 0 and POWN% = 30, with Method = Equity on its
+          Entity member. After consolidation, what appears in GlobalMerge Corp's
+          consolidated Balance Sheet in relation to NovaTech?
+        </div>
+        <ul class="exam-options">
+          <li class="exam-option"><span class="opt-key">A</span>30% of all NovaTech asset and liability balances aggregated line by line.</li>
+          <li class="exam-option"><span class="opt-key">B</span>100% of NovaTech's net assets, with a 70% NCI elimination.</li>
+          <li class="exam-option correct"><span class="opt-key">C</span>A single-line "Investment in NovaTech" equal to GlobalMerge's share of NovaTech's net assets (30% of net equity).</li>
+          <li class="exam-option"><span class="opt-key">D</span>Nothing — PCON% = 0 means NovaTech is fully excluded from consolidated financials.</li>
+        </ul>
+        <button class="reveal-btn" onclick="toggleReveal(this)">Reveal Answer</button>
+        <div class="exam-reveal">
+          <div class="exam-answer-box">
+            <strong>Correct: C.</strong> Equity Method (PCON = 0) means no line-by-line consolidation.
+            Instead, a single investment line reflects GlobalMerge's proportionate share of NovaTech's
+            net equity (30%). FCCS posts this to the "Investment in Subsidiaries" account.
+            NovaTech's individual revenues, expenses, assets, and liabilities do not appear in the
+            consolidated trial balance — only the investment value does.
+          </div>
+        </div>
+      </div>
+ 
+    </div><!-- /exam -->
+ 
+  </main>
+ 
+  <!-- ─── SIDEBAR ──────────────────────────────────────────── -->
+  <aside class="sidebar">
+ 
+    <!-- Tour Guide Widget -->
+    <div class="tour-guide-widget">
+      <div class="tg-header">
+        <div class="tg-avatar">🤖</div>
+        <div>
+          <div class="tg-name">Tour Guide AI</div>
+          <div class="tg-title">Ask about metadata concepts</div>
+        </div>
+      </div>
+      <div class="tg-body">
+        <div class="tg-messages" id="tgMessages">
+          <div class="tg-msg bot">
+            Welcome to Hall 2! I can explain any metadata concept —
+            dimensions, hierarchies, ICP, member properties, or
+            SC status. What would you like to explore?
+          </div>
+        </div>
+        <div class="tg-input-wrap">
+          <input class="tg-input" id="tgInput" type="text"
+            placeholder="Ask a metadata question…"
+            onkeydown="if(event.key==='Enter')sendTourMessage()" />
+          <button class="tg-send" onclick="sendTourMessage()">→</button>
+        </div>
+      </div>
+    </div>
+ 
+    <!-- Entity Ownership Summary -->
+    <div class="side-card">
+      <div class="side-card-title">GlobalMerge — Entity Ownership</div>
+      <div class="entity-list">
+        <div class="entity-row">
+          <div class="entity-dot" style="background:var(--accent)"></div>
+          <span class="entity-name">BritEdge Ltd</span>
+          <span class="entity-tag">GBP</span>
+          <span class="entity-pct" style="color:var(--accent)">100%</span>
+        </div>
+        <div class="entity-row">
+          <div class="entity-dot" style="background:var(--accent-2)"></div>
+          <span class="entity-name">DeutschWerk GmbH</span>
+          <span class="entity-tag">EUR</span>
+          <span class="entity-pct" style="color:var(--accent-2)">80%</span>
+        </div>
+        <div class="entity-row">
+          <div class="entity-dot" style="background:var(--accent-purple)"></div>
+          <span class="entity-name">AsiaLink Pte Ltd</span>
+          <span class="entity-tag">SGD · JV</span>
+          <span class="entity-pct" style="color:var(--accent-purple)">50%</span>
+        </div>
+        <div class="entity-row">
+          <div class="entity-dot" style="background:var(--accent-gold)"></div>
+          <span class="entity-name">NovaTech Inc</span>
+          <span class="entity-tag">USD · EQ</span>
+          <span class="entity-pct" style="color:var(--accent-gold)">30%</span>
+        </div>
+      </div>
+    </div>
+ 
+    <!-- SC Status Quick Reference -->
+    <div class="side-card">
+      <div class="side-card-title">SC Status Quick Reference</div>
+      <div class="kv-row">
+        <span class="kv-key">1 – OK</span>
+        <span class="kv-val green">No action needed</span>
+      </div>
+      <div class="kv-row">
+        <span class="kv-key">2 – Consolidated</span>
+        <span class="kv-val green">Run complete</span>
+      </div>
+      <div class="kv-row">
+        <span class="kv-key">3 – Needs Translation</span>
+        <span class="kv-val cyan">FX updated</span>
+      </div>
+      <div class="kv-row">
+        <span class="kv-key">4 – No Data</span>
+        <span class="kv-val gold">Submit data first</span>
+      </div>
+      <div class="kv-row">
+        <span class="kv-key">5 – Matched</span>
+        <span class="kv-val green">IC within tolerance</span>
+      </div>
+      <div class="kv-row">
+        <span class="kv-key">6 – Impacted</span>
+        <span class="kv-val gold">Re-consolidate</span>
+      </div>
+      <div class="kv-row">
+        <span class="kv-key">7 – Unmatched</span>
+        <span class="kv-val rose">IC mismatch!</span>
+      </div>
+      <div class="kv-row">
+        <span class="kv-key">10 – Locked</span>
+        <span class="kv-val rose">Period closed</span>
+      </div>
+    </div>
+ 
+    <!-- Dimension Cheatsheet -->
+    <div class="side-card">
+      <div class="side-card-title">Dimension Cheatsheet</div>
+      <div class="kv-row">
+        <span class="kv-key">Entity</span>
+        <span class="kv-val cyan">Custom ✓ · ICP source</span>
+      </div>
+      <div class="kv-row">
+        <span class="kv-key">Account</span>
+        <span class="kv-val cyan">Custom ✓ · type required</span>
+      </div>
+      <div class="kv-row">
+        <span class="kv-key">Scenario</span>
+        <span class="kv-val cyan">Custom ✓ · method/FX</span>
+      </div>
+      <div class="kv-row">
+        <span class="kv-key">Year</span>
+        <span class="kv-val gold">System · fixed range</span>
+      </div>
+      <div class="kv-row">
+        <span class="kv-key">Period</span>
+        <span class="kv-val gold">System + sub-periods</span>
+      </div>
+      <div class="kv-row">
+        <span class="kv-key">View</span>
+        <span class="kv-val rose">Fixed 3 · no additions</span>
+      </div>
+      <div class="kv-row">
+        <span class="kv-key">ICP</span>
+        <span class="kv-val gold">Auto from Entity leafs</span>
+      </div>
+      <div class="kv-row">
+        <span class="kv-key">Movement</span>
+        <span class="kv-val cyan">System + custom ✓</span>
+      </div>
+    </div>
+ 
+    <!-- Hall Navigation -->
+    <div class="side-card">
+      <div class="side-card-title">Tour Halls</div>
+      <nav class="hall-pills">
+        <a href="hall-1.html" class="hall-pill">
+          <span class="hall-pill-num">01</span> Consolidation Overview
+        </a>
+        <a href="hall-2.html" class="hall-pill current">
+          <span class="hall-pill-num">02</span> Metadata Gallery
+        </a>
+        <a href="hall-3.html" class="hall-pill">
+          <span class="hall-pill-num">03</span> Journals &amp; Adjustments
+        </a>
+        <a href="hall-4.html" class="hall-pill">
+          <span class="hall-pill-num">04</span> Data Forms
+        </a>
+        <a href="hall-5.html" class="hall-pill">
+          <span class="hall-pill-num">05</span> Calculation Rules
+        </a>
+      </nav>
+    </div>
+ 
+  </aside>
+</div>
+ 
+<!-- ─── FOOTER ───────────────────────────────────────────────── -->
+<footer class="site-footer">
+  FCCS EPM Cloud Study Tour · Hall 2 — Metadata Gallery ·
+  GlobalMerge Corp Case · Oracle FCCS Implementation Specialist Prep
+</footer>
+ 
+<!-- ─── SCRIPTS ──────────────────────────────────────────────── -->
+<script>
+  // ── Tab switching ────────────────────────────────────────────
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+    });
+  });
+ 
+  // ── Exam reveal ──────────────────────────────────────────────
+  function toggleReveal(btn) {
+    const reveal = btn.nextElementSibling;
+    if (reveal.classList.contains('show')) {
+      reveal.classList.remove('show');
+      btn.textContent = 'Reveal Answer';
+    } else {
+      reveal.classList.add('show');
+      btn.textContent = 'Hide Answer';
+    }
+  }
+ 
+  // ── Tour Guide (calls /api/tour-guide) ───────────────────────
+  async function sendTourMessage() {
+  const input = document.getElementById('tgInput');
+  const messages = document.getElementById('tgMessages');
+  const question = input.value.trim();
+  if (!question) return;
+  const userBubble = document.createElement('div');
+  userBubble.className = 'tg-msg user';
+  userBubble.textContent = question;
+  messages.appendChild(userBubble);
+  input.value = '';
+  const typing = document.createElement('div');
+  typing.className = 'tg-msg bot';
+  typing.textContent = '…';
+  messages.appendChild(typing);
+  messages.scrollTop = messages.scrollHeight;
+  try {
+    const res = await fetch('/api/tour-guide', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        system: `You are the Tour Guide for Hall 2 — Metadata Gallery of the FCCS EPM Cloud Study Tour. Help learners understand FCCS dimensions, hierarchies, ICP, alternate rollups, and SC vs Impacted status. GlobalMerge Corp: BritEdge (GBP 100%), DeutschWerk (EUR 80%), AsiaLink (SGD 50% JV), NovaTech (USD 30%).`,
+        messages: [{ role: 'user', content: question }]
+      })
+    });
+    const data = await res.json();
+    typing.textContent = data.content?.[0]?.text || 'No response received.';
+  } catch (e) {
+    typing.textContent = 'Tour guide temporarily unavailable.';
+  }
+  messages.scrollTop = messages.scrollHeight;
+}
+</script>
+</body>
+</html>
