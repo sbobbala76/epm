@@ -1939,11 +1939,13 @@
   messages.appendChild(typing);
   messages.scrollTop = messages.scrollHeight;
   try {
-    const res = await fetch('/api/tour-guide', {
+    const res = await fetch('https://epbcs-tutor.fancy-brook-fc0d.workers.dev', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        system: `You are the Tour Guide for Hall 2 — Metadata Gallery of the FCCS EPM Cloud Study Tour. Help learners understand FCCS dimensions, hierarchies, ICP, alternate rollups, and SC vs Impacted status. GlobalMerge Corp: BritEdge (GBP 100%), DeutschWerk (EUR 80%), AsiaLink (SGD 50% JV), NovaTech (USD 30%).`,
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        system: 'You are the Tour Guide for Hall 2 — Metadata Gallery of the FCCS EPM Cloud Study Tour. Help learners understand FCCS dimensions, hierarchies, ICP, alternate rollups, and SC vs Impacted status. GlobalMerge Corp: BritEdge (GBP 100%), DeutschWerk (EUR 80%), AsiaLink (SGD 50% JV), NovaTech (USD 30%).',
         messages: [{ role: 'user', content: question }]
       })
     });
