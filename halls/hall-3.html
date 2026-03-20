@@ -1471,10 +1471,12 @@ epmautomate logout</div>
     messages.scrollTop = messages.scrollHeight;
  
     try {
-      const res = await fetch('/api/tour-guide', {
+      const res = await fetch('https://epbcs-tutor.fancy-brook-fc0d.workers.dev', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
+          model: 'claude-sonnet-4-20250514',
+          max_tokens: 1000,
           hall: 3,
           topic: 'data-integration',
           question,

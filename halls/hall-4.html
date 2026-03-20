@@ -1422,10 +1422,12 @@ You think like both a senior Oracle EPM Cloud consultant and a Finance Controlle
     thread.push({ role: 'user', content: q });
     const loadId = addMsg('Thinking…', 'ai loading');
     try {
-      const res = await fetch('/api/tour-guide', {
+      const res = await fetch('https://epbcs-tutor.fancy-brook-fc0d.workers.dev', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
+          model: 'claude-sonnet-4-20250514',
+          max_tokens: 1000,
           hall: 4, topic: 'consolidation-chamber', question: q,
           context: 'GlobalMerge Corp: BritEdge GBP 100%, DeutschWerk EUR 80%, AsiaLink SGD 50% JV equity method, NovaTech USD 30%. Translate vs Consolidate vs Force Consolidate. IAS 21 translation: avg rate P&L, closing rate BS, historical Equity. CTA automatic via Movement prebuilt calcs. IC elimination automatic via ICP. Unrealised profit NOT automatic — Hall 5 or Hall 7. Q1 rates: EUR/USD 1.09/1.11, GBP/USD 1.26/1.28, SGD/USD 0.742/0.748.',
           thread

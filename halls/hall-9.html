@@ -721,10 +721,12 @@ async function sendTourMessage() {
   messages.appendChild(typing);
   messages.scrollTop = messages.scrollHeight;
   try {
-    const res = await fetch('/api/tour-guide', {
+    const res = await fetch('https://epbcs-tutor.fancy-brook-fc0d.workers.dev', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
         system: `You are the Tour Guide for Hall 9 — Exam Prep Corner of the FCCS EPM Cloud Study Tour at epm.brainspring.ai. Help learners prepare for Oracle FCCS exam 1Z0-1081-25.
  
 Key verified facts:

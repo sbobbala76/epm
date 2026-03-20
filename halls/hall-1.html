@@ -1448,10 +1448,12 @@ You are a senior Oracle EPM Cloud implementation consultant and educator. Give d
     thread.push({ role: 'user', content: q });
     const loadId = addMsg('Thinking…', 'ai loading');
     try {
-      const res = await fetch('/api/tour-guide', {
+      const res = await fetch('https://epbcs-tutor.fancy-brook-fc0d.workers.dev', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
+          model: 'claude-sonnet-4-20250514',
+          max_tokens: 1000,
           hall: 1,
           topic: 'orientation',
           question: q,
