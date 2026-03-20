@@ -716,6 +716,7 @@ async function sendTourMessage() {
       body: JSON.stringify({
         model: 'claude-sonnet-4-20250514',
         max_tokens: 1000,
+        system: systemPrompt, // <--- Add the system prompt here!
         system: `You are the Tour Guide for Hall 8× — the Project Kickoff Lab of the FCCS EPM Cloud Study Tour at epm.brainspring.ai. You help learners understand how all 8 FCCS halls connect in a real implementation lifecycle.
  
 Six-step lifecycle for GlobalMerge Corp:

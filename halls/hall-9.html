@@ -727,6 +727,7 @@ async function sendTourMessage() {
       body: JSON.stringify({
         model: 'claude-sonnet-4-20250514',
         max_tokens: 1000,
+        system: systemPrompt, // <--- Add the system prompt here!
         system: `You are the Tour Guide for Hall 9 — Exam Prep Corner of the FCCS EPM Cloud Study Tour at epm.brainspring.ai. Help learners prepare for Oracle FCCS exam 1Z0-1081-25.
  
 Key verified facts:

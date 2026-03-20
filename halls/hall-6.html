@@ -1608,7 +1608,7 @@
         })
       });
       const data = await res.json();
-      typing.textContent = data.answer || data.message || 'No response received.';
+      typing.textContent = data.content?.[0]?.text || 'No response received.';
     } catch (e) {
       typing.textContent = 'Tour guide is temporarily unavailable. Check the Conceptual tab for data source separation details.';
     }

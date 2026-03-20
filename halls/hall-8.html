@@ -1465,7 +1465,7 @@
         })
       });
       const data = await res.json();
-      typing.textContent = data.answer || data.message || 'No response received.';
+      typing.textContent = data.content?.[0]?.text || 'No response received.';
     } catch (e) {
       typing.textContent = 'Tour guide temporarily unavailable. See the Role Quick Reference in the sidebar — remember: "Metadata Administrator" does not exist.';
     }
