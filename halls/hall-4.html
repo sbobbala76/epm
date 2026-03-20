@@ -1391,14 +1391,14 @@
   //  ── Tour Guide (calls /api/tour-guide ─────────────────────────────────────────────
 async function sendATG() {
   const input = document.getElementById('atg-input');
-  const btn = document.querySelector('.tg-send-btn');
+  const btn = document.getElementById('atg-btn');
   const question = input.value.trim();
   if (!question) return;
-
+ 
   const loadId = addMsg('...', 'ai loading');
   input.value = '';
   btn.disabled = true;
-
+ 
   try {
     const res = await fetch('https://epbcs-tutor.fancy-brook-fc0d.workers.dev', {
       method: 'POST',
@@ -1422,7 +1422,7 @@ async function sendATG() {
         messages: [{ role: 'user', content: question }]
       })
     });
-
+ 
     const data = await res.json();
     // FIX 3: Use the correct data path from Hall 2
     const reply = data.content?.[0]?.text || 'No response received.';
