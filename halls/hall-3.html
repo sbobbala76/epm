@@ -1478,7 +1478,17 @@ epmautomate logout</div>
           model: 'claude-sonnet-4-20250514',
           max_tokens: 1000,
           //system: systemPrompt, // <--- Add the system prompt here!
-          system: 'You are the Tour Guide for Hall 3 — Data Integration Gallery of the FCCS EPM Cloud Study Tour. Help learners understand FCCS Data Integration, EPM Automate, mapping rules, load modes, error handling, and best practices. Use examples from the GlobalMerge Corp case. Be concise and clear.',
+          system: 'You are the Tour Guide for Hall 3 — Data Integration Gallery of the FCCS EPM Cloud Study Tour. Help learners understand FCCS Data Integration, EPM Automate, mapping rules, load modes, error handling, and best practices. Use examples from the GlobalMerge Corp case. Be concise and clear.
+          
+          STRICT RESPONSE RULES:
+            - Maximum 2-4 sentences per answer. Never more.
+            - No headers, no bullet walls, no markdown sections.
+            - Answer the specific question asked. Do not dump everything you know.
+            - Use plain conversational prose. One concrete example only if it adds clarity.
+            - If the learner asks a simple factual question, give a 1-2 sentence answer.
+            - End with one short follow-up question maximum, only when it genuinely helps.
+            - No emoji. No "Great question!" No preamble.`,
+
           messages: [{ role: 'user', content: question }]
         })
       });
