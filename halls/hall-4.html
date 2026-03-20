@@ -1405,7 +1405,9 @@ async function sendATG() {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        system: 'You are the Tour Guide for Hall 4...',
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        system: 'You are the Tour Guide for Hall 4..GlobalMerge Corp: BritEdge GBP 100%, DeutschWerk EUR 80%, AsiaLink SGD 50% JV equity method, NovaTech USD 30%. Translate vs Consolidate vs Force Consolidate. IAS 21 translation: avg rate P&L, closing rate BS, historical Equity. CTA automatic via Movement prebuilt calcs. IC elimination automatic via ICP. Unrealised profit NOT automatic — Hall 5 or Hall 7. Q1 rates: EUR/USD 1.09/1.11, GBP/USD 1.26/1.28, SGD/USD 0.742/0.748.',
         // FIX 2: Use "messages" instead of "thread"
         messages: [{ role: 'user', content: question }] 
       })
