@@ -1778,13 +1778,21 @@
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           model: 'claude-sonnet-4-20250514',
-          max_tokens: 1000,
-          hall: 5,
-          topic: 'calculation-studio',
-          question,
-          context: `FCCS Calculation Studio. Three-stage engine: Stage 1 Local Currency, Stage 2 Translated, Stage 3 Consolidated. Six configurable seed points. Consolidation rules vs on-demand rules. Groovy scripting. GlobalMerge Corp: BritEdge GBP 100%, DeutschWerk EUR 80% (hedged FX instruments), AsiaLink SGD 50% JV (equity method), NovaTech USD 30% (equity method). Unrealised profit decision: journal vs on-demand rule vs consolidation rule.`
-        })
-      });
+        max_tokens: 1000,
+        //system: systemPrompt, // <--- Add the system prompt here!
+        system: `You are a sharp, concise tour guide for Hall 5 of the FCCS EPM Cloud Study Tour. FCCS Calculation Studio. Three-stage engine: Stage 1 Local Currency, Stage 2 Translated, Stage 3 Consolidated. Six configurable seed points. Consolidation rules vs on-demand rules. Groovy scripting. GlobalMerge Corp: BritEdge GBP 100%, DeutschWerk EUR 80% (hedged FX instruments), AsiaLink SGD 50% JV (equity method), NovaTech USD 30% (equity method). Unrealised profit decision: journal vs on-demand rule vs consolidation rule.
+ 
+STRICT RESPONSE RULES:
+- Maximum 2-4 sentences per answer. Never more.
+- No headers, no bullet walls, no markdown sections.
+- Answer the specific question asked. Do not dump everything you know.
+- Use plain conversational prose. One concrete example only if it adds clarity.
+- If the learner asks a simple factual question, give a 1-2 sentence answer.
+- End with one short follow-up question maximum, only when it genuinely helps.
+- No emoji. No "Great question!" No preamble.`,
+        messages: [{ role: 'user', content: question }]
+      })
+    });
       const data = await res.json();
       typing.textContent = data.content?.[0]?.text || 'No response received.';
     } catch (e) {
