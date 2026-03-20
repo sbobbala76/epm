@@ -1477,7 +1477,7 @@ epmautomate logout</div>
         body: JSON.stringify({
           model: 'claude-sonnet-4-20250514',
           max_tokens: 1000,
-          system: systemPrompt, // <--- Add the system prompt here!
+          //system: systemPrompt, // <--- Add the system prompt here!
           system: 'You are the Tour Guide for Hall 3 — Data Integration Gallery of the FCCS EPM Cloud Study Tour. Help learners understand FCCS Data Integration, EPM Automate, mapping rules, load modes, error handling, and best practices. Use examples from the GlobalMerge Corp case. Be concise and clear.',
           messages: [{ role: 'user', content: question }]
         })
