@@ -1389,33 +1389,33 @@
   renderQuiz();
  
   //  ── Tour Guide (calls /api/tour-guide ─────────────────────────────────────────────
-  async function sendTourMessage() {
-    const input    = document.getElementById('tgInput');
-    const messages = document.getElementById('tgMessages');
-    const question = input.value.trim();
-    if (!question) return;
+async function sendTourMessage() {
+  const input = document.getElementById('tgInput');
+  const messages = document.getElementById('tgMessages');
+  const question = input.value.trim();
+  if (!question) return;
+  const userBubble = document.createElement('div');
+  userBubble.className = 'tg-msg user';
+  userBubble.textContent = question;
+  messages.appendChild(userBubble);
+  input.value = '';
+  const typing = document.createElement('div');
+  typing.className = 'tg-msg bot';
+  typing.textContent = '…';
+  messages.appendChild(typing);
+  messages.scrollTop = messages.scrollHeight;
+  try {
+    const res = await fetch('https://epbcs-tutor.fancy-brook-fc0d.workers.dev', {
+      method: 'POST',
+      headers: { 
+        'Content-Type': 'application/json'
+        },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        //system: systemPrompt, // <--- Add the system prompt here!
+        system: `You are a sharp, concise tour guide for Hall 2 of the FCCS EPM Cloud Study Tour. The company is GlobalMerge Corp: BritEdge (GBP 100%), DeutschWerk (EUR 80%), AsiaLink (SGD 50% JV), NovaTech (USD 30%).
  
-    const userBubble = document.createElement('div');
-    userBubble.className = 'tg-msg user';
-    userBubble.textContent = question;
-    messages.appendChild(userBubble);
-    input.value = '';
- 
-    const typing = document.createElement('div');
-    typing.className = 'tg-msg bot';
-    typing.textContent = '…';
-    messages.appendChild(typing);
-    messages.scrollTop = messages.scrollHeight;
- 
-    try {
-      const res = await fetch('https://epbcs-tutor.fancy-brook-fc0d.workers.dev', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          model: 'claude-sonnet-4-20250514',
-          max_tokens: 1000,
-          system: `You are a sharp, concise tour guide for Hall 4 of the FCCS EPM Cloud Study Tour. GlobalMerge Corp: BritEdge GBP 100% (OIC), DeutschWerk EUR 80% (SAP CSV), AsiaLink SGD 50% JV (REST), NovaTech USD 30% Equity (manual). Translate vs Consolidate vs Force Consolidate. IAS 21 translation: avg rate P&L, closing rate BS, historical Equity. CTA automatic via Movement prebuilt calcs. IC elimination automatic via ICP. Unrealised profit NOT automatic — Hall 5 or Hall 7. Q1 rates: EUR/USD 1.09/1.11, GBP/USD 1.26/1.28, SGD/USD 0.742/0.748.
-
 STRICT RESPONSE RULES:
 - Maximum 2-4 sentences per answer. Never more.
 - No headers, no bullet walls, no markdown sections.
@@ -1424,16 +1424,16 @@ STRICT RESPONSE RULES:
 - If the learner asks a simple factual question, give a 1-2 sentence answer.
 - End with one short follow-up question maximum, only when it genuinely helps.
 - No emoji. No "Great question!" No preamble.`,
-          messages: [{ role: 'user', content: question }]
-        })           // ← closes JSON.stringify
-      });            // ← closes fetch options
-      const data = await res.json();
-      typing.textContent = data.content?.[0]?.text || 'No response received.';
-    } catch (e) {
-      typing.textContent = 'Tour guide is temporarily unavailable. Try: What is the correct mapping priority order in Data Management?';
-    }
-    messages.scrollTop = messages.scrollHeight;
+        messages: [{ role: 'user', content: question }]
+      })
+    });
+    const data = await res.json();
+    typing.textContent = data.content?.[0]?.text || 'No response received.';
+  } catch (e) {
+    typing.textContent = 'Tour guide temporarily unavailable.';
   }
+  messages.scrollTop = messages.scrollHeight;
+}
 </script>
 </body>
 </html>
