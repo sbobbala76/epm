@@ -1388,17 +1388,70 @@
   function restartQuiz() { cur = 0; score = 0; done = new Array(questions.length).fill(false); renderQuiz(); }
   renderQuiz();
  
+  //  ── Tour Guide helpers ────────────────────────────────────────────────────────────
+  function addMsg(text, cls) {
+    const thread = document.getElementById('atg-thread');
+    const div = document.createElement('div');
+    div.className = 'tg-msg ' + cls;
+    div.textContent = text;
+    thread.appendChild(div);
+    thread.scrollTop = thread.scrollHeight;
+    return div;
+  }
+
+  function updateMsg(div, text) {
+    div.className = 'tg-msg bot';
+    div.textContent = text;
+    const thread = document.getElementById('atg-thread');
+    thread.scrollTop = thread.scrollHeight;
+  }
+
+  function askChip(el) {
+    const input = document.getElementById('atg-input');
+    input.value = el.textContent;
+    sendATG();
+  }
+
+  //  ── Tour Guide helpers ────────────────────────────────────────────────────────────
+  function addMsg(text, cls) {
+    const thread = document.getElementById('atg-thread');
+    const div = document.createElement('div');
+    div.className = 'tg-msg ' + cls;
+    div.textContent = text;
+    const id = 'msg-' + Date.now();
+    div.id = id;
+    thread.appendChild(div);
+    thread.scrollTop = thread.scrollHeight;
+    return id;
+  }
+
+  function updateMsg(id, text) {
+    const div = document.getElementById(id);
+    if (div) {
+      div.textContent = text;
+      div.className = 'tg-msg bot';
+    }
+    const thread = document.getElementById('atg-thread');
+    thread.scrollTop = thread.scrollHeight;
+  }
+
+  function askChip(el) {
+    const input = document.getElementById('atg-input');
+    input.value = el.textContent;
+    sendATG();
+  }
+
   //  ── Tour Guide (calls /api/tour-guide ─────────────────────────────────────────────
 async function sendATG() {
   const input = document.getElementById('atg-input');
   const btn = document.getElementById('atg-btn');
   const question = input.value.trim();
   if (!question) return;
- 
+
   const loadId = addMsg('...', 'ai loading');
   input.value = '';
   btn.disabled = true;
- 
+
   try {
     const res = await fetch('https://epbcs-tutor.fancy-brook-fc0d.workers.dev', {
       method: 'POST',
@@ -1422,7 +1475,7 @@ async function sendATG() {
         messages: [{ role: 'user', content: question }]
       })
     });
- 
+
     const data = await res.json();
     // FIX 3: Use the correct data path from Hall 2
     const reply = data.content?.[0]?.text || 'No response received.';
