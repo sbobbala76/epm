@@ -1389,81 +1389,51 @@
   renderQuiz();
  
   // ── Tour Guide AI ─────────────────────────────────────────────
-  const ATG_SYSTEM = `You are the Tour Guide for Hall 4 of the FCCS EPM Cloud Study Tour — the Consolidation Chamber. This is where all prior halls converge. Entities arrive at Impacted status from Hall 3 and leave at OK status.
+  async function sendTourMessage() {
+    const input    = document.getElementById('tgInput');
+    const messages = document.getElementById('tgMessages');
+    const question = input.value.trim();
+    if (!question) return;
  
-Key facts for Hall 4:
-- Translate is both a standalone rule AND embedded as the first internal stage of Consolidate
-- Translate only: runs FX conversion, entity stays Impacted — used for FX rate validation, testing avg vs closing rates, troubleshooting CTA before committing to full consolidation
-- Consolidate: runs the complete engine — Translation → Entity Total → Proportion → Elimination → Contribution. Entity reaches OK.
-- Force Consolidate: reruns engine even when OK — used after rule changes, not data changes
-- Translation rates per IAS 21: P&L accounts at average rate (PVA method), Balance Sheet at closing rate (VAL method), Equity at historical rates
-- CTA is calculated automatically by two prebuilt Movement calcs: FX on opening balance + FX on movements. No manual journal required.
-- Consolidation path exam answer: Currency, Account, Movement (arithmetic path). Implementation reality: Entity/Consolidation/Currency intersections (workflow). Both correct, different questions.
-- DeutschWerk 80%: full consolidation, Proportion = 80% of Entity Total, NCI = 20% disclosed in equity and P&L — NOT deducted from revenue
-- AsiaLink 50% JV: equity method — no line-by-line consolidation, single investment line on BS, share of net income on P&L
-- NovaTech 30%: equity method, USD so no translation needed
-- IC elimination: basic sales/COGS elimination via ICP dimension is automatic. Unrealised profit in inventory is NOT automatic — requires Groovy rule (Hall 5) or Enterprise Journal (Hall 7)
-- Entity status after Consolidate: OK. After Translate only: still Impacted.
-- Q1 rates: EUR/USD avg 1.09 closing 1.11. GBP/USD avg 1.26 closing 1.28. SGD/USD avg 0.742 closing 0.748.
+    const userBubble = document.createElement('div');
+    userBubble.className = 'tg-msg user';
+    userBubble.textContent = question;
+    messages.appendChild(userBubble);
+    input.value = '';
  
-GlobalMerge Corp: BritEdge (UK, GBP, 100%), DeutschWerk (Germany, EUR, 80%), AsiaLink (Singapore, SGD, 50% JV), NovaTech (US, USD, 30%).
+    const typing = document.createElement('div');
+    typing.className = 'tg-msg bot';
+    typing.textContent = '…';
+    messages.appendChild(typing);
+    messages.scrollTop = messages.scrollHeight;
  
-You think like both a senior Oracle EPM Cloud consultant and a Finance Controller. Give technically precise, practitioner-level answers using GlobalMerge scenarios.`;
- 
-  const thread = [];
- 
-  async function sendATG() {
-    const inp = document.getElementById('atg-input');
-    const btn = document.getElementById('atg-btn');
-    const q = inp.value.trim();
-    if (!q) return;
-    inp.value = ''; btn.disabled = true;
-    addMsg(q, 'user');
-    thread.push({ role: 'user', content: q });
-    const loadId = addMsg('Thinking…', 'ai loading');
     try {
       const res = await fetch('https://epbcs-tutor.fancy-brook-fc0d.workers.dev', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           model: 'claude-sonnet-4-20250514',
-          max_tokens: 1000,
-          //system: systemPrompt, // <--- Add the system prompt here!
-          system: 'You are the Tour Guide for Hall 4 — Consolidation Chamber of the FCCS EPM Cloud Study Tour. Help learners understand FCCS rules, consolidation, ICP elimination. GlobalMerge Corp: BritEdge (GBP 100%), DeutschWerk (EUR 80%), AsiaLink (SGD 50% JV), NovaTech (USD 30%).',
+        max_tokens: 1000,
+        //system: systemPrompt, // <--- Add the system prompt here!
+        system: `You are a sharp, concise tour guide for Hall 3 of the FCCS EPM Cloud Study Tour. GlobalMerge Corp: BritEdge GBP 100% (OIC), DeutschWerk EUR 80% (SAP CSV), AsiaLink SGD 50% JV (REST), NovaTech USD 30% Equity (manual). GlobalMerge Corp: BritEdge GBP 100%, DeutschWerk EUR 80%, AsiaLink SGD 50% JV equity method, NovaTech USD 30%. Translate vs Consolidate vs Force Consolidate. IAS 21 translation: avg rate P&L, closing rate BS, historical Equity. CTA automatic via Movement prebuilt calcs. IC elimination automatic via ICP. Unrealised profit NOT automatic — Hall 5 or Hall 7. Q1 rates: EUR/USD 1.09/1.11, GBP/USD 1.26/1.28, SGD/USD 0.742/0.748.
+ 
+STRICT RESPONSE RULES:
+- Maximum 2-4 sentences per answer. Never more.
+- No headers, no bullet walls, no markdown sections.
+- Answer the specific question asked. Do not dump everything you know.
+- Use plain conversational prose. One concrete example only if it adds clarity.
+- If the learner asks a simple factual question, give a 1-2 sentence answer.
+- End with one short follow-up question maximum, only when it genuinely helps.
+- No emoji. No "Great question!" No preamble.`,
         messages: [{ role: 'user', content: question }]
-        })
-      });
+      })
+    });
       const data = await res.json();
-      const reply = data.answer || data.message || 'Could not generate a response.';
-      thread.push({ role: 'assistant', content: reply });
-      updateMsg(loadId, reply);
+      typing.textContent = data.content?.[0]?.text || 'No response received.';
     } catch (e) {
-      updateMsg(loadId, 'Tour Guide is offline in this environment. Deploy to Vercel for live AI responses.');
+      typing.textContent = 'Tour guide is temporarily unavailable. Try: What is the correct mapping priority order in Data Management?';
     }
-    btn.disabled = false;
-  }
- 
-  function askChip(el) {
-    document.getElementById('atg-input').value = el.textContent;
-    sendATG();
-  }
- 
-  function addMsg(text, type) {
-    const t = document.getElementById('atg-thread');
-    const id = 'msg-' + Date.now();
-    const div = document.createElement('div');
-    div.id = id;
-    div.className = 'tg-msg ' + (type.includes('user') ? 'tg-msg-user' : 'tg-msg-ai' + (type.includes('loading') ? ' loading' : ''));
-    div.textContent = text;
-    t.appendChild(div);
-    t.scrollTop = t.scrollHeight;
-    return id;
-  }
- 
-  function updateMsg(id, text) {
-    const el = document.getElementById(id);
-    if (el) { el.textContent = text; el.className = 'tg-msg tg-msg-ai'; }
-    document.getElementById('atg-thread').scrollTop = 9999;
+    messages.scrollTop = messages.scrollHeight;
   }
 </script>
 </body>
