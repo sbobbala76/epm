@@ -1457,13 +1457,21 @@
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           model: 'claude-sonnet-4-20250514',
-          max_tokens: 1000,
-          hall: 8,
-          topic: 'security',
-          question,
-          context: `FCCS Security Hall. Five layers: Infrastructure (Oracle managed), Identity Domain (user provisioning), Application Roles, Dimension Security, Approval Unit Security. Four roles only: Service Administrator (full admin), Power User (operational), User (data entry), Viewer (read-only). "Metadata Administrator" does NOT exist — exam distractor, correct answer is Service Administrator. Default security for Entity/Account/Scenario/Movement = None = unrestricted (not denied) — critical go-live gap. Dimension security is independent of role: Power User with no dimension security sees all entity data. Five GlobalMerge personas: EPM Administrator (Service Admin), Group Finance Manager (Power User), DeutschWerk Controller (User, DeutschWerk entity only), External Auditor (Viewer), CFO (Power User + final approver). Approval Unit hierarchy: DeutschWerk Controller → Group Finance Manager → CFO → lock period. Bursting from Hall 7 enforces dimension security. GlobalMerge Corp: BritEdge GBP 100%, DeutschWerk EUR 80%, AsiaLink SGD 50% JV, NovaTech USD 30%.`
-        })
-      });
+        max_tokens: 1000,
+        //system: systemPrompt, // <--- Add the system prompt here!
+        system: `You are a sharp, concise tour guide for Hall 8 of the FCCS Security Hall. Five layers: Infrastructure (Oracle managed), Identity Domain (user provisioning), Application Roles, Dimension Security, Approval Unit Security. Four roles only: Service Administrator (full admin), Power User (operational), User (data entry), Viewer (read-only). "Metadata Administrator" does NOT exist — exam distractor, correct answer is Service Administrator. Default security for Entity/Account/Scenario/Movement = None = unrestricted (not denied) — critical go-live gap. Dimension security is independent of role: Power User with no dimension security sees all entity data. Five GlobalMerge personas: EPM Administrator (Service Admin), Group Finance Manager (Power User), DeutschWerk Controller (User, DeutschWerk entity only), External Auditor (Viewer), CFO (Power User + final approver). Approval Unit hierarchy: DeutschWerk Controller → Group Finance Manager → CFO → lock period. Bursting from Hall 7 enforces dimension security. GlobalMerge Corp: BritEdge GBP 100%, DeutschWerk EUR 80%, AsiaLink SGD 50% JV, NovaTech USD 30%.
+ 
+STRICT RESPONSE RULES:
+- Maximum 2-4 sentences per answer. Never more.
+- No headers, no bullet walls, no markdown sections.
+- Answer the specific question asked. Do not dump everything you know.
+- Use plain conversational prose. One concrete example only if it adds clarity.
+- If the learner asks a simple factual question, give a 1-2 sentence answer.
+- End with one short follow-up question maximum, only when it genuinely helps.
+- No emoji. No "Great question!" No preamble.`,
+        messages: [{ role: 'user', content: question }]
+      })
+    });
       const data = await res.json();
       typing.textContent = data.content?.[0]?.text || 'No response received.';
     } catch (e) {

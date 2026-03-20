@@ -1453,14 +1453,21 @@ You are a senior Oracle EPM Cloud implementation consultant and educator. Give d
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           model: 'claude-sonnet-4-20250514',
-          max_tokens: 1000,
-          hall: 1,
-          topic: 'orientation',
-          question: q,
-          context: 'GlobalMerge Corp: BritEdge GBP 100%, DeutschWerk EUR 80%, AsiaLink SGD 50% JV equity method, NovaTech USD 30% equity method. FCCS application setup, 11 system dimensions, consolidation path Currency→Account→Movement (exam) vs Entity→Consolidation→Currency (implementation), four roles (no Metadata Administrator), patch schedule first/third Friday, 12 or 13 month periods, Multi-Currency creation-time permanent.',
-          thread
-        })
-      });
+        max_tokens: 1000,
+        //system: systemPrompt, // <--- Add the system prompt here!
+        system: `You are a sharp, concise tour guide for Hall 1 of the FCCS EPM Cloud Study Tour. GlobalMerge Corp: BritEdge GBP 100%, DeutschWerk EUR 80%, AsiaLink SGD 50% JV equity method, NovaTech USD 30% equity method. FCCS application setup, 11 system dimensions, consolidation path Currency→Account→Movement (exam) vs Entity→Consolidation→Currency (implementation), four roles (no Metadata Administrator), patch schedule first/third Friday, 12 or 13 month periods, Multi-Currency creation-time permanent.
+ 
+STRICT RESPONSE RULES:
+- Maximum 2-4 sentences per answer. Never more.
+- No headers, no bullet walls, no markdown sections.
+- Answer the specific question asked. Do not dump everything you know.
+- Use plain conversational prose. One concrete example only if it adds clarity.
+- If the learner asks a simple factual question, give a 1-2 sentence answer.
+- End with one short follow-up question maximum, only when it genuinely helps.
+- No emoji. No "Great question!" No preamble.`,
+        messages: [{ role: 'user', content: question }]
+      })
+    });
       const data = await res.json();
       const reply = data.answer || data.message || 'I could not generate a response. Please try again.';
       thread.push({ role: 'assistant', content: reply });

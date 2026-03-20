@@ -1186,11 +1186,21 @@
         method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           model: 'claude-sonnet-4-20250514',
-          max_tokens: 1000,
-          hall: 7, topic: 'reporting-atrium', question,
-          context: `FCCS Reporting Atrium Hall 7. Reports framework (not FR Studio — sunset): Books, Bursting (silently excludes entities user cannot access), POV Selectors, Drill-through, Multi-GAAP. Consolidation dimension POV: FCCS_Entity Input (raw pre-consol), FCCS_Proportion (PCON% weighted — not POWN%), FCCS_Elimination (eliminations only), FCCS_Contribution (final — always use for external reports). Three data source lanes: FCCS_Managed Data (DI loads, Replace clears ONLY this), FCCS_Data Input (Data Forms + Smart View submissions, Replace does NOT clear), FCCS_Journal Input (journals, Replace does NOT clear). Data Form entry → FCCS_Data Input; after submission entity → Impacted, must rerun Consolidate. Smart View: Office add-in, ad-hoc analysis vs function grids (HsGetValue), POV bar must be verified before submission, drill-through to source, submission → FCCS_Data Input. Wrong Scenario POV: posts silently to wrong Scenario with no error raised — critical trap. Smart View is NOT a bulk loading tool. Smart Push: parent to children direction only. Bursting enforces dimension security silently. AsiaLink/NovaTech equity method: single line group P&L, dividends → Investing Activities, share of income reversed out from Operating as non-cash. GlobalMerge: BritEdge GBP 100%, DeutschWerk EUR 80% (PCON=100% POWN=80%), AsiaLink SGD 50% JV equity method, NovaTech USD 30% equity method.`
-        })
-      });
+        max_tokens: 1000,
+        //system: systemPrompt, // <--- Add the system prompt here!
+        system: `You are a sharp, concise tour guide for Hall 7 of the FCCS Reporting Atrium Hall 7. Reports framework (not FR Studio — sunset): Books, Bursting (silently excludes entities user cannot access), POV Selectors, Drill-through, Multi-GAAP. Consolidation dimension POV: FCCS_Entity Input (raw pre-consol), FCCS_Proportion (PCON% weighted — not POWN%), FCCS_Elimination (eliminations only), FCCS_Contribution (final — always use for external reports). Three data source lanes: FCCS_Managed Data (DI loads, Replace clears ONLY this), FCCS_Data Input (Data Forms + Smart View submissions, Replace does NOT clear), FCCS_Journal Input (journals, Replace does NOT clear). Data Form entry → FCCS_Data Input; after submission entity → Impacted, must rerun Consolidate. Smart View: Office add-in, ad-hoc analysis vs function grids (HsGetValue), POV bar must be verified before submission, drill-through to source, submission → FCCS_Data Input. Wrong Scenario POV: posts silently to wrong Scenario with no error raised — critical trap. Smart View is NOT a bulk loading tool. Smart Push: parent to children direction only. Bursting enforces dimension security silently. AsiaLink/NovaTech equity method: single line group P&L, dividends → Investing Activities, share of income reversed out from Operating as non-cash. GlobalMerge: BritEdge GBP 100%, DeutschWerk EUR 80% (PCON=100% POWN=80%), AsiaLink SGD 50% JV equity method, NovaTech USD 30% equity method.
+ 
+STRICT RESPONSE RULES:
+- Maximum 2-4 sentences per answer. Never more.
+- No headers, no bullet walls, no markdown sections.
+- Answer the specific question asked. Do not dump everything you know.
+- Use plain conversational prose. One concrete example only if it adds clarity.
+- If the learner asks a simple factual question, give a 1-2 sentence answer.
+- End with one short follow-up question maximum, only when it genuinely helps.
+- No emoji. No "Great question!" No preamble.`,
+        messages: [{ role: 'user', content: question }]
+      })
+    });
       const data = await res.json();
       typing.textContent = data.content?.[0]?.text || 'No response received.';
     } catch (e) {
