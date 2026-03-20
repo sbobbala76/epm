@@ -1388,7 +1388,7 @@
   function restartQuiz() { cur = 0; score = 0; done = new Array(questions.length).fill(false); renderQuiz(); }
   renderQuiz();
  
-  // ── Tour Guide AI ─────────────────────────────────────────────
+  //  ── Tour Guide (calls /api/tour-guide ─────────────────────────────────────────────
   async function sendTourMessage() {
     const input    = document.getElementById('tgInput');
     const messages = document.getElementById('tgMessages');
@@ -1412,7 +1412,7 @@
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          model: 'claude-sonnet-4-20250514',
+        model: 'claude-sonnet-4-20250514',
         max_tokens: 1000,
         //system: systemPrompt, // <--- Add the system prompt here!
         system: `You are a sharp, concise tour guide for Hall 3 of the FCCS EPM Cloud Study Tour. GlobalMerge Corp: BritEdge GBP 100% (OIC), DeutschWerk EUR 80% (SAP CSV), AsiaLink SGD 50% JV (REST), NovaTech USD 30% Equity (manual). GlobalMerge Corp: BritEdge GBP 100%, DeutschWerk EUR 80%, AsiaLink SGD 50% JV equity method, NovaTech USD 30%. Translate vs Consolidate vs Force Consolidate. IAS 21 translation: avg rate P&L, closing rate BS, historical Equity. CTA automatic via Movement prebuilt calcs. IC elimination automatic via ICP. Unrealised profit NOT automatic — Hall 5 or Hall 7. Q1 rates: EUR/USD 1.09/1.11, GBP/USD 1.26/1.28, SGD/USD 0.742/0.748.
