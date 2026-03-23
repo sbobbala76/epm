@@ -3,296 +3,219 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BrainSpring EPM — Oracle EPM Cloud Learning Hub</title>
-<meta name="description" content="The complete Oracle EPM Cloud learning hub. Free, AI-first study tours for FCCS, EPBCS, EDMCS, ARCS, Integration, and Narrative Reporting. Built by BrainSpring.">
+<title>BrainSpring EPM — Oracle Fusion Cloud EPM Learning Hub</title>
+<meta name="description" content="The complete Oracle Fusion Cloud EPM learning hub. Free, AI-first study tours for all nine EPM modules — Planning, FCCS, ARCS, Tax Reporting, Narrative Reporting, PCM, Freeform, EDM, and the EPM Platform. Built by BrainSpring.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Crimson+Pro:ital,wght@0,400;0,500;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-/* ═══════════════════════════════════════════════
-   BRAINSPRING EPM HUB
-   Oracle EPM Cloud — Complete Learning Platform
-   Navy · Silver · Green · Purple accent
-═══════════════════════════════════════════════ */
 :root{
-  --navy:  #0d1b2e;
-  --navy2: #112240;
-  --navy3: #16304f;
-  --navy4: #1e3f64;
-  --silver:#c8d4e0;
-  --silver2:#8fa3b8;
-  --green: #4ade80;
-  --green2:#22c55e;
-  --green3:#16a34a;
-  --purple:#a855f7;
-  --purple2:#7c3aed;
-  --teal:  #2dd4bf;
-  --amber: #fbbf24;
-  --red:   #f87171;
-  --sky:   #38bdf8;
-  --white: #e8f0f8;
-  --dim:   #4a6080;
-  --border:rgba(200,212,224,.12);
-  --border2:rgba(74,222,128,.15);
+  --navy:  #0d1b2e;--navy2:#112240;--navy3:#16304f;--navy4:#1e3f64;
+  --silver:#c8d4e0;--silver2:#8fa3b8;
+  --green: #4ade80;--green2:#22c55e;--green3:#16a34a;
+  --purple:#a855f7;--purple2:#7c3aed;
+  --teal:  #2dd4bf;--amber:#fbbf24;--red:#f87171;--sky:#38bdf8;
+  --coral: #fb923c;--rose:#f472b6;--lime:#a3e635;
+  --white:#e8f0f8;--dim:#4a6080;
+  --border:rgba(200,212,224,.1);--border2:rgba(74,222,128,.14);
   --r:10px
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
 body{font-family:'Crimson Pro',serif;background:var(--navy);color:var(--white);min-height:100vh;overflow-x:hidden}
-
-/* ── Circuit background ── */
-body::before{
-  content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
-  background-image:
-    linear-gradient(rgba(74,222,128,.025) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(74,222,128,.025) 1px, transparent 1px);
-  background-size:60px 60px;
-}
-body::after{
-  content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
-  background:radial-gradient(ellipse 80% 60% at 50% 0%, rgba(74,222,128,.06) 0%, transparent 70%);
-}
-
-/* ── Stars ── */
+body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;background-image:linear-gradient(rgba(74,222,128,.02) 1px,transparent 1px),linear-gradient(90deg,rgba(74,222,128,.02) 1px,transparent 1px);background-size:56px 56px}
+body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;background:radial-gradient(ellipse 80% 50% at 50% -10%,rgba(74,222,128,.07) 0%,transparent 70%)}
 #stars{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
 .star{position:absolute;border-radius:50%;background:#4ade80;animation:twinkle var(--d,4s) infinite var(--delay,0s)}
-@keyframes twinkle{0%,100%{opacity:.02}50%{opacity:var(--op,.2)}}
-@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
-@keyframes fadeIn{from{opacity:0}to{opacity:1}}
-@keyframes glow{0%,100%{text-shadow:0 0 40px rgba(74,222,128,.2)}50%{text-shadow:0 0 80px rgba(74,222,128,.45)}}
-@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(74,222,128,.25)}50%{box-shadow:0 0 0 6px rgba(74,222,128,0)}}
-@keyframes slideRight{from{width:0}to{width:100%}}
-@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+@keyframes twinkle{0%,100%{opacity:.02}50%{opacity:var(--op,.18)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@keyframes glow{0%,100%{text-shadow:0 0 40px rgba(74,222,128,.18)}50%{text-shadow:0 0 80px rgba(74,222,128,.42)}}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(74,222,128,.22)}50%{box-shadow:0 0 0 5px rgba(74,222,128,0)}}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
 
 /* ── Topbar ── */
-#topbar{
-  position:fixed;top:0;left:0;right:0;height:56px;
-  background:rgba(13,27,46,.96);backdrop-filter:blur(20px);
-  border-bottom:1px solid var(--border2);
-  display:flex;align-items:center;padding:0 28px;gap:16px;z-index:200
-}
-.tb-shield{display:flex;align-items:center;gap:10px;text-decoration:none;flex-shrink:0}
-.tb-brand{font-family:'Rajdhani',sans-serif;font-size:17px;font-weight:700;letter-spacing:.04em}
-.tb-brain{color:var(--white)}
-.tb-spring{color:var(--green)}
-.tb-sep{color:var(--dim);font-size:14px;margin:0 4px}
-.tb-product{font-family:'Rajdhani',sans-serif;font-size:13px;font-weight:600;color:var(--silver2);letter-spacing:.06em;text-transform:uppercase}
+#topbar{position:fixed;top:0;left:0;right:0;height:54px;background:rgba(13,27,46,.97);backdrop-filter:blur(20px);border-bottom:1px solid var(--border2);display:flex;align-items:center;padding:0 24px;gap:14px;z-index:200}
+.tb-shield{display:flex;align-items:center;gap:9px;text-decoration:none;flex-shrink:0}
+.tb-brand{font-family:'Rajdhani',sans-serif;font-size:16px;font-weight:700;letter-spacing:.03em}
+.tb-brain{color:var(--white)}.tb-spring{color:var(--green)}
+.tb-sep{color:var(--dim);font-size:13px}
+.tb-product{font-family:'Rajdhani',sans-serif;font-size:12px;font-weight:600;color:var(--silver2);letter-spacing:.07em;text-transform:uppercase}
 .tb-dot{width:7px;height:7px;border-radius:50%;background:var(--green);animation:pulse 2.5s infinite;flex-shrink:0}
-.tb-nav{display:flex;gap:6px;margin-left:auto;overflow-x:auto;align-items:center}
+.tb-nav{display:flex;gap:5px;margin-left:auto;overflow-x:auto;align-items:center}
 .tb-nav::-webkit-scrollbar{display:none}
-.tb-link{padding:5px 11px;border-radius:6px;border:1px solid var(--border);background:transparent;color:var(--dim);font-family:'Rajdhani',sans-serif;font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;text-decoration:none;white-space:nowrap;transition:all .15s}
-.tb-link:hover{border-color:var(--green);color:var(--green);background:rgba(74,222,128,.06)}
+.tb-link{padding:4px 10px;border-radius:6px;border:1px solid var(--border);color:var(--dim);font-family:'Rajdhani',sans-serif;font-size:10.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;text-decoration:none;white-space:nowrap;transition:all .15s}
+.tb-link:hover{border-color:var(--green);color:var(--green)}
 .tb-link.live{border-color:rgba(74,222,128,.3);color:var(--green)}
-.tb-live-dot{display:inline-block;width:5px;height:5px;border-radius:50%;background:var(--green);margin-right:5px;animation:pulse 2s infinite}
+.tb-live-dot{display:inline-block;width:5px;height:5px;border-radius:50%;background:var(--green);margin-right:4px;animation:pulse 2s infinite}
 
 /* ── Layout ── */
-.wrap{position:relative;z-index:1;max-width:1100px;margin:0 auto;padding:0 28px}
+.wrap{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:0 28px}
+@media(max-width:680px){.wrap{padding:0 16px}}
 
 /* ── Hero ── */
-.hero{
-  padding:calc(56px + 80px) 0 72px;
-  text-align:center;
-  animation:fadeUp .7s ease both
-}
-.hero-eyebrow{
-  display:inline-flex;align-items:center;gap:10px;
-  font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.14em;
-  color:rgba(74,222,128,.6);text-transform:uppercase;
-  border:1px solid rgba(74,222,128,.15);border-radius:20px;
-  padding:5px 16px;margin-bottom:28px
-}
-.hero-title{
-  font-family:'Rajdhani',sans-serif;font-size:clamp(42px,6vw,72px);
-  font-weight:700;line-height:1.05;margin-bottom:16px;
-  animation:glow 5s infinite
-}
-.hero-title .ht-oracle{color:var(--silver2);font-weight:500;display:block;font-size:.6em;letter-spacing:.08em;text-transform:uppercase;margin-bottom:4px}
-.hero-title .ht-epm{color:var(--white)}
-.hero-title .ht-cloud{color:var(--green)}
-.hero-sub{
-  font-size:18px;color:rgba(232,240,248,.48);font-style:italic;
-  max-width:640px;margin:0 auto 40px;line-height:1.8
-}
-.hero-stats{
-  display:flex;gap:32px;justify-content:center;flex-wrap:wrap;
-  margin-bottom:48px
-}
-.hs-item{text-align:center}
-.hs-val{font-family:'Rajdhani',sans-serif;font-size:28px;font-weight:700;color:var(--green);display:block}
-.hs-lbl{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--dim);letter-spacing:.1em;text-transform:uppercase;margin-top:2px}
-.hero-cta{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
-.btn{padding:13px 32px;font-family:'Rajdhani',sans-serif;font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;border-radius:8px;text-decoration:none;transition:all .18s;display:inline-block}
-.btn-primary{background:var(--green2);color:var(--navy);border:none}
-.btn-primary:hover{background:var(--green);transform:translateY(-2px);box-shadow:0 8px 32px rgba(74,222,128,.3)}
-.btn-outline{background:transparent;color:var(--silver);border:1px solid rgba(200,212,224,.2)}
-.btn-outline:hover{border-color:var(--silver);color:var(--white)}
+.hero{padding:calc(54px + 76px) 0 64px;text-align:center;animation:fadeUp .6s ease both}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:8px;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.13em;color:rgba(74,222,128,.55);text-transform:uppercase;border:1px solid rgba(74,222,128,.14);border-radius:20px;padding:5px 16px;margin-bottom:26px}
+.hero-title{font-family:'Rajdhani',sans-serif;font-size:clamp(40px,6vw,70px);font-weight:700;line-height:1.06;margin-bottom:14px;animation:glow 5s infinite}
+.ht-sub{color:var(--silver2);font-weight:500;font-size:.55em;letter-spacing:.1em;text-transform:uppercase;display:block;margin-bottom:6px}
+.ht-main{color:var(--white)}
+.ht-accent{color:var(--green)}
+.hero-desc{font-size:17px;color:rgba(232,240,248,.45);font-style:italic;max-width:660px;margin:0 auto 36px;line-height:1.82}
+.hero-stats{display:flex;gap:28px;justify-content:center;flex-wrap:wrap;margin-bottom:44px}
+.hs-v{font-family:'Rajdhani',sans-serif;font-size:26px;font-weight:700;color:var(--green);display:block}
+.hs-l{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--dim);letter-spacing:.1em;text-transform:uppercase;margin-top:2px}
+.hero-cta{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.btn{padding:12px 30px;font-family:'Rajdhani',sans-serif;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;border-radius:8px;text-decoration:none;transition:all .18s;display:inline-block}
+.btn-g{background:var(--green2);color:var(--navy);border:none}
+.btn-g:hover{background:var(--green);transform:translateY(-1px);box-shadow:0 6px 28px rgba(74,222,128,.28)}
+.btn-o{background:transparent;color:var(--silver);border:1px solid rgba(200,212,224,.18)}
+.btn-o:hover{border-color:var(--silver);color:var(--white)}
+.btn-p{background:rgba(168,85,247,.15);color:var(--purple);border:1px solid rgba(168,85,247,.3)}
+.btn-p:hover{background:rgba(168,85,247,.22)}
 
-/* ── Section headers ── */
-.sec-wrap{padding:72px 0}
-.sec-label{font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:.16em;color:rgba(74,222,128,.5);text-transform:uppercase;margin-bottom:10px}
-.sec-title{font-family:'Rajdhani',sans-serif;font-size:clamp(24px,3.5vw,36px);font-weight:700;color:var(--white);margin-bottom:8px}
-.sec-sub{font-size:15px;color:rgba(232,240,248,.45);font-style:italic;line-height:1.75;max-width:640px;margin-bottom:40px}
-.sec-divider{width:48px;height:2px;background:linear-gradient(90deg,var(--green),transparent);margin:16px 0 36px}
+/* ── Section ── */
+.sec{padding:64px 0}
+.sec-lbl{font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:.16em;color:rgba(74,222,128,.45);text-transform:uppercase;margin-bottom:8px}
+.sec-h{font-family:'Rajdhani',sans-serif;font-size:clamp(22px,3.5vw,34px);font-weight:700;color:var(--white);margin-bottom:6px}
+.sec-sub{font-size:15px;color:rgba(232,240,248,.42);font-style:italic;line-height:1.78;max-width:660px;margin-bottom:32px}
+.sec-div{width:44px;height:2px;background:linear-gradient(90deg,var(--green),transparent);margin:12px 0 28px}
 
 /* ── What is Oracle EPM Cloud ── */
-.epm-explainer{
-  background:linear-gradient(135deg,rgba(17,34,64,.8),rgba(22,48,79,.6));
-  border:1px solid var(--border2);border-radius:14px;
-  padding:36px 40px;margin-bottom:28px
-}
-.epm-explainer p{font-size:15.5px;color:rgba(232,240,248,.72);line-height:1.88;margin-bottom:12px}
-.epm-explainer p:last-child{margin-bottom:0}
-.epm-explainer strong{color:var(--white);font-weight:500}
+.explainer{background:linear-gradient(135deg,rgba(17,34,64,.85),rgba(22,48,79,.65));border:1px solid var(--border2);border-radius:14px;padding:34px 38px;margin-bottom:24px}
+.explainer p{font-size:15.5px;color:rgba(232,240,248,.7);line-height:1.88;margin-bottom:11px}
+.explainer p:last-child{margin-bottom:0}
+.explainer strong{color:var(--white);font-weight:500}
+@media(max-width:680px){.explainer{padding:22px 18px}}
 
-/* ── EPM Suite diagram ── */
-.suite-diagram{margin:40px 0}
-.sd-flow{display:flex;align-items:center;gap:0;overflow-x:auto;padding:4px 0 12px}
-.sd-flow::-webkit-scrollbar{height:3px}
-.sd-flow::-webkit-scrollbar-thumb{background:rgba(74,222,128,.2);border-radius:2px}
-.sd-node{
-  flex-shrink:0;text-align:center;padding:16px 14px;min-width:110px;
-  background:var(--navy3);border:1px solid var(--border);border-radius:8px;
-  transition:all .18s;cursor:default
-}
-.sd-node:hover{border-color:var(--green);background:rgba(74,222,128,.04);transform:translateY(-2px)}
-.sd-icon{font-size:22px;display:block;margin-bottom:6px;animation:float 3s infinite}
-.sd-name{font-family:'Rajdhani',sans-serif;font-size:11px;font-weight:700;letter-spacing:.06em;color:var(--white);text-transform:uppercase;margin-bottom:3px}
-.sd-role{font-size:10px;color:var(--dim);line-height:1.4}
-.sd-arrow{flex-shrink:0;padding:0 8px;color:rgba(74,222,128,.35);font-size:18px;align-self:center}
+/* ── Product taxonomy ── */
+.taxonomy{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin:28px 0}
+@media(max-width:860px){.taxonomy{grid-template-columns:1fr 1fr}}
+@media(max-width:520px){.taxonomy{grid-template-columns:1fr}}
+.tx-group{background:var(--navy2);border:1px solid var(--border);border-radius:12px;overflow:hidden}
+.tx-header{padding:12px 16px;font-family:'Rajdhani',sans-serif;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;border-bottom:1px solid var(--border)}
+.tx-item{display:flex;align-items:center;gap:10px;padding:9px 16px;border-bottom:1px solid rgba(255,255,255,.03);font-size:13px;color:rgba(232,240,248,.58);transition:background .12s}
+.tx-item:last-child{border-bottom:none}
+.tx-item:hover{background:rgba(255,255,255,.02)}
+.tx-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.tx-name{font-family:'Rajdhani',sans-serif;font-weight:600;font-size:13.5px;color:rgba(232,240,248,.75);letter-spacing:.02em}
+.tx-role{font-size:11px;color:var(--dim);line-height:1.4;margin-top:1px}
+
+/* Planning group */
+.grp-plan .tx-header{background:rgba(168,85,247,.08);color:var(--purple);border-color:rgba(168,85,247,.15)}
+.grp-plan .tx-dot{background:var(--purple)}
+/* Close group */
+.grp-close .tx-header{background:rgba(45,212,191,.07);color:var(--teal);border-color:rgba(45,212,191,.14)}
+.grp-close .tx-dot{background:var(--teal)}
+/* Platform group */
+.grp-plat .tx-header{background:rgba(74,222,128,.07);color:var(--green);border-color:rgba(74,222,128,.14)}
+.grp-plat .tx-dot{background:var(--green)}
 
 /* ── Data flow ── */
-.flow-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1px;background:var(--border);border-radius:12px;overflow:hidden;margin:28px 0}
-.flow-step{background:var(--navy2);padding:20px 22px}
-.fs-num{font-family:'JetBrains Mono',monospace;font-size:9px;color:rgba(74,222,128,.4);letter-spacing:.1em;margin-bottom:6px}
-.fs-title{font-family:'Rajdhani',sans-serif;font-size:13px;font-weight:700;color:var(--white);margin-bottom:4px;letter-spacing:.03em}
-.fs-desc{font-size:12px;color:var(--dim);line-height:1.6}
-.fs-tag{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:8.5px;padding:2px 7px;border-radius:4px;margin-top:6px;border:1px solid}
+.flow-row{display:flex;gap:0;overflow-x:auto;padding:4px 0 10px;margin:28px 0}
+.flow-row::-webkit-scrollbar{height:3px}
+.flow-row::-webkit-scrollbar-thumb{background:rgba(74,222,128,.2);border-radius:2px}
+.flow-node{flex-shrink:0;text-align:center;padding:14px 12px;min-width:104px;background:var(--navy3);border:1px solid var(--border);border-radius:8px;transition:all .18s}
+.flow-node:hover{border-color:var(--green);transform:translateY(-2px)}
+.fn-icon{font-size:20px;display:block;margin-bottom:5px;animation:float 3.5s infinite}
+.fn-name{font-family:'Rajdhani',sans-serif;font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;margin-bottom:2px}
+.fn-role{font-size:9.5px;color:var(--dim);line-height:1.35}
+.flow-arr{flex-shrink:0;align-self:center;padding:0 6px;color:rgba(74,222,128,.3);font-size:16px}
 
-/* ── Module cards ── */
-.modules-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:16px}
-.module-card{
-  background:var(--navy2);border:1px solid var(--border);
-  border-radius:14px;overflow:hidden;
-  transition:all .2s;position:relative
-}
-.module-card:hover{transform:translateY(-4px);box-shadow:0 16px 48px rgba(0,0,0,.4)}
-.mc-top{padding:24px 26px 18px;border-bottom:1px solid var(--border)}
-.mc-status{display:inline-flex;align-items:center;gap:6px;font-family:'JetBrains Mono',monospace;font-size:8.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:3px 10px;border-radius:10px;margin-bottom:14px}
-.mc-status.live{background:rgba(74,222,128,.1);border:1px solid rgba(74,222,128,.25);color:var(--green)}
-.mc-status.soon{background:rgba(251,191,36,.08);border:1px solid rgba(251,191,36,.2);color:var(--amber)}
-.mc-status.planned{background:rgba(74,96,128,.1);border:1px solid rgba(74,96,128,.2);color:var(--dim)}
-.mc-icon{font-size:32px;margin-bottom:10px;display:block;animation:float 3s infinite}
-.mc-product{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--dim);letter-spacing:.1em;text-transform:uppercase;margin-bottom:4px}
-.mc-title{font-family:'Rajdhani',sans-serif;font-size:20px;font-weight:700;color:var(--white);margin-bottom:6px;letter-spacing:.02em}
-.mc-full{font-size:11px;color:var(--dim);margin-bottom:10px;font-style:italic}
-.mc-desc{font-size:13.5px;color:rgba(232,240,248,.55);line-height:1.72}
-.mc-body{padding:18px 26px}
-.mc-what{margin-bottom:14px}
-.mc-what-lbl{font-family:'JetBrains Mono',monospace;font-size:8.5px;letter-spacing:.1em;color:rgba(74,222,128,.45);text-transform:uppercase;margin-bottom:8px}
-.mc-tags{display:flex;flex-wrap:wrap;gap:5px}
-.mc-tag{font-size:11px;padding:3px 9px;border-radius:6px;border:1px solid var(--border);color:var(--dim);font-family:'Rajdhani',sans-serif;font-weight:600;letter-spacing:.03em}
-.mc-case{background:rgba(255,255,255,.02);border-radius:8px;padding:10px 13px;margin-bottom:14px;font-size:12px;color:rgba(232,240,248,.4);line-height:1.6;border-left:2px solid rgba(74,222,128,.2)}
-.mc-case strong{color:rgba(232,240,248,.6)}
-.mc-cta{display:block;text-align:center;padding:11px;font-family:'Rajdhani',sans-serif;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;border-radius:8px;text-decoration:none;transition:all .18s}
-.mc-cta.live-cta{background:var(--green2);color:var(--navy)}
-.mc-cta.live-cta:hover{background:var(--green);box-shadow:0 6px 20px rgba(74,222,128,.25)}
-.mc-cta.soon-cta{background:rgba(251,191,36,.08);color:var(--amber);border:1px solid rgba(251,191,36,.15);cursor:default}
-.mc-cta.planned-cta{background:rgba(74,96,128,.08);color:var(--dim);border:1px solid var(--border);cursor:default}
-
-/* accent borders per product */
-.card-fccs{border-top:3px solid #2dd4bf}
-.card-epbcs{border-top:3px solid #a855f7}
-.card-epcm{border-top:3px solid #fbbf24}
-.card-arcs{border-top:3px solid #f87171}
-.card-edmcs{border-top:3px solid #38bdf8}
-.card-int{border-top:3px solid #4ade80}
-.card-nr{border-top:3px solid #c084fc}
-
-/* ── Architecture diagram ── */
-.arch-diagram{
-  background:var(--navy2);border:1px solid var(--border2);
-  border-radius:14px;padding:32px;margin:28px 0;overflow-x:auto
-}
-.arch-title{font-family:'Rajdhani',sans-serif;font-size:13px;font-weight:700;letter-spacing:.08em;color:var(--silver2);text-transform:uppercase;margin-bottom:24px}
-.arch-layer{margin-bottom:20px}
+/* ── Architecture layers ── */
+.arch{background:var(--navy2);border:1px solid var(--border2);border-radius:14px;padding:30px;margin:24px 0;overflow-x:auto}
+.arch-h{font-family:'Rajdhani',sans-serif;font-size:12px;font-weight:700;letter-spacing:.09em;color:var(--silver2);text-transform:uppercase;margin-bottom:22px}
+.arch-layer{margin-bottom:18px}
 .arch-layer:last-child{margin-bottom:0}
-.al-label{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--dim);letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px}
-.al-boxes{display:flex;gap:8px;flex-wrap:wrap}
-.al-box{
-  padding:10px 14px;border-radius:8px;border:1px solid;
-  font-family:'Rajdhani',sans-serif;font-size:12px;font-weight:700;
-  letter-spacing:.04em;text-transform:uppercase;white-space:nowrap;
-  transition:all .15s
-}
+.al-lbl{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--dim);letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px}
+.al-boxes{display:flex;gap:7px;flex-wrap:wrap}
+.al-box{padding:9px 14px;border-radius:7px;border:1px solid;font-family:'Rajdhani',sans-serif;font-size:12px;font-weight:700;letter-spacing:.04em;white-space:nowrap;transition:transform .15s}
 .al-box:hover{transform:translateY(-1px)}
-.arch-arrow{text-align:center;color:rgba(74,222,128,.3);font-size:16px;margin:6px 0;letter-spacing:12px}
-
-/* source systems */
-.src{background:rgba(74,96,128,.1);border-color:rgba(74,96,128,.25);color:var(--silver2)}
-/* governance */
-.gov{background:rgba(56,189,248,.08);border-color:rgba(56,189,248,.2);color:var(--sky)}
-/* planning */
-.pln{background:rgba(168,85,247,.1);border-color:rgba(168,85,247,.25);color:var(--purple)}
-/* close */
-.cls{background:rgba(45,212,191,.08);border-color:rgba(45,212,191,.2);color:var(--teal)}
-/* reporting */
-.rep{background:rgba(74,222,128,.08);border-color:rgba(74,222,128,.2);color:var(--green)}
-/* integration */
-.int-box{background:rgba(251,191,36,.06);border-color:rgba(251,191,36,.18);color:var(--amber)}
+.arch-arr{text-align:center;color:rgba(74,222,128,.25);font-size:14px;margin:4px 0;letter-spacing:10px}
+.src{background:rgba(74,96,128,.1);border-color:rgba(74,96,128,.22);color:var(--silver2)}
+.plat{background:rgba(74,222,128,.07);border-color:rgba(74,222,128,.18);color:var(--green)}
+.pln{background:rgba(168,85,247,.09);border-color:rgba(168,85,247,.22);color:var(--purple)}
+.cls{background:rgba(45,212,191,.07);border-color:rgba(45,212,191,.18);color:var(--teal)}
+.rep{background:rgba(251,191,36,.07);border-color:rgba(251,191,36,.18);color:var(--amber)}
+.gov{background:rgba(56,189,248,.07);border-color:rgba(56,189,248,.18);color:var(--sky)}
 
 /* ── Comparison table ── */
-.compare-wrap{overflow-x:auto;border-radius:12px;border:1px solid var(--border);margin:28px 0}
-.compare-tbl{width:100%;border-collapse:collapse;font-size:12.5px;min-width:700px}
-.compare-tbl th{background:rgba(74,222,128,.06);color:var(--green);padding:11px 14px;text-align:left;font-family:'Rajdhani',sans-serif;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;border-bottom:1px solid var(--border2)}
-.compare-tbl td{padding:10px 14px;border-bottom:1px solid rgba(255,255,255,.03);color:rgba(232,240,248,.6);vertical-align:top;line-height:1.55}
-.compare-tbl tr:last-child td{border-bottom:none}
-.compare-tbl tr:hover td{background:rgba(255,255,255,.015)}
-.compare-tbl td:first-child{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:13px;color:var(--white);letter-spacing:.03em}
-.tag{display:inline-block;padding:2px 7px;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;border:1px solid}
+.tbl-wrap{overflow-x:auto;border-radius:12px;border:1px solid var(--border);margin:24px 0}
+.tbl{width:100%;border-collapse:collapse;font-size:12.5px;min-width:760px}
+.tbl th{background:rgba(74,222,128,.05);color:var(--green);padding:10px 14px;text-align:left;font-family:'Rajdhani',sans-serif;font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;border-bottom:1px solid var(--border2)}
+.tbl td{padding:9px 14px;border-bottom:1px solid rgba(255,255,255,.03);color:rgba(232,240,248,.58);vertical-align:top;line-height:1.5}
+.tbl tr:last-child td{border-bottom:none}
+.tbl tr:hover td{background:rgba(255,255,255,.012)}
+.tbl td:first-child{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:13px;color:var(--white);letter-spacing:.02em;white-space:nowrap}
+.tbl td:nth-child(2){color:rgba(232,240,248,.72)}
+.tag{display:inline-block;padding:2px 7px;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:8.5px;font-weight:700;border:1px solid;white-space:nowrap}
+.tag-live{color:var(--green);border-color:rgba(74,222,128,.25);background:rgba(74,222,128,.07)}
+.tag-soon{color:var(--amber);border-color:rgba(251,191,36,.22);background:rgba(251,191,36,.06)}
+.tag-plan{color:var(--dim);border-color:rgba(74,96,128,.2);background:rgba(74,96,128,.08)}
 
-/* ── Free & Open banner ── */
-.free-banner{
-  background:linear-gradient(135deg,rgba(74,222,128,.08),rgba(34,197,94,.04));
-  border:1px solid rgba(74,222,128,.2);border-radius:12px;
-  padding:28px 32px;display:flex;align-items:center;gap:24px;
-  margin:40px 0
-}
-.fb-icon{font-size:36px;flex-shrink:0;animation:float 3s infinite}
-.fb-title{font-family:'Rajdhani',sans-serif;font-size:18px;font-weight:700;color:var(--green);margin-bottom:4px}
-.fb-desc{font-size:13.5px;color:rgba(232,240,248,.55);line-height:1.65}
+/* ── Module cards ── */
+.modules{display:grid;grid-template-columns:repeat(auto-fit,minmax(330px,1fr));gap:14px}
+@media(max-width:720px){.modules{grid-template-columns:1fr}}
+.mcard{background:var(--navy2);border:1px solid var(--border);border-radius:14px;overflow:hidden;transition:all .2s;display:flex;flex-direction:column}
+.mcard:hover{transform:translateY(-3px);box-shadow:0 14px 44px rgba(0,0,0,.4)}
+.mc-top{padding:22px 24px 16px;border-bottom:1px solid var(--border);flex:1}
+.mc-status{display:inline-flex;align-items:center;gap:5px;font-family:'JetBrains Mono',monospace;font-size:8.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:3px 10px;border-radius:10px;margin-bottom:12px}
+.st-live{background:rgba(74,222,128,.1);border:1px solid rgba(74,222,128,.22);color:var(--green)}
+.st-soon{background:rgba(251,191,36,.08);border:1px solid rgba(251,191,36,.18);color:var(--amber)}
+.st-plan{background:rgba(74,96,128,.08);border:1px solid rgba(74,96,128,.18);color:var(--dim)}
+.mc-icon{font-size:28px;margin-bottom:8px;display:block;animation:float 3s infinite}
+.mc-prod{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--dim);letter-spacing:.1em;text-transform:uppercase;margin-bottom:3px}
+.mc-title{font-family:'Rajdhani',sans-serif;font-size:19px;font-weight:700;color:var(--white);margin-bottom:4px}
+.mc-full{font-size:11px;color:var(--dim);font-style:italic;margin-bottom:9px}
+.mc-desc{font-size:13px;color:rgba(232,240,248,.52);line-height:1.72}
+.mc-body{padding:16px 24px}
+.mc-lbl{font-family:'JetBrains Mono',monospace;font-size:8.5px;letter-spacing:.1em;color:rgba(74,222,128,.4);text-transform:uppercase;margin-bottom:7px}
+.mc-tags{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:12px}
+.mc-tag{font-size:11px;padding:2px 8px;border-radius:5px;border:1px solid var(--border);color:var(--dim);font-family:'Rajdhani',sans-serif;font-weight:600}
+.mc-case{background:rgba(255,255,255,.02);border-radius:7px;padding:9px 12px;margin-bottom:12px;font-size:11.5px;color:rgba(232,240,248,.38);line-height:1.6;border-left:2px solid rgba(74,222,128,.18)}
+.mc-case strong{color:rgba(232,240,248,.55)}
+.mc-cta{display:block;text-align:center;padding:10px;font-family:'Rajdhani',sans-serif;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;border-radius:8px;text-decoration:none;transition:all .18s}
+.cta-live{background:var(--green2);color:var(--navy)}
+.cta-live:hover{background:var(--green);box-shadow:0 5px 18px rgba(74,222,128,.22)}
+.cta-soon{background:rgba(251,191,36,.07);color:var(--amber);border:1px solid rgba(251,191,36,.14);cursor:default}
+.cta-plan{background:rgba(74,96,128,.07);color:var(--dim);border:1px solid var(--border);cursor:default}
+
+/* card accent borders */
+.c-plat{border-top:3px solid #4ade80}
+.c-plan{border-top:3px solid #a855f7}
+.c-pcm{border-top:3px solid #fb923c}
+.c-fccs{border-top:3px solid #2dd4bf}
+.c-arcs{border-top:3px solid #f87171}
+.c-tax{border-top:3px solid #fbbf24}
+.c-nr{border-top:3px solid #c084fc}
+.c-ff{border-top:3px solid #a3e635}
+.c-edm{border-top:3px solid #38bdf8}
+
+/* ── Free banner ── */
+.free-banner{background:linear-gradient(135deg,rgba(74,222,128,.07),rgba(34,197,94,.03));border:1px solid rgba(74,222,128,.18);border-radius:12px;padding:26px 30px;display:flex;align-items:center;gap:22px;margin:36px 0}
+.fb-icon{font-size:34px;flex-shrink:0;animation:float 3s infinite}
+.fb-title{font-family:'Rajdhani',sans-serif;font-size:17px;font-weight:700;color:var(--green);margin-bottom:4px}
+.fb-desc{font-size:13px;color:rgba(232,240,248,.5);line-height:1.68}
+@media(max-width:560px){.free-banner{flex-direction:column;text-align:center}}
+
+/* ── Hyperion note ── */
+.hyperion-note{background:rgba(56,189,248,.05);border:1px solid rgba(56,189,248,.15);border-radius:10px;padding:16px 20px;margin:20px 0;display:flex;gap:14px;align-items:flex-start;font-size:13px;color:rgba(232,240,248,.5);line-height:1.65}
+.hyperion-note strong{color:var(--sky)}
 
 /* ── Footer ── */
-footer{
-  border-top:1px solid var(--border);padding:40px 0;
-  text-align:center;position:relative;z-index:1
-}
-.ft-brand{font-family:'Rajdhani',sans-serif;font-size:16px;font-weight:700;margin-bottom:8px}
-.ft-brain{color:var(--white)}.ft-spring{color:var(--green)}
-.ft-links{display:flex;gap:20px;justify-content:center;flex-wrap:wrap;margin:16px 0}
-.ft-links a{font-size:12px;color:var(--dim);text-decoration:none;font-family:'Rajdhani',sans-serif;font-weight:600;letter-spacing:.04em;text-transform:uppercase;transition:color .15s}
+footer{border-top:1px solid var(--border);padding:36px 0;text-align:center;position:relative;z-index:1}
+.ft-b{font-family:'Rajdhani',sans-serif;font-size:15px;font-weight:700;margin-bottom:6px}
+.ft-br{color:var(--white)}.ft-sp{color:var(--green)}
+.ft-links{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin:14px 0}
+.ft-links a{font-size:11.5px;color:var(--dim);text-decoration:none;font-family:'Rajdhani',sans-serif;font-weight:600;letter-spacing:.04em;text-transform:uppercase;transition:color .15s}
 .ft-links a:hover{color:var(--green)}
-.ft-note{font-size:11px;color:rgba(74,96,128,.6);margin-top:12px;line-height:1.7}
-
-/* ── Responsive ── */
-@media(max-width:720px){
-  .wrap{padding:0 16px}
-  .hero{padding:calc(56px + 52px) 0 48px}
-  .hero-stats{gap:20px}
-  .epm-explainer{padding:24px 20px}
-  .modules-grid{grid-template-columns:1fr}
-  .arch-diagram{padding:20px}
-  .free-banner{flex-direction:column;text-align:center}
-  #topbar{padding:0 16px}
-  .tb-product{display:none}
-}
+.ft-note{font-size:10.5px;color:rgba(74,96,128,.55);margin-top:10px;line-height:1.75}
 </style>
 </head>
 <body>
 <div id="stars"></div>
 
-<!-- ══════════════ TOPBAR ══════════════ -->
+<!-- ══ TOPBAR ══ -->
 <div id="topbar">
-  <a href="https://brainspring.ai" class="tb-shield" title="BrainSpring · Beyond the Prompt" target="_blank" rel="noopener">
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 36" width="22" height="24">
+  <a href="https://brainspring.ai" class="tb-shield" target="_blank" rel="noopener" title="BrainSpring · Beyond the Prompt">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 36" width="20" height="22">
       <path d="M16 1L2 7v12c0 8.3 6 16 14 18 8-2 14-9.7 14-18V7L16 1z" fill="#0d1b2e" stroke="#4ade80" stroke-width="1.5"/>
       <path d="M10 14c0-2 1.5-3.5 3-3.5s2.5 1 2.5 1V10h3v5c.4-.4 1-.7 1.5-.7 1.8 0 3 1.5 3 3.5s-1.2 3.5-3 3.5c-.5 0-1.1-.3-1.5-.7V23h-3v-.7s-1 .7-2.5.7-3-1.5-3-3.5z" fill="none" stroke="#4ade80" stroke-width="1.1" opacity=".9"/>
       <circle cx="21" cy="27" r="2.2" fill="none" stroke="#4ade80" stroke-width=".9" opacity=".7"/>
@@ -300,507 +223,505 @@ footer{
     <span class="tb-brand"><span class="tb-brain">Brain</span><span class="tb-spring">Spring</span></span>
   </a>
   <span class="tb-sep">›</span>
-  <span class="tb-product">EPM Cloud Hub</span>
+  <span class="tb-product">Oracle EPM Cloud</span>
   <span class="tb-dot"></span>
   <nav class="tb-nav">
     <a href="/halls/hall-1.html" class="tb-link live"><span class="tb-live-dot"></span>FCCS</a>
-    <a href="/epbcs/" class="tb-link live"><span class="tb-live-dot"></span>EPBCS</a>
-    <a href="#epcm" class="tb-link">EPCM</a>
-    <a href="#arcs" class="tb-link">ARCS</a>
-    <a href="#edmcs" class="tb-link">EDMCS</a>
-    <a href="#integrations" class="tb-link">Integration</a>
-    <a href="#architecture" class="tb-link">Architecture</a>
+    <a href="/epbcs/" class="tb-link live"><span class="tb-live-dot"></span>Planning</a>
+    <a href="#planning" class="tb-link">Close</a>
+    <a href="#platform" class="tb-link">Platform</a>
+    <a href="#all-modules" class="tb-link">All Modules</a>
   </nav>
 </div>
 
-<!-- ══════════════ HERO ══════════════ -->
+<!-- ══ HERO ══ -->
 <div class="wrap">
   <section class="hero">
-    <div class="hero-eyebrow">
-      <span class="tb-dot" style="width:6px;height:6px"></span>
-      BrainSpring · Free · AI-First · No Registration
-    </div>
+    <div class="hero-eyebrow"><span class="tb-dot" style="width:6px;height:6px"></span>BrainSpring · Free · AI-First · No Registration Required</div>
     <h1 class="hero-title">
-      <span class="ht-oracle">Oracle</span>
-      <span class="ht-epm">EPM </span><span class="ht-cloud">Cloud</span>
+      <span class="ht-sub">Oracle Fusion Cloud</span>
+      <span class="ht-main">Enterprise Performance </span><span class="ht-accent">Management</span>
     </h1>
-    <p class="hero-sub">One platform. Six modules. A complete financial intelligence suite — from planning to consolidation, from master data to reporting. Learn each one here, free, with an AI guide at every step.</p>
+    <p class="hero-desc">Nine cloud modules. One connected suite. Plan, consolidate, reconcile, allocate, report, and govern — all on a single platform with AI embedded throughout. Learn every module here, free, with an AI guide at every step.</p>
     <div class="hero-stats">
-      <div class="hs-item"><span class="hs-val">6</span><span class="hs-lbl">EPM Modules</span></div>
-      <div class="hs-item"><span class="hs-val">2</span><span class="hs-lbl">Live Now</span></div>
-      <div class="hs-item"><span class="hs-val">19+</span><span class="hs-lbl">Study Halls</span></div>
-      <div class="hs-item"><span class="hs-val">100+</span><span class="hs-lbl">Exam Questions</span></div>
-      <div class="hs-item"><span class="hs-val">AI</span><span class="hs-lbl">In Every Hall</span></div>
+      <div><span class="hs-v">9</span><span class="hs-l">EPM Modules</span></div>
+      <div><span class="hs-v">2</span><span class="hs-l">Live Study Tours</span></div>
+      <div><span class="hs-v">19+</span><span class="hs-l">Study Halls</span></div>
+      <div><span class="hs-v">100+</span><span class="hs-l">Exam Questions</span></div>
+      <div><span class="hs-v">AI</span><span class="hs-l">Every Hall</span></div>
     </div>
     <div class="hero-cta">
-      <a href="/halls/hall-1.html" class="btn btn-primary">Enter FCCS Tour →</a>
-      <a href="/epbcs/" class="btn btn-outline">Explore EPBCS Quest →</a>
+      <a href="/halls/hall-1.html" class="btn btn-g">FCCS Study Tour →</a>
+      <a href="/epbcs/" class="btn btn-p">Planning Quest →</a>
+      <a href="#all-modules" class="btn btn-o">All Modules ↓</a>
     </div>
   </section>
 </div>
 
-<!-- ══════════════ WHAT IS ORACLE EPM CLOUD ══════════════ -->
+<!-- ══ WHAT IS ORACLE EPM CLOUD ══ -->
 <div class="wrap">
-  <section class="sec-wrap" style="padding-top:0">
-    <div class="sec-label">The Suite</div>
-    <h2 class="sec-title">What Is Oracle EPM Cloud?</h2>
-    <div class="sec-divider"></div>
+  <section class="sec" style="padding-top:0">
+    <div class="sec-lbl">The Suite</div>
+    <h2 class="sec-h">What Is Oracle Fusion Cloud EPM?</h2>
+    <div class="sec-div"></div>
 
-    <div class="epm-explainer">
-      <p>Oracle EPM Cloud — Enterprise Performance Management — is a suite of cloud applications that covers the complete financial intelligence lifecycle of a large organisation. It is not one product. It is six interconnected modules, each solving a different part of the same problem: <strong>how does an organisation of 5,000+ people, across multiple countries and currencies, produce reliable financial information in time to act on it?</strong></p>
-      <p>The suite spans three domains. <strong>Planning</strong> — what should happen (budgets, forecasts, workforce plans, capital plans). <strong>Close &amp; Consolidation</strong> — what did happen (statutory consolidation, account reconciliation, currency translation, intercompany elimination). <strong>Governance</strong> — the master data and integration layer that ensures the numbers moving between systems are the same numbers (Enterprise Data Management, Data Integration).</p>
-      <p>Most organisations implement these modules sequentially over several years. A typical journey: EPBCS first for planning, FCCS next for statutory close, EDMCS to govern the chart of accounts, ARCS to automate reconciliations, with Integration connecting to SAP or Oracle Financials throughout. <strong>Understanding how they connect is what separates an EPM practitioner from an EPM architect.</strong></p>
+    <div class="explainer">
+      <p>Oracle Fusion Cloud Enterprise Performance Management (EPM) is a suite of nine interconnected cloud applications that covers the complete financial management lifecycle — from long-range strategic planning to statutory consolidation to tax reporting to disclosure. It is purpose-built for organisations that need to <strong>plan, close, and report</strong> with speed, accuracy, and auditability at enterprise scale.</p>
+      <p>The suite addresses three fundamental finance questions. <strong>What should happen?</strong> — answered by Planning, Profitability and Cost Management, and Freeform through budgets, forecasts, cost allocations, and scenario models. <strong>What did happen?</strong> — answered by Financial Consolidation and Close, Account Reconciliation, and Tax Reporting through the close process, consolidated group results, and corporate tax provision. <strong>How do we govern and communicate it?</strong> — answered by Enterprise Data Management, the EPM Platform, and Narrative Reporting through master data governance, shared infrastructure, and published disclosures.</p>
+      <p>Oracle's 2025 Gartner Magic Quadrant position — Leader in both Financial Planning Software and Financial Close and Consolidation Solutions — reflects the depth of the suite. <strong>Nearly 10,000 organisations worldwide run Oracle EPM for mission-critical financial processes.</strong> Understanding how the nine modules connect is the difference between an EPM configurator and an EPM architect.</p>
     </div>
 
-    <!-- Suite flow diagram -->
-    <div class="suite-diagram">
-      <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--dim);letter-spacing:.1em;text-transform:uppercase;margin-bottom:14px">How the modules connect — left to right is the data flow</div>
-      <div class="sd-flow">
-        <div class="sd-node" style="border-color:rgba(56,189,248,.25)">
-          <span class="sd-icon">🏢</span>
-          <div class="sd-name" style="color:var(--sky)">Source<br>Systems</div>
-          <div class="sd-role">SAP · Oracle<br>Financials · ERP</div>
-        </div>
-        <div class="sd-arrow">→</div>
-        <div class="sd-node" style="border-color:rgba(251,191,36,.25)">
-          <span class="sd-icon">🔗</span>
-          <div class="sd-name" style="color:var(--amber)">Integration</div>
-          <div class="sd-role">Data pipelines<br>· mapping · load</div>
-        </div>
-        <div class="sd-arrow">→</div>
-        <div class="sd-node" style="border-color:rgba(168,85,247,.3)" style="animation-delay:.2s">
-          <span class="sd-icon">📊</span>
-          <div class="sd-name" style="color:var(--purple)">EPBCS</div>
-          <div class="sd-role">Planning<br>· budget · forecast</div>
-        </div>
-        <div class="sd-arrow">↘</div>
-        <div class="sd-node" style="border-color:rgba(248,113,113,.25)">
-          <span class="sd-icon">⚖️</span>
-          <div class="sd-name" style="color:var(--red)">ARCS</div>
-          <div class="sd-role">Reconciliation<br>· sub-ledger cert</div>
-        </div>
-        <div class="sd-arrow">→</div>
-        <div class="sd-node" style="border-color:rgba(45,212,191,.3)">
-          <span class="sd-icon">🏛️</span>
-          <div class="sd-name" style="color:var(--teal)">FCCS</div>
-          <div class="sd-role">Consolidation<br>· close · statutory</div>
-        </div>
-        <div class="sd-arrow">→</div>
-        <div class="sd-node" style="border-color:rgba(74,222,128,.3)">
-          <span class="sd-icon">📋</span>
-          <div class="sd-name" style="color:var(--green)">Narrative<br>Reporting</div>
-          <div class="sd-role">Board pack<br>· disclosures</div>
-        </div>
+    <!-- Product taxonomy — 3 groups -->
+    <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--dim);letter-spacing:.1em;text-transform:uppercase;margin:24px 0 10px">Oracle Fusion Cloud EPM — Nine modules across three domains</div>
+    <div class="taxonomy">
+      <!-- Planning domain -->
+      <div class="tx-group grp-plan">
+        <div class="tx-header">📊 Planning Domain — What Should Happen</div>
+        <div class="tx-item"><div><div class="tx-name">Planning (PBCS / EPBCS)</div><div class="tx-role">Budgeting, forecasting, workforce, capital, sales, scenario modeling</div></div></div>
+        <div class="tx-item"><div><div class="tx-name">Profitability and Cost Management</div><div class="tx-role">Cost allocation models, profitability analysis, shared services costing</div></div></div>
+        <div class="tx-item"><div><div class="tx-name">Freeform</div><div class="tx-role">Custom multidimensional planning and modeling — powered by Essbase</div></div></div>
       </div>
-      <div style="margin-top:12px;display:flex;align-items:center;gap:8px">
-        <div class="sd-node" style="border-color:rgba(56,189,248,.2);padding:10px 14px;min-width:0">
-          <div class="sd-name" style="color:var(--sky);font-size:10px">EDMCS</div>
-          <div class="sd-role" style="font-size:9px">Master data governance · chart of accounts · hierarchies</div>
-        </div>
-        <div style="font-size:11px;color:var(--dim);font-style:italic">↑ Governs master data across ALL modules above</div>
+      <!-- Close domain -->
+      <div class="tx-group grp-close">
+        <div class="tx-header">🏛️ Close Domain — What Did Happen</div>
+        <div class="tx-item"><div><div class="tx-name">Financial Consolidation and Close (FCCS)</div><div class="tx-role">Statutory consolidation, currency translation, IC elimination, NCI</div></div></div>
+        <div class="tx-item"><div><div class="tx-name">Account Reconciliation (ARCS)</div><div class="tx-role">Sub-ledger to GL reconciliation, transaction matching, certification</div></div></div>
+        <div class="tx-item"><div><div class="tx-name">Tax Reporting</div><div class="tx-role">Corporate tax provision, country-by-country reporting (CbCR), BEPS</div></div></div>
+      </div>
+      <!-- Platform domain -->
+      <div class="tx-group grp-plat">
+        <div class="tx-header">⚙️ Platform Domain — Govern and Communicate</div>
+        <div class="tx-item"><div><div class="tx-name">EPM Platform</div><div class="tx-role">Shared infrastructure — Data Integration, EPM Automate, REST API, Smart View</div></div></div>
+        <div class="tx-item"><div><div class="tx-name">Enterprise Data Management (EDM)</div><div class="tx-role">Master data governance — chart of accounts, hierarchies, change management</div></div></div>
+        <div class="tx-item"><div><div class="tx-name">Narrative Reporting</div><div class="tx-role">Financial disclosures, board packs, regulatory report packages</div></div></div>
       </div>
     </div>
 
-    <!-- 5-step data flow -->
-    <div class="flow-grid">
-      <div class="flow-step">
-        <div class="fs-num">Step 01</div>
-        <div class="fs-title">Master Data</div>
-        <div class="fs-desc">EDMCS defines the chart of accounts, entity hierarchy, and consolidation rules that every other module uses. Change the chart of accounts in EDMCS — it propagates to FCCS, EPBCS, and ARCS automatically.</div>
-        <span class="fs-tag" style="color:var(--sky);border-color:rgba(56,189,248,.2);background:rgba(56,189,248,.06)">EDMCS</span>
+    <!-- Data flow -->
+    <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--dim);letter-spacing:.1em;text-transform:uppercase;margin:32px 0 10px">How data moves through the suite — a typical quarterly close</div>
+    <div class="flow-row">
+      <div class="flow-node" style="border-color:rgba(74,96,128,.25)">
+        <span class="fn-icon">🏢</span>
+        <div class="fn-name" style="color:var(--silver2)">ERP Source</div>
+        <div class="fn-role">SAP · Oracle Fin · NetSuite</div>
       </div>
-      <div class="flow-step">
-        <div class="fs-num">Step 02</div>
-        <div class="fs-title">Planning &amp; Forecast</div>
-        <div class="fs-desc">EPBCS builds the budget and rolling forecast. Finance enters headcount plans, revenue drivers, and OpEx assumptions. The approved Budget becomes a scenario in FCCS — the target the close process measures against.</div>
-        <span class="fs-tag" style="color:var(--purple);border-color:rgba(168,85,247,.2);background:rgba(168,85,247,.06)">EPBCS</span>
+      <div class="flow-arr">→</div>
+      <div class="flow-node" style="border-color:rgba(74,222,128,.25)">
+        <span class="fn-icon">⚙️</span>
+        <div class="fn-name" style="color:var(--green)">EPM Platform</div>
+        <div class="fn-role">Data Integration · load · map</div>
       </div>
-      <div class="flow-step">
-        <div class="fs-num">Step 03</div>
-        <div class="fs-title">Trial Balance Load</div>
-        <div class="fs-desc">Integration pulls trial balances from SAP, Oracle Financials, and other ERPs. Data lands in FCCS as Entity Input. ARCS reconciles sub-ledger accounts to GL before the load — certifying that what enters FCCS is clean.</div>
-        <span class="fs-tag" style="color:var(--amber);border-color:rgba(251,191,36,.2);background:rgba(251,191,36,.06)">Integration</span>
-        <span class="fs-tag" style="color:var(--red);border-color:rgba(248,113,113,.2);background:rgba(248,113,113,.06);margin-left:4px">ARCS</span>
+      <div class="flow-arr">→</div>
+      <div class="flow-node" style="border-color:rgba(248,113,113,.25)">
+        <span class="fn-icon">⚖️</span>
+        <div class="fn-name" style="color:var(--red)">ARCS</div>
+        <div class="fn-role">Reconcile sub-ledger to GL</div>
       </div>
-      <div class="flow-step">
-        <div class="fs-num">Step 04</div>
-        <div class="fs-title">Consolidation &amp; Close</div>
-        <div class="fs-desc">FCCS translates currencies, eliminates intercompany transactions, applies ownership percentages, and runs the consolidation sequence. The CFO sees one set of group numbers — across 50 entities, 8 currencies, in 4 hours.</div>
-        <span class="fs-tag" style="color:var(--teal);border-color:rgba(45,212,191,.2);background:rgba(45,212,191,.06)">FCCS</span>
+      <div class="flow-arr">→</div>
+      <div class="flow-node" style="border-color:rgba(45,212,191,.3)">
+        <span class="fn-icon">🏛️</span>
+        <div class="fn-name" style="color:var(--teal)">FCCS</div>
+        <div class="fn-role">Consolidate · translate · eliminate</div>
       </div>
-      <div class="flow-step">
-        <div class="fs-num">Step 05</div>
-        <div class="fs-title">Reporting &amp; Disclosure</div>
-        <div class="fs-desc">Narrative Reporting wraps consolidated FCCS results in management commentary, IFRS disclosures, and board packs. The CFO approves. The period locks. Reports burst to subsidiary controllers. The close is complete.</div>
-        <span class="fs-tag" style="color:var(--green);border-color:rgba(74,222,128,.2);background:rgba(74,222,128,.06)">Narrative Reporting</span>
+      <div class="flow-arr">→</div>
+      <div class="flow-node" style="border-color:rgba(251,191,36,.25)">
+        <span class="fn-icon">🧾</span>
+        <div class="fn-name" style="color:var(--amber)">Tax Reporting</div>
+        <div class="fn-role">Tax provision · CbCR</div>
+      </div>
+      <div class="flow-arr">→</div>
+      <div class="flow-node" style="border-color:rgba(192,132,252,.3)">
+        <span class="fn-icon">📋</span>
+        <div class="fn-name" style="color:#c084fc">Narrative</div>
+        <div class="fn-role">Board pack · disclosures</div>
       </div>
     </div>
+    <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:8px">
+      <div class="flow-node" style="border-color:rgba(168,85,247,.25);padding:10px 14px;min-width:0;flex:1">
+        <div class="fn-name" style="color:var(--purple);font-size:12px">Planning (EPBCS)</div>
+        <div class="fn-role" style="font-size:10px">Budget &amp; forecast scenarios feed FCCS as plan targets. Workforce plans drive compensation in the close.</div>
+      </div>
+      <div class="flow-node" style="border-color:rgba(251,146,60,.25);padding:10px 14px;min-width:0;flex:1">
+        <div class="fn-name" style="color:var(--coral);font-size:12px">Profitability &amp; Cost Mgmt</div>
+        <div class="fn-role" style="font-size:10px">Allocates shared service costs across entities and products. Feeds management reporting with fully-loaded margins.</div>
+      </div>
+      <div class="flow-node" style="border-color:rgba(163,230,53,.25);padding:10px 14px;min-width:0;flex:1">
+        <div class="fn-name" style="color:var(--lime);font-size:12px">Freeform</div>
+        <div class="fn-role" style="font-size:10px">Custom models — ad-hoc analysis, what-if scenarios, complex multi-dimensional modeling beyond standard templates.</div>
+      </div>
+    </div>
+    <div style="margin-top:8px;font-size:11.5px;color:rgba(74,96,128,.7);text-align:center;font-style:italic">↑ EDM governs the master data — chart of accounts, entity hierarchies, dimension members — that flows to all modules above</div>
   </section>
 </div>
 
-<!-- ══════════════ EPM ARCHITECTURE ══════════════ -->
+<!-- ══ ARCHITECTURE ══ -->
 <div class="wrap">
-  <section class="sec-wrap" id="architecture" style="padding-top:0">
-    <div class="sec-label">Reference Architecture</div>
-    <h2 class="sec-title">The Complete EPM Landscape</h2>
-    <div class="sec-divider"></div>
-    <p style="font-size:14.5px;color:rgba(232,240,248,.45);margin-bottom:28px;line-height:1.75">How an enterprise implementation positions each module — and why the sequence of adoption matters. Most organisations begin with Planning or Close and expand outward as capability matures.</p>
+  <section class="sec" id="platform" style="padding-top:0">
+    <div class="sec-lbl">Reference Architecture</div>
+    <h2 class="sec-h">Oracle EPM Cloud — The Complete Landscape</h2>
+    <div class="sec-div"></div>
 
-    <div class="arch-diagram">
-      <div class="arch-title">Oracle EPM Cloud — Reference Architecture</div>
-
+    <div class="arch">
+      <div class="arch-h">Oracle Fusion Cloud EPM — Reference Architecture</div>
       <div class="arch-layer">
-        <div class="al-label">Master Data &amp; Governance Layer</div>
+        <div class="al-lbl">Source Systems — data originates here</div>
         <div class="al-boxes">
-          <div class="al-box gov">EDMCS — Enterprise Data Management</div>
-          <div class="al-box gov">Chart of Accounts Governance</div>
-          <div class="al-box gov">Entity Hierarchy Management</div>
-          <div class="al-box gov">Data Relationship Management</div>
+          <div class="al-box src">Oracle Fusion ERP</div>
+          <div class="al-box src">SAP S/4HANA</div>
+          <div class="al-box src">NetSuite</div>
+          <div class="al-box src">Other ERPs &amp; GL Systems</div>
+          <div class="al-box src">HR Systems (HCM)</div>
         </div>
       </div>
-
-      <div class="arch-arrow">↓ &nbsp; ↓ &nbsp; ↓</div>
-
+      <div class="arch-arr">↓ &nbsp; ↓ &nbsp; ↓</div>
       <div class="arch-layer">
-        <div class="al-label">Integration Layer — data moves between ERP and EPM</div>
+        <div class="al-lbl">EPM Platform — shared infrastructure for all modules</div>
         <div class="al-boxes">
-          <div class="al-box int-box">Data Integration (DI)</div>
-          <div class="al-box int-box">EPM Automate (CLI)</div>
-          <div class="al-box int-box">REST API</div>
-          <div class="al-box int-box">File-Based Integration</div>
+          <div class="al-box plat">Data Integration (DI)</div>
+          <div class="al-box plat">EPM Automate (CLI)</div>
+          <div class="al-box plat">REST API</div>
+          <div class="al-box plat">Smart View (Excel Add-in)</div>
+          <div class="al-box plat">Oracle Reports &amp; Dashboards</div>
+          <div class="al-box plat">Access Control &amp; Identity</div>
         </div>
       </div>
-
-      <div class="arch-arrow">↓ &nbsp; ↓ &nbsp; ↓</div>
-
+      <div class="arch-arr">↓ &nbsp; ↓ &nbsp; ↓</div>
       <div class="arch-layer">
-        <div class="al-label">Planning Layer — what should happen</div>
+        <div class="al-lbl">Governance Layer — master data across the entire suite</div>
         <div class="al-boxes">
-          <div class="al-box pln">EPBCS — Enterprise Planning</div>
-          <div class="al-box pln">Workforce Planning (OEP_WFP)</div>
-          <div class="al-box pln">Capital Asset Planning</div>
-          <div class="al-box pln">Strategic Modeling (EPCM)</div>
+          <div class="al-box gov">Enterprise Data Management (EDM) — Chart of Accounts · Entity Hierarchy · Dimension Members</div>
         </div>
       </div>
-
-      <div class="arch-arrow">↓ &nbsp; ↓ &nbsp; ↓</div>
-
+      <div class="arch-arr">↓ &nbsp; ↓ &nbsp; ↓</div>
       <div class="arch-layer">
-        <div class="al-label">Close &amp; Consolidation Layer — what did happen</div>
+        <div class="al-lbl">Planning Domain — what should happen</div>
         <div class="al-boxes">
-          <div class="al-box cls">ARCS — Account Reconciliation</div>
-          <div class="al-box cls">FCCS — Financial Consolidation &amp; Close</div>
-          <div class="al-box cls">Tax Reporting</div>
+          <div class="al-box pln">Planning / EPBCS — Financial &amp; Workforce &amp; Capital &amp; Sales Planning</div>
+          <div class="al-box pln">Profitability and Cost Management — Allocation Models</div>
+          <div class="al-box pln">Freeform — Custom Essbase-Powered Models</div>
         </div>
       </div>
-
-      <div class="arch-arrow">↓ &nbsp; ↓ &nbsp; ↓</div>
-
+      <div class="arch-arr">↓ &nbsp; ↓ &nbsp; ↓</div>
       <div class="arch-layer">
-        <div class="al-label">Reporting &amp; Disclosure Layer — what gets published</div>
+        <div class="al-lbl">Close &amp; Consolidation Domain — what did happen</div>
         <div class="al-boxes">
-          <div class="al-box rep">Oracle Reports (in FCCS &amp; EPBCS)</div>
-          <div class="al-box rep">Narrative Reporting</div>
-          <div class="al-box rep">Financial Reporting Studio (legacy)</div>
-          <div class="al-box rep">Smart View (Excel add-in)</div>
+          <div class="al-box cls">Account Reconciliation (ARCS) — Sub-Ledger Certification</div>
+          <div class="al-box cls">Financial Consolidation &amp; Close (FCCS) — Statutory Consolidation</div>
+          <div class="al-box cls">Tax Reporting — Provision &amp; Country-by-Country</div>
+        </div>
+      </div>
+      <div class="arch-arr">↓ &nbsp; ↓ &nbsp; ↓</div>
+      <div class="arch-layer">
+        <div class="al-lbl">Reporting &amp; Disclosure Layer — what gets communicated</div>
+        <div class="al-boxes">
+          <div class="al-box rep">Narrative Reporting — Board Packs · IFRS Disclosures · Regulatory Reports</div>
+          <div class="al-box rep">Oracle Reports — Operational Reports within each module</div>
+          <div class="al-box rep">Smart View — Excel-based Ad Hoc Analysis</div>
         </div>
       </div>
     </div>
 
-    <!-- Module comparison table -->
-    <div class="compare-wrap">
-      <table class="compare-tbl">
+    <!-- Comparison table — all 9 modules -->
+    <div class="tbl-wrap">
+      <table class="tbl">
         <thead>
-          <tr>
-            <th>Module</th>
-            <th>Primary Question</th>
-            <th>Key Users</th>
-            <th>Data Direction</th>
-            <th>Certification</th>
-          </tr>
+          <tr><th>Module</th><th>Primary Question It Answers</th><th>Key Users</th><th>Hyperion Predecessor</th><th>Study Tour</th></tr>
         </thead>
         <tbody>
           <tr>
-            <td>EPBCS</td>
-            <td>What should our revenue, costs, and headcount be next year?</td>
-            <td>FP&amp;A, Finance BPs, Dept managers</td>
-            <td>Plans flow → FCCS as Budget scenario</td>
-            <td><span class="tag" style="color:var(--purple);border-color:rgba(168,85,247,.25);background:rgba(168,85,247,.08)">1Z0-1081</span></td>
+            <td>EPM Platform</td>
+            <td>How do all EPM modules share infrastructure, security, and data movement?</td>
+            <td>EPM Admins, Architects, Integration Engineers</td>
+            <td>Shared Services / FDMEE</td>
+            <td><span class="tag tag-plan">Integrated</span></td>
+          </tr>
+          <tr>
+            <td>Planning (EPBCS)</td>
+            <td>What should revenue, costs, headcount, and capital be next year?</td>
+            <td>FP&amp;A, Finance BPs, Dept Managers, HR Finance</td>
+            <td>Hyperion Planning</td>
+            <td><span class="tag tag-live">● Live</span></td>
+          </tr>
+          <tr>
+            <td>Profitability &amp; Cost Mgmt</td>
+            <td>Which products, customers, and business units are actually profitable?</td>
+            <td>Finance Controllers, Cost Analysts, Shared Services</td>
+            <td>Hyperion Profitability and Cost Management</td>
+            <td><span class="tag tag-soon">Coming</span></td>
+          </tr>
+          <tr>
+            <td>Freeform</td>
+            <td>How do we build custom planning models beyond standard templates?</td>
+            <td>Finance Architects, Advanced FP&amp;A, Strategic Finance</td>
+            <td>Hyperion Essbase (SaaS equivalent)</td>
+            <td><span class="tag tag-soon">Coming</span></td>
           </tr>
           <tr>
             <td>FCCS</td>
-            <td>What were our consolidated group results this quarter?</td>
-            <td>Group finance, External reporting, CFO</td>
-            <td>Trial balances in → consolidated P&amp;L/BS out</td>
-            <td><span class="tag" style="color:var(--teal);border-color:rgba(45,212,191,.25);background:rgba(45,212,191,.08)">1Z0-1081-25</span></td>
+            <td>What are the consolidated group financial results this quarter?</td>
+            <td>Group Finance, External Reporting, CFO Office</td>
+            <td>Hyperion Financial Management (HFM)</td>
+            <td><span class="tag tag-live">● Live</span></td>
           </tr>
           <tr>
-            <td>ARCS</td>
+            <td>Account Reconciliation</td>
             <td>Do our sub-ledger balances agree with the GL before we close?</td>
-            <td>Controllers, Accounting teams</td>
-            <td>Sub-ledger cert → feeds FCCS trial balance</td>
-            <td><span class="tag" style="color:var(--red);border-color:rgba(248,113,113,.25);background:rgba(248,113,113,.08)">Coming</span></td>
+            <td>Controllers, Accounting Teams, Shared Service Centres</td>
+            <td>Hyperion Financial Close Suite</td>
+            <td><span class="tag tag-soon">Coming</span></td>
           </tr>
           <tr>
-            <td>EDMCS</td>
-            <td>Is everyone in the organisation using the same chart of accounts?</td>
-            <td>Finance architects, Data governance</td>
-            <td>Master data → all EPM modules</td>
-            <td><span class="tag" style="color:var(--sky);border-color:rgba(56,189,248,.25);background:rgba(56,189,248,.08)">Coming</span></td>
+            <td>Tax Reporting</td>
+            <td>What is our corporate tax provision and are we BEPS/CbCR compliant?</td>
+            <td>Tax Directors, Group Tax Teams, Finance Controllers</td>
+            <td>Hyperion Tax Provision</td>
+            <td><span class="tag tag-soon">Coming</span></td>
           </tr>
           <tr>
-            <td>EPCM</td>
-            <td>What is our long-term financial trajectory under different scenarios?</td>
-            <td>Strategic finance, CFO, Board</td>
-            <td>Models inform EPBCS assumptions</td>
-            <td><span class="tag" style="color:var(--amber);border-color:rgba(251,191,36,.25);background:rgba(251,191,36,.08)">Coming</span></td>
+            <td>Narrative Reporting</td>
+            <td>How do we produce and publish regulated financial report packages?</td>
+            <td>External Reporting, Investor Relations, Company Secretary</td>
+            <td>Hyperion Disclosure Management</td>
+            <td><span class="tag tag-soon">Coming</span></td>
           </tr>
           <tr>
-            <td>Integration</td>
-            <td>How do we move data reliably between ERP and EPM at scale?</td>
-            <td>EPM architects, Integration engineers</td>
-            <td>Bidirectional — load and extract</td>
-            <td><span class="tag" style="color:var(--green);border-color:rgba(74,222,128,.25);background:rgba(74,222,128,.08)">Coming</span></td>
+            <td>Enterprise Data Management</td>
+            <td>Is everyone using the same chart of accounts and entity hierarchy?</td>
+            <td>Finance Architects, Data Governance, EPM COE</td>
+            <td>Hyperion Data Relationship Mgmt (DRM)</td>
+            <td><span class="tag tag-soon">Coming</span></td>
           </tr>
         </tbody>
       </table>
     </div>
-  </section>
-</div>
 
-<!-- ══════════════ MODULE CARDS ══════════════ -->
-<div class="wrap">
-  <section class="sec-wrap" style="padding-top:0">
-    <div class="sec-label">Study Tours</div>
-    <h2 class="sec-title">Choose Your Module</h2>
-    <div class="sec-divider"></div>
-    <p class="sec-sub">Each module has its own dedicated study tour — a structured learning journey with an AI guide, a case company, hands-on labs, and exam preparation where applicable.</p>
-
-    <div class="modules-grid">
-
-      <!-- FCCS -->
-      <div class="module-card card-fccs" id="fccs">
-        <div class="mc-top">
-          <div class="mc-status live"><span style="width:6px;height:6px;border-radius:50%;background:var(--green);display:inline-block;animation:pulse 2s infinite"></span>&nbsp;Live Now</div>
-          <span class="mc-icon">🏛️</span>
-          <div class="mc-product">Oracle FCCS</div>
-          <div class="mc-title">Financial Consolidation &amp; Close</div>
-          <div class="mc-full">Financial Consolidation and Close Service · 1Z0-1081-25</div>
-          <p class="mc-desc">Statutory consolidation, currency translation, intercompany elimination, and the complete group close process. The authoritative source of consolidated group financial results.</p>
-        </div>
-        <div class="mc-body">
-          <div class="mc-what">
-            <div class="mc-what-lbl">9 Halls Cover</div>
-            <div class="mc-tags">
-              <span class="mc-tag">Application Setup</span>
-              <span class="mc-tag">11 Dimensions</span>
-              <span class="mc-tag">Consolidation Sequence</span>
-              <span class="mc-tag">Currency Translation</span>
-              <span class="mc-tag">IC Elimination</span>
-              <span class="mc-tag">NCI</span>
-              <span class="mc-tag">Journals</span>
-              <span class="mc-tag">Groovy Rules</span>
-              <span class="mc-tag">Security &amp; Approvals</span>
-              <span class="mc-tag">Reporting</span>
-              <span class="mc-tag">Exam Prep</span>
-            </div>
-          </div>
-          <div class="mc-case"><strong>Case Company:</strong> GlobalMerge Corp — USD parent with GBP (100%), EUR (80% NCI), SGD (50% JV), and USD (30% equity) subsidiaries across four ERP systems.</div>
-          <a href="/halls/hall-1.html" class="mc-cta live-cta">Enter FCCS Study Tour →</a>
-        </div>
-      </div>
-
-      <!-- EPBCS -->
-      <div class="module-card card-epbcs" id="epbcs">
-        <div class="mc-top">
-          <div class="mc-status live"><span style="width:6px;height:6px;border-radius:50%;background:var(--green);display:inline-block;animation:pulse 2s infinite"></span>&nbsp;Live Now</div>
-          <span class="mc-icon">📊</span>
-          <div class="mc-product">Oracle EPBCS</div>
-          <div class="mc-title">Enterprise Planning</div>
-          <div class="mc-full">Enterprise Planning and Budgeting Cloud Service</div>
-          <p class="mc-desc">The complete financial and operational planning platform. Budget, forecast, headcount plans, driver-based models, Groovy automation, and the Essbase block storage engine that powers it all.</p>
-        </div>
-        <div class="mc-body">
-          <div class="mc-what">
-            <div class="mc-what-lbl">9 Parts + Modules Cover</div>
-            <div class="mc-tags">
-              <span class="mc-tag">Dimension Design</span>
-              <span class="mc-tag">Block Storage</span>
-              <span class="mc-tag">Groovy Scripting</span>
-              <span class="mc-tag">Forms 2.0</span>
-              <span class="mc-tag">Data Integration</span>
-              <span class="mc-tag">Workflow &amp; Approvals</span>
-              <span class="mc-tag">Workforce Planning</span>
-              <span class="mc-tag">EPM Automate</span>
-              <span class="mc-tag">REST API</span>
-              <span class="mc-tag">Essbase Kernel</span>
-              <span class="mc-tag">The Engagement</span>
-            </div>
-          </div>
-          <div class="mc-case"><strong>Case Company:</strong> Vision Corporation — $2.8B revenue, 12 entities, 6 currencies (USD/EUR/GBP/JPY/AUD/CAD), 4,200 headcount, SAP ERP source system.</div>
-          <a href="/epbcs/" class="mc-cta live-cta">Enter EPBCS Quest →</a>
-        </div>
-      </div>
-
-      <!-- EPCM -->
-      <div class="module-card card-epcm" id="epcm">
-        <div class="mc-top">
-          <div class="mc-status soon">⏳&nbsp;Coming Soon</div>
-          <span class="mc-icon">🔭</span>
-          <div class="mc-product">Oracle EPCM</div>
-          <div class="mc-title">Strategic Modeling</div>
-          <div class="mc-full">Enterprise Planning and Consolidation Management · Strategic Modeling Cloud</div>
-          <p class="mc-desc">Long-range financial modeling, scenario analysis, and strategic planning. Where the CFO stress-tests the business model across 10-year horizons under multiple macro assumptions.</p>
-        </div>
-        <div class="mc-body">
-          <div class="mc-what">
-            <div class="mc-what-lbl">Will Cover</div>
-            <div class="mc-tags">
-              <span class="mc-tag">Model Design</span>
-              <span class="mc-tag">Drivers &amp; Assumptions</span>
-              <span class="mc-tag">Scenario Analysis</span>
-              <span class="mc-tag">P&amp;L / BS / Cash Flow</span>
-              <span class="mc-tag">Sensitivity Analysis</span>
-              <span class="mc-tag">Integration with EPBCS</span>
-            </div>
-          </div>
-          <div class="mc-case"><strong>Coming:</strong> Strategic Modeling study tour with a CFO-level scenario framework — M&amp;A impact, rate sensitivity, and multi-year growth model design.</div>
-          <span class="mc-cta soon-cta">Study Tour Coming Soon</span>
-        </div>
-      </div>
-
-      <!-- ARCS -->
-      <div class="module-card card-arcs" id="arcs">
-        <div class="mc-top">
-          <div class="mc-status soon">⏳&nbsp;Coming Soon</div>
-          <span class="mc-icon">⚖️</span>
-          <div class="mc-product">Oracle ARCS</div>
-          <div class="mc-title">Account Reconciliation</div>
-          <div class="mc-full">Account Reconciliation Cloud Service</div>
-          <p class="mc-desc">Automates the reconciliation of sub-ledger balances to GL during the close cycle. Certifies that what enters FCCS is clean — reducing the risk of consolidated numbers built on unreconciled accounts.</p>
-        </div>
-        <div class="mc-body">
-          <div class="mc-what">
-            <div class="mc-what-lbl">Will Cover</div>
-            <div class="mc-tags">
-              <span class="mc-tag">Reconciliation Profiles</span>
-              <span class="mc-tag">Match Rules</span>
-              <span class="mc-tag">Period Close Calendar</span>
-              <span class="mc-tag">Workflow &amp; Certification</span>
-              <span class="mc-tag">Risk Ratings</span>
-              <span class="mc-tag">FCCS Integration</span>
-            </div>
-          </div>
-          <div class="mc-case"><strong>Coming:</strong> ARCS study tour built around GlobalMerge Corp's close calendar — reconciling BritEdge's intercompany balances before they enter FCCS consolidation.</div>
-          <span class="mc-cta soon-cta">Study Tour Coming Soon</span>
-        </div>
-      </div>
-
-      <!-- EDMCS -->
-      <div class="module-card card-edmcs" id="edmcs">
-        <div class="mc-top">
-          <div class="mc-status soon">⏳&nbsp;Coming Soon</div>
-          <span class="mc-icon">🗂️</span>
-          <div class="mc-product">Oracle EDMCS</div>
-          <div class="mc-title">Enterprise Data Management</div>
-          <div class="mc-full">Enterprise Data Management Cloud Service</div>
-          <p class="mc-desc">The governance layer for master data across the entire Oracle EPM suite. Manages the chart of accounts, entity hierarchies, and dimension members that flow to FCCS, EPBCS, ARCS, and source ERP systems simultaneously.</p>
-        </div>
-        <div class="mc-body">
-          <div class="mc-what">
-            <div class="mc-what-lbl">Will Cover</div>
-            <div class="mc-tags">
-              <span class="mc-tag">Applications &amp; Dimensions</span>
-              <span class="mc-tag">Node Types</span>
-              <span class="mc-tag">Viewpoints</span>
-              <span class="mc-tag">Request Workflows</span>
-              <span class="mc-tag">Binding &amp; Synchronisation</span>
-              <span class="mc-tag">Custom Validations</span>
-            </div>
-          </div>
-          <div class="mc-case"><strong>Coming:</strong> EDMCS study tour — governing the chart of accounts across GlobalMerge Corp's four ERP systems and both Oracle EPM modules simultaneously.</div>
-          <span class="mc-cta soon-cta">Study Tour Coming Soon</span>
-        </div>
-      </div>
-
-      <!-- Integration -->
-      <div class="module-card card-int" id="integrations">
-        <div class="mc-top">
-          <div class="mc-status planned">🗓&nbsp;Planned</div>
-          <span class="mc-icon">🔗</span>
-          <div class="mc-product">Oracle EPM</div>
-          <div class="mc-title">Integration Deep Dive</div>
-          <div class="mc-full">Data Integration · EPM Automate · REST API · File-Based</div>
-          <p class="mc-desc">The plumbing that connects Oracle EPM to the rest of the enterprise. Every implementation depends on it. Most practitioners underestimate its complexity until the first production failure at 3am.</p>
-        </div>
-        <div class="mc-body">
-          <div class="mc-what">
-            <div class="mc-what-lbl">Will Cover</div>
-            <div class="mc-tags">
-              <span class="mc-tag">Data Integration (DI)</span>
-              <span class="mc-tag">Import Formats</span>
-              <span class="mc-tag">Dimension Maps</span>
-              <span class="mc-tag">EPM Automate CLI</span>
-              <span class="mc-tag">REST API Patterns</span>
-              <span class="mc-tag">Reconciliation Controls</span>
-              <span class="mc-tag">Nightly Batch Design</span>
-            </div>
-          </div>
-          <div class="mc-case"><strong>Planned:</strong> Integration deep dive using both Vision Corp (SAP → EPBCS) and GlobalMerge Corp (multi-ERP → FCCS) as dual case studies.</div>
-          <span class="mc-cta planned-cta">Planned — Check Back</span>
-        </div>
-      </div>
-
+    <div class="hyperion-note">
+      <span style="font-size:20px;flex-shrink:0">🔄</span>
+      <div><strong>Migrating from Hyperion?</strong> Every Oracle Cloud EPM module has a direct on-premise Hyperion predecessor. The cloud equivalents deliver the same core functionality with SaaS management, quarterly updates, embedded AI, and no infrastructure overhead. Oracle's Soar to Cloud migration programme supports the transition for each module.</div>
     </div>
   </section>
 </div>
 
-<!-- ══════════════ FREE & OPEN ══════════════ -->
+<!-- ══ ALL MODULE CARDS ══ -->
+<div class="wrap">
+  <section class="sec" id="all-modules" style="padding-top:0">
+    <div class="sec-lbl">Study Tours</div>
+    <h2 class="sec-h">Choose Your Module</h2>
+    <div class="sec-div"></div>
+    <p class="sec-sub">Each module has a dedicated study tour — structured learning with an AI guide, a case company, hands-on scenarios, and exam preparation. Two are live now. More coming.</p>
+
+    <div class="modules">
+
+      <!-- EPM Platform -->
+      <div class="mcard c-plat">
+        <div class="mc-top">
+          <div class="mc-status st-plan">⚙ Integrated</div>
+          <span class="mc-icon">⚙️</span>
+          <div class="mc-prod">Foundation</div>
+          <div class="mc-title">EPM Platform</div>
+          <div class="mc-full">Oracle Cloud EPM Platform — shared infrastructure</div>
+          <p class="mc-desc">The technical and functional framework shared across all nine EPM modules. Data Integration (DI), EPM Automate CLI, REST API, Smart View, Oracle Reports, Dashboards, and the shared security and access model. Everything else is built on top of this.</p>
+        </div>
+        <div class="mc-body">
+          <div class="mc-lbl">Covers</div>
+          <div class="mc-tags"><span class="mc-tag">Data Integration</span><span class="mc-tag">EPM Automate CLI</span><span class="mc-tag">REST API</span><span class="mc-tag">Smart View</span><span class="mc-tag">Oracle Reports</span><span class="mc-tag">Navigation Flows</span><span class="mc-tag">Access Control</span></div>
+          <div class="mc-case"><strong>Note:</strong> Platform content is woven into both live study tours. The EPBCS Quest covers EPM Automate, REST API, and Data Integration in depth. The FCCS Tour covers Data Integration and the close platform.</div>
+          <a href="/epbcs/" class="mc-cta cta-live">See Platform in EPBCS Quest →</a>
+        </div>
+      </div>
+
+      <!-- Planning -->
+      <div class="mcard c-plan" id="planning">
+        <div class="mc-top">
+          <div class="mc-status st-live"><span style="width:5px;height:5px;border-radius:50%;background:var(--green);display:inline-block;animation:pulse 2s infinite"></span>&nbsp;Live Now</div>
+          <span class="mc-icon">📊</span>
+          <div class="mc-prod">Oracle Planning · PBCS · EPBCS</div>
+          <div class="mc-title">Planning</div>
+          <div class="mc-full">Enterprise Planning and Budgeting Cloud Service</div>
+          <p class="mc-desc">Driver-based budgeting, rolling forecasts, workforce planning, capital asset planning, sales planning, and scenario modeling. The Essbase block storage engine powers multi-dimensional analysis at enterprise scale. Groovy scripting automates complex calculation logic.</p>
+        </div>
+        <div class="mc-body">
+          <div class="mc-lbl">9 Parts + Modules Cover</div>
+          <div class="mc-tags"><span class="mc-tag">Dimension Design</span><span class="mc-tag">Essbase Block Storage</span><span class="mc-tag">Forms 2.0</span><span class="mc-tag">Groovy Scripting</span><span class="mc-tag">Workforce Planning</span><span class="mc-tag">Data Integration</span><span class="mc-tag">Approvals Workflow</span><span class="mc-tag">EPM Automate</span><span class="mc-tag">REST API</span><span class="mc-tag">The Engagement</span></div>
+          <div class="mc-case"><strong>Case Company:</strong> Vision Corporation — $2.8B revenue, 12 entities, 6 currencies, 4,200 headcount, SAP ERP source.</div>
+          <a href="/epbcs/" class="mc-cta cta-live">Enter Planning Quest →</a>
+        </div>
+      </div>
+
+      <!-- PCM -->
+      <div class="mcard c-pcm">
+        <div class="mc-top">
+          <div class="mc-status st-soon">⏳ Coming Soon</div>
+          <span class="mc-icon">💰</span>
+          <div class="mc-prod">Oracle Cloud EPM</div>
+          <div class="mc-title">Profitability &amp; Cost Management</div>
+          <div class="mc-full">Oracle Cloud EPM Profitability and Cost Management</div>
+          <p class="mc-desc">Build transparent allocation models to understand which customers, products, and lines of business are genuinely profitable — and which are subsidised. Shared services costing, IT financial management, and tax transfer pricing models.</p>
+        </div>
+        <div class="mc-body">
+          <div class="mc-lbl">Will Cover</div>
+          <div class="mc-tags"><span class="mc-tag">Allocation Models</span><span class="mc-tag">Driver-Based Costing</span><span class="mc-tag">Profitability Analysis</span><span class="mc-tag">Shared Services</span><span class="mc-tag">IT Chargeback</span><span class="mc-tag">Transfer Pricing</span><span class="mc-tag">What-If Scenarios</span></div>
+          <div class="mc-case"><strong>Coming:</strong> PCM study tour — allocating GlobalMerge Corp's shared IT and Finance costs across four subsidiaries using driver-based models.</div>
+          <span class="mc-cta cta-soon">Study Tour Coming Soon</span>
+        </div>
+      </div>
+
+      <!-- Freeform -->
+      <div class="mcard c-ff">
+        <div class="mc-top">
+          <div class="mc-status st-soon">⏳ Coming Soon</div>
+          <span class="mc-icon">🔬</span>
+          <div class="mc-prod">Oracle Cloud EPM</div>
+          <div class="mc-title">Freeform</div>
+          <div class="mc-full">Oracle Cloud EPM Freeform — Essbase in SaaS</div>
+          <p class="mc-desc">The power and flexibility of Essbase delivered as a managed SaaS service. Build custom multidimensional planning, modeling, and reporting applications that go beyond standard Planning templates — without managing infrastructure.</p>
+        </div>
+        <div class="mc-body">
+          <div class="mc-lbl">Will Cover</div>
+          <div class="mc-tags"><span class="mc-tag">BSO &amp; ASO Cubes</span><span class="mc-tag">Custom Dimensions</span><span class="mc-tag">Ad-Hoc Analysis</span><span class="mc-tag">Groovy Rules</span><span class="mc-tag">What-If Modeling</span><span class="mc-tag">Predictive Planning</span><span class="mc-tag">Monte Carlo</span></div>
+          <div class="mc-case"><strong>Coming:</strong> Freeform study tour — building a custom M&amp;A impact model and long-range scenario analysis beyond Planning's standard modules.</div>
+          <span class="mc-cta cta-soon">Study Tour Coming Soon</span>
+        </div>
+      </div>
+
+      <!-- FCCS -->
+      <div class="mcard c-fccs">
+        <div class="mc-top">
+          <div class="mc-status st-live"><span style="width:5px;height:5px;border-radius:50%;background:var(--green);display:inline-block;animation:pulse 2s infinite"></span>&nbsp;Live Now</div>
+          <span class="mc-icon">🏛️</span>
+          <div class="mc-prod">Oracle FCCS · 1Z0-1081-25</div>
+          <div class="mc-title">Financial Consolidation &amp; Close</div>
+          <div class="mc-full">Financial Consolidation and Close Cloud Service</div>
+          <p class="mc-desc">Statutory consolidation, currency translation, intercompany elimination, ownership management, and the complete group close process. The authoritative source of consolidated group financial results under IFRS or US GAAP.</p>
+        </div>
+        <div class="mc-body">
+          <div class="mc-lbl">9 Halls Cover</div>
+          <div class="mc-tags"><span class="mc-tag">Application Setup</span><span class="mc-tag">11 System Dimensions</span><span class="mc-tag">Consolidation Sequence</span><span class="mc-tag">Currency Translation</span><span class="mc-tag">IC Elimination</span><span class="mc-tag">NCI &amp; Equity Method</span><span class="mc-tag">Journals</span><span class="mc-tag">Groovy Rules</span><span class="mc-tag">Security</span><span class="mc-tag">Exam Prep 1Z0-1081-25</span></div>
+          <div class="mc-case"><strong>Case Company:</strong> GlobalMerge Corp — USD parent with GBP (100%), EUR (80% NCI), SGD (50% JV), USD (30% equity) subsidiaries.</div>
+          <a href="/halls/hall-1.html" class="mc-cta cta-live">Enter FCCS Study Tour →</a>
+        </div>
+      </div>
+
+      <!-- ARCS -->
+      <div class="mcard c-arcs">
+        <div class="mc-top">
+          <div class="mc-status st-soon">⏳ Coming Soon</div>
+          <span class="mc-icon">⚖️</span>
+          <div class="mc-prod">Oracle ARCS</div>
+          <div class="mc-title">Account Reconciliation</div>
+          <div class="mc-full">Oracle Cloud Account Reconciliation Service</div>
+          <p class="mc-desc">Automates the reconciliation of sub-ledger account balances to the general ledger and certifies them before the close. Reduces the risk of consolidated numbers built on unreconciled accounts and eliminates manual spreadsheet-based reconciliation processes.</p>
+        </div>
+        <div class="mc-body">
+          <div class="mc-lbl">Will Cover</div>
+          <div class="mc-tags"><span class="mc-tag">Reconciliation Profiles</span><span class="mc-tag">Transaction Matching</span><span class="mc-tag">Period Close Calendar</span><span class="mc-tag">Workflow &amp; Certification</span><span class="mc-tag">Risk Ratings</span><span class="mc-tag">FCCS Integration</span><span class="mc-tag">Variance Thresholds</span></div>
+          <div class="mc-case"><strong>Coming:</strong> ARCS study tour built on GlobalMerge Corp's close calendar — reconciling BritEdge's intercompany balances before they enter FCCS consolidation.</div>
+          <span class="mc-cta cta-soon">Study Tour Coming Soon</span>
+        </div>
+      </div>
+
+      <!-- Tax Reporting -->
+      <div class="mcard c-tax">
+        <div class="mc-top">
+          <div class="mc-status st-soon">⏳ Coming Soon</div>
+          <span class="mc-icon">🧾</span>
+          <div class="mc-prod">Oracle Tax Reporting</div>
+          <div class="mc-title">Tax Reporting</div>
+          <div class="mc-full">Oracle Cloud Tax Reporting</div>
+          <p class="mc-desc">Aligns corporate tax reporting with financial reporting for transparency and compliance. Covers tax provision calculation, current and deferred tax, country-by-country reporting (CbCR) for BEPS compliance, and integration with FCCS consolidated results.</p>
+        </div>
+        <div class="mc-body">
+          <div class="mc-lbl">Will Cover</div>
+          <div class="mc-tags"><span class="mc-tag">Tax Provision</span><span class="mc-tag">Current &amp; Deferred Tax</span><span class="mc-tag">CbCR / BEPS</span><span class="mc-tag">Effective Tax Rate</span><span class="mc-tag">Tax Automation</span><span class="mc-tag">FCCS Integration</span></div>
+          <div class="mc-case"><strong>Coming:</strong> Tax Reporting study tour — calculating GlobalMerge Corp's consolidated tax provision across four jurisdictions with DeutschWerk's 20% NCI impact.</div>
+          <span class="mc-cta cta-soon">Study Tour Coming Soon</span>
+        </div>
+      </div>
+
+      <!-- Narrative Reporting -->
+      <div class="mcard c-nr">
+        <div class="mc-top">
+          <div class="mc-status st-soon">⏳ Coming Soon</div>
+          <span class="mc-icon">📋</span>
+          <div class="mc-prod">Oracle Narrative Reporting</div>
+          <div class="mc-title">Narrative Reporting</div>
+          <div class="mc-full">Oracle Cloud Narrative Reporting</div>
+          <p class="mc-desc">Collaborative authoring and publishing of financial, management, and regulatory report packages. Connects live FCCS consolidated data to the narrative layer — so disclosures, board packs, and investor reports update automatically when the numbers change.</p>
+        </div>
+        <div class="mc-body">
+          <div class="mc-lbl">Will Cover</div>
+          <div class="mc-tags"><span class="mc-tag">Report Packages</span><span class="mc-tag">Doclets</span><span class="mc-tag">Reference Doclets</span><span class="mc-tag">Author Workflow</span><span class="mc-tag">FCCS Data Links</span><span class="mc-tag">XBRL</span><span class="mc-tag">Bursting</span></div>
+          <div class="mc-case"><strong>Coming:</strong> Narrative Reporting study tour — producing GlobalMerge Corp's IFRS group accounts with live links to FCCS consolidation data.</div>
+          <span class="mc-cta cta-soon">Study Tour Coming Soon</span>
+        </div>
+      </div>
+
+      <!-- EDM -->
+      <div class="mcard c-edm">
+        <div class="mc-top">
+          <div class="mc-status st-soon">⏳ Coming Soon</div>
+          <span class="mc-icon">🗂️</span>
+          <div class="mc-prod">Oracle EDM · formerly DRM</div>
+          <div class="mc-title">Enterprise Data Management</div>
+          <div class="mc-full">Oracle Cloud Enterprise Data Management</div>
+          <p class="mc-desc">Governs the master data — chart of accounts, entity hierarchies, cost centre structures, dimension members — that flows to every EPM module and back to ERP source systems. The single source of truth for the data that defines how numbers are organised across the enterprise.</p>
+        </div>
+        <div class="mc-body">
+          <div class="mc-lbl">Will Cover</div>
+          <div class="mc-tags"><span class="mc-tag">Applications &amp; Dimensions</span><span class="mc-tag">Viewpoints</span><span class="mc-tag">Node Types</span><span class="mc-tag">Request Workflows</span><span class="mc-tag">Binding &amp; Sync</span><span class="mc-tag">Custom Validations</span><span class="mc-tag">DRM Migration</span></div>
+          <div class="mc-case"><strong>Coming:</strong> EDM study tour — governing the chart of accounts across GlobalMerge Corp's four ERP systems and both EPM modules simultaneously with full change audit trail.</div>
+          <span class="mc-cta cta-soon">Study Tour Coming Soon</span>
+        </div>
+      </div>
+
+    </div><!-- /modules -->
+  </section>
+</div>
+
+<!-- ══ FREE BANNER ══ -->
 <div class="wrap">
   <div class="free-banner">
     <div class="fb-icon">🔓</div>
     <div>
       <div class="fb-title">Free. No Registration. AI in Every Hall.</div>
-      <p class="fb-desc">Every study tour on this platform is free, open to all, and requires no account to access. Each hall has an AI guide trained on that hall's content. The EPBCS Quest offers optional Google sign-in for evaluation and portfolio features — but every lesson is accessible without it. This is a community resource, built by practitioners, for practitioners.</p>
+      <p class="fb-desc">Every study tour on this platform is free, open to all, and requires no account to access. Each hall has an AI guide trained on that hall's content and case company. The Planning Quest offers optional Google sign-in for evaluation and portfolio features — but every lesson is fully accessible without it. This is a community resource, built by practitioners, for practitioners.</p>
     </div>
   </div>
 </div>
 
-<!-- ══════════════ FOOTER ══════════════ -->
+<!-- ══ FOOTER ══ -->
 <div class="wrap">
   <footer>
-    <div class="ft-brand"><span class="ft-brain">Brain</span><span class="ft-spring">Spring</span></div>
-    <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--dim);letter-spacing:.12em;margin-bottom:14px">BEYOND THE PROMPT · EPM CLOUD LEARNING HUB</div>
+    <div class="ft-b"><span class="ft-br">Brain</span><span class="ft-sp">Spring</span></div>
+    <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--dim);letter-spacing:.12em;margin-bottom:12px">BEYOND THE PROMPT · ORACLE EPM CLOUD LEARNING HUB</div>
     <div class="ft-links">
       <a href="/halls/hall-1.html">FCCS Tour</a>
-      <a href="/epbcs/">EPBCS Quest</a>
-      <a href="#epcm">EPCM</a>
-      <a href="#arcs">ARCS</a>
-      <a href="#edmcs">EDMCS</a>
-      <a href="#integrations">Integration</a>
+      <a href="/epbcs/">Planning Quest</a>
+      <a href="#planning">Planning</a>
+      <a href="#all-modules">All Modules</a>
+      <a href="#platform">Architecture</a>
       <a href="https://brainspring.ai" target="_blank">brainspring.ai</a>
+      <a href="https://www.oracle.com/performance-management/" target="_blank" rel="noopener">Oracle EPM</a>
     </div>
     <p class="ft-note">
       Free educational resource · No registration required · AI-powered guides in every hall<br>
-      Oracle EPM Cloud content cross-validated against Oracle documentation · Built with Claude AI<br>
-      Oracle, FCCS, EPBCS, EDMCS, ARCS are trademarks of Oracle Corporation. BrainSpring is an independent educational resource not affiliated with Oracle.
+      Content cross-validated against Oracle documentation · Built with Claude AI · <a href="https://brainspring.ai" target="_blank" style="color:rgba(74,222,128,.35);text-decoration:none">brainspring.ai</a><br>
+      Oracle, FCCS, EPBCS, Planning, ARCS, EDM, and related names are trademarks of Oracle Corporation.<br>
+      BrainSpring is an independent educational resource and is not affiliated with or endorsed by Oracle Corporation.
     </p>
   </footer>
 </div>
 
 <script>
-/* Stars */
 (function(){
   var s=document.getElementById('stars');
-  for(var i=0;i<60;i++){
+  for(var i=0;i<55;i++){
     var d=document.createElement('div');d.className='star';
-    var sz=Math.random()*1.5+0.5;
-    d.style.cssText='width:'+sz+'px;height:'+sz+'px;top:'+Math.random()*100+'%;left:'+Math.random()*100+'%;--d:'+(3+Math.random()*5)+'s;--delay:'+Math.random()*6+'s;--op:'+(0.08+Math.random()*0.18);
+    var sz=Math.random()*1.4+0.4;
+    d.style.cssText='width:'+sz+'px;height:'+sz+'px;top:'+Math.random()*100+'%;left:'+Math.random()*100+'%;--d:'+(3+Math.random()*5)+'s;--delay:'+Math.random()*6+'s;--op:'+(0.06+Math.random()*0.16);
     s.appendChild(d);
   }
 })();
-
-/* Smooth scroll for nav links */
 document.querySelectorAll('a[href^="#"]').forEach(function(a){
   a.addEventListener('click',function(e){
     var id=this.getAttribute('href').slice(1);
@@ -808,21 +729,6 @@ document.querySelectorAll('a[href^="#"]').forEach(function(a){
     if(el){e.preventDefault();el.scrollIntoView({behavior:'smooth',block:'start'});}
   });
 });
-
-/* Animate stats on scroll */
-var observed=false;
-var io=new IntersectionObserver(function(entries){
-  entries.forEach(function(entry){
-    if(entry.isIntersecting&&!observed){
-      observed=true;
-      document.querySelectorAll('.hs-val').forEach(function(el){
-        el.style.animation='fadeUp .5s ease both';
-      });
-    }
-  });
-},{threshold:.3});
-var stats=document.querySelector('.hero-stats');
-if(stats)io.observe(stats);
 </script>
 </body>
 </html>
