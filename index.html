@@ -340,65 +340,203 @@ footer{border-top:1px solid var(--border);padding:32px 0;text-align:center;posit
   <h2 class="sec-h">Oracle EPM Cloud — The Complete Landscape</h2>
   <div class="sec-div"></div>
 
-  <div class="arch-strip">
-    <div class="arch-h">Oracle Fusion Cloud EPM — Reference Architecture</div>
-    <div class="arch-layer">
-      <div class="al-lbl">Source Systems</div>
-      <div class="al-boxes">
-        <div class="al-box src">Oracle Fusion ERP</div>
-        <div class="al-box src">SAP S/4HANA</div>
-        <div class="al-box src">NetSuite</div>
-        <div class="al-box src">Other ERPs &amp; GL Systems</div>
-        <div class="al-box src">HR Systems (HCM)</div>
-      </div>
-    </div>
-    <div class="arch-arr">↓ &nbsp; ↓ &nbsp; ↓</div>
-    <div class="arch-layer">
-      <div class="al-lbl">EPM Platform — shared infrastructure</div>
-      <div class="al-boxes">
-        <div class="al-box plat">Data Integration (DI)</div>
-        <div class="al-box plat">EPM Automate (CLI)</div>
-        <div class="al-box plat">REST API</div>
-        <div class="al-box plat">Smart View</div>
-        <div class="al-box plat">Oracle Reports &amp; Dashboards</div>
-        <div class="al-box plat">Access Control &amp; Identity</div>
-      </div>
-    </div>
-    <div class="arch-arr">↓ &nbsp; ↓ &nbsp; ↓</div>
-    <div class="arch-layer">
-      <div class="al-lbl">Governance Layer</div>
-      <div class="al-boxes">
-        <div class="al-box gov">Enterprise Data Management (EDM) — Chart of Accounts · Entity Hierarchy · Dimension Members</div>
-      </div>
-    </div>
-    <div class="arch-arr">↓ &nbsp; ↓ &nbsp; ↓</div>
-    <div class="arch-layer">
-      <div class="al-lbl">Planning Domain</div>
-      <div class="al-boxes">
-        <div class="al-box pln">Planning / EPBCS</div>
-        <div class="al-box pln">Profitability and Cost Management</div>
-        <div class="al-box pln">Freeform</div>
-      </div>
-    </div>
-    <div class="arch-arr">↓ &nbsp; ↓ &nbsp; ↓</div>
-    <div class="arch-layer">
-      <div class="al-lbl">Close &amp; Consolidation Domain</div>
-      <div class="al-boxes">
-        <div class="al-box cls">Account Reconciliation (ARCS)</div>
-        <div class="al-box cls">Financial Consolidation &amp; Close (FCCS)</div>
-        <div class="al-box cls">Tax Reporting</div>
-      </div>
-    </div>
-    <div class="arch-arr">↓ &nbsp; ↓ &nbsp; ↓</div>
-    <div class="arch-layer">
-      <div class="al-lbl">Reporting &amp; Disclosure Layer</div>
-      <div class="al-boxes">
-        <div class="al-box rep">Narrative Reporting — Board Packs · IFRS Disclosures</div>
-        <div class="al-box rep">Oracle Reports — Operational</div>
-        <div class="al-box rep">Smart View — Excel Ad Hoc</div>
-      </div>
-    </div>
-  </div>
+  <svg width="100%" viewBox="0 0 680 980" style="display:block;overflow:visible">
+  <defs>
+    <marker id="epm-arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+  </defs>
+  <style>
+    /* ── band wrappers (outer containers per layer) ── */
+    .b-src   {fill:rgba(200,212,224,.04); stroke:rgba(200,212,224,.16)}
+    .b-plat  {fill:rgba(45,212,191,.04);  stroke:rgba(45,212,191,.22)}
+    .b-gov   {fill:rgba(56,189,248,.05);  stroke:rgba(56,189,248,.22)}
+    .b-dom   {fill:rgba(255,255,255,.01); stroke:rgba(200,212,224,.08)}
+    .b-plan  {fill:rgba(168,85,247,.05);  stroke:rgba(168,85,247,.22)}
+    .b-close {fill:rgba(45,212,191,.05);  stroke:rgba(45,212,191,.22)}
+    .b-plops {fill:rgba(74,222,128,.04);  stroke:rgba(74,222,128,.2)}
+    .b-ux    {fill:rgba(251,191,36,.04);  stroke:rgba(251,191,36,.2)}
+    .b-out   {fill:rgba(251,146,60,.05);  stroke:rgba(251,146,60,.25)}
+    /* ── inner chips ── */
+    .c-src   {fill:rgba(200,212,224,.08); stroke:rgba(200,212,224,.22)}
+    .c-plat  {fill:rgba(45,212,191,.08);  stroke:rgba(45,212,191,.3)}
+    .c-gov   {fill:rgba(56,189,248,.08);  stroke:rgba(56,189,248,.28)}
+    .c-plan  {fill:rgba(168,85,247,.09);  stroke:rgba(168,85,247,.3)}
+    .c-close {fill:rgba(45,212,191,.09);  stroke:rgba(45,212,191,.3)}
+    .c-plops {fill:rgba(74,222,128,.07);  stroke:rgba(74,222,128,.26)}
+    .c-ux    {fill:rgba(251,191,36,.08);  stroke:rgba(251,191,36,.28)}
+    .c-out   {fill:rgba(251,146,60,.09);  stroke:rgba(251,146,60,.3)}
+    .c-ai    {fill:rgba(251,146,60,.15);  stroke:rgba(251,146,60,.45)}
+    /* ── text ── */
+    .t-lbl   {fill:#4a6080; font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:.1em}
+    .t-head  {fill:#e8f0f8; font-family:'Rajdhani',sans-serif; font-weight:700; font-size:13px}
+    .t-sub   {fill:#4a6080; font-family:'JetBrains Mono',monospace; font-size:9.5px}
+    .t-green {fill:#4ade80; font-family:'Rajdhani',sans-serif; font-weight:700; font-size:13px}
+    .t-teal  {fill:#2dd4bf; font-family:'Rajdhani',sans-serif; font-weight:700; font-size:13px}
+    .t-sky   {fill:#38bdf8; font-family:'Rajdhani',sans-serif; font-weight:700; font-size:13px}
+    .t-purple{fill:#a855f7; font-family:'Rajdhani',sans-serif; font-weight:700; font-size:13px}
+    .t-amber {fill:#fbbf24; font-family:'Rajdhani',sans-serif; font-weight:700; font-size:13px}
+    .t-coral {fill:#fb923c; font-family:'Rajdhani',sans-serif; font-weight:700; font-size:13px}
+    .t-silver{fill:#8fa3b8; font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:.09em}
+    .t-badge {fill:#fb923c; font-family:'Rajdhani',sans-serif; font-weight:700; font-size:12px; letter-spacing:.05em}
+    .t-flow  {fill:rgba(74,96,128,.5); font-size:13px; letter-spacing:6px}
+  </style>
+
+  <!-- ══ L1 · SOURCE SYSTEMS ══ -->
+  <rect x="20" y="18" width="640" height="106" rx="11" class="b-src" stroke-width="0.5"/>
+  <text x="340" y="36" text-anchor="middle" class="t-silver">SOURCE SYSTEMS — data originates here</text>
+  <rect x="34"  y="48" width="104" height="62" rx="7" class="c-src" stroke-width="0.5"/>
+  <text x="86"  y="72" text-anchor="middle" class="t-head">Oracle ERP</text>
+  <text x="86"  y="90" text-anchor="middle" class="t-sub">Fusion Cloud</text>
+  <rect x="150" y="48" width="86"  height="62" rx="7" class="c-src" stroke-width="0.5"/>
+  <text x="193" y="72" text-anchor="middle" class="t-head">SAP</text>
+  <text x="193" y="90" text-anchor="middle" class="t-sub">S/4HANA</text>
+  <rect x="248" y="48" width="86"  height="62" rx="7" class="c-src" stroke-width="0.5"/>
+  <text x="291" y="72" text-anchor="middle" class="t-head">NetSuite</text>
+  <text x="291" y="90" text-anchor="middle" class="t-sub">Cloud ERP</text>
+  <rect x="346" y="48" width="100" height="62" rx="7" class="c-src" stroke-width="0.5"/>
+  <text x="396" y="72" text-anchor="middle" class="t-head">Other ERPs</text>
+  <text x="396" y="90" text-anchor="middle" class="t-sub">Any GL system</text>
+  <rect x="458" y="48" width="84"  height="62" rx="7" class="c-src" stroke-width="0.5"/>
+  <text x="500" y="72" text-anchor="middle" class="t-head">HR / HCM</text>
+  <text x="500" y="90" text-anchor="middle" class="t-sub">Workforce</text>
+  <rect x="554" y="48" width="90"  height="62" rx="7" class="c-src" stroke-width="0.5"/>
+  <text x="599" y="72" text-anchor="middle" class="t-head">Flat files</text>
+  <text x="599" y="90" text-anchor="middle" class="t-sub">CSV · Excel</text>
+
+  <text x="340" y="141" text-anchor="middle" class="t-flow">↓  ↓  ↓</text>
+
+  <!-- ══ L2 · EPM PLATFORM ══ -->
+  <rect x="20" y="154" width="640" height="94" rx="11" class="b-plat" stroke-width="0.5"/>
+  <text x="340" y="172" text-anchor="middle" class="t-silver">EPM PLATFORM — shared infrastructure</text>
+  <rect x="34"  y="184" width="138" height="50" rx="7" class="c-plat" stroke-width="0.5"/>
+  <text x="103" y="205" text-anchor="middle" class="t-teal">Data Integration</text>
+  <text x="103" y="223" text-anchor="middle" class="t-sub">ETL+ · pipelines · agent</text>
+  <rect x="184" y="184" width="116" height="50" rx="7" class="c-plat" stroke-width="0.5"/>
+  <text x="242" y="205" text-anchor="middle" class="t-teal">EPM Automate</text>
+  <text x="242" y="223" text-anchor="middle" class="t-sub">CLI scheduling</text>
+  <rect x="312" y="184" width="90"  height="50" rx="7" class="c-plat" stroke-width="0.5"/>
+  <text x="357" y="205" text-anchor="middle" class="t-teal">REST API</text>
+  <text x="357" y="223" text-anchor="middle" class="t-sub">Integration</text>
+  <rect x="414" y="184" width="108" height="50" rx="7" class="c-plat" stroke-width="0.5"/>
+  <text x="468" y="205" text-anchor="middle" class="t-teal">Access &amp; IAM</text>
+  <text x="468" y="223" text-anchor="middle" class="t-sub">Identity control</text>
+  <rect x="534" y="184" width="110" height="50" rx="7" class="c-plat" stroke-width="0.5"/>
+  <text x="589" y="205" text-anchor="middle" class="t-teal">Oracle Reports</text>
+  <text x="589" y="223" text-anchor="middle" class="t-sub">Dashboards</text>
+
+  <text x="340" y="267" text-anchor="middle" class="t-flow">↓  ↓  ↓</text>
+
+  <!-- ══ L3 · GOVERNANCE ══ -->
+  <rect x="20" y="280" width="640" height="58" rx="11" class="b-gov" stroke-width="0.5"/>
+  <text x="340" y="299" text-anchor="middle" class="t-silver">GOVERNANCE — master data cuts across every module</text>
+  <text x="340" y="321" text-anchor="middle" class="t-sky">Enterprise Data Management (EDM) — chart of accounts · entity hierarchies · dimension members · change audit</text>
+
+  <text x="340" y="358" text-anchor="middle" class="t-flow">↓  ↓  ↓</text>
+
+  <!-- ══ L4 · THREE DOMAINS ══ -->
+  <rect x="20" y="370" width="640" height="220" rx="11" class="b-dom" stroke-width="0.5"/>
+  <text x="340" y="389" text-anchor="middle" class="t-silver">EPM MODULES — where the work happens</text>
+
+  <!-- Planning -->
+  <rect x="32"  y="398" width="196" height="180" rx="9" class="b-plan" stroke-width="0.5"/>
+  <text x="130" y="416" text-anchor="middle" class="t-lbl" style="fill:#a855f7">PLANNING DOMAIN</text>
+  <rect x="44"  y="424" width="172" height="46" rx="7" class="c-plan" stroke-width="0.5"/>
+  <text x="130" y="443" text-anchor="middle" class="t-purple">Planning (EPBCS)</text>
+  <text x="130" y="461" text-anchor="middle" class="t-sub">Budget · forecast · workforce</text>
+  <rect x="44"  y="478" width="172" height="46" rx="7" class="c-plan" stroke-width="0.5"/>
+  <text x="130" y="497" text-anchor="middle" class="t-purple">Profitability &amp; Cost</text>
+  <text x="130" y="515" text-anchor="middle" class="t-sub">Allocation · margin analysis</text>
+  <rect x="44"  y="532" width="172" height="32" rx="7" class="c-plan" stroke-width="0.5"/>
+  <text x="130" y="553" text-anchor="middle" class="t-purple">Freeform</text>
+
+  <!-- Close -->
+  <rect x="242" y="398" width="196" height="180" rx="9" class="b-close" stroke-width="0.5"/>
+  <text x="340" y="416" text-anchor="middle" class="t-lbl" style="fill:#2dd4bf">CLOSE DOMAIN</text>
+  <rect x="254" y="424" width="172" height="46" rx="7" class="c-close" stroke-width="0.5"/>
+  <text x="340" y="443" text-anchor="middle" class="t-teal">FCCS</text>
+  <text x="340" y="461" text-anchor="middle" class="t-sub">Consolidation · IC · NCI</text>
+  <rect x="254" y="478" width="172" height="46" rx="7" class="c-close" stroke-width="0.5"/>
+  <text x="340" y="497" text-anchor="middle" class="t-teal">Account Reconciliation</text>
+  <text x="340" y="515" text-anchor="middle" class="t-sub">ARCS · sub-ledger to GL</text>
+  <rect x="254" y="532" width="172" height="32" rx="7" class="c-close" stroke-width="0.5"/>
+  <text x="340" y="553" text-anchor="middle" class="t-teal">Tax Reporting</text>
+
+  <!-- Platform ops -->
+  <rect x="452" y="398" width="196" height="180" rx="9" class="b-plops" stroke-width="0.5"/>
+  <text x="550" y="416" text-anchor="middle" class="t-lbl" style="fill:#4ade80">PLATFORM OPS</text>
+  <rect x="464" y="424" width="172" height="46" rx="7" class="c-plops" stroke-width="0.5"/>
+  <text x="550" y="443" text-anchor="middle" class="t-green">Scenario Modeling</text>
+  <text x="550" y="461" text-anchor="middle" class="t-sub">What-if · long-range</text>
+  <rect x="464" y="478" width="172" height="46" rx="7" class="c-plops" stroke-width="0.5"/>
+  <text x="550" y="497" text-anchor="middle" class="t-green">Close Task Mgmt</text>
+  <text x="550" y="515" text-anchor="middle" class="t-sub">Workflow · approvals</text>
+  <rect x="464" y="532" width="172" height="32" rx="7" class="c-plops" stroke-width="0.5"/>
+  <text x="550" y="553" text-anchor="middle" class="t-green">Audit &amp; Compliance</text>
+
+  <text x="340" y="611" text-anchor="middle" class="t-flow">↓  ↓  ↓</text>
+
+  <!-- ══ L5 · UX LAYER ══ -->
+  <rect x="20" y="624" width="640" height="100" rx="11" class="b-ux" stroke-width="0.5"/>
+  <text x="340" y="643" text-anchor="middle" class="t-silver">UX LAYER — how users see, interact with and consume EPM</text>
+  <rect x="34"  y="655" width="146" height="55" rx="7" class="c-ux" stroke-width="0.5"/>
+  <text x="107" y="676" text-anchor="middle" class="t-amber">Smart View</text>
+  <text x="107" y="694" text-anchor="middle" class="t-sub">Excel-based ad hoc</text>
+  <rect x="192" y="655" width="148" height="55" rx="7" class="c-ux" stroke-width="0.5"/>
+  <text x="266" y="676" text-anchor="middle" class="t-amber">Oracle Dashboards</text>
+  <text x="266" y="694" text-anchor="middle" class="t-sub">In-product reports</text>
+  <rect x="352" y="655" width="152" height="55" rx="7" class="c-ux" stroke-width="0.5"/>
+  <text x="428" y="676" text-anchor="middle" class="t-amber">Narrative Reporting</text>
+  <text x="428" y="694" text-anchor="middle" class="t-sub">Board packs · disclosures</text>
+  <rect x="516" y="655" width="128" height="55" rx="7" class="c-ux" stroke-width="0.5"/>
+  <text x="580" y="676" text-anchor="middle" class="t-amber">EPM Journals</text>
+  <text x="580" y="694" text-anchor="middle" class="t-sub">Manual adj · audit</text>
+
+  <text x="340" y="745" text-anchor="middle" class="t-flow">↓  ↓  ↓</text>
+
+  <!-- ══ L6 · OUTPUT + AI ══ -->
+  <rect x="20" y="758" width="640" height="114" rx="11" class="b-out" stroke-width="0.5"/>
+  <text x="340" y="777" text-anchor="middle" class="t-silver">OUTPUT LAYER — decisions, disclosures &amp; AI-first intelligence</text>
+  <rect x="34"  y="789" width="130" height="68" rx="7" class="c-out" stroke-width="0.5"/>
+  <text x="99"  y="813" text-anchor="middle" class="t-coral">Decisions</text>
+  <text x="99"  y="831" text-anchor="middle" class="t-sub">CFO · board · finance</text>
+  <text x="99"  y="848" text-anchor="middle" class="t-sub">leadership actions</text>
+  <rect x="176" y="789" width="130" height="68" rx="7" class="c-out" stroke-width="0.5"/>
+  <text x="241" y="813" text-anchor="middle" class="t-coral">Disclosures</text>
+  <text x="241" y="831" text-anchor="middle" class="t-sub">IFRS · GAAP · XBRL</text>
+  <text x="241" y="848" text-anchor="middle" class="t-sub">regulatory filings</text>
+  <!-- AI divider -->
+  <line x1="320" y1="791" x2="320" y2="855" stroke="rgba(251,146,60,.2)" stroke-width="0.5" stroke-dasharray="3 3"/>
+  <rect x="330" y="789" width="156" height="68" rx="7" class="c-ai" stroke-width="0.5"/>
+  <text x="408" y="810" text-anchor="middle" class="t-coral">AI Agents</text>
+  <text x="408" y="828" text-anchor="middle" class="t-sub">Autonomous close · anomaly</text>
+  <text x="408" y="845" text-anchor="middle" class="t-sub">detection · auto-alerts</text>
+  <rect x="498" y="789" width="146" height="68" rx="7" class="c-ai" stroke-width="0.5"/>
+  <text x="571" y="810" text-anchor="middle" class="t-coral">AI Apps</text>
+  <text x="571" y="828" text-anchor="middle" class="t-sub">Narrative gen · planning</text>
+  <text x="571" y="845" text-anchor="middle" class="t-sub">copilot · commentary</text>
+
+  <!-- ══ AI-FIRST BADGE ══ -->
+  <rect x="20" y="886" width="640" height="34" rx="8" fill="rgba(251,146,60,.07)" stroke="rgba(251,146,60,.28)" stroke-width="0.5"/>
+  <text x="340" y="907" text-anchor="middle" class="t-badge">✦  AI-first by design — embedded across every module, every workflow, every output  ✦</text>
+
+  <!-- ══ LEGEND ══ -->
+  <rect x="20"  y="934" width="9" height="9" rx="2" class="c-src"   stroke-width="0.5"/>
+  <text x="35"  y="943" class="t-sub">Sources</text>
+  <rect x="100" y="934" width="9" height="9" rx="2" class="c-plat"  stroke-width="0.5"/>
+  <text x="115" y="943" class="t-sub" style="fill:#2dd4bf">Platform</text>
+  <rect x="196" y="934" width="9" height="9" rx="2" class="c-gov"   stroke-width="0.5"/>
+  <text x="211" y="943" class="t-sub" style="fill:#38bdf8">Governance</text>
+  <rect x="310" y="934" width="9" height="9" rx="2" class="c-plan"  stroke-width="0.5"/>
+  <text x="325" y="943" class="t-sub" style="fill:#a855f7">Planning</text>
+  <rect x="400" y="934" width="9" height="9" rx="2" class="c-close" stroke-width="0.5"/>
+  <text x="415" y="943" class="t-sub" style="fill:#2dd4bf">Close</text>
+  <rect x="470" y="934" width="9" height="9" rx="2" class="c-ux"    stroke-width="0.5"/>
+  <text x="485" y="943" class="t-sub" style="fill:#fbbf24">UX Layer</text>
+  <rect x="560" y="934" width="9" height="9" rx="2" class="c-ai"    stroke-width="0.5"/>
+  <text x="575" y="943" class="t-sub" style="fill:#fb923c">AI Output</text>
+
+  </svg>
 </div>
 
 <div class="wrap"><div class="sdiv"></div></div>
