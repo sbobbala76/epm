@@ -1,0 +1,1359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>EPM Data Integration · BrainSpring</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Syne:wght@700;800&family=JetBrains+Mono:wght@400;500&display=swap');
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0c0c11;--bg1:#111118;--bg2:#16161f;--bg3:#1c1c27;--bg4:#22222f;
+  --border:rgba(255,255,255,0.06);--border2:rgba(255,255,255,0.12);
+  --text:#e4e4dc;--muted:#72728a;--muted2:#9898b0;
+  --ob:#0C6DB5;--og:#5a7a2a;--ob-l:#3a9de8;--og-l:#8ab44a;
+  --red:#c74634;--rl:#e8705a;--rdim:rgba(199,70,52,0.13);--rb:rgba(199,70,52,0.32);
+  --amb:#b87c20;--al:#e0a040;--adim:rgba(184,124,32,0.12);--ab:rgba(184,124,32,0.32);
+  --tel:#38c8a8;--tdim:rgba(26,174,144,0.10);--tb2:rgba(26,174,144,0.28);
+  --bll:#60b0f0;--bdim:rgba(58,142,208,0.10);--bb:rgba(58,142,208,0.28);
+  --fn:'Inter',sans-serif;--fd:'Syne',sans-serif;--fm:'JetBrains Mono',monospace;
+  --r:8px;--rl2:12px;
+  --sidebar-w:200px;
+}
+html,body{height:100%;overflow:hidden}
+body{font-family:var(--fn);background:var(--bg);color:var(--text);font-size:14px;line-height:1.6;display:flex;flex-direction:column}
+
+/* ── TOPBAR ── */
+.topbar{flex-shrink:0;height:52px;background:var(--bg1);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 16px;gap:14px;z-index:20}
+.bs-logo{display:flex;align-items:center;gap:9px;text-decoration:none;flex-shrink:0}
+.bs-wordmark{font-family:var(--fd);font-size:15px;font-weight:800;letter-spacing:-0.01em}
+.bs-wordmark .br{color:var(--ob-l)}.bs-wordmark .sp{color:var(--og-l)}
+.tsep{width:1px;height:22px;background:var(--border);flex-shrink:0}
+.tcourse{font-size:12px;color:var(--muted2);font-weight:500;white-space:nowrap}
+.tcourse strong{color:var(--text);font-weight:600}
+.tright{margin-left:auto;display:flex;align-items:center;gap:8px}
+.tbadge{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;padding:3px 9px;border-radius:20px;white-space:nowrap}
+.tbadge-b{background:var(--bdim);border:1px solid var(--bb);color:var(--bll)}
+.tbadge-g{background:rgba(90,122,42,0.15);border:1px solid rgba(90,122,42,0.35);color:var(--og-l)}
+/* mobile hamburger */
+.hamburger{display:none;background:none;border:none;cursor:pointer;padding:6px;flex-shrink:0}
+.hamburger span{display:block;width:18px;height:2px;background:var(--muted2);margin:3px 0;border-radius:2px;transition:all .2s}
+
+/* ── BODY LAYOUT ── */
+.body-wrap{flex:1;display:flex;overflow:hidden;position:relative}
+
+/* ── SIDEBAR ── */
+.sidebar{
+  width:var(--sidebar-w);flex-shrink:0;
+  background:var(--bg1);border-right:1px solid var(--border);
+  display:flex;flex-direction:column;overflow-y:auto;overflow-x:hidden;
+  scrollbar-width:thin;scrollbar-color:var(--bg3) transparent;
+  transition:transform .25s ease;z-index:15;
+}
+.sidebar::-webkit-scrollbar{width:3px}
+.sidebar::-webkit-scrollbar-thumb{background:var(--bg3)}
+.sb-section{padding:14px 10px 4px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);display:flex;align-items:center;gap:6px}
+.sb-section::after{content:'';flex:1;height:1px;background:var(--border)}
+.sb-nav{display:flex;flex-direction:column;gap:2px;padding:0 8px 10px}
+.sbn{
+  display:flex;align-items:center;gap:9px;
+  padding:8px 10px;border-radius:var(--r);
+  font-size:12px;font-weight:500;color:var(--muted2);
+  cursor:pointer;border:none;background:none;text-align:left;
+  font-family:var(--fn);transition:all .15s;width:100%;
+}
+.sbn:hover{background:var(--bg3);color:var(--text)}
+.sbn.on{background:var(--rdim);color:var(--rl);font-weight:600}
+.sbn-num{
+  width:22px;height:22px;border-radius:5px;background:var(--bg3);
+  font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;
+  color:var(--muted);flex-shrink:0;transition:all .15s;
+}
+.sbn.on .sbn-num{background:rgba(199,70,52,0.2);color:var(--rl)}
+.sbn-icon{font-size:14px;flex-shrink:0}
+.sbn-label{line-height:1.3;flex:1}
+/* practice section accent */
+.sb-section.practice{color:var(--og-l)}
+.sb-section.practice::after{background:rgba(90,122,42,0.2)}
+.sbn.practice-item:hover{background:rgba(90,122,42,0.08);color:var(--og-l)}
+.sbn.practice-item.on{background:rgba(90,122,42,0.15);color:var(--og-l)}
+.sbn.practice-item.on .sbn-num{background:rgba(90,122,42,0.2);color:var(--og-l)}
+
+/* overlay for mobile */
+.sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:14}
+
+/* ── PANELS AREA ── */
+.panels{flex:1;overflow:hidden;position:relative}
+.panel{position:absolute;inset:0;overflow-y:auto;overflow-x:hidden;display:none;scrollbar-width:thin;scrollbar-color:var(--bg3) transparent}
+.panel.on{display:block}
+.panel::-webkit-scrollbar{width:4px}
+.panel::-webkit-scrollbar-thumb{background:var(--bg3);border-radius:4px}
+.pi{max-width:860px;margin:0 auto;padding:32px 28px 72px}
+
+/* ── MOBILE SIDEBAR ── */
+@media(max-width:720px){
+  :root{--sidebar-w:220px}
+  .sidebar{position:fixed;left:0;top:52px;bottom:0;transform:translateX(-100%)}
+  .sidebar.open{transform:translateX(0)}
+  .sidebar-overlay.open{display:block}
+  .hamburger{display:block}
+  .panels{width:100%}
+}
+
+/* ── ELIOT NARRATOR ── */
+.eliot{background:linear-gradient(135deg,rgba(12,109,181,0.07),rgba(90,122,42,0.05));border:1px solid rgba(12,109,181,0.18);border-left:3px solid var(--ob);border-radius:var(--rl2);padding:16px 18px;margin-bottom:24px;display:flex;gap:13px;align-items:flex-start}
+.eliot-avatar{width:34px;height:34px;border-radius:50%;background:var(--bg3);border:2px solid rgba(12,109,181,0.35);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:15px}
+.eliot-txt{font-size:13px;color:var(--muted2);line-height:1.75;font-style:italic}
+.eliot-txt strong{color:var(--ob-l);font-style:normal;font-weight:600}
+.eliot-name{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--ob-l);margin-bottom:5px}
+
+/* ── PANEL HEADER ── */
+.ph{margin-bottom:26px;padding-bottom:22px;border-bottom:1px solid var(--border)}
+.ph-tag{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--rl);margin-bottom:9px;display:flex;align-items:center;gap:7px}
+.ph-tag::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--red);flex-shrink:0}
+.ph h1{font-family:var(--fd);font-size:1.7rem;font-weight:800;color:#fff;line-height:1.15;margin-bottom:9px}
+.ph h1 em{font-style:normal;color:var(--rl)}
+.ph-sub{font-size:13.5px;color:var(--muted);max-width:660px;line-height:1.7}
+
+/* ── SECTION LABEL ── */
+.sl{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:28px 0 12px;display:flex;align-items:center;gap:10px}
+.sl::after{content:'';flex:1;height:1px;background:var(--border)}
+
+/* ── PROSE ── */
+.prose{font-size:13.5px;color:var(--muted2);line-height:1.75;margin-bottom:14px}
+.prose strong{color:var(--text);font-weight:500}
+
+/* ── SCENARIO ── */
+.scenario{background:var(--bg2);border:1px solid rgba(90,122,42,0.3);border-left:3px solid var(--og);border-radius:var(--rl2);padding:18px 20px;margin:16px 0}
+.scenario-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--og-l);margin-bottom:7px;display:flex;align-items:center;gap:6px}
+.scenario-label::before{content:'⚡';font-size:12px}
+.scenario h4{font-size:13.5px;font-weight:600;color:var(--text);margin-bottom:6px}
+.scenario p{font-size:13px;color:var(--muted2);line-height:1.65}
+
+/* ── HIGHLIGHT ── */
+.hb{border-radius:var(--rl2);padding:15px 18px;margin:14px 0;display:flex;gap:13px;align-items:flex-start;font-size:13px;line-height:1.65}
+.hb-i{font-size:15px;flex-shrink:0;margin-top:1px}
+.hb.warn{background:var(--adim);border:1px solid var(--ab);color:#c8a050}
+.hb.info{background:var(--bdim);border:1px solid var(--bb);color:#70aee0}
+.hb.tip{background:var(--tdim);border:1px solid var(--tb2);color:#48c0a8}
+.hb.danger{background:var(--rdim);border:1px solid var(--rb);color:#d87868}
+.hb strong{color:inherit;font-weight:600}
+
+/* ── CARDS ── */
+.cg{display:grid;gap:10px}
+.cg2{grid-template-columns:1fr 1fr}
+.cg3{grid-template-columns:1fr 1fr 1fr}
+@media(max-width:640px){.cg2,.cg3{grid-template-columns:1fr}}
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rl2);padding:18px;transition:border-color .15s}
+.card:hover{border-color:var(--border2)}
+.ci{font-size:17px;margin-bottom:8px}
+.card h3{font-size:13px;font-weight:600;color:var(--text);margin-bottom:5px}
+.card p{font-size:12.5px;color:var(--muted);line-height:1.6}
+.card.red{border-color:var(--rb)}.card.teal{border-color:var(--tb2)}
+.card.amber{border-color:var(--ab)}.card.blue{border-color:var(--bb)}.card.olive{border-color:rgba(90,122,42,0.4)}
+.card code,.hb code,.prose code,.sb code,.step-body code{font-family:var(--fm);font-size:11px;background:var(--bg4);border:1px solid var(--border);border-radius:4px;padding:1px 5px;color:var(--bll)}
+
+/* ── STEPS ── */
+.steps{display:flex;flex-direction:column;gap:9px}
+.step{display:flex;gap:13px;align-items:flex-start;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:15px;transition:border-color .15s}
+.step:hover{border-color:var(--rb)}
+.sn{width:24px;height:24px;border-radius:50%;background:var(--rdim);border:1px solid var(--rb);color:var(--rl);font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.sb h4,.step-body h4{font-size:13px;font-weight:600;color:var(--text);margin-bottom:3px}
+.sb p,.step-body p{font-size:12.5px;color:var(--muted);line-height:1.6}
+
+/* ── FLOW ── */
+.flow{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rl2);padding:20px;display:flex;align-items:center;justify-content:center;gap:5px;flex-wrap:wrap;margin:14px 0}
+.fs{background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r);padding:9px 14px;text-align:center;min-width:88px}
+.fsn{font-size:10px;color:var(--rl);font-weight:600;text-transform:uppercase;letter-spacing:.05em;margin-bottom:2px}
+.fsl{font-size:12.5px;font-weight:500;color:var(--text)}
+.fa{color:var(--muted);font-size:13px;flex-shrink:0}
+
+/* ── TABLE ── */
+.tbl{width:100%;border-collapse:collapse;font-size:12.5px;margin:14px 0}
+.tbl th{background:var(--bg3);border-bottom:1px solid var(--border2);padding:8px 12px;text-align:left;color:var(--muted2);font-weight:500;font-size:11px;text-transform:uppercase;letter-spacing:.05em}
+.tbl td{border-bottom:1px solid var(--border);padding:9px 12px;color:var(--muted2);vertical-align:top}
+.tbl tr:last-child td{border-bottom:none}
+.tbl tr:hover td{background:rgba(255,255,255,0.015)}
+.tbl td strong{color:var(--text);font-weight:500}
+.ctag{font-family:var(--fm);font-size:11px;background:var(--bg4);border:1px solid var(--border);border-radius:4px;padding:1px 5px;color:var(--bll);white-space:nowrap}
+.etag{background:var(--rdim);border:1px solid var(--rb);color:var(--rl);font-size:11px;padding:2px 7px;border-radius:4px;font-weight:600}
+
+/* ── TAGS ── */
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
+.tag{font-size:11px;padding:2px 9px;border-radius:20px;font-weight:500;background:var(--bg3);border:1px solid var(--border);color:var(--muted)}
+.tag.r{background:var(--rdim);border-color:var(--rb);color:var(--rl)}
+.tag.b{background:var(--bdim);border-color:var(--bb);color:var(--bll)}
+.tag.t{background:var(--tdim);border-color:var(--tb2);color:var(--tel)}
+.tag.a{background:var(--adim);border-color:var(--ab);color:var(--al)}
+.tag.g{background:rgba(90,122,42,0.1);border-color:rgba(90,122,42,0.3);color:var(--og-l)}
+
+/* ── CODE BLOCK ── */
+.cb{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:15px;margin:12px 0;font-family:var(--fm);font-size:11.5px;color:#90b8e8;overflow-x:auto;line-height:1.7;white-space:pre}
+.cb .cm{color:var(--muted)}.cb .kw{color:var(--al)}.cb .vl{color:var(--tel)}.cb .er{color:var(--rl)}
+
+/* ── CHECKLIST ── */
+.chk{list-style:none;display:flex;flex-direction:column;gap:8px}
+.chk li{display:flex;gap:9px;align-items:flex-start;font-size:13px;color:var(--muted2);line-height:1.55}
+.chk li strong{color:var(--text);font-weight:500}
+.ck-y{color:var(--tel);flex-shrink:0;margin-top:1px}
+.ck-n{color:var(--rl);flex-shrink:0;margin-top:1px}
+.ck-o{color:var(--al);flex-shrink:0;margin-top:1px}
+
+/* ═══════════════════════════════════════════
+   FLASHCARD SYSTEM — improved
+   ═══════════════════════════════════════════ */
+.fc-toolbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:10px}
+.fc-progress-text{font-size:12px;color:var(--muted);font-weight:500}
+.fc-progress-text strong{color:var(--text)}
+.fc-controls{display:flex;gap:8px}
+.fc-ctrl{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:7px 14px;font-size:12px;color:var(--muted2);cursor:pointer;font-family:var(--fn);font-weight:500;transition:all .15s}
+.fc-ctrl:hover{border-color:var(--border2);color:var(--text)}
+.fc-ctrl.primary{background:var(--rdim);border-color:var(--rb);color:var(--rl)}
+
+/* single large card view */
+.fc-stage{position:relative;height:320px;margin-bottom:20px;perspective:1200px;cursor:pointer}
+.fc-stage-inner{width:100%;height:100%;transition:transform .6s cubic-bezier(.4,0,.2,1);transform-style:preserve-3d;position:relative}
+.fc-stage.flipped .fc-stage-inner{transform:rotateY(180deg)}
+.fc-face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:16px;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:36px;text-align:center}
+.fc-front-face{
+  background:var(--bg2);
+  border:1px solid var(--border2);
+}
+.fc-back-face{
+  background:linear-gradient(135deg,rgba(90,122,42,0.12),rgba(26,174,144,0.08));
+  border:1px solid rgba(90,122,42,0.35);
+  transform:rotateY(180deg);
+}
+.fc-category{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:14px}
+.fc-question{font-family:var(--fd);font-size:1.1rem;font-weight:700;color:var(--text);line-height:1.45;max-width:560px}
+.fc-tap-hint{position:absolute;bottom:18px;right:20px;font-size:11px;color:var(--muted);display:flex;align-items:center;gap:5px}
+.fc-tap-hint::before{content:'↺';font-size:14px}
+.fc-answer-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--og-l);margin-bottom:14px}
+.fc-answer{font-size:14px;color:var(--muted2);line-height:1.7;max-width:560px}
+.fc-answer strong{color:var(--tel);font-weight:600}
+
+/* dot strip */
+.fc-dots{display:flex;gap:5px;justify-content:center;flex-wrap:wrap;margin-bottom:20px}
+.fc-dot{width:8px;height:8px;border-radius:50%;background:var(--border2);cursor:pointer;transition:all .2s;flex-shrink:0}
+.fc-dot.seen{background:var(--muted)}
+.fc-dot.current{background:var(--red);transform:scale(1.3)}
+.fc-dot.known{background:var(--tel)}
+
+/* nav row */
+.fc-nav{display:flex;align-items:center;justify-content:center;gap:12px}
+.fc-nav-btn{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:8px 20px;font-size:13px;color:var(--muted2);cursor:pointer;font-family:var(--fn);font-weight:500;transition:all .15s;display:flex;align-items:center;gap:6px}
+.fc-nav-btn:hover{border-color:var(--border2);color:var(--text)}
+.fc-nav-btn:disabled{opacity:.3;cursor:default}
+.fc-know-btn{background:var(--tdim);border:1px solid var(--tb2);color:var(--tel)}
+.fc-know-btn:hover{background:rgba(26,174,144,0.2)}
+.fc-known-count{font-size:12px;color:var(--muted);font-weight:500;min-width:80px;text-align:center}
+
+/* ═══════════════════════════════════════════
+   QUIZ — improved
+   ═══════════════════════════════════════════ */
+.quiz-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:10px}
+.quiz-score-pill{background:var(--bg3);border:1px solid var(--border);border-radius:20px;padding:6px 16px;font-size:13px;color:var(--muted2);display:flex;align-items:center;gap:8px}
+.qsp-num{font-family:var(--fd);font-size:1.1rem;font-weight:800;color:var(--tel)}
+.qsp-total{font-size:12px;color:var(--muted)}
+.quiz-progress-bar{height:3px;background:var(--border);border-radius:2px;margin-bottom:24px;overflow:hidden}
+.quiz-progress-fill{height:100%;background:linear-gradient(90deg,var(--ob),var(--tel));border-radius:2px;transition:width .4s ease;width:0%}
+.qcard{background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:0;margin-bottom:14px;overflow:hidden;transition:border-color .2s}
+.qcard.answered-c{border-color:rgba(26,174,144,0.4)}
+.qcard.answered-w{border-color:rgba(199,70,52,0.35)}
+.qcard-head{padding:18px 20px 14px;border-bottom:1px solid var(--border)}
+.qcard-meta{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.qnum-pill{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;background:var(--rdim);border:1px solid var(--rb);color:var(--rl);padding:2px 9px;border-radius:20px}
+.qmodule-pill{font-size:10px;color:var(--muted);background:var(--bg3);border:1px solid var(--border);padding:2px 9px;border-radius:20px}
+.qq{font-size:14px;font-weight:500;color:var(--text);line-height:1.55}
+.qcard-body{padding:14px 20px 18px}
+.qopts{display:flex;flex-direction:column;gap:7px}
+.qo{
+  background:var(--bg3);border:1px solid var(--border);border-radius:10px;
+  padding:11px 14px;font-size:13px;color:var(--muted2);cursor:pointer;
+  transition:all .15s;text-align:left;width:100%;font-family:var(--fn);
+  display:flex;align-items:center;gap:10px;
+}
+.qo-letter{width:22px;height:22px;border-radius:6px;background:var(--bg4);border:1px solid var(--border);font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--muted);transition:all .15s}
+.qo:hover{border-color:var(--border2);color:var(--text)}
+.qo:hover .qo-letter{border-color:var(--border2);color:var(--text)}
+.qo.c{background:rgba(26,174,144,0.1);border-color:var(--tb2);color:var(--tel);cursor:default;pointer-events:none}
+.qo.c .qo-letter{background:var(--tdim);border-color:var(--tb2);color:var(--tel)}
+.qo.w{background:var(--rdim);border-color:var(--rb);color:var(--rl);cursor:default;pointer-events:none}
+.qo.w .qo-letter{background:rgba(199,70,52,0.2);border-color:var(--rb);color:var(--rl)}
+.qo.reveal{opacity:.5;cursor:default;pointer-events:none}
+.qfb{margin:10px 20px 16px;font-size:13px;padding:12px 14px;border-radius:10px;display:none;line-height:1.65}
+.qfb.show{display:flex;gap:10px;align-items:flex-start}
+.qfb-icon{font-size:15px;flex-shrink:0;margin-top:1px}
+.qfb.c{background:var(--tdim);color:var(--tel);border:1px solid var(--tb2)}
+.qfb.w{background:var(--rdim);color:var(--rl);border:1px solid var(--rb)}
+
+/* ═══════════════════════════════════════════
+   TRUE/FALSE — improved
+   ═══════════════════════════════════════════ */
+.tf-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:10px}
+.tf-score-pill{background:var(--bg3);border:1px solid var(--border);border-radius:20px;padding:6px 16px;font-size:13px;color:var(--muted2);display:flex;align-items:center;gap:8px}
+.tf-progress-bar{height:3px;background:var(--border);border-radius:2px;margin-bottom:24px;overflow:hidden}
+.tf-progress-fill{height:100%;background:linear-gradient(90deg,var(--og),var(--tel));border-radius:2px;transition:width .4s ease;width:0%}
+.tf-card{background:var(--bg2);border:1px solid var(--border);border-radius:16px;margin-bottom:12px;overflow:hidden;transition:border-color .2s}
+.tf-card.answered-t{border-color:rgba(26,174,144,0.4)}
+.tf-card.answered-f{border-color:rgba(199,70,52,0.35)}
+.tf-card-head{padding:18px 20px 14px;border-bottom:1px solid var(--border)}
+.tf-meta{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.tf-num-pill{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;background:rgba(90,122,42,0.15);border:1px solid rgba(90,122,42,0.35);color:var(--og-l);padding:2px 9px;border-radius:20px}
+.tf-stmt{font-size:14px;font-weight:500;color:var(--text);line-height:1.55}
+.tf-card-body{padding:14px 20px 18px}
+.tf-btns{display:flex;gap:8px}
+.tf-btn{
+  flex:1;background:var(--bg3);border:1px solid var(--border);border-radius:10px;
+  padding:10px 16px;font-size:13px;color:var(--muted2);cursor:pointer;
+  font-family:var(--fn);font-weight:600;transition:all .15s;
+  display:flex;align-items:center;justify-content:center;gap:7px;
+}
+.tf-btn:hover{border-color:var(--border2);color:var(--text)}
+.tf-btn.true-btn{color:var(--tel)}
+.tf-btn.false-btn{color:var(--rl)}
+.tf-btn.true-btn:hover{background:var(--tdim);border-color:var(--tb2)}
+.tf-btn.false-btn:hover{background:var(--rdim);border-color:var(--rb)}
+.tf-btn.selected-correct{background:var(--tdim);border-color:var(--tb2);color:var(--tel);cursor:default;pointer-events:none}
+.tf-btn.selected-wrong{background:var(--rdim);border-color:var(--rb);color:var(--rl);cursor:default;pointer-events:none}
+.tf-btn.disabled{opacity:.4;cursor:default;pointer-events:none}
+.tf-fb{margin:10px 20px 16px;font-size:13px;padding:12px 14px;border-radius:10px;display:none;line-height:1.65}
+.tf-fb.show{display:flex;gap:10px;align-items:flex-start}
+.tf-fb-icon{font-size:15px;flex-shrink:0;margin-top:1px}
+.tf-fb.c{background:var(--tdim);color:var(--tel);border:1px solid var(--tb2)}
+.tf-fb.w{background:var(--rdim);color:var(--rl);border:1px solid var(--rb)}
+
+/* ═══════════════════════════════════════════
+   GLOSSARY — improved
+   ═══════════════════════════════════════════ */
+.gl-search-wrap{position:relative;margin-bottom:20px}
+.gl-search{
+  width:100%;background:var(--bg2);border:1px solid var(--border);
+  border-radius:var(--rl2);padding:11px 14px 11px 38px;
+  font-size:13px;color:var(--text);font-family:var(--fn);outline:none;
+  transition:border-color .15s;
+}
+.gl-search:focus{border-color:var(--border2)}
+.gl-search::placeholder{color:var(--muted)}
+.gl-search-icon{position:absolute;left:12px;top:50%;transform:translateY(-50%);font-size:14px;color:var(--muted)}
+.gl-count{font-size:12px;color:var(--muted);margin-bottom:16px}
+.gl-grid{display:flex;flex-direction:column;gap:8px}
+.gl-entry{
+  background:var(--bg2);border:1px solid var(--border);border-radius:var(--rl2);
+  overflow:hidden;cursor:pointer;transition:border-color .15s;
+}
+.gl-entry:hover{border-color:var(--border2)}
+.gl-entry.open{border-color:rgba(90,122,42,0.4)}
+.gl-entry-head{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 18px;gap:12px;
+}
+.gl-term-wrap{display:flex;align-items:center;gap:10px}
+.gl-letter{
+  width:32px;height:32px;border-radius:8px;
+  background:rgba(90,122,42,0.12);border:1px solid rgba(90,122,42,0.3);
+  font-family:var(--fd);font-size:14px;font-weight:800;color:var(--og-l);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.gl-term{font-size:14px;font-weight:600;color:var(--text)}
+.gl-chevron{font-size:12px;color:var(--muted);transition:transform .2s;flex-shrink:0}
+.gl-entry.open .gl-chevron{transform:rotate(180deg)}
+.gl-body{display:none;padding:0 18px 16px;border-top:1px solid var(--border)}
+.gl-entry.open .gl-body{display:block}
+.gl-def-text{font-size:13px;color:var(--muted2);line-height:1.7;margin-top:12px}
+.gl-def-text strong{color:var(--text);font-weight:500}
+.gl-eliot-wrap{margin-top:12px;background:rgba(12,109,181,0.06);border:1px solid rgba(12,109,181,0.15);border-left:2px solid var(--ob);border-radius:var(--r);padding:11px 14px;display:flex;gap:9px;align-items:flex-start}
+.gl-eliot-icon{font-size:13px;flex-shrink:0;margin-top:1px}
+.gl-eliot-txt{font-size:12.5px;color:var(--muted2);font-style:italic;line-height:1.65}
+.gl-eliot-txt strong{color:var(--ob-l);font-style:normal}
+.gl-no-results{text-align:center;padding:40px 20px;color:var(--muted);font-size:13px}
+
+/* ── DISCLAIMER ── */
+.disc{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:12px 16px;font-size:11.5px;color:var(--muted);line-height:1.6;margin-top:24px}
+.disc strong{color:var(--muted2);font-weight:500}
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <button class="hamburger" onclick="toggleSidebar()" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+  <a class="bs-logo" href="https://epm.brainspring.ai" target="_blank">
+    <svg width="30" height="30" viewBox="0 0 32 32" fill="none">
+      <rect width="32" height="32" rx="8" fill="#0d1117"/>
+      <path d="M9 10 Q6 10 6 14 Q6 18 9 19 Q8 20 9 21 Q11 23 13 21 L13 10 Z" fill="#0C6DB5" opacity=".9"/>
+      <path d="M23 10 Q26 10 26 14 Q26 18 23 19 Q24 20 23 21 Q21 23 19 21 L19 10 Z" fill="#5a7a2a" opacity=".9"/>
+      <rect x="13" y="10" width="6" height="11" rx="1" fill="#1a2535"/>
+      <path d="M13 13 L19 13 M13 16 L19 16 M13 19 L19 19" stroke="#2a4060" stroke-width="0.8"/>
+      <circle cx="16" cy="8" r="1.2" fill="#0C6DB5" opacity=".7"/>
+      <circle cx="13" cy="7" r=".8" fill="#5a7a2a" opacity=".6"/>
+      <circle cx="19" cy="7" r=".8" fill="#0C6DB5" opacity=".6"/>
+    </svg>
+    <span class="bs-wordmark"><span class="br">Brain</span><span class="sp">Spring</span></span>
+  </a>
+  <div class="tsep"></div>
+  <div class="tcourse"><strong>EPM Data Integration</strong> · Comprehensive Course</div>
+  <div class="tright">
+    <span class="tbadge tbadge-b">Deep Dive</span>
+    <span class="tbadge tbadge-g">Free</span>
+  </div>
+</div>
+
+<!-- BODY WRAP: sidebar + panels -->
+<div class="body-wrap">
+
+<!-- MOBILE OVERLAY -->
+<div class="sidebar-overlay" id="overlay" onclick="toggleSidebar()"></div>
+
+<!-- SIDEBAR -->
+<nav class="sidebar" id="sidebar">
+
+  <div class="sb-section">Course Modules</div>
+  <div class="sb-nav">
+    <button class="sbn on" onclick="go(0)">
+      <span class="sbn-num">01</span>
+      <span class="sbn-icon">🏠</span>
+      <span class="sbn-label">Overview</span>
+    </button>
+    <button class="sbn" onclick="go(1)">
+      <span class="sbn-num">02</span>
+      <span class="sbn-icon">🏗️</span>
+      <span class="sbn-label">Architecture</span>
+    </button>
+    <button class="sbn" onclick="go(2)">
+      <span class="sbn-num">03</span>
+      <span class="sbn-icon">🔌</span>
+      <span class="sbn-label">ERP Connection</span>
+    </button>
+    <button class="sbn" onclick="go(3)">
+      <span class="sbn-num">04</span>
+      <span class="sbn-icon">⚙️</span>
+      <span class="sbn-label">Integration Setup</span>
+    </button>
+    <button class="sbn" onclick="go(4)">
+      <span class="sbn-num">05</span>
+      <span class="sbn-icon">📊</span>
+      <span class="sbn-label">Metadata &amp; Extracts</span>
+    </button>
+    <button class="sbn" onclick="go(5)">
+      <span class="sbn-num">06</span>
+      <span class="sbn-icon">↩️</span>
+      <span class="sbn-label">Writeback</span>
+    </button>
+    <button class="sbn" onclick="go(6)">
+      <span class="sbn-num">07</span>
+      <span class="sbn-icon">🔧</span>
+      <span class="sbn-label">Troubleshooting</span>
+    </button>
+    <button class="sbn" onclick="go(7)">
+      <span class="sbn-num">08</span>
+      <span class="sbn-icon">🚀</span>
+      <span class="sbn-label">Advanced &amp; Pipeline</span>
+    </button>
+    <button class="sbn" onclick="go(8)">
+      <span class="sbn-num">09</span>
+      <span class="sbn-icon">⚡</span>
+      <span class="sbn-label">Scenarios</span>
+    </button>
+  </div>
+
+  <div class="sb-section practice">Practice</div>
+  <div class="sb-nav">
+    <button class="sbn practice-item" onclick="go(9)">
+      <span class="sbn-num">10</span>
+      <span class="sbn-icon">🃏</span>
+      <span class="sbn-label">Flashcards</span>
+    </button>
+    <button class="sbn practice-item" onclick="go(10)">
+      <span class="sbn-num">11</span>
+      <span class="sbn-icon">🎯</span>
+      <span class="sbn-label">Quiz</span>
+    </button>
+    <button class="sbn practice-item" onclick="go(11)">
+      <span class="sbn-num">12</span>
+      <span class="sbn-icon">✅</span>
+      <span class="sbn-label">True / False</span>
+    </button>
+    <button class="sbn practice-item" onclick="go(12)">
+      <span class="sbn-num">13</span>
+      <span class="sbn-icon">📖</span>
+      <span class="sbn-label">Glossary</span>
+    </button>
+  </div>
+
+</nav>
+
+<!-- PANELS -->
+<div class="panels">
+<!-- ══ P0 · OVERVIEW ══ -->
+<div class="panel on" id="p0"><div class="pi">
+  <div class="eliot">
+    <div style="flex-shrink:0"><div class="eliot-name">Eliot — your guide</div><div class="eliot-avatar">👤</div></div>
+    <div class="eliot-txt">Look, I'm going to break this down for you the way I see systems — not the way Oracle's marketing team does. <strong>Data Integration</strong> is the pipe. Your EPM apps are the tank. Your ERP, your SAP, your flat files — those are the water source. The question isn't whether data moves. The question is: <strong>do you control how it moves, or does it control you?</strong> That's what this course is about.</div>
+  </div>
+  <div class="ph">
+    <div class="ph-tag">Module 01 · Foundation</div>
+    <h1>EPM Data Integration — <em>Platform Overview</em></h1>
+    <p class="ph-sub">The successor to FDMEE and Data Management. An auditable, extensible ETL+ pipeline connecting any source to any Oracle EPM Cloud business process.</p>
+    <div class="tags" style="margin-top:14px">
+      <span class="tag r">Replaces FDMEE / Data Management</span>
+      <span class="tag b">All EPM Business Processes</span>
+      <span class="tag t">4-Step Pipeline</span>
+      <span class="tag g">Any Source · Any Target · Any Volume</span>
+    </div>
+  </div>
+
+  <div class="sl">The three external load methods</div>
+  <div class="cg cg3">
+    <div class="card blue"><div class="ci">📄</div><h3>Native Import</h3><p>Pre-mapped files for all EPM business processes. Data must match expected format. Drill-through from release 22.08 onwards.</p></div>
+    <div class="card amber"><div class="ci">🔌</div><h3>REST API</h3><p>Programmatic loads via <code>importDataSlice</code>. Used for real-time triggers, Groovy Business Rules, and middleware integration patterns.</p></div>
+    <div class="card red"><div class="ci">⚙️</div><h3>Data Integration</h3><p>Full governed pipeline. <strong>All EPM Business Processes.</strong> Any source, any volume. Includes the EPM Integration Agent for on-premises connectivity.</p></div>
+  </div>
+
+  <div class="sl">The four-step pipeline — what happens to your data</div>
+  <div class="flow">
+    <div class="fs"><div class="fsn">Step 1</div><div class="fsl">Import</div></div><div class="fa">→</div>
+    <div class="fs"><div class="fsn">Step 2</div><div class="fsl">Validate</div></div><div class="fa">→</div>
+    <div class="fs"><div class="fsn">Step 3</div><div class="fsl">Export</div></div><div class="fa">→</div>
+    <div class="fs"><div class="fsn">Step 4</div><div class="fsl">Check</div></div>
+  </div>
+  <p class="prose"><strong>Import</strong> pulls source data into staging tables (TDATASEG_T). <strong>Validate</strong> applies member mappings and expressions — unmapped members surface here. <strong>Export</strong> pushes mapped data into the EPM target Essbase cube. <strong>Check</strong> runs optional Business Rules (e.g. consolidation trigger). Every step logs to Process Details.</p>
+
+  <div class="sl">Why Data Integration is more than ETL</div>
+  <div class="cg cg2">
+    <div class="card olive"><h3>🗺️ Member Mapping Engine</h3><p>Explicit, Between, In, Like — four rule types with deterministic priority order. SQL Mapping and Expressions for complex transformations without writing code.</p></div>
+    <div class="card olive"><h3>🔍 Audit Transparency</h3><p>Every load is auditable. Workbench shows source-to-target data with original values. Process Details records timing, row counts, and errors per step.</p></div>
+    <div class="card olive"><h3>📤 Writeback Capability</h3><p>Not just inbound. Push EPM budget and actual data back to Oracle Cloud ERP GL journal interface or directly to ERP Essbase cubes.</p></div>
+    <div class="card olive"><h3>🔗 Drill-Through</h3><p>Navigate from an EPM cell all the way back to the ERP source transaction — via URL, Agent SQL query, BI Publisher report, or custom presentation layer.</p></div>
+  </div>
+
+  <div class="hb info"><span class="hb-i">ℹ️</span><div><strong>Migration note:</strong> Data Integration runs on the same data model as classic Data Management. All existing Data Load Rules and mappings are visible in both UIs. New features ship only in Data Integration — Data Management is being progressively retired starting from the 23.07 update.</div></div>
+  <div class="disc"><strong>BrainSpring study material.</strong> This course is produced independently for educational purposes. All product names and feature descriptions refer to Oracle EPM Cloud. This is not an official Oracle publication. Always validate against the current Oracle documentation for your environment version.</div>
+</div></div>
+
+<!-- ══ P1 · ARCHITECTURE ══ -->
+<div class="panel" id="p1"><div class="pi">
+  <div class="eliot">
+    <div style="flex-shrink:0"><div class="eliot-name">Eliot</div><div class="eliot-avatar">👤</div></div>
+    <div class="eliot-txt">Every system I've ever hacked had one thing in common — <strong>an exposed pipe with no one watching it.</strong> The EPM Integration Agent is different. Oracle designed it so credentials stay in the cloud, not on your server. The Agent polls. It doesn't listen. That's a security architecture choice, and it's a good one. Pay attention to where data actually flows, not where the UI says it flows.</div>
+  </div>
+  <div class="ph"><div class="ph-tag">Module 02 · Architecture</div><h1>Integration Architecture <em>& EPM Agent</em></h1><p class="ph-sub">How cloud and on-premises sources connect to EPM. The Integration Agent is the secure bridge for anything that isn't a native cloud-to-cloud connection.</p></div>
+
+  <div class="sl">Architecture overview</div>
+  <div class="flow" style="flex-direction:column;gap:14px;align-items:stretch;padding:22px">
+    <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:center">
+      <div class="fs" style="border-color:var(--bb)"><div class="fsn" style="color:var(--bll)">Source</div><div class="fsl">Oracle Cloud ERP / HCM / NetSuite</div></div>
+      <div class="fa">⟷ direct ⟷</div>
+      <div class="fs" style="border-color:var(--rb)"><div class="fsn" style="color:var(--rl)">Target</div><div class="fsl">Cloud EPM</div></div>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:center">
+      <div class="fs" style="border-color:var(--bb)"><div class="fsn" style="color:var(--bll)">Source</div><div class="fsl">On-Prem EBS · PeopleSoft · SQL DB</div></div>
+      <div class="fa">⟷</div>
+      <div class="fs" style="border-color:rgba(90,122,42,0.5)"><div class="fsn" style="color:var(--og-l)">Agent</div><div class="fsl">EPM Integration Agent</div></div>
+      <div class="fa">⟷</div>
+      <div class="fs" style="border-color:var(--rb)"><div class="fsn" style="color:var(--rl)">Target</div><div class="fsl">Cloud EPM</div></div>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:center">
+      <div class="fs" style="border-color:var(--bb)"><div class="fsn" style="color:var(--bll)">Source</div><div class="fsl">3rd-Party APIs (Workday, SFDC, SAP)</div></div>
+      <div class="fa">⟷ scripted ⟷</div>
+      <div class="fs" style="border-color:rgba(90,122,42,0.5)"><div class="fsn" style="color:var(--og-l)">Agent</div><div class="fsl">Python / Groovy Pre/Post Scripts</div></div>
+    </div>
+    <p style="text-align:center;font-size:11.5px;color:var(--muted);margin-top:4px">Cloud EPM orchestrates all jobs end-to-end. The Agent <strong style="color:var(--muted2)">polls</strong> for work, executes SQL locally, and returns a data file upward. Credentials live in the cloud, never on the agent server.</p>
+  </div>
+
+  <div class="sl">Why the Agent matters — the FDMEE replacement</div>
+  <div class="cg cg2">
+    <div class="card teal"><div class="ci">🪶</div><h3>Lightweight footprint</h3><p>Similar install to EPMAutomate. Minimal configuration. Connectivity credentials stored <strong>securely in cloud</strong> — not on the local server. Agent polls cloud for jobs rather than exposing a port.</p></div>
+    <div class="card blue"><div class="ci">📦</div><h3>Pre-seeded GL extracts</h3><p>Ships with ready-made SQL queries for <strong>Oracle EBS General Ledger</strong> and <strong>PeopleSoft GL</strong>. Any other source uses custom SQL queries you define in the UI.</p></div>
+    <div class="card amber"><div class="ci">📝</div><h3>Script extensions</h3><p>Python (Jython) or Groovy pre/post-process scripts call any REST API — Workday, Salesforce, SAP BAPIs — without middleware or OIC. The scripting engine is full-featured.</p></div>
+    <div class="card red"><div class="ci">🔍</div><h3>No-URL drill-through</h3><p>Drill from an EPM cell into on-premises transaction data <strong>without publishing a URL</strong>. The Agent resolves the drill query live using its SQL connection.</p></div>
+  </div>
+
+  <div class="sl">JDBC source compatibility</div>
+  <div class="tags"><span class="tag b">Oracle Database</span><span class="tag b">MS SQL Server</span><span class="tag b">Snowflake</span><span class="tag b">Teradata</span><span class="tag b">IBM DB2</span><span class="tag b">Apache Hive</span><span class="tag b">MySQL</span><span class="tag b">JD Edwards (DAD)</span><span class="tag">Any Type 3 / 4 JDBC driver</span></div>
+
+  <div class="sl">Cloud compute deployment</div>
+  <p class="prose">The Agent does not have to run on-premises. Deploying it on an <strong>Oracle Cloud Infrastructure (OCI) compute node</strong> creates a 100% cloud solution. Use Dynamic Routing Gateway (DRG) and VPN to reach on-premises resources from OCI. This also enables direct connectivity to Autonomous Data Warehouse (ADW) and Autonomous Transaction Processing (ATP) without any extra configuration.</p>
+
+  <div class="sl">3rd-party ERP integration patterns</div>
+  <table class="tbl">
+    <thead><tr><th>ERP</th><th>Flat file</th><th>Agent</th><th>OIC</th></tr></thead>
+    <tbody>
+      <tr><td><strong>SAP</strong></td><td>SAP Basis exports CSV → EPMAutomate uploads</td><td>Agent + Groovy BAPI calls, or JDBC (check SAP licence)</td><td>SAP Adapter + OIC REST to EPM</td></tr>
+      <tr><td><strong>JD Edwards</strong></td><td>JDE extract → EPMAutomate</td><td>Agent + Data Access Driver (DAD)</td><td>JDE Adapter available in OIC</td></tr>
+      <tr><td><strong>Workday / SFDC</strong></td><td>API export → stage as CSV</td><td>Agent + Python script calling REST API</td><td>OIC pre-built connectors</td></tr>
+    </tbody>
+  </table>
+
+  <div class="hb tip"><span class="hb-i">💡</span><div><strong>Launch from Groovy:</strong> Define a Connection object in Data Integration, then call the Data Integration REST API from a Groovy Business Rule using <code>operation.application.getConnection("DM").post()</code>. Pair with an Action Menu item in Planning — users click a button on a form, and the integration fires automatically.</div></div>
+</div></div>
+
+<!-- ══ P2 · ERP CONNECTION ══ -->
+<div class="panel" id="p2"><div class="pi">
+  <div class="eliot">
+    <div style="flex-shrink:0"><div class="eliot-name">Eliot</div><div class="eliot-avatar">👤</div></div>
+    <div class="eliot-txt">First rule of system access: <strong>use the right credentials, configured the right way.</strong> SSO accounts look fine on the surface. They authenticate in the browser. But they can't authenticate via API. Data Integration doesn't use your browser — it makes REST calls. That's why a federated account fails every single time, even though the same human can log in manually. <strong>The system and the human are not the same entity.</strong></div>
+  </div>
+  <div class="ph"><div class="ph-tag">Module 03 · Setup</div><h1>Creating the <em>ERP Cloud Connection</em></h1><p class="ph-sub">The foundational step before any GL data, metadata, or writeback can flow. A one-time setup that underpins all ERP integration patterns.</p></div>
+
+  <div class="sl">Prerequisites checklist</div>
+  <div class="card" style="margin-bottom:16px">
+    <ul class="chk">
+      <li><span class="ck-y">✓</span><div><strong>Non-SSO native ERP service account</strong> — must authenticate via username/password API call, not via federated/SAML identity. Password ideally set to never expire.</div></li>
+      <li><span class="ck-y">✓</span><div><strong>Required GL job role</strong> — one of: <em>Financial Analyst</em>, <em>General Accountant</em>, or <em>General Accounting Manager</em> in Oracle Fusion security.</div></li>
+      <li><span class="ck-y">✓</span><div><strong>Registered EPM target application</strong> — the Planning, FCCS, or other EPM application must already exist.</div></li>
+      <li><span class="ck-y">✓</span><div><strong>Correct ERP pod URL</strong> — log into ERP first, copy URL from browser. Format: <code>https://xxxx.fa.ocs.oraclecloud.com</code>. No trailing slash. Not the IDCS redirect URL.</div></li>
+    </ul>
+  </div>
+
+  <div class="sl">Step-by-step: create the source connection</div>
+  <div class="steps">
+    <div class="step"><div class="sn">1</div><div class="sb"><h4>Actions → Applications → Connections</h4><p>In Data Integration, go to <strong>Actions → Applications</strong>. Click the Connections chain-link icon in the toolbar.</p></div></div>
+    <div class="step"><div class="sn">2</div><div class="sb"><h4>+ → Oracle Cloud ERP</h4><p>Click the "+" dropdown. Choose <strong>Oracle Cloud ERP</strong>. (Other types include Oracle HCM Cloud, NetSuite.)</p></div></div>
+    <div class="step"><div class="sn">3</div><div class="sb"><h4>Enter connection details</h4><p>Fill: <strong>Connection Name</strong> (e.g. <code>ERP_Demo</code>), <strong>Service URL</strong>, <strong>Username</strong>, <strong>Password</strong>. The Connection Name you set here is referenced everywhere — integrations, ESS jobs, writeback configs, BI Publisher setups.</p></div></div>
+    <div class="step"><div class="sn">4</div><div class="sb"><h4>Test Connection → OK</h4><p>Click <strong>Test Connection</strong> first. Successful response confirms URL format, credentials, network, and GL roles are all correct. Only then save with OK. If the test fails, go to Module 07 Troubleshooting.</p></div></div>
+  </div>
+
+  <div class="hb warn"><span class="hb-i">⚠️</span><div><strong>URL gotcha:</strong> Remove any trailing slash "/". <code>https://xxxx.fa.ocs.oraclecloud.com/</code> → Invalid URL error. Correct: <code>https://xxxx.fa.ocs.oraclecloud.com</code></div></div>
+
+  <div class="sl">Register the ERP source application</div>
+  <div class="steps">
+    <div class="step"><div class="sn">1</div><div class="sb"><h4>Actions → Applications → + Add</h4><p>Category = <code>Data Source</code>, Type = <code>Oracle Cloud ERP</code>.</p></div></div>
+    <div class="step"><div class="sn">2</div><div class="sb"><h4>Select connection and apply filter</h4><p>Choose your registered connection (e.g. <code>ERP_Demo</code>). Use the optional <strong>Application Filter</strong> (e.g. <code>InFusionLedger</code>) to import only specific ledgers. Without a filter, all GL ledgers import.</p></div></div>
+    <div class="step"><div class="sn">3</div><div class="sb"><h4>Import Applications</h4><p>A background ESS job runs and imports the application. Monitor in Process Details. Once complete: Period Mappings auto-import, Drill URL auto-sets. <strong>Neither can be manually added in the new Data Integration UI.</strong></p></div></div>
+  </div>
+
+  <div class="sl">Postman / cURL diagnostic test</div>
+  <p class="prose">When Test Connection fails with an unclear error, use Postman or cURL to isolate the issue. The response tells you exactly what's wrong — credentials, role, IP firewall.</p>
+  <div class="cb"><span class="cm">// POST — ERP REST API endpoint</span>
+<span class="kw">URL:</span> <span class="vl">https://&lt;your-erp-pod&gt;/fscmRestApi/resources/latest/erpintegrations</span>
+
+<span class="cm">// JSON Body</span>
+{
+  <span class="kw">"OperationName"</span>: <span class="vl">"submitESSJobRequest"</span>,
+  <span class="kw">"JobPackageName"</span>: <span class="vl">"oracle/apps/ess/financials/generalLedger/ledgers/ledgerDefinitions"</span>,
+  <span class="kw">"JobDefName"</span>:    <span class="vl">"ExtractCubeInformation"</span>,
+  <span class="kw">"ESSParameters"</span>: <span class="vl">"null"</span>
+}
+
+<span class="cm">// HTTP 201 CREATED  → credentials + roles are good
+// HTTP 401           → authentication failure (wrong password or SSO account)
+// HTTP 403           → IP Firewall / Allowlist blocking EPM Cloud IPs</span></div>
+</div></div>
+
+<!-- ══ P3 · INTEGRATION SETUP ══ -->
+<div class="panel" id="p3"><div class="pi">
+  <div class="eliot">
+    <div style="flex-shrink:0"><div class="eliot-name">Eliot</div><div class="eliot-avatar">👤</div></div>
+    <div class="eliot-txt">Four screens. That's all an integration is. <strong>General → Map Dimensions → Map Members → Options.</strong> But don't mistake simplicity for triviality. The mapping rules you write here are the ones that decide whether your CFO sees the right numbers or the wrong ones. Overlapping period keys. Wildcard mappings that match too broadly. Source filters that return a million cells. These are the bugs that surface at 11pm on close day. <strong>Build it right once.</strong></div>
+  </div>
+  <div class="ph"><div class="ph-tag">Module 04 · Configuration</div><h1>Configuring an Integration — <em>End to End</em></h1><p class="ph-sub">The complete four-screen wizard. Period mapping, category mapping, dimension mapping, member mapping, source filters — all in sequence.</p></div>
+
+  <div class="sl">Step A — Period mapping</div>
+  <div class="cg cg2">
+    <div class="card"><h3>Default — no mapping needed</h3><p>ERP and EPM period names match exactly. Data Integration uses the global calendar. Most common scenario — do nothing.</p></div>
+    <div class="card amber"><h3>Explicit — mapping required</h3><p>ERP and EPM period names differ (e.g. "Dec-22" vs "FY22-Dec"). Create Source Mapping via <strong>Actions → Period Mapping</strong>. Set integration to use <code>Explicit</code> type.</p></div>
+  </div>
+  <div class="hb warn"><span class="hb-i">⚠️</span><div><strong>Overlapping Period Keys</strong> — including adjustment periods in Source Mapping — cause <strong>record duplication AND import failures</strong>. Always verify uniqueness. After adding new ERP periods, run <strong>Application Update</strong>.</div></div>
+
+  <div class="sl">Step B — Category mapping</div>
+  <p class="prose">Maps ERP ledger categories (e.g. <code>Actual</code>) to EPM Scenario members (e.g. <code>Current</code>). Navigate: <strong>Actions → Category Mapping</strong>. Set the ERP Category, Frequency (Monthly / Quarterly / Annually), and Target EPM Category.</p>
+
+  <div class="sl">Step C — Four-screen integration wizard</div>
+  <div class="steps">
+    <div class="step"><div class="sn">1</div><div class="sb"><h4>General tab — Name, Location, Source, Target</h4><p>Click <strong>+ → Integration</strong>. Enter meaningful Name and Location. Select Source (e.g. <code>InFusionLedger</code>) and Target (e.g. <code>Vision</code>). Set Target Cube, Category Mapping. If reusing an existing Location, it must have been created for the same Source/Target pair.</p></div></div>
+    <div class="step"><div class="sn">2</div><div class="sb"><h4>Map Dimensions tab</h4><p>Map each source segment to its target dimension (e.g. <code>Company → Entity</code>, <code>Account → Account</code>). Build Expressions for complex transforms. <strong>Best practice: use Expressions or SQL Mapping instead of <code>* to *</code> wildcards</strong> — wildcards are slower and harder to audit. Access advanced options via the ⚙ cog per dimension row.</p></div></div>
+    <div class="step"><div class="sn">3</div><div class="sb"><h4>Map Members tab</h4><p>Define Source → Target member mappings per dimension. Use the <strong>Member Selector</strong> — not manual typing — to avoid casing mismatches. Additional types (Between, In, Like, Multi-Dim) via magnifying glass icon. Set Processing Order where rules may conflict.</p></div></div>
+    <div class="step"><div class="sn">4</div><div class="sb"><h4>Options tab — filters, period type, load method</h4><p>Define <strong>Source Filters</strong> (default: iLvl0 members all dimensions). Set <strong>Period Mapping Type</strong> (Default or Explicit). Choose <strong>Load Method</strong>: Numeric Data Only / All Data with Data Protection / Replace / Merge. Set Batch Size (default 10,000). Configure Drill Region and validation message display.</p></div></div>
+  </div>
+
+  <div class="sl">Mapping rule priority order</div>
+  <table class="tbl">
+    <thead><tr><th>Type</th><th>Example</th><th>Priority</th><th>Best for</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Explicit</strong></td><td><code>4001-GBP → Revenue_UK</code></td><td>Highest — always wins</td><td>Exact one-to-one overrides</td></tr>
+      <tr><td><strong>In</strong></td><td><code>5001,5003,5007 → DirectCosts</code></td><td>2nd</td><td>Discrete, non-contiguous codes</td></tr>
+      <tr><td><strong>Between</strong></td><td><code>4000–4999 → Revenue</code></td><td>3rd</td><td>Ranges of numeric GL codes</td></tr>
+      <tr><td><strong>Like</strong></td><td><code>IC_* → ICElimAcct</code></td><td>Lowest</td><td>Wildcard / pattern match as fallback</td></tr>
+    </tbody>
+  </table>
+
+  <div class="sl">Running the integration</div>
+  <div class="steps">
+    <div class="step"><div class="sn">▶</div><div class="sb"><h4>Play button on the integration row</h4><p>Set <strong>Import Mode</strong> (Replace / Append / Recalculate), <strong>Export Mode</strong> (Store Data / Add Data / Subtract / Replace), and <strong>Start/End Periods</strong>. Click Run. Monitor in-browser or click "Continue Offline" and track via Process Details.</p></div></div>
+  </div>
+
+  <div class="hb tip"><span class="hb-i">✅</span><div><strong>Setup checklist:</strong> Connection created → ERP Application registered → Period Mappings defined (if needed) → Category Mappings set → Integration General configured → Dimension Mappings → Member Mappings → Filters/Options → Execute → Validate in Process Details.</div></div>
+</div></div>
+
+<!-- ══ P4 · METADATA & EXTRACTS ══ -->
+<div class="panel" id="p4"><div class="pi">
+  <div class="eliot">
+    <div style="flex-shrink:0"><div class="eliot-name">Eliot</div><div class="eliot-avatar">👤</div></div>
+    <div class="eliot-txt">The CSV header. That's the thing people don't think about until it breaks. You register a custom application against a CSV file. The column headers become your dimension list. Six months later, someone adds a column to the BIP report. <strong>Nothing fails. No error. The data just starts landing in the wrong dimensions.</strong> That's the kind of silent bug that lives in production for three months before someone notices the numbers are wrong. Watch your headers.</div>
+  </div>
+  <div class="ph"><div class="ph-tag">Module 05 · Advanced Integration</div><h1>Metadata Integration <em>& Custom ERP Extracts</em></h1><p class="ph-sub">Chart of Accounts metadata loading, BI Publisher custom queries, ESS Job execution mode, and drill-back to source transactions.</p></div>
+
+  <div class="sl">Integrating Chart of Accounts metadata from ERP</div>
+  <p class="prose">Loads the Oracle GL hierarchy directly into EPM dimension members — segment values, parent-child relationships, descriptions, account type, hierarchy top node — without manual dimension maintenance.</p>
+  <div class="steps">
+    <div class="step"><div class="sn">1</div><div class="sb"><h4>Register the COA application</h4><p>Category = <code>Data Source</code>, Type = <code>Oracle ERP Cloud (Chart of Accounts)</code>. Exposes metadata dimensions: Segment Value, Description, Parent Value, Hierarchy Top Node, Level, Account Type, Variance Reporting.</p></div></div>
+    <div class="step"><div class="sn">2</div><div class="sb"><h4>Set source filters</h4><p>Configure: COA Application Name (e.g. <code>InFusionLedger</code>), Segment Name (e.g. <code>Account</code>), Hierarchy Top Node (e.g. <code>All Account Values</code>), <code>Refresh from Source = Yes</code>.</p></div></div>
+    <div class="step"><div class="sn">3</div><div class="sb"><h4>Create the metadata integration</h4><p>Source = COA application, Target = EPM Account dimension. Map and run. EPM dimension members update automatically on each execution.</p></div></div>
+  </div>
+
+  <div class="sl">Prepackaged ERP data extracts (ready to use)</div>
+  <div class="hb info"><span class="hb-i">📦</span><div><strong>Four out-of-the-box extracts:</strong> Payable Transactions, Receivable Transactions, Trial Balance - Average, Trial Balance. Register via matching Type. Only periods and Ledger ID can be passed at runtime — all other filters are predefined.</div></div>
+
+  <div class="sl">Custom BI Publisher extract — 4-step build</div>
+  <div class="steps">
+    <div class="step"><div class="sn">1</div><div class="sb"><h4>Create the BIP report in Fusion</h4><p>Write SQL against GL or other Fusion tables. Specify bind variables (<code>:PERIOD_NAME</code>, <code>:LEDGER_NAME</code>). Create Data Model → Report layout. <strong>Output format = CSV only</strong> — all other formats fail. Save in Custom folder (not Shared). Bind parameters use tilde syntax: <code>~PERIOD~</code>.</p></div></div>
+    <div class="step"><div class="sn">2</div><div class="sb"><h4>Create an ESS Job for large reports</h4><p>Direct BIP mode times out after 5 minutes. For large extracts, create an Oracle Enterprise Scheduler (ESS) Job in Fusion. Job Type = <code>BIPJobType</code>, provide Report ID path. ESS runs asynchronously, uploads CSV to UCM. EPM polls UCM — up to 6.5 minutes total wait (12 retries × 5s intervals, increasing).</p></div></div>
+    <div class="step"><div class="sn">3</div><div class="sb"><h4>Register the custom application</h4><p>Upload sample CSV to EPM Inbox. Create application: Category = <code>Data Source</code>, Type = <code>Oracle ERP Cloud (Custom)</code>. Browse to CSV — <strong>column headers define the dimension list. The filename becomes the application name.</strong> If the report header ever changes without re-registering, data maps to wrong dimensions silently.</p></div></div>
+    <div class="step"><div class="sn">4</div><div class="sb"><h4>Configure execution method and parameters</h4><p>In Application Options: set <strong>Execution Method</strong> = <code>BIP Report</code> (sync, 5-min timeout) or <code>ESS Job</code> (async). Provide Report Name or ESS Job Path/Name. Define <strong>Parameter List</strong> e.g. <code>argument1=Ledger ES;argument2=$START_PERIODKEY[MMM-yy]$</code>. Dynamic parameters via custom Property and <code>$PropertyName$</code> substitution.</p></div></div>
+  </div>
+
+  <div class="hb danger"><span class="hb-i">🚨</span><div><strong>Critical — CSV header stability:</strong> The dimension list locks at registration time based on the CSV header. Any subsequent change to the BIP report's column structure without re-registering means data extracts into wrong dimensions. No error is thrown. This is a <strong>silent data integrity failure</strong>.</div></div>
+
+  <div class="sl">Execution mode comparison</div>
+  <table class="tbl">
+    <thead><tr><th>Method</th><th>Mode</th><th>Timeout</th><th>Retries</th><th>Use case</th></tr></thead>
+    <tbody>
+      <tr><td><strong>BIP Report</strong></td><td>Synchronous</td><td>30 seconds</td><td>3 retries (5s intervals)</td><td>Small, fast queries</td></tr>
+      <tr><td><strong>ESS Job</strong></td><td>Asynchronous</td><td>~6.5 minutes</td><td>12 retries (escalating)</td><td>Large extracts, complex joins</td></tr>
+    </tbody>
+  </table>
+</div></div>
+
+<!-- ══ P5 · WRITEBACK ══ -->
+<div class="panel" id="p5"><div class="pi">
+  <div class="eliot">
+    <div style="flex-shrink:0"><div class="eliot-name">Eliot</div><div class="eliot-avatar">👤</div></div>
+    <div class="eliot-txt">Writeback is the integration running in reverse. Most people treat it as an afterthought — <strong>data goes from ERP to EPM, that's the direction.</strong> But the GL Journal Interface table doesn't care about your assumptions. When you push budget data back to ERP and the pre-validation errors tell you the currency is invalid, that's not an EPM problem. <strong>That's the ERP saying your mapping doesn't match reality.</strong> Check the Correct Budget Import Errors screen in ERP first, not the EPM log.</div>
+  </div>
+  <div class="ph"><div class="ph-tag">Module 06 · Writeback</div><h1>Writing Back <em>to Oracle Cloud ERP</em></h1><p class="ph-sub">Pushing EPM budget and actual data back into Oracle Fusion GL. Two distinct mechanisms, each with different ERP destinations.</p></div>
+
+  <div class="sl">Two writeback types — completely different destinations</div>
+  <div class="cg cg2">
+    <div class="card red"><div class="ci">📋</div><h3>Writeback — Actuals</h3><p>Extracts actual values from EPM and writes to the <strong>GL Journal Interface table (GL_INTERFACE)</strong> in ERP. ImportJournals ESS job then creates actual journal entries in Oracle GL. Balance Type = <code>Actual</code>.</p></div>
+    <div class="card amber"><div class="ci">📊</div><h3>Writeback — Budget</h3><p>Writes budget data <strong>directly to the ERP Essbase cube</strong> — not via the journal interface. ERP-side Essbase cube and budget scenarios must already exist. Source Budget Type = <code>EPM Financials module</code>.</p></div>
+  </div>
+
+  <div class="hb info"><span class="hb-i">ℹ️</span><div><strong>ERP prerequisites:</strong> ERP Essbase cube must exist. Budget scenarios must be configured in ERP. Integration user needs Journal Source authorisation (Actuals) or Budget write access (Budget writeback).</div></div>
+
+  <div class="sl">Configuration steps</div>
+  <div class="steps">
+    <div class="step"><div class="sn">1</div><div class="sb"><h4>Create the writeback integration — reversed direction</h4><p>Source = EPM application (e.g. <code>Vision</code>), Target = ERP Ledger (e.g. <code>InFusionLedger</code>). This reverses the normal direction — EPM is source, ERP is target.</p></div></div>
+    <div class="step"><div class="sn">2</div><div class="sb"><h4>Set writeback-specific options</h4><p>Configure: <strong>Balance Type</strong> (Actual / Budget), <strong>Journal Source</strong> (e.g. "Other"), <strong>Journal Category</strong>, <strong>Source Budget Type</strong>. Enable Purge Data File as appropriate.</p></div></div>
+    <div class="step"><div class="sn">3</div><div class="sb"><h4>Map dimensions in reverse</h4><p>Map EPM dimensions back to ERP GL segments. ERP member values must be valid — ERP pre-validation rejects rows with invalid currency, invalid account values, or missing budget names.</p></div></div>
+  </div>
+
+  <div class="sl">Process log reading guide</div>
+  <table class="tbl">
+    <thead><tr><th>Log pattern</th><th>Meaning</th><th>Action</th></tr></thead>
+    <tbody>
+      <tr><td><span class="ctag">status is: SUCCEEDED</span></td><td>ESS job completed, data written</td><td>Verify in ERP Scheduled Processes or GL Balances</td></tr>
+      <tr><td><span class="ctag">ORA-01400: cannot insert NULL</span></td><td>Required GL_INTERFACE column is null</td><td>Check dimension mappings — required ERP field not populated</td></tr>
+      <tr><td><span class="ctag">BEGIN: Process Log From the Ess Job</span></td><td>Error originated in ERP, not EPM</td><td>Contact ERP Support first</td></tr>
+      <tr><td><span class="ctag">Error in Validating the Budget Load</span></td><td>ERP pre-validation failed</td><td>ERP → General Accounting Dashboard → Correct Budget Import Errors</td></tr>
+      <tr><td><span class="ctag">Rows not loaded due to data errors</span></td><td>Systematic mapping problem</td><td>Download .log from ERP Scheduled Processes for row-level detail</td></tr>
+    </tbody>
+  </table>
+</div></div>
+
+<!-- ══ P6 · TROUBLESHOOTING ══ -->
+<div class="panel" id="p6"><div class="pi">
+  <div class="eliot">
+    <div style="flex-shrink:0"><div class="eliot-name">Eliot</div><div class="eliot-avatar">👤</div></div>
+    <div class="eliot-txt">HTTP 401 vs HTTP 403. Most people confuse them. <strong>401 is "I don't know who you are."</strong> Wrong password, SSO account. <strong>403 is "I know exactly who you are, and you're not allowed here."</strong> IP firewall. The ERP knows your credentials are valid — it's just blocking your IP. These are fundamentally different problems. Misdiagnose them and you'll spend three hours resetting passwords for a firewall problem. <strong>Read the error code. Actually read it.</strong></div>
+  </div>
+  <div class="ph"><div class="ph-tag">Module 07 · Operations</div><h1>Troubleshooting <em>Common Issues</em></h1><p class="ph-sub">Organised by failure category. Always start with Process Details in Data Integration, then trace to ERP-side ESS logs if the error references an ERP job ID.</p></div>
+
+  <div class="sl">A — Connection & initialisation errors</div>
+  <table class="tbl">
+    <thead><tr><th>Error</th><th>Root cause</th><th>Resolution</th></tr></thead>
+    <tbody>
+      <tr><td><span class="etag">HTTP 401</span></td><td>Wrong credentials or SSO-enabled account</td><td>Test ERP login directly. Confirm account is non-SSO. Re-enter credentials in Connection.</td></tr>
+      <tr><td><span class="etag">HTTP 403</span></td><td>IP Firewall / Allowlist blocking EPM Cloud IPs</td><td>Contact ERP admin to add EPM Cloud IP ranges to ERP allowlist.</td></tr>
+      <tr><td>Connection refused / timed out</td><td>Wrong pod URL, trailing slash, or ERP pod down</td><td>Remove trailing slash. Validate URL. Test via Postman (Module 03).</td></tr>
+      <tr><td>Cannot import ERP applications</td><td>Missing GL job role on service account</td><td>Assign: General Accountant / General Accounting Manager / Financial Analyst in ERP Identity Management.</td></tr>
+    </tbody>
+  </table>
+
+  <div class="sl">B — No records / duplicate data</div>
+  <div class="steps">
+    <div class="step"><div class="sn">B1</div><div class="sb"><h4>Validate period mappings</h4><p>Check for overlapping period keys including adjustment periods. Overlapping keys cause both duplication and import failure. Verify Default vs Explicit type matches config.</p></div></div>
+    <div class="step"><div class="sn">B2</div><div class="sb"><h4>Check source filters</h4><p>Confirm ERP records exist for your filter conditions. Use Member Selector, not manual typing. Use Fully Qualified Members if members exist in multiple hierarchies.</p></div></div>
+    <div class="step"><div class="sn">B3</div><div class="sb"><h4>Essbase error 1200766 — 1M cell limit</h4><p>Hard-coded in ERP Fusion Cloud. Cannot be increased by Oracle Support. Resolution: narrow source filters to reduce cells per run (e.g. filter by specific ledger, company, cost centre).</p></div></div>
+  </div>
+
+  <div class="sl">C — Drill-through failures</div>
+  <table class="tbl">
+    <thead><tr><th>Symptom</th><th>Cause</th><th>Fix</th></tr></thead>
+    <tbody>
+      <tr><td>Wrong landing page</td><td>Incorrect Drill URL set in classic Data Management</td><td>Delete and recreate ERP Source System — new UI auto-sets Drill URL.</td></tr>
+      <tr><td>ERP login screen</td><td>User not logged into ERP before drilling</td><td>Log into ERP first. Verify service account has Financial Analyst role.</td></tr>
+      <tr><td>No drill results</td><td>Drill Through not enabled; dimension classification mismatch; too many Drill Region members</td><td>Enable in Application Options. Check dimension classification consistency. Define Custom Drill Region.</td></tr>
+      <tr><td>Partial / wrong results</td><td>1,000-member-per-dimension query limit</td><td>Disable in Application Options (max 3 dimensions may exceed 1,000 members).</td></tr>
+    </tbody>
+  </table>
+
+  <div class="sl">D — Performance optimisation</div>
+  <div class="cg cg2">
+    <div class="card teal"><h3>⚡ Expressions over wildcards</h3><p>Replace <code>* to *</code> with SQL Mapping and Expressions. Significantly reduces Transform step processing time.</p></div>
+    <div class="card blue"><h3>🔄 Quick Mode (Direct Load)</h3><p>Bypasses TDATASEG staging and Validate step. <strong>No Workbench data, no drill-through</strong> — but dramatically faster for high-volume loads.</p></div>
+    <div class="card amber"><h3>⚙️ Workflow mode</h3><p><strong>Full:</strong> All events + drill. <strong>Full No Archive:</strong> All events, no drill (TDATASEG purged after load). <strong>Simple:</strong> Import + Export only.</p></div>
+    <div class="card"><h3>🗂️ Batch size & maintenance</h3><p>Tune Batch Size (default 10,000). Purge historical data. Run "Maintain Data Table" and "Relocate Tablespace" from System Maintenance Tasks.</p></div>
+  </div>
+
+  <div class="sl">E — BIP / ESS job errors</div>
+  <table class="tbl">
+    <thead><tr><th>Error</th><th>Meaning</th><th>Resolution</th></tr></thead>
+    <tbody>
+      <tr><td><span class="etag">Read timed out</span></td><td>BIP report exceeded timeout. 3 retries (BIP) or 12 retries (ESS) exhausted.</td><td>Switch Execution Method from BIP Report to ESS Job. Check UCM job timing and integration user UCM privileges.</td></tr>
+      <tr><td><span class="etag">Request ID = -1</span></td><td>ESS job failed to trigger. Parameter mismatch. (Doc 2915658.1)</td><td>Verify ESS Job Path, Name, Parameter List against Fusion Job Definition. Test resubmitting ESS job directly in ERP using integration user.</td></tr>
+    </tbody>
+  </table>
+
+  <div class="hb tip"><span class="hb-i">💡</span><div><strong>Which support team?</strong> Log line contains <em>"BEGIN: Process Log From the Ess Job"</em> or references <code>XXXXXXX.log</code> → <strong>ERP Support first</strong>. Error directly in DI log lines → <strong>EPM Data Integration Support</strong>. Always include: Process Log, ESS log, and whether CSV was generated.</div></div>
+</div></div>
+
+<!-- ══ P7 · ADVANCED ══ -->
+<div class="panel" id="p7"><div class="pi">
+  <div class="eliot">
+    <div style="flex-shrink:0"><div class="eliot-name">Eliot</div><div class="eliot-avatar">👤</div></div>
+    <div class="eliot-txt">The Pipeline is the thing I wish I'd had years ago. Not because it's clever — because <strong>it makes the invisible visible.</strong> Month-end processes used to live in batch scripts nobody documented, scheduled by people who've since left the company. Now it's a visual graph. Load metadata → BSO cube → ASO cube → email notification. Every step logged. Every failure surfaced. <strong>Operationalise your integrations. Stop relying on tribal knowledge.</strong></div>
+  </div>
+  <div class="ph"><div class="ph-tag">Module 08 · Advanced</div><h1>Pipeline, Quick Mode <em>& Roadmap</em></h1><p class="ph-sub">Multi-step orchestration, high-volume patterns, FCCS-specific behaviour, and where the product is heading.</p></div>
+
+  <div class="sl">Data Integration Pipeline — orchestration built in</div>
+  <p class="prose">The Pipeline (available from 23.06) creates <strong>visual, multi-step processing workflows</strong> across any Cloud EPM instance. No separate scheduler needed — Pipeline replaces the legacy Batch feature with a proper orchestration tool.</p>
+  <div class="cg cg2">
+    <div class="card blue"><div class="ci">🔗</div><h3>Job types in a Pipeline</h3><p>Integration, Business Rule, Email notification, Copy file to/from Object Store, Open Batch, ESS Job (ERP Cloud), Clear Data, Export Dimension by Name (EDMCS). Jobs can target <strong>any Cloud EPM instance</strong> via connection.</p></div>
+    <div class="card olive"><div class="ci">🌊</div><h3>Serial and parallel execution</h3><p>Jobs within a Stage run in parallel. Stages run serially. Design your stages to match dependencies: metadata first → BSO cube → ASO cube → Business Rules → email report.</p></div>
+  </div>
+
+  <div class="hb info"><span class="hb-i">💻</span><div><strong>Run Pipeline via REST API:</strong> Job type = <code>pipeline</code>, jobName = your Pipeline name. Pass variables: STARTPERIOD, ENDPERIOD, IMPORTMODE, EXPORTMODE, SEND_TO for email. Full REST API syntax available in Oracle EPM REST API documentation.</div></div>
+
+  <div class="sl">Quick Mode — export options guide</div>
+  <table class="tbl">
+    <thead><tr><th>Extract option</th><th>Method</th><th>Best for</th></tr></thead>
+    <tbody>
+      <tr><td><strong>All Data</strong></td><td>MDX</td><td>Hybrid or ASO with filters</td></tr>
+      <tr><td><strong>Level 0 Data</strong></td><td>MAXL</td><td>High-volume ASO exports</td></tr>
+      <tr><td><strong>Stored Data Only</strong></td><td>DATAEXPORT</td><td>BSO — stored values, excludes dynamic calc</td></tr>
+      <tr><td><strong>Stored + Dynamic Calculated</strong></td><td>DATAEXPORT</td><td>BSO — includes Dense dimension dynamic calc values only</td></tr>
+    </tbody>
+  </table>
+  <div class="hb warn"><span class="hb-i">⚠️</span><div><strong>Quick Mode & EPMAutomate:</strong> <code>runDataRule</code> does NOT support Quick Mode. Use the <strong>runIntegration REST API</strong> with <code>importMode: DIRECT</code> and <code>exportMode: REPLACE</code>.</div></div>
+
+  <div class="sl">FCCS-specific integration behaviour</div>
+  <div class="cg cg2">
+    <div class="card"><h3>Partial loading support</h3><p>Loading to Essbase via OLU: valid data loads, invalid rows reject. Process Details shows errors per row. Close teams can proceed with valid data while fixing rejected rows.</p></div>
+    <div class="card"><h3>Dry Run mode (22.09)</h3><p>Validate without loading. Uses <code>importdataslice</code> API. Stops after 99 errors. Run this before the real load on close day to surface mapping problems before they impact the cube.</p></div>
+    <div class="card"><h3>Loading YTD data</h3><p>Load to <code>YTD_Input</code> in the View dimension for Income Statement. DSO-enabled: YTD computed via Member Formulas on-the-fly. Non-DSO: computed during consolidation process.</p></div>
+    <div class="card"><h3>Business rules in data load</h3><p>Configurable positions: Before Extract, Before/After Import, Before/After Load, Before/After Check. Check Rule in FCCS triggers Consolidation per Entity — scope performance impact carefully.</p></div>
+  </div>
+
+  <div class="sl">Feature timeline (2022 → current)</div>
+  <div class="cg cg2">
+    <div>
+      <p style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--tel);margin-bottom:10px">Delivered</p>
+      <ul class="chk">
+        <li><span class="ck-y">✓</span><div>Direct Drill / Quick Mode Drill (22.08)</div></li>
+        <li><span class="ck-y">✓</span><div>GL Metadata Adapter (22.07)</div></li>
+        <li><span class="ck-y">✓</span><div>OAuth Support for Agent (22.09)</div></li>
+        <li><span class="ck-y">✓</span><div>Data Integration Pipeline (23.06)</div></li>
+        <li><span class="ck-y">✓</span><div>Quick Mode File without Agent (22.12)</div></li>
+        <li><span class="ck-y">✓</span><div>EDMCS Export Dimension job types (24.02)</div></li>
+        <li><span class="ck-y">✓</span><div>Data Management formally decommissioned (23.07)</div></li>
+      </ul>
+    </div>
+    <div>
+      <p style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--al);margin-bottom:10px">On the horizon</p>
+      <ul class="chk">
+        <li><span class="ck-o">○</span><div>OIC Adapter (packaged)</div></li>
+        <li><span class="ck-o">○</span><div>Groovy support in Data Integration</div></li>
+        <li><span class="ck-o">○</span><div>Attribute Dimension Loading</div></li>
+        <li><span class="ck-o">○</span><div>Cash Forecasting packaged adapter</div></li>
+        <li><span class="ck-o">○</span><div>Custom Reporting inside Data Integration</div></li>
+        <li><span class="ck-o">○</span><div>ERP Adapter performance improvements</div></li>
+      </ul>
+    </div>
+  </div>
+</div></div>
+
+<!-- ══ P8 · SCENARIOS ══ -->
+<div class="panel" id="p8"><div class="pi">
+  <div class="eliot">
+    <div style="flex-shrink:0"><div class="eliot-name">Eliot</div><div class="eliot-avatar">👤</div></div>
+    <div class="eliot-txt">Theory is just a map. <strong>Real environments don't look like Oracle's demo slides.</strong> They have Snowflake as a data warehouse that nobody documented. They have SAP with a JDBC driver that someone installed three years ago and the password expired. They have a BIP report that outputs XML because someone clicked the wrong dropdown. These scenarios are what you'll actually face. <strong>Learn the patterns, not just the steps.</strong></div>
+  </div>
+  <div class="ph"><div class="ph-tag">Module 09 · Real World</div><h1>Real-World <em>Scenarios & Patterns</em></h1><p class="ph-sub">Realistic implementation scenarios drawn from common enterprise setups. Each shows the problem, the architecture decision, and the key configuration choices.</p></div>
+
+  <div class="sl">Scenario 1 — Manufacturing company, multi-ERP close</div>
+  <div class="scenario">
+    <div class="scenario-label">Scenario 01 · Multi-source GL consolidation</div>
+    <h4>GlobalMerge Corp: SAP in Germany, Oracle Cloud ERP in UK, NetSuite in Singapore</h4>
+    <p><strong>Problem:</strong> Three subsidiaries, three source systems, monthly close in 5 days. Finance team currently exports CSVs manually and pastes into Excel.<br><br>
+    <strong>Solution architecture:</strong> UK (Oracle Cloud ERP) → native ERP connection via Data Integration. Germany (SAP) → EPM Agent on OCI compute node with Groovy script calling SAP BAPI GL extract. Singapore (NetSuite) → NetSuite direct connection via Data Integration.<br><br>
+    <strong>Key configuration choices:</strong> Pipeline orchestrates all three loads in Stage 1 (parallel), then triggers consolidation Business Rule in Stage 2, then sends email notification to CFO in Stage 3. Period mappings configured for SAP's German fiscal calendar. Account mappings translate SAP cost element numbers (400000–499999) to EPM account members using Between rules.</p>
+  </div>
+
+  <div class="scenario">
+    <div class="scenario-label">Scenario 02 · On-premises EBS to Planning</div>
+    <h4>Oracle E-Business Suite R12 on-premises → EPBCS Planning</h4>
+    <p><strong>Problem:</strong> Customer is moving to EPM Cloud but EBS stays on-premises for 3 more years. Need real-time actuals in Planning for rolling forecast re-runs.<br><br>
+    <strong>Solution architecture:</strong> EPM Integration Agent installed on a Linux server in the customer's data centre. Pre-seeded EBS GL extract SQL runs nightly. Agent polls Cloud EPM every 5 minutes for job triggers. Groovy post-process script sends a Slack notification on completion.<br><br>
+    <strong>Key pitfalls:</strong> EBS account code combinations (segments concatenated) must be split using Expression functions in the Dimension Mapping. Quick Mode enabled for high-volume loads — drilling disabled, workbench not available. Dry Run mode scheduled 30 minutes before the real load to catch any new unmapped accounts added that day.</p>
+  </div>
+
+  <div class="scenario">
+    <div class="scenario-label">Scenario 03 · BIP report timeout at scale</div>
+    <h4>Custom Payables extract timing out in direct BIP mode</h4>
+    <p><strong>Problem:</strong> Custom BI Publisher report for accounts payable detail works fine in Fusion but times out in Data Integration's synchronous (direct BIP) mode. Only 20% of data loads.<br><br>
+    <strong>Root cause:</strong> Direct BIP mode has a hard 5-minute synchronous timeout. The AP extract for a large ledger takes 8–12 minutes.<br><br>
+    <strong>Solution:</strong> Switch Execution Method from <code>BIP Report</code> to <code>ESS Job</code>. Create an Enterprise Scheduler Job definition in Fusion wrapping the same BIP report. Set ESS Job Path, Name, and Parameter List in Application Options. The ESS job runs asynchronously — Data Integration polls UCM for up to 6.5 minutes. For extracts exceeding even that, consider partitioning the extract by ledger or period range into multiple smaller integrations.</p>
+  </div>
+
+  <div class="scenario">
+    <div class="scenario-label">Scenario 04 · Snowflake data warehouse as source</div>
+    <h4>Enterprise data warehouse on Snowflake → EPBCS via EPM Agent</h4>
+    <p><strong>Problem:</strong> Finance data platform team built a Snowflake data warehouse aggregating 14 source systems. They want this as the single source for EPM Planning — not individual ERP connections.<br><br>
+    <strong>Solution architecture:</strong> EPM Agent on OCI compute node (close to Snowflake's OCI region). Snowflake JDBC driver (Type 4) added to Agent CUSTOM_CLASS_PATH. Custom SQL query extracts the pre-aggregated planning data by entity, account, and period. Connection string: <code>jdbc:snowflake://&lt;account&gt;.snowflakecomputing.com/?warehouse=PLANNING&role=EPM_READER</code>.<br><br>
+    <strong>Key benefit:</strong> Finance doesn't care which ERP a number came from — they want clean, governed data from the warehouse. One Agent connection replaces 14 ERP connections. Quick Mode Direct Load for performance on large volumes.</p>
+  </div>
+
+  <div class="scenario">
+    <div class="scenario-label">Scenario 05 · Budget writeback to ERP for commitment control</div>
+    <h4>EPM Planning budget → Oracle Cloud ERP GL for budgetary control</h4>
+    <p><strong>Problem:</strong> Oracle Cloud ERP is configured for Budgetary Control (commitment accounting). The approved annual budget from EPBCS must be pushed to ERP GL so purchase order encumbrances are checked against it.<br><br>
+    <strong>Solution:</strong> Writeback integration. Source = EPBCS Plan1 cube (Budget scenario). Target = Oracle Cloud ERP InFusionLedger. Balance Type = Budget. ERP Essbase cube must have budget scenarios pre-configured. Map EPBCS Entity → ERP Company segment, EPBCS Account → ERP Account segment.<br><br>
+    <strong>Common failure:</strong> ERP pre-validation rejects rows where Currency is missing or invalid. Check via ERP General Accounting Dashboard → Correct Budget Import Errors. The Budget Name field must match exactly what is configured in ERP — case-sensitive.</p>
+  </div>
+</div></div>
+
+
+<!-- ══ P9 · FLASHCARDS ══ -->
+<div class="panel" id="p9"><div class="pi">
+  <div class="ph">
+    <div class="ph-tag">Practice · 10 · Flashcards</div>
+    <h1>Flashcards — <em>Click to Flip</em></h1>
+    <p class="ph-sub">30 cards. Navigate with arrows or dots. Mark cards you know — track your progress as you go.</p>
+  </div>
+
+  <div class="fc-toolbar">
+    <div class="fc-progress-text">Card <strong id="fc-cur">1</strong> of <strong id="fc-tot">30</strong> · <span id="fc-known-label" style="color:var(--tel)">0 known</span></div>
+    <div class="fc-controls">
+      <button class="fc-ctrl" onclick="fcShuffle()">⇌ Shuffle</button>
+      <button class="fc-ctrl" onclick="fcReset()">↺ Reset</button>
+    </div>
+  </div>
+
+  <!-- Main card -->
+  <div class="fc-stage" id="fc-stage" onclick="fcFlip()">
+    <div class="fc-stage-inner" id="fc-inner">
+      <div class="fc-face fc-front-face">
+        <div class="fc-category" id="fc-cat">Concept</div>
+        <div class="fc-question" id="fc-q-text">Loading...</div>
+        <div class="fc-tap-hint">Tap to reveal</div>
+      </div>
+      <div class="fc-face fc-back-face">
+        <div class="fc-answer-label">Answer</div>
+        <div class="fc-answer" id="fc-a-text"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dot strip -->
+  <div class="fc-dots" id="fc-dots"></div>
+
+  <!-- Navigation -->
+  <div class="fc-nav">
+    <button class="fc-nav-btn" id="fc-prev" onclick="fcNav(-1)">← Prev</button>
+    <button class="fc-nav-btn fc-know-btn" id="fc-know" onclick="fcMarkKnown()">✓ I know this</button>
+    <span class="fc-known-count"><span id="fc-kc">0</span> / <span id="fc-kt">30</span> known</span>
+    <button class="fc-nav-btn" id="fc-next" onclick="fcNav(1)">Next →</button>
+  </div>
+</div></div>
+
+<!-- ══ P10 · QUIZ ══ -->
+<div class="panel" id="p10"><div class="pi">
+  <div class="ph">
+    <div class="ph-tag">Practice · 11 · Multiple Choice Quiz</div>
+    <h1>Quiz — <em>12 Questions</em></h1>
+    <p class="ph-sub">Select the best answer. Immediate feedback after each question.</p>
+  </div>
+  <div class="quiz-header">
+    <div class="quiz-score-pill">
+      <span class="qsp-num" id="q-correct">0</span>
+      <span class="qsp-total">correct · <span id="q-answered">0</span> of 12 answered</span>
+    </div>
+  </div>
+  <div class="quiz-progress-bar"><div class="quiz-progress-fill" id="q-progress"></div></div>
+  <div id="quiz-container"></div>
+  <div class="disc"><strong>BrainSpring study material.</strong> Always validate against current Oracle documentation for your environment version.</div>
+</div></div>
+
+<!-- ══ P11 · TRUE/FALSE ══ -->
+<div class="panel" id="p11"><div class="pi">
+  <div class="ph">
+    <div class="ph-tag">Practice · 12 · True / False</div>
+    <h1>True / False — <em>20 Statements</em></h1>
+    <p class="ph-sub">Some are common misconceptions. Trust your instincts — then read the explanation.</p>
+  </div>
+  <div class="tf-header">
+    <div class="tf-score-pill">
+      <span class="qsp-num" id="tf-correct">0</span>
+      <span class="qsp-total">correct · <span id="tf-answered">0</span> of 20 answered</span>
+    </div>
+  </div>
+  <div class="tf-progress-bar"><div class="tf-progress-fill" id="tf-progress"></div></div>
+  <div id="tf-container"></div>
+  <div class="disc"><strong>BrainSpring study material.</strong> These target the most common misconceptions in real implementations.</div>
+</div></div>
+
+<!-- ══ P12 · GLOSSARY ══ -->
+<div class="panel" id="p12"><div class="pi">
+  <div class="ph">
+    <div class="ph-tag">Practice · 13 · Glossary</div>
+    <h1>Glossary — <em>Eliot's Definitions</em></h1>
+    <p class="ph-sub">20 key terms. What they mean under the hood, and why they matter in practice. Search or browse — click any term to expand.</p>
+  </div>
+  <div class="gl-search-wrap">
+    <span class="gl-search-icon">🔍</span>
+    <input class="gl-search" type="text" placeholder="Search terms..." id="gl-search" oninput="glFilter(this.value)">
+  </div>
+  <div class="gl-count" id="gl-count">20 terms</div>
+  <div class="gl-grid" id="gl-container"></div>
+  <div class="disc"><strong>BrainSpring study material.</strong> Definitions written for practitioner understanding.</div>
+</div></div>
+
+</div><!-- /panels -->
+</div><!-- /body-wrap -->
+
+<script>
+/* ── NAVIGATION ── */
+const panels=document.querySelectorAll('.panel');
+const sbns=document.querySelectorAll('.sbn');
+function go(i){
+  panels.forEach((p,j)=>{p.classList.toggle('on',i===j);if(i===j)p.scrollTop=0});
+  sbns.forEach((b,j)=>b.classList.toggle('on',i===j));
+  // close sidebar on mobile after nav
+  if(window.innerWidth<=720){
+    document.getElementById('sidebar').classList.remove('open');
+    document.getElementById('overlay').classList.remove('open');
+  }
+}
+function toggleSidebar(){
+  document.getElementById('sidebar').classList.toggle('open');
+  document.getElementById('overlay').classList.toggle('open');
+}
+
+const fcData=[
+  {q:"What is the successor to FDMEE and Data Management in Oracle EPM Cloud?",a:"<strong>Data Integration</strong> — a rebuilt UI on the same data model. All new features ship only here. Data Management was formally deprecated from 23.07."},
+  {q:"Name the four steps in the Data Integration pipeline.",a:"<strong>Import → Validate → Export → Check.</strong> Import stages data, Validate applies mappings, Export loads the cube, Check runs Business Rules."},
+  {q:"Why does an SSO-enabled ERP account fail in Data Integration?",a:"Data Integration authenticates via <strong>direct username/password REST API calls</strong>. SSO/federated accounts authenticate via the browser identity provider — they cannot authenticate via API."},
+  {q:"What HTTP status code indicates an IP Firewall / Allowlist problem?",a:"<strong>HTTP 403 (Forbidden)</strong> — the ERP knows your credentials are valid but is blocking your IP. HTTP 401 = wrong credentials (authentication). Know the difference."},
+  {q:"What is the member mapping priority order (highest to lowest)?",a:"<strong>Explicit → In → Between → Like.</strong> Explicit always wins regardless of rule order. An account matching both Explicit and Like will always use Explicit."},
+  {q:"What output format is required for custom BI Publisher extracts?",a:"<strong>CSV only.</strong> All other formats (Excel, XML, PDF) cause integration failure when EPM tries to read the BIP output file."},
+  {q:"What is the maximum wait time for a synchronous BIP Report execution?",a:"<strong>30 seconds</strong> with 3 retries. For longer extracts, switch to <strong>ESS Job</strong> mode which supports up to 6.5 minutes (12 retries at escalating intervals)."},
+  {q:"Where is ACTUAL writeback data written in Oracle Cloud ERP?",a:"To the <strong>GL Journal Interface table (GL_INTERFACE)</strong>. The ImportJournals ESS job then posts these as actual journal entries in Oracle General Ledger."},
+  {q:"Where is BUDGET writeback data written in Oracle Cloud ERP?",a:"<strong>Directly to the ERP Essbase cube</strong> — not via the journal interface. The ERP Essbase cube and budget scenarios must already be configured in ERP."},
+  {q:"What does Quick Mode (Direct Load) remove from the normal pipeline?",a:"<strong>TDATASEG staging tables</strong> and the Validate step. This means <strong>no Workbench data, no drill-through</strong>. Significantly faster for high-volume loads."},
+  {q:"The Essbase 1200766 error (1M cell limit) — can it be increased?",a:"<strong>No.</strong> It is hard-coded in ERP Fusion Cloud. Cannot be changed by Oracle Support or configuration. Only solution: narrow source filters to reduce cells returned per run."},
+  {q:"What happens if a custom BIP application's CSV header changes after registration?",a:"<strong>Silent data corruption.</strong> Data extracts into wrong dimensions with no error thrown. Always re-register the application when the BIP report's column structure changes."},
+  {q:"What is the EPM Integration Agent's security model for credentials?",a:"Credentials are stored <strong>securely in Cloud EPM</strong>, not on the agent server. The Agent polls cloud for jobs — it does not expose any inbound ports. Credentials never touch the local machine."},
+  {q:"What EPMAutomate command supports Quick Mode exports?",a:"<strong>None.</strong> Quick Mode exports require the <code>runIntegration</code> REST API with <code>importMode: DIRECT</code> and <code>exportMode: REPLACE</code>. EPMAutomate's runDataRule does not support Quick Mode."},
+  {q:"What does 'BEGIN: Process Log From the Ess Job' in a DI log indicate?",a:"The error <strong>originated in ERP Fusion</strong>, not in EPM Data Integration. Contact ERP Support first. Download the referenced XXXXXXX.log from ERP Scheduled Processes to diagnose."},
+  {q:"What is TDATASEG?",a:"The <strong>staging database table</strong> where Data Integration stores source data after import, before mapping and export. Quick Mode bypasses this table for performance. It is the foundation of Workbench and drill-through."},
+  {q:"What is the Pipeline feature in Data Integration?",a:"A <strong>visual multi-step orchestration tool</strong> (available from 23.06) that sequences Stages of Jobs (Integrations, Business Rules, Emails, ESS Jobs) across any Cloud EPM instance. Replaces legacy Batch feature."},
+  {q:"What are the three Workflow Mode options?",a:"<strong>Full</strong> (all events + drill), <strong>Full No Archive</strong> (all events, TDATASEG deleted after load, no drill), <strong>Simple</strong> (Import + Export only, no validations, no Workbench)."},
+  {q:"How does the EPM Agent connect to Snowflake?",a:"Via a <strong>Type 4 JDBC driver</strong>. The Snowflake JDBC jar is added to the Agent's CUSTOM_CLASS_PATH in agentparams.ini. Any source supporting a Type 3 or 4 JDBC driver is compatible."},
+  {q:"What is UCM in the context of BIP/ESS Job integrations?",a:"<strong>Universal Content Manager</strong> — Oracle Fusion's file repository. When an ESS Job completes, it uploads the CSV output to UCM. Data Integration then polls UCM to retrieve the file. If the file never reaches UCM, the integration fails."},
+  {q:"What is Dry Run mode in FCCS Data Integration?",a:"Validates the data load <strong>without actually writing to the cube</strong>. Uses the <code>importdataslice</code> API. Stops after 99 errors detected. Run before the real load on close day to surface mapping problems early."},
+  {q:"What is the iLvl0 source filter?",a:"A default source filter that returns only <strong>Level 0 (leaf) members</strong> — the lowest members in the dimension hierarchy that hold actual data values. Default applied to all dimensions in new integrations."},
+  {q:"What is the key difference between 'Stored Data Only' and 'All Data' in Quick Mode export?",a:"<strong>Stored Data Only</strong>: extracts stored values, excludes dynamically calculated values. <strong>All Data</strong>: extracts stored values + dynamically calculated values for both Dense and Sparse dimensions."},
+  {q:"When using the EPM Agent on an OCI compute node, how do you reach on-premises resources?",a:"Via <strong>Dynamic Routing Gateway (DRG) and VPN</strong> connecting OCI to the on-premises network. The Agent can also connect natively to Autonomous Data Warehouse (ADW) and ATP without extra configuration."},
+  {q:"What is the Application Filter in ERP Application registration?",a:"An optional filter that limits which ledger applications import from ERP. Without it, <strong>all GL ledgers</strong> import. With a filter (e.g. <code>InFusionLedger</code>), only matching ledgers are imported — reducing clutter."},
+  {q:"Name three job types available in a Data Integration Pipeline.",a:"<strong>Integration, Business Rule, Email notification, Copy file to/from Object Store, Open Batch, ESS Job (ERP Cloud), Clear Data, Export Dimension by Name (EDMCS).</strong>"},
+  {q:"What is the Drill Region in Data Integration?",a:"A defined set of dimension members within which drill-through queries will execute. Defining a <strong>Custom Drill Region</strong> limits query scope — prevents timeouts when the application has too many members in the drill path."},
+  {q:"What is the 'copysource' expression used for?",a:"A performance optimisation that copies the source value to a target dimension <strong>without going through the full mapping evaluation engine</strong>. Faster than wildcard mapping for dimensions where source and target member names are identical."},
+  {q:"What does 'Application Update' do for ERP applications?",a:"Re-synchronises the registered ERP application — re-imports Period Mappings and refreshes the application metadata from ERP. <strong>Required any time new periods are added in ERP</strong> to make them available in Data Integration."},
+  {q:"In FCCS, what happens when Business Rules are configured in the 'Check' position of a data load?",a:"<strong>Consolidation executes for each entity</strong> after data loads. This can be very slow if many entities are loading. Better practice: configure consolidation as a separate Pipeline Stage that runs after all entities complete loading."}
+];
+
+
+/* ═══════════════════════════════════
+   FLASHCARD ENGINE
+   ═══════════════════════════════════ */
+let fcIdx=0;
+const fcKnown=new Set();
+let fcOrder=[...Array(fcData.length).keys()];
+
+const categories=['Architecture','Architecture','ERP Setup','ERP Setup','Mapping','Extracts','Extracts','Writeback','Writeback','Performance','Troubleshooting','Extracts','FCCS','Advanced','Troubleshooting','Core Concept','Pipeline','Performance','Architecture','Extracts','FCCS','Architecture','Performance','Architecture','ERP Setup','Pipeline','Troubleshooting','Performance','ERP Setup','FCCS'];
+
+function fcRender(){
+  const idx=fcOrder[fcIdx];
+  const d=fcData[idx];
+  document.getElementById('fc-q-text').innerHTML=d.q;
+  document.getElementById('fc-a-text').innerHTML=d.a;
+  document.getElementById('fc-cat').textContent=categories[idx]||'Concept';
+  document.getElementById('fc-cur').textContent=fcIdx+1;
+  document.getElementById('fc-tot').textContent=fcOrder.length;
+  document.getElementById('fc-kc').textContent=fcKnown.size;
+  document.getElementById('fc-kt').textContent=fcData.length;
+  document.getElementById('fc-known-label').textContent=fcKnown.size+' known';
+  // reset flip
+  document.getElementById('fc-stage').classList.remove('flipped');
+  // update know button
+  const kb=document.getElementById('fc-know');
+  if(fcKnown.has(idx)){kb.textContent='★ Known';kb.style.background='rgba(26,174,144,0.2)';}
+  else{kb.textContent='✓ I know this';kb.style.background='';}
+  // update nav buttons
+  document.getElementById('fc-prev').disabled=fcIdx===0;
+  document.getElementById('fc-next').disabled=fcIdx===fcOrder.length-1;
+  // dots
+  const dots=document.getElementById('fc-dots');
+  dots.innerHTML='';
+  fcOrder.forEach((_,i)=>{
+    const d2=document.createElement('div');
+    d2.className='fc-dot'+(i===fcIdx?' current':fcKnown.has(fcOrder[i])?' known':i<fcIdx?' seen':'');
+    d2.title=`Card ${i+1}`;
+    d2.onclick=(e)=>{e.stopPropagation();fcIdx=i;fcRender()};
+    dots.appendChild(d2);
+  });
+}
+function fcFlip(){document.getElementById('fc-stage').classList.toggle('flipped')}
+function fcNav(dir){
+  fcIdx=Math.max(0,Math.min(fcOrder.length-1,fcIdx+dir));
+  fcRender();
+}
+function fcMarkKnown(){
+  const idx=fcOrder[fcIdx];
+  if(fcKnown.has(idx))fcKnown.delete(idx);
+  else fcKnown.add(idx);
+  fcRender();
+  if(fcIdx<fcOrder.length-1)setTimeout(()=>fcNav(1),300);
+}
+function fcShuffle(){
+  for(let i=fcOrder.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));
+    [fcOrder[i],fcOrder[j]]=[fcOrder[j],fcOrder[i]];
+  }
+  fcIdx=0;fcRender();
+}
+function fcReset(){fcKnown.clear();fcOrder=[...Array(fcData.length).keys()];fcIdx=0;fcRender();}
+// init flashcards when first entering panel
+document.querySelector('[onclick="go(9)"]').addEventListener('click',()=>setTimeout(fcRender,50));
+fcRender();
+
+/* ═══════════════════════════════════
+   QUIZ ENGINE
+   ═══════════════════════════════════ */
+const quizData=[
+  {n:'Q01',mod:'Module 03',q:'What type of ERP service account is required for Oracle Cloud ERP integration in Data Integration?',opts:['A) Any SSO-enabled federated identity account','B) Non-SSO native ERP account with a GL job role','C) Any active ERP user account','D) System Administrator only'],ans:1,fb:{c:'Correct. Data Integration authenticates via direct REST API calls using username/password. SSO/federated accounts require a browser-based identity provider — they cannot authenticate via API.',w:'The account must be a non-SSO native ERP account. Federated accounts fail at API authentication even though they work in a browser.'}},
+  {n:'Q02',mod:'Module 07',q:'An HTTP 403 in the Process Log during ERP initialisation most likely indicates what?',opts:['A) Wrong ERP password','B) Missing GL job role on service account','C) IP Firewall / Allowlist blocking EPM Cloud IPs','D) ERP pod is down'],ans:2,fb:{c:'Correct. HTTP 403 = Forbidden — the ERP knows your identity but your IP is blocked by the network firewall / allowlist configuration.',w:'HTTP 403 specifically means an IP Firewall / Allowlist issue. HTTP 401 would indicate credential failure.'}},
+  {n:'Q03',mod:'Module 05',q:'For a custom BI Publisher extract, which output format must be selected?',opts:['A) Excel (XLSX)','B) XML','C) CSV','D) PDF'],ans:2,fb:{c:'Correct. Only CSV format is supported. All other formats (Excel, XML, PDF) cause failure when Data Integration reads the BIP output file.',w:'Only CSV format works. Check the Output Formats setting in your BI Publisher report layout.'}},
+  {n:'Q04',mod:'Module 08',q:'What is NOT available in Quick Mode (Direct Load)?',opts:['A) Expressions for dimension mapping','B) Workbench data and drill-through','C) High-volume data import','D) File-based source loads'],ans:1,fb:{c:'Correct. Quick Mode bypasses TDATASEG staging and the Validate step — no Workbench data, no drill-through. Expressions remain fully supported.',w:'Quick Mode does support expressions. What it removes is Workbench data staging and drill-through capability.'}},
+  {n:'Q05',mod:'Module 06',q:'When writing back ACTUAL data from EPM to Oracle Cloud ERP GL, where does the data land?',opts:['A) Directly into ERP Essbase cube','B) GL Journal Interface table (GL_INTERFACE), creating journal entries','C) UCM staging file','D) TDATASEG table in Data Integration'],ans:1,fb:{c:'Correct. Actuals writeback goes to GL_INTERFACE. The ImportJournals ESS job then creates posted journal entries in Oracle General Ledger.',w:'Budget writeback goes to ERP Essbase directly. Actuals writeback goes to the GL Journal Interface table (GL_INTERFACE).'}},
+  {n:'Q06',mod:'Module 07',q:'Essbase error 1200766 ("query result cells exceeds the limit [1000000]") — correct resolution?',opts:['A) Raise a Support request to increase the limit','B) Increase Batch Size in System Settings','C) Narrow source filters to reduce cells returned per run','D) Switch to native import'],ans:2,fb:{c:'Correct. The 1M cell limit is hard-coded in ERP Fusion Cloud — it cannot be changed by anyone. Only fix: narrow source filters to reduce cells per run.',w:'The limit is hard-coded and cannot be changed by Oracle Support or configuration. Narrow your source filters.'}},
+  {n:'Q07',mod:'Module 04',q:'In the member mapping rule priority order, which type always wins?',opts:['A) Like (wildcard)','B) Between (range)','C) Explicit (exact match)','D) In (list)'],ans:2,fb:{c:'Correct. Explicit always wins, regardless of rule creation order. Priority: Explicit → In → Between → Like.',w:'Explicit has the highest priority. Order: Explicit → In → Between → Like.'}},
+  {n:'Q08',mod:'Module 05',q:'A custom BIP application is registered using a sample CSV. The report is later modified to add two new columns without re-registration. What happens?',opts:['A) Integration fails immediately with an error','B) New columns auto-added to the dimension list','C) Data extracts silently into wrong dimensions — no error thrown','D) Integration runs normally, ignoring new columns'],ans:2,fb:{c:'Correct. The dimension list locks at registration time. Header changes without re-registration cause silent data corruption — no error is thrown.',w:'No error is thrown. Data lands in wrong dimensions silently — a serious data integrity failure.'}},
+  {n:'Q09',mod:'Module 02',q:'The EPM Integration Agent stores connectivity credentials where?',opts:['A) In agentparams.ini on the local server','B) Securely in Cloud EPM — not on the agent server','C) In an encrypted file in EPMAgentData folder','D) In Oracle Vault service'],ans:1,fb:{c:'Correct. Credentials are stored securely in Cloud EPM. The Agent polls cloud — credentials never touch the local server. Deliberate security design.',w:'Credentials are stored in Cloud EPM, not on the agent server. This is a deliberate security architecture choice.'}},
+  {n:'Q10',mod:'Module 08',q:'Which EPMAutomate command supports Quick Mode (Direct Load)?',opts:['A) runDataRule with --quickMode flag','B) runBatch with DIRECT import mode','C) Neither — use the runIntegration REST API with importMode: DIRECT','D) runIntegration EPMAutomate command with QUICK flag'],ans:2,fb:{c:'Correct. EPMAutomate\'s runDataRule does not support Quick Mode. Use the runIntegration REST API with importMode: DIRECT.',w:'No EPMAutomate command supports Quick Mode. You must use the runIntegration REST API.'}},
+  {n:'Q11',mod:'Module 04',q:'Period Mappings for Oracle Cloud ERP are automatically imported on registration. Which statement is TRUE?',opts:['A) You can still manually add Application Period Mappings in the new UI','B) Application Mappings cannot be added manually — create Source Mappings for custom alignment','C) Period mappings are never automatic — always manual','D) Period mappings only apply to budget scenarios'],ans:1,fb:{c:'Correct. Application Period Mappings auto-import and cannot be manually added in the new Data Integration UI. Use Source Mappings for custom period alignment.',w:'Application Mappings for ERP Periods are auto-imported and cannot be manually added in the new UI.'}},
+  {n:'Q12',mod:'Module 07',q:'Process Log shows "BEGIN: Process Log From the Ess Job" referencing a .log file. Which support team do you contact FIRST?',opts:['A) EPM Data Integration Support','B) ERP Support — error originated in Oracle Fusion, not EPM','C) Oracle Identity Cloud Service Support','D) Oracle Integration Cloud Support'],ans:1,fb:{c:'Correct. That log pattern means the error originated in Oracle Fusion\'s ESS job. Contact ERP Support first — not EPM DI Support.',w:'"BEGIN: Process Log From the Ess Job" = ERP-side error. Contact ERP Support first.'}}
+];
+
+const qState={};let qCorrect=0,qAnswered=0;
+function buildQuiz(){
+  const c=document.getElementById('quiz-container');
+  const letters=['A','B','C','D'];
+  quizData.forEach((q,qi)=>{
+    const id='q'+qi;
+    const card=document.createElement('div');
+    card.className='qcard';card.id='qcard-'+qi;
+    const opts=q.opts.map((o,oi)=>`
+      <button class="qo" onclick="qAnswer(${qi},${oi})">
+        <span class="qo-letter">${letters[oi]}</span>
+        <span>${o.substring(3)}</span>
+      </button>`).join('');
+    card.innerHTML=`
+      <div class="qcard-head">
+        <div class="qcard-meta">
+          <span class="qnum-pill">${q.n}</span>
+          <span class="qmodule-pill">${q.mod}</span>
+        </div>
+        <div class="qq">${q.q}</div>
+      </div>
+      <div class="qcard-body">
+        <div class="qopts" id="qopts-${qi}">${opts}</div>
+        <div class="qfb" id="qfb-${qi}"></div>
+      </div>`;
+    c.appendChild(card);
+  });
+}
+function qAnswer(qi,oi){
+  if(qState[qi]!==undefined)return;
+  const correct=quizData[qi].ans;
+  const isC=oi===correct;
+  qState[qi]=isC;
+  document.querySelectorAll(`#qopts-${qi} .qo`).forEach((btn,bi)=>{
+    if(bi===oi)btn.classList.add(isC?'c':'w');
+    else if(bi===correct&&!isC)btn.classList.add('c');
+    else btn.classList.add('reveal');
+    btn.style.pointerEvents='none';
+  });
+  const fb=document.getElementById('qfb-'+qi);
+  const msg=isC?quizData[qi].fb.c:quizData[qi].fb.w;
+  fb.innerHTML=`<span class="qfb-icon">${isC?'✓':'✗'}</span><span>${msg}</span>`;
+  fb.className='qfb show '+(isC?'c':'w');
+  document.getElementById('qcard-'+qi).classList.add(isC?'answered-c':'answered-w');
+  qAnswered++;if(isC)qCorrect++;
+  document.getElementById('q-correct').textContent=qCorrect;
+  document.getElementById('q-answered').textContent=qAnswered;
+  document.getElementById('q-progress').style.width=(qAnswered/12*100)+'%';
+}
+buildQuiz();
+
+/* ═══════════════════════════════════
+   TRUE/FALSE ENGINE
+   ═══════════════════════════════════ */
+const tfData=[
+  {s:"Data Integration and Data Management share the same underlying data model.",a:true,f:"True. Data Integration is a new UI built on top of the existing Data Management data model. All Data Load Rules and mappings created in Data Management are visible in Data Integration."},
+  {s:"An SSO-enabled ERP account can be used for the Data Integration source connection.",a:false,f:"False. Data Integration makes direct REST API calls using username/password. SSO/federated accounts require browser-based identity provider redirects — they cannot authenticate via API."},
+  {s:"The EPM Integration Agent stores connectivity credentials on the local agent server.",a:false,f:"False. Credentials are stored securely in Cloud EPM. The Agent polls cloud for jobs — credentials never reside on the agent machine. This is a deliberate security design choice."},
+  {s:"Quick Mode (Direct Load) supports drill-through to source data.",a:false,f:"False. Quick Mode bypasses the TDATASEG staging tables that power Workbench and drill-through. No Workbench data, no drill-through. Trade-off for significantly faster load times."},
+  {s:"The EPMAutomate runDataRule command supports Quick Mode.",a:false,f:"False. Quick Mode requires the runIntegration REST API with importMode: DIRECT. EPMAutomate's runDataRule does not support Quick Mode. This is a common implementation mistake."},
+  {s:"Custom BIP application dimension lists are re-evaluated automatically when the report header changes.",a:false,f:"False. The dimension list is locked at registration time based on the original CSV header. If the report structure changes without re-registration, data silently maps to wrong dimensions with no error thrown."},
+  {s:"Application Period Mappings for Oracle Cloud ERP are imported automatically and cannot be added manually in the new Data Integration UI.",a:true,f:"True. Period Mappings auto-import when the ERP application is initialised. The new Data Integration UI has removed the ability to add them manually. Use Source Mappings for custom period alignment."},
+  {s:"The 1,000,000 cell limit (Essbase error 1200766) can be increased by submitting a Service Request to Oracle Support.",a:false,f:"False. This limit is hard-coded in ERP Fusion Cloud. It cannot be increased by Oracle Support, configuration, or any other means. The only solution is narrower source filters."},
+  {s:"HTTP 401 and HTTP 403 errors in Data Integration Process Logs have different root causes.",a:true,f:"True. HTTP 401 = authentication failure (wrong password or SSO account). HTTP 403 = authorisation failure (IP Firewall/Allowlist blocking EPM Cloud IPs). Different problems requiring different fixes."},
+  {s:"The Explicit mapping rule type has lower priority than the Between (range) type.",a:false,f:"False. Explicit has the HIGHEST priority. The order is: Explicit → In → Between → Like. An account matching both an Explicit and a Between rule will always use the Explicit mapping."},
+  {s:"When writing back budget data from EPM to Oracle Cloud ERP, the data goes to the GL Journal Interface table.",a:false,f:"False. Budget writeback goes DIRECTLY to the ERP Essbase cube, not the GL Interface. Actuals writeback goes to GL_INTERFACE. These are two fundamentally different destination mechanisms."},
+  {s:"The EPM Integration Agent can connect to Snowflake as a data source.",a:true,f:"True. Snowflake provides a Type 4 JDBC driver. Add the Snowflake JDBC jar to the Agent's CUSTOM_CLASS_PATH in agentparams.ini. Any JDBC Type 3 or 4 compatible source works with the Agent."},
+  {s:"A Pipeline Stage's jobs execute sequentially, one after another.",a:false,f:"False. Jobs WITHIN a Stage execute in PARALLEL. Stages execute serially. Design stages to group jobs that can run simultaneously, and sequence stages based on dependencies."},
+  {s:"Direct BIP mode (synchronous) for custom ERP extracts has a maximum timeout of 5 minutes.",a:false,f:"False. The synchronous BIP timeout is 30 SECONDS (with 3 retries). For extracts needing more time, switch to ESS Job mode which allows up to approximately 6.5 minutes."},
+  {s:"The Drill URL for an ERP Source Connection is set manually in the new Data Integration UI.",a:false,f:"False. The Drill URL is automatically determined upon registration in the new Data Integration UI. The option to manually add or modify it has been removed. If a wrong URL was set in classic Data Management, delete and recreate the source system."},
+  {s:"Data Integration supports writeback to on-premises databases using the EPM Integration Agent.",a:true,f:"True. The Agent supports write-back using BefExport and AftExport event scripts. When integration executes, the Agent downloads export data and constructs INSERT statements to load data to the target on-premises table."},
+  {s:"FCCS Dry Run mode actually loads data to the cube while checking for errors.",a:false,f:"False. Dry Run mode validates WITHOUT loading to the cube. It uses the importdataslice API in validation-only mode and stops after 99 errors are detected. Use it before the real load to surface problems safely."},
+  {s:"The EPM Integration Agent's pre/post process scripting supports both Python (Jython) and Groovy.",a:true,f:"True. The Agent's scripting engine supports both Jython (Python) and Groovy scripts. This enables complex logic, REST API calls, file manipulation, and custom pre/post-processing without external middleware."},
+  {s:"New features in Oracle EPM Data Integration are back-ported to Data Management for parity.",a:false,f:"False. Oracle has confirmed that all new features ship only in Data Integration and will NOT be back-ported to Data Management. Only critical bug fixes and security patches are still applied to Data Management."},
+  {s:"In FCCS, loading data to YTD_Input in the View dimension is the correct approach for YTD Income Statement data.",a:true,f:"True. For Income Statement YTD data in FCCS, load to YTD_Input in the View dimension. For DSO-enabled applications, YTD is computed via Member Formulas on-the-fly. For non-DSO, YTD is computed during consolidation."}
+];
+
+
+let tfCorrect=0,tfAnswered=0;
+const tfState={};
+function buildTF(){
+  const c=document.getElementById('tf-container');
+  tfData.forEach((d,i)=>{
+    const card=document.createElement('div');
+    card.className='tf-card';card.id='tf-card-'+i;
+    card.innerHTML=`
+      <div class="tf-card-head">
+        <div class="tf-meta"><span class="tf-num-pill">Statement ${String(i+1).padStart(2,'0')}</span></div>
+        <div class="tf-stmt">${d.s}</div>
+      </div>
+      <div class="tf-card-body">
+        <div class="tf-btns">
+          <button class="tf-btn true-btn" onclick="tfAnswer(${i},true)">✓ True</button>
+          <button class="tf-btn false-btn" onclick="tfAnswer(${i},false)">✗ False</button>
+        </div>
+        <div class="tf-fb" id="tf-fb-${i}"></div>
+      </div>`;
+    c.appendChild(card);
+  });
+}
+function tfAnswer(i,choice){
+  if(tfState[i]!==undefined)return;
+  const correct=tfData[i].a;
+  const isC=choice===correct;
+  tfState[i]=isC;
+  const card=document.getElementById('tf-card-'+i);
+  card.querySelectorAll('.tf-btn').forEach(b=>{
+    b.style.pointerEvents='none';
+    b.classList.add('disabled');
+  });
+  const chosen=card.querySelector(choice?'.true-btn':'.false-btn');
+  chosen.classList.remove('disabled');
+  chosen.classList.add(isC?'selected-correct':'selected-wrong');
+  const fb=document.getElementById('tf-fb-'+i);
+  fb.innerHTML=`<span class="tf-fb-icon">${isC?'✓':'✗'}</span><span>${(isC?'Correct — ':'Incorrect — ')+tfData[i].f}</span>`;
+  fb.className='tf-fb show '+(isC?'c':'w');
+  card.classList.add(choice?'answered-t':'answered-f');
+  tfAnswered++;if(isC)tfCorrect++;
+  document.getElementById('tf-correct').textContent=tfCorrect;
+  document.getElementById('tf-answered').textContent=tfAnswered;
+  document.getElementById('tf-progress').style.width=(tfAnswered/20*100)+'%';
+}
+buildTF();
+
+/* ═══════════════════════════════════
+   GLOSSARY ENGINE
+   ═══════════════════════════════════ */
+const glData=[
+  {t:"Data Integration",d:"The next-generation ETL+ platform embedded in Oracle EPM Cloud. Replaces legacy Data Management (FDMEE). Provides a four-step pipeline (Import → Validate → Export → Check) connecting any source to any EPM business process. All new features ship here only.",e:"Think of it as the OS running under the hood of every data load. You might only see the UI, but this is what's actually executing."},
+  {t:"FDMEE (Financial Data Management Enterprise Edition)",d:"The on-premises predecessor to Data Integration. A standalone application that sat between source systems and Hyperion/EPM environments. Now replaced by EPM Cloud Data Integration + the EPM Integration Agent for cloud customers.",e:"FDMEE was the middleman nobody liked but everyone needed. The Agent is what killed it — in a good way."},
+  {t:"EPM Integration Agent",d:"A lightweight executable installed on-premises (or on an OCI compute node) that extends Cloud EPM connectivity to any JDBC-compatible on-premises or cloud database. Polls Cloud EPM for jobs. Credentials stay in the cloud. Supports SQL queries, flat files, and pre/post scripting.",e:"It's not a server that listens. It's a client that polls. That's the difference that matters for security architecture."},
+  {t:"TDATASEG",d:"The staging database table in Data Integration where source data is loaded after import, before mapping and export to the target cube. Powers Workbench audit viewing and drill-through. Quick Mode bypasses this table for performance.",e:"TDATASEG is the paper trail. Quick Mode shreds the paper. Faster, but you lose the audit trail."},
+  {t:"Quick Mode (Direct Load)",d:"An integration execution mode that bypasses the TDATASEG staging tables and the Validate step. Dramatically faster for high-volume loads. Trade-off: no Workbench data, no drill-through capability. Expressions still supported. Cannot be triggered via EPMAutomate — requires REST API.",e:"Quick Mode is like shipping freight without the customs inspection. Faster. But if something's wrong, you won't find it until it's in the warehouse."},
+  {t:"Workflow Mode",d:"Controls which pipeline steps execute and what data is retained. Full: all events + TDATASEG populated + drill-through. Full No Archive: all events but TDATASEG deleted after load, no drill. Simple: Import + Export only, no validations, no Workbench.",e:"Choose your workflow mode based on what you need to audit. Don't use Full mode for high-volume loads if you don't need the Workbench data."},
+  {t:"Pipeline",d:"Multi-step orchestration feature (available from 23.06) that sequences Stages of Jobs — Integrations, Business Rules, Emails, ESS Jobs — across any Cloud EPM instance. Stages execute serially. Jobs within a Stage execute in parallel. Replaces the legacy Batch feature.",e:"The Pipeline is the thing that makes EPM Cloud feel like a real automation platform. Not just a data loader with a scheduler."},
+  {t:"UCM (Universal Content Manager)",d:"Oracle Fusion's internal file repository system. When a BIP Report or ESS Job completes, it uploads its CSV output file to UCM. Data Integration polls UCM to retrieve this file for processing. UCM access issues cause 'Read timed out' errors.",e:"UCM is the intermediary nobody thinks about until the file doesn't show up. Check it when your ESS job succeeds but DI says it can't find the file."},
+  {t:"ESS Job (Oracle Enterprise Scheduler)",d:"Oracle Fusion's job scheduling framework. In the context of Data Integration, used to run BI Publisher reports asynchronously — overcoming the 5-minute synchronous BIP timeout. ESS jobs upload output to UCM. Data Integration polls UCM. Total wait: up to 6.5 minutes.",e:"ESS is ERP's way of saying 'this takes longer than 30 seconds, trust me, I'll send you a file when I'm done'."},
+  {t:"GL_INTERFACE",d:"The Oracle General Ledger journal interface table in ERP Fusion. This is the destination for Actuals writeback from EPM. The ImportJournals ESS job reads GL_INTERFACE and creates posted journal entries in Oracle GL. Missing required fields cause ORA-01400 NULL errors.",e:"GL_INTERFACE is the loading dock for the General Ledger. If your truck doesn't have all the required manifest fields, it gets turned away."},
+  {t:"Period Mapping",d:"Configuration that aligns ERP fiscal periods with EPM periods. Source Mapping handles custom period name translation. Application Mapping auto-imports from ERP on registration and cannot be manually added in the new UI. Essential when ERP and EPM use different calendar naming conventions.",e:"If your ERP says 'Dec-22' and your EPM says 'FY22-Dec', someone has to translate. That's Period Mapping. Get it wrong and you load last quarter's actuals into this quarter."},
+  {t:"Category Mapping",d:"Maps ERP ledger categories (e.g. 'Actual', 'Budget') to EPM Scenario dimension members (e.g. 'Current', 'Plan'). Configured in Actions → Category Mapping. Defines the semantic translation between ERP financial categories and EPM planning scenarios.",e:"Category Mapping is where 'Actual' in ERP becomes 'Current' in EPM. Or doesn't, if you forget to set it up."},
+  {t:"Explicit Mapping",d:"The highest-priority member mapping rule type. Maps a specific source value to a specific target member. Overrides all other rule types regardless of creation order. Use for: exceptions, overrides, known one-to-one correspondences.",e:"Explicit is the VIP pass. It skips all the queues. Whatever else might match, Explicit wins."},
+  {t:"iLvl0 (Level 0 Filter)",d:"Default source filter applied to all dimensions in new integrations. Selects only Level 0 (leaf) members — the lowest members in the hierarchy that hold actual data values. These are the only members with stored values in the source system.",e:"You don't sum at the dimension level in the source. You load the leaves and let EPM do the aggregation. iLvl0 makes sure you're getting the right data."},
+  {t:"Dry Run Mode",d:"FCCS-specific feature (22.09) that validates a data load without writing to the cube. Uses the importdataslice API in validation-only mode. Stops after 99 errors. Essential for close-day validation before the actual load.",e:"Dry Run is like a dress rehearsal. It finds your unmapped members and bad data before they corrupt the live cube."},
+  {t:"Drill Region",d:"The set of dimension members within which drill-through queries execute. Define a Custom Drill Region to scope and limit drill query performance. Too many members in the Drill Region causes timeouts and failure.",e:"Drill Region is your access control for auditors drilling to source data. Too broad = performance problems. Too narrow = incomplete audit trail."},
+  {t:"BIP (BI Publisher)",d:"Oracle's embedded reporting tool in Fusion Cloud. Used in Data Integration for custom data extracts beyond the standard GL balance queries. Reports must be saved in the Custom folder, output as CSV, and have at least one bind parameter. Used in sync (direct) or async (ESS Job) mode.",e:"BIP is the query tool Oracle gave you because they knew you'd eventually need data they didn't package for you. Use it, but understand the timeout constraints."},
+  {t:"DAD (Data Access Driver)",d:"The connectivity driver used by the EPM Integration Agent to connect to JD Edwards EnterpriseOne. A specific JDBC adapter that accesses JDE's business data without requiring direct SQL access to the underlying Oracle database.",e:"JDE doesn't let you just write SQL against its tables. DAD is the polite door. The JDE database is the locked one you don't go through directly."},
+  {t:"Application Update",d:"An operation in Data Integration that re-synchronises a registered ERP application — re-imports Period Mappings and refreshes application metadata from ERP. Must be run any time new periods are added in ERP Fusion to make them available in Data Integration.",e:"If your periods are missing in DI, run Application Update before you do anything else. It's the 'sync' button."},
+  {t:"copysource Expression",d:"A performance optimisation expression in Data Integration that copies the source dimension value directly to the target without going through the full mapping evaluation engine. Faster than wildcard matching for dimensions where source and target member names are identical.",e:"When source and target dimension values are the same, why run the matching engine? copysource tells it to skip the logic and just copy. It's the fastest mapping there is."}
+];
+
+
+function buildGlossary(data){
+  const c=document.getElementById('gl-container');
+  c.innerHTML='';
+  if(!data.length){c.innerHTML='<div class="gl-no-results">No terms match your search.</div>';return;}
+  document.getElementById('gl-count').textContent=data.length+' term'+(data.length!==1?'s':'');
+  data.forEach((d,i)=>{
+    const entry=document.createElement('div');
+    entry.className='gl-entry';
+    const letter=d.t.charAt(0).toUpperCase();
+    entry.innerHTML=`
+      <div class="gl-entry-head" onclick="glToggle(this.parentElement)">
+        <div class="gl-term-wrap">
+          <div class="gl-letter">${letter}</div>
+          <div class="gl-term">${d.t}</div>
+        </div>
+        <div class="gl-chevron">▾</div>
+      </div>
+      <div class="gl-body">
+        <div class="gl-def-text">${d.d}</div>
+        <div class="gl-eliot-wrap">
+          <span class="gl-eliot-icon">👤</span>
+          <div class="gl-eliot-txt"><strong>Eliot:</strong> "${d.e}"</div>
+        </div>
+      </div>`;
+    c.appendChild(entry);
+  });
+}
+function glToggle(entry){entry.classList.toggle('open')}
+function glFilter(q){
+  const lq=q.toLowerCase();
+  const filtered=q?glData.filter(d=>d.t.toLowerCase().includes(lq)||d.d.toLowerCase().includes(lq)||d.e.toLowerCase().includes(lq)):glData;
+  buildGlossary(filtered);
+}
+buildGlossary(glData);
+
+</script>
+</body>
+</html>
