@@ -1,0 +1,1062 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EPM Automate CLI Reference — The Planning Quest</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Crimson+Pro:ital,wght@0,400;0,500;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ── Inline shared CSS vars ── */
+:root{--bg:#07090e;--bg2:#0c0f18;--bg3:#111520;--bg4:#161c2a;--gold:#d4a017;--goldLt:#f0c040;--goldDim:#5c4108;--teal:#1fb8a8;--tealLt:#4dd9c8;--purple:#7c3aed;--purpleLt:#a855f7;--emerald:#059669;--emeraldLt:#10b981;--sky:#0ea5e9;--skyLt:#38bdf8;--red:#c0392b;--redLt:#e74c3c;--amber:#d97706;--amberLt:#fbbf24;--rose:#be185d;--roseLt:#f472b6;--border:rgba(212,160,23,.15);--white:#f0ead6;--dim:#5a6478;--r:10px}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Crimson Pro',serif;background:var(--bg);color:var(--white);min-height:100vh;overflow-x:hidden}
+#stars{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+.star{position:absolute;border-radius:50%;background:white;animation:twinkle var(--d,3s) infinite var(--delay,0s)}
+@keyframes twinkle{0%,100%{opacity:.05}50%{opacity:var(--op,.6)}}
+@keyframes glow{0%,100%{text-shadow:0 0 20px rgba(212,160,23,.3)}50%{text-shadow:0 0 50px rgba(212,160,23,.55)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+code{font-family:'JetBrains Mono',monospace;font-size:12px;background:rgba(255,255,255,.06);padding:2px 6px;border-radius:4px;color:var(--tealLt)}
+p{font-size:15px;line-height:1.8;color:rgba(240,234,214,.75);margin-bottom:10px}
+h2{font-family:'Cinzel',serif;font-size:16px;font-weight:600;color:var(--goldLt);margin:28px 0 14px;letter-spacing:.03em}
+
+/* ── Topbar ── */
+#topbar-ar{position:fixed;top:0;left:0;right:0;height:54px;background:rgba(7,9,14,.97);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 20px;gap:12px;z-index:200;overflow:hidden}
+.tb-dot{width:8px;height:8px;border-radius:50%;background:var(--tealLt)}
+
+/* ── Layout: sidebar + main ── */
+#ar-shell{display:flex;padding-top:54px;min-height:100vh}
+#ar-sb{width:260px;background:var(--bg2);border-right:1px solid var(--border);position:fixed;top:54px;bottom:0;overflow-y:auto;z-index:100;flex-shrink:0}
+#ar-sb::-webkit-scrollbar{width:3px}
+#ar-sb::-webkit-scrollbar-thumb{background:var(--goldDim);border-radius:2px}
+#ar-main{margin-left:260px;flex:1;min-width:0;position:relative;z-index:1}
+.ar-wrap{max-width:820px;padding:32px 40px 100px;margin:0 auto}
+
+/* ── Sidebar styles ── */
+.sb-hdr{padding:10px 14px 6px;font-family:'Cinzel',serif;font-size:9px;font-weight:700;color:var(--goldDim);letter-spacing:.1em;text-transform:uppercase;border-bottom:1px solid rgba(255,255,255,.04)}
+.sb-link{display:block;padding:8px 14px;font-size:11.5px;color:rgba(240,234,214,.4);text-decoration:none;transition:all .12s;border-left:2px solid transparent}
+.sb-link:hover,.sb-link.active{color:var(--goldLt);background:rgba(212,160,23,.05);border-left-color:var(--goldLt)}
+.sb-tool-link{padding:8px 14px;display:flex;align-items:center;gap:8px;font-size:11.5px;color:var(--dim);text-decoration:none;transition:all .12s;border-left:2px solid transparent}
+.sb-tool-link:hover{color:var(--tealLt);background:rgba(31,184,168,.04);border-left-color:var(--tealLt)}
+
+/* ── Hero ── */
+.ar-hero{margin-bottom:36px;padding-bottom:24px;border-bottom:1px solid var(--border)}
+.ar-badge{font-family:'Cinzel',serif;font-size:9.5px;font-weight:700;letter-spacing:.14em;color:var(--teal);padding:4px 14px;border:1px solid rgba(31,184,168,.25);border-radius:20px;display:inline-block;margin-bottom:14px}
+.ar-title{font-family:'Cinzel',serif;font-size:28px;font-weight:900;color:var(--goldLt);margin-bottom:6px}
+.ar-sub{font-size:14px;color:var(--dim);font-style:italic;margin-bottom:16px}
+.ar-stats{display:flex;gap:20px;flex-wrap:wrap}
+.ar-stat{text-align:center}
+.ar-stat-v{font-family:'Cinzel',serif;font-size:20px;font-weight:700;color:var(--goldLt)}
+.ar-stat-l{font-size:9.5px;color:var(--dim);letter-spacing:.06em;text-transform:uppercase;margin-top:2px}
+
+/* ── Search bar ── */
+.ar-search-bar{display:flex;gap:0;margin-bottom:28px;background:var(--bg3);border:1px solid var(--border);border-radius:10px;overflow:hidden;transition:border-color .15s}
+.ar-search-bar:focus-within{border-color:var(--teal)}
+.ar-search-bar span{padding:0 14px;display:flex;align-items:center;color:var(--dim);font-size:16px}
+#ar-search{flex:1;padding:13px 8px;background:transparent;border:none;color:var(--white);font-family:'Crimson Pro',serif;font-size:16px;outline:none}
+#ar-search::placeholder{color:rgba(240,234,214,.2)}
+
+/* ── Section headers ── */
+.ar-section{margin-bottom:48px}
+.ar-section-hdr{display:flex;align-items:center;gap:12px;margin-bottom:18px;padding-bottom:10px;border-bottom:2px solid rgba(212,160,23,.15)}
+.ar-section-icon{font-size:20px}
+.ar-section-title{font-family:'Cinzel',serif;font-size:17px;font-weight:700;color:var(--goldLt)}
+.ar-section-count{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--dim);background:var(--bg3);border:1px solid var(--border);padding:2px 8px;border-radius:10px}
+
+/* ── Command card ── */
+.cmd-card{background:var(--bg3);border:1px solid var(--border);border-radius:10px;margin-bottom:12px;overflow:hidden;transition:border-color .18s}
+.cmd-card:hover{border-color:rgba(212,160,23,.25)}
+.cmd-card[data-hidden="true"]{display:none}
+.cmd-header{display:flex;align-items:center;gap:12px;padding:14px 18px;cursor:pointer;user-select:none}
+.cmd-name{font-family:'JetBrains Mono',monospace;font-size:13.5px;font-weight:500;color:var(--tealLt);flex-shrink:0}
+.cmd-desc{font-size:13px;color:rgba(240,234,214,.55);flex:1;line-height:1.4}
+.cmd-chevron{color:var(--dim);font-size:12px;flex-shrink:0;transition:transform .2s}
+.cmd-card.open .cmd-chevron{transform:rotate(180deg)}
+.cmd-badge{font-family:'Cinzel',serif;font-size:8px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:2px 8px;border-radius:10px;flex-shrink:0}
+.badge-daily{background:rgba(5,150,105,.1);border:1px solid rgba(5,150,105,.25);color:var(--emeraldLt)}
+.badge-essential{background:rgba(212,160,23,.1);border:1px solid rgba(212,160,23,.25);color:var(--goldLt)}
+.badge-admin{background:rgba(14,165,233,.08);border:1px solid rgba(14,165,233,.2);color:var(--skyLt)}
+.badge-deprecated{background:rgba(192,57,43,.08);border:1px solid rgba(192,57,43,.2);color:var(--redLt)}
+/* Body (expandable) */
+.cmd-body{display:none;padding:0 18px 18px;border-top:1px solid rgba(255,255,255,.05)}
+.cmd-card.open .cmd-body{display:block}
+.cmd-syntax{background:#090d14;border:1px solid rgba(255,255,255,.07);border-radius:8px;padding:14px 18px;font-family:'JetBrains Mono',monospace;font-size:12px;line-height:1.75;color:#a8d8ea;overflow-x:auto;white-space:pre;margin:12px 0;position:relative}
+.cmd-copy-btn{position:absolute;top:8px;right:8px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:6px;padding:4px 10px;font-family:'Cinzel',serif;font-size:8.5px;font-weight:700;color:var(--dim);cursor:pointer;transition:all .15s;letter-spacing:.05em}
+.cmd-copy-btn:hover{background:rgba(31,184,168,.1);border-color:var(--teal);color:var(--tealLt)}
+.cmd-copy-btn.copied{color:var(--emeraldLt);border-color:var(--emerald)}
+.cmd-params{margin:10px 0}
+.param-row{display:flex;align-items:flex-start;gap:10px;padding:7px 0;border-bottom:1px solid rgba(255,255,255,.04);font-size:13px}
+.param-row:last-child{border-bottom:none}
+.param-name{font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--purpleLt);min-width:160px;flex-shrink:0}
+.param-opt{font-family:'Cinzel',serif;font-size:8px;color:var(--dim);border:1px solid var(--border);border-radius:8px;padding:1px 6px;flex-shrink:0;margin-top:2px}
+.param-desc{color:rgba(240,234,214,.6);line-height:1.5;flex:1}
+.cmd-notes{background:rgba(217,119,6,.05);border:1px solid rgba(217,119,6,.2);border-radius:8px;padding:12px 16px;margin-top:10px;font-size:13px;color:rgba(240,234,214,.68);line-height:1.7}
+.cmd-notes strong{color:var(--amberLt)}
+.cmd-vision{background:linear-gradient(135deg,rgba(31,184,168,.05),rgba(7,9,14,.98));border:1px solid rgba(31,184,168,.15);border-radius:8px;padding:12px 16px;margin-top:10px;font-size:13px;color:rgba(240,234,214,.6);line-height:1.7}
+.cmd-vision-lbl{font-family:'Cinzel',serif;font-size:8.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--tealLt);margin-bottom:4px}
+
+/* ── Nightly script box ── */
+.script-box{background:#090d14;border:1px solid rgba(212,160,23,.15);border-radius:10px;padding:20px 22px;margin:16px 0;position:relative}
+.script-lbl{font-family:'Cinzel',serif;font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--gold);margin-bottom:10px}
+.script-body{font-family:'JetBrains Mono',monospace;font-size:11.5px;line-height:1.8;color:#a8d8ea;white-space:pre;overflow-x:auto}
+.sk{color:#ff7b72}.sv{color:#79c0ff}.sc{color:#6a737d}.ss{color:#a5d6ff}
+
+/* ── Callout ── */
+.callout{border-radius:var(--r);padding:14px 18px;margin:16px 0;font-size:14px;line-height:1.72}
+.tip{background:rgba(5,150,105,.07);border:1px solid rgba(5,150,105,.22);color:rgba(240,234,214,.72)}
+.warn{background:rgba(217,119,6,.07);border:1px solid rgba(217,119,6,.25);color:rgba(240,234,214,.72)}
+.danger{background:rgba(192,57,43,.07);border:1px solid rgba(192,57,43,.25);color:rgba(240,234,214,.72)}
+.ci{font-size:15px;margin-right:7px}
+
+/* ── No results ── */
+#ar-no-results{display:none;text-align:center;padding:40px;color:var(--dim);font-style:italic}
+
+@media(max-width:860px){#ar-sb{display:none}#ar-main{margin-left:0}.ar-wrap{padding:24px 16px 80px}}
+</style>
+</head>
+<body>
+<div id="stars"></div>
+
+<!-- Topbar -->
+<div id="topbar-ar">
+  <a href="index.html" style="font-family:'Cinzel',serif;font-size:13px;font-weight:700;color:var(--goldLt);text-decoration:none;display:flex;align-items:center;gap:9px;flex-shrink:0"><span class="tb-dot"></span>The Planning Quest</a>
+  <span style="color:var(--goldDim)">›</span>
+  <span style="font-family:'Cinzel',serif;font-size:11px;color:var(--teal);flex-shrink:0">EPM Automate CLI</span>
+  <div style="flex:1"></div>
+  <div style="display:flex;gap:3px;overflow-x:auto;flex-shrink:0">
+    <a href="parts-1-3.html" style="padding:4px 7px;border-radius:6px;border:1px solid var(--border);color:var(--dim);font-family:'Cinzel',serif;font-size:8px;font-weight:700;text-decoration:none;white-space:nowrap">📖 I–III</a>
+    <a href="parts-4-5.html" style="padding:4px 7px;border-radius:6px;border:1px solid var(--border);color:var(--dim);font-family:'Cinzel',serif;font-size:8px;font-weight:700;text-decoration:none;white-space:nowrap">⚔ IV–V</a>
+    <a href="parts-6-9.html" style="padding:4px 7px;border-radius:6px;border:1px solid var(--border);color:var(--dim);font-family:'Cinzel',serif;font-size:8px;font-weight:700;text-decoration:none;white-space:nowrap">👑 VI–IX</a>
+    <a href="groovy-ch1.html" style="padding:4px 7px;border-radius:6px;border:1px solid var(--border);color:var(--dim);font-family:'Cinzel',serif;font-size:8px;font-weight:700;text-decoration:none;white-space:nowrap">📘 Groovy</a>
+    <a href="whats-new.html" style="padding:4px 7px;border-radius:6px;border:1px solid rgba(31,184,168,.25);color:var(--tealLt);font-family:'Cinzel',serif;font-size:8px;font-weight:700;text-decoration:none;white-space:nowrap">🆕 New</a>
+    <a href="simulators.html" style="padding:4px 7px;border-radius:6px;border:1px solid var(--border);color:var(--dim);font-family:'Cinzel',serif;font-size:8px;font-weight:700;text-decoration:none;white-space:nowrap">⚙ Sims</a>
+    <a href="quiz.html" style="padding:4px 7px;border-radius:6px;border:1px solid var(--border);color:var(--dim);font-family:'Cinzel',serif;font-size:8px;font-weight:700;text-decoration:none;white-space:nowrap">📝 Quiz</a>
+    <a href="flashcards.html" style="padding:4px 7px;border-radius:6px;border:1px solid var(--border);color:var(--dim);font-family:'Cinzel',serif;font-size:8px;font-weight:700;text-decoration:none;white-space:nowrap">🃏 Cards</a>
+    <a href="search.html" style="padding:4px 7px;border-radius:6px;border:1px solid var(--border);color:var(--dim);font-family:'Cinzel',serif;font-size:8px;font-weight:700;text-decoration:none;white-space:nowrap">🔍</a>
+  </div>
+</div>
+
+<div id="ar-shell">
+<!-- Sidebar -->
+<div id="ar-sb">
+  <div class="sb-hdr">EPM Automate CLI</div>
+  <a class="sb-link" href="#section-auth">🔐 Authentication</a>
+  <a class="sb-link" href="#section-data">📊 Data Load &amp; Export</a>
+  <a class="sb-link" href="#section-rules">⚙ Business Rules</a>
+  <a class="sb-link" href="#section-meta">🗂 Metadata</a>
+  <a class="sb-link" href="#section-files">📁 File Management</a>
+  <a class="sb-link" href="#section-vars">🔧 SubVars &amp; Settings</a>
+  <a class="sb-link" href="#section-snapshot">💾 Snapshots &amp; LCM</a>
+  <a class="sb-link" href="#section-security">🛡 Security &amp; Users</a>
+  <a class="sb-link" href="#section-workflow">✅ Workflow</a>
+  <a class="sb-link" href="#section-diag">🩺 Diagnostics</a>
+  <a class="sb-link" href="#section-nightly">🌙 Nightly Script</a>
+  <div class="sb-hdr" style="margin-top:8px">Quest</div>
+  <a class="sb-tool-link" href="index.html">🏠 Quest Map</a>
+  <a class="sb-tool-link" href="whats-new.html">🆕 What's New</a>
+  <a class="sb-tool-link" href="groovy-ch2.html">⚡ Groovy Ch.II</a>
+  <a class="sb-tool-link" href="simulators.html">⚙ Simulators</a>
+  <a class="sb-tool-link" href="labs.html">🔬 Labs</a>
+  <a class="sb-tool-link" href="search.html">🔍 Search</a>
+</div>
+
+<!-- Main content -->
+<div id="ar-main"><div class="ar-wrap">
+
+  <!-- Hero -->
+  <div class="ar-hero">
+    <div class="ar-badge">EPM 25.06+ · Java 17 Required · Planning · FCCS · ARCS</div>
+    <h1 class="ar-title">⚙ EPM Automate CLI Reference</h1>
+    <p class="ar-sub">Complete command reference with Vision Corporation examples. Copy-paste ready. Updated for EPM 25.06+.</p>
+    <div class="ar-stats">
+      <div class="ar-stat"><div class="ar-stat-v" id="total-cmd-count">55+</div><div class="ar-stat-l">Commands</div></div>
+      <div class="ar-stat"><div class="ar-stat-v">10</div><div class="ar-stat-l">Categories</div></div>
+      <div class="ar-stat"><div class="ar-stat-v">1</div><div class="ar-stat-l">Nightly Script</div></div>
+    </div>
+  </div>
+
+  <!-- Search -->
+  <div class="ar-search-bar">
+    <span>🔍</span>
+    <input id="ar-search" type="text" placeholder="Search commands... (e.g. runDataRule, setSubstitutionVariable)" autocomplete="off">
+  </div>
+  <div id="ar-no-results">No commands match your search. Try shorter terms like "run", "upload", or "refresh".</div>
+
+  <!-- PREREQS -->
+  <div class="ar-section" id="section-prereqs">
+    <div class="ar-section-hdr">
+      <span class="ar-section-icon">📋</span>
+      <span class="ar-section-title">Prerequisites &amp; Setup</span>
+    </div>
+    <div class="callout warn"><span class="ci">⚠</span><strong>Java 17 Required (EPM 25.06+):</strong> EPM Automate requires Java 17. Set <code>JAVA_HOME</code> to your Java 17 JRE. Old Java 8/11 installs cause TLS cipher failures from 25.09 onwards. Download: <code>Settings &amp; Actions → Downloads → EPM Automate</code></div>
+    <div class="callout tip"><span class="ci">💡</span><strong>Password file (recommended):</strong> Never store plain-text passwords in scripts. Generate an encrypted password file: <code>epmautomate encrypt MyPassword myEncryptKey ./passwords/vision.epw</code> — then reference <code>vision.epw</code> in all scripts.</div>
+  </div>
+
+  <!-- SECTION: AUTHENTICATION -->
+  <div class="ar-section" id="section-auth">
+    <div class="ar-section-hdr">
+      <span class="ar-section-icon">🔐</span>
+      <span class="ar-section-title">Authentication</span>
+      <span class="ar-section-count">3 commands</span>
+    </div>
+
+    <div class="cmd-card" data-category="auth">
+      <div class="cmd-header" onclick="toggleCmd(this)">
+        <span class="cmd-name">login</span>
+        <span class="cmd-badge badge-essential">Essential</span>
+        <span class="cmd-desc">Start an authenticated session with an EPM Cloud environment</span>
+        <span class="cmd-chevron">▼</span>
+      </div>
+      <div class="cmd-body">
+        <div class="cmd-syntax"><button class="cmd-copy-btn" onclick="copyCmd(this)">Copy</button><span style="color:#6a737d"># Syntax</span>
+epmautomate login <span style="color:#79c0ff">USERNAME</span> <span style="color:#79c0ff">PASSWORD|PASSWORD_FILE</span> <span style="color:#79c0ff">URL</span>
+
+<span style="color:#6a737d"># Vision Corporation — recommended (encrypted password file)</span>
+epmautomate login <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="f9989d949097b98f908a909697d79a9694">[email&#160;protected]</a> ./passwords/vision.epw \
+  https://vision-prod.planning.ocp.oraclecloud.com/epmcloud
+
+<span style="color:#6a737d"># OAuth 2.0 (more secure — EPM 25.06+)</span>
+epmautomate login <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="90f1f4fdf9fed0e6f9e3f9fffebef3fffd">[email&#160;protected]</a> ./oauth/vision-token.epw \
+  https://vision-prod.planning.ocp.oraclecloud.com/epmcloud</div>
+        <div class="cmd-params">
+          <div class="param-row"><span class="param-name">USERNAME</span><span class="param-desc">Service Administrator email address. Must have Service Administrator role in OCI Identity.</span></div>
+          <div class="param-row"><span class="param-name">PASSWORD_FILE</span><span class="param-desc">Path to <code>.epw</code> encrypted password file. Generated with <code>encrypt</code> command. Preferred over plain-text passwords.</span></div>
+          <div class="param-row"><span class="param-name">URL</span><span class="param-desc">Full environment URL including <code>/epmcloud</code> suffix. Found in: Settings &amp; Actions → About.</span></div>
+        </div>
+        <div class="cmd-notes"><strong>Note:</strong> Creates a session token file in the current directory. All subsequent commands in the same session use this token. Always follow with <code>logout</code> at script end.</div>
+      </div>
+    </div>
+
+    <div class="cmd-card" data-category="auth">
+      <div class="cmd-header" onclick="toggleCmd(this)">
+        <span class="cmd-name">logout</span>
+        <span class="cmd-badge badge-essential">Essential</span>
+        <span class="cmd-desc">End the current session. Always include at end of every script.</span>
+        <span class="cmd-chevron">▼</span>
+      </div>
+      <div class="cmd-body">
+        <div class="cmd-syntax"><button class="cmd-copy-btn" onclick="copyCmd(this)">Copy</button>epmautomate logout</div>
+        <div class="cmd-notes"><strong>Critical:</strong> Always call <code>logout</code> in a <code>finally</code>-equivalent block. Orphaned sessions count against concurrent session limits. In bash: use <code>trap "epmautomate logout" EXIT</code> to guarantee logout even if the script fails mid-run.</div>
+      </div>
+    </div>
+
+    <div class="cmd-card" data-category="auth">
+      <div class="cmd-header" onclick="toggleCmd(this)">
+        <span class="cmd-name">encrypt</span>
+        <span class="cmd-badge badge-essential">Essential</span>
+        <span class="cmd-desc">Create an encrypted password file for use in automation scripts</span>
+        <span class="cmd-chevron">▼</span>
+      </div>
+      <div class="cmd-body">
+        <div class="cmd-syntax"><button class="cmd-copy-btn" onclick="copyCmd(this)">Copy</button><span style="color:#6a737d"># Syntax</span>
+epmautomate encrypt <span style="color:#79c0ff">PASSWORD</span> <span style="color:#79c0ff">ENCRYPTION_KEY</span> <span style="color:#79c0ff">PASSWORD_FILE_PATH</span>
+
+<span style="color:#6a737d"># Vision Corp — create encrypted password file</span>
+epmautomate encrypt MySecureP@ss VisionKey2025 ./passwords/vision-prod.epw</div>
+        <div class="cmd-notes"><strong>Security:</strong> Store <code>.epw</code> files in a secure location with restricted read permissions. Never commit to version control. The encryption key is not stored — keep it separately. Regenerate if the key is compromised.</div>
+      </div>
+    </div>
+  </div><!-- end auth section -->
+
+  <!-- SECTION: DATA LOAD & EXPORT -->
+  <div class="ar-section" id="section-data">
+    <div class="ar-section-hdr">
+      <span class="ar-section-icon">📊</span>
+      <span class="ar-section-title">Data Load &amp; Export</span>
+      <span class="ar-section-count">6 commands</span>
+    </div>
+
+    <div class="cmd-card" data-category="data">
+      <div class="cmd-header" onclick="toggleCmd(this)">
+        <span class="cmd-name">runDataRule</span>
+        <span class="cmd-badge badge-daily">Daily Use</span>
+        <span class="cmd-desc">Execute a Data Integration data rule to load data into EPM</span>
+        <span class="cmd-chevron">▼</span>
+      </div>
+      <div class="cmd-body">
+        <div class="cmd-syntax"><button class="cmd-copy-btn" onclick="copyCmd(this)">Copy</button><span style="color:#6a737d"># Syntax</span>
+epmautomate runDataRule <span style="color:#79c0ff">RULE_NAME</span> <span style="color:#79c0ff">START_PERIOD</span> <span style="color:#79c0ff">END_PERIOD</span> <span style="color:#79c0ff">IMPORT_MODE</span> <span style="color:#79c0ff">EXPORT_MODE</span>
+
+<span style="color:#6a737d"># Vision Corp — load March actuals (Replace mode)</span>
+epmautomate runDataRule "Vision_US_Actuals" "Mar" "Mar" REPLACE COMMIT
+
+<span style="color:#6a737d"># Load full-year budget data (Accumulate for additive loads)</span>
+epmautomate runDataRule "Vision_Budget_Load" "Jan" "Dec" REPLACE COMMIT
+
+<span style="color:#6a737d"># Validate only — don't commit (check for mapping errors first)</span>
+epmautomate runDataRule "Vision_US_Actuals" "Mar" "Mar" REPLACE NOCOMMIT</div>
+        <div class="cmd-params">
+          <div class="param-row"><span class="param-name">RULE_NAME</span><span class="param-desc">Exact name of the Data Integration rule as defined in Tools → Data Integration.</span></div>
+          <div class="param-row"><span class="param-name">START_PERIOD / END_PERIOD</span><span class="param-desc">Period names matching DI period mapping (e.g. "Jan", "Feb", "Mar"). Must match the period labels in your DI configuration.</span></div>
+          <div class="param-row"><span class="param-name">IMPORT_MODE</span><span class="param-desc"><code>REPLACE</code> clears existing data before loading. <code>MERGE</code> adds to existing. <strong>Always use REPLACE for actuals to prevent doubling.</strong></span></div>
+          <div class="param-row"><span class="param-name">EXPORT_MODE</span><span class="param-desc"><code>COMMIT</code> writes to Essbase. <code>NOCOMMIT</code> validates mapping only — use to check for errors before a live load.</span></div>
+        </div>
+        <div class="cmd-vision"><div class="cmd-vision-lbl">Vision Corp — Nightly Actuals Pattern</div>Upload yesterday's GL extract → run data rule → verify count → run calc. See the Nightly Script section for the full chain.</div>
+      </div>
+    </div>
+
+    <div class="cmd-card" data-category="data">
+      <div class="cmd-header" onclick="toggleCmd(this)">
+        <span class="cmd-name">runDataRuleDataset</span>
+        <span class="cmd-badge badge-admin">Admin</span>
+        <span class="cmd-desc">Run a Data Integration rule using a dataset (EPM 25.06+ Data Integration pipeline)</span>
+        <span class="cmd-chevron">▼</span>
+      </div>
+      <div class="cmd-body">
+        <div class="cmd-syntax"><button class="cmd-copy-btn" onclick="copyCmd(this)">Copy</button><span style="color:#6a737d"># Syntax — EPM 25.06+ Data Integration</span>
+epmautomate runDataRuleDataset <span style="color:#79c0ff">RULE_NAME</span> <span style="color:#79c0ff">DATASET_NAME</span> <span style="color:#79c0ff">PERIOD</span> <span style="color:#79c0ff">IMPORT_MODE</span> <span style="color:#79c0ff">EXPORT_MODE</span>
+
+<span style="color:#6a737d"># Vision Corp — dataset-based load</span>
+epmautomate runDataRuleDataset "Vision_SAP_Load" "VisionDS" "Mar" REPLACE COMMIT</div>
+        <div class="cmd-notes"><strong>EPM 25.06+:</strong> Use with the newer Data Integration pipeline that references Connections and Datasets rather than traditional DM Locations. For legacy Data Management rules, use <code>runDataRule</code> instead.</div>
+      </div>
+    </div>
+
+    <div class="cmd-card" data-category="data">
+      <div class="cmd-header" onclick="toggleCmd(this)">
+        <span class="cmd-name">exportData</span>
+        <span class="cmd-badge badge-admin">Admin</span>
+        <span class="cmd-desc">Export data from an EPM cube to a flat file in the Outbox</span>
+        <span class="cmd-chevron">▼</span>
+      </div>
+      <div class="cmd-body">
+        <div class="cmd-syntax"><button class="cmd-copy-btn" onclick="copyCmd(this)">Copy</button><span style="color:#6a737d"># Syntax</span>
+epmautomate exportData <span style="color:#79c0ff">QUERY_NAME</span> <span style="color:#79c0ff">FILE_NAME</span> [EXPORT_FORMAT]
+
+<span style="color:#6a737d"># Export Vision Budget to CSV</span>
+epmautomate exportData "Vision_Budget_Export_Q" "Vision_Budget_FY2025.csv"
+
+<span style="color:#6a737d"># Then download to local</span>
+epmautomate downloadFile "Vision_Budget_FY2025.csv" ./exports/</div>
+        <div class="cmd-notes"><strong>Note:</strong> The query must be pre-defined in the application. Output lands in the Outbox — use <code>downloadFile</code> to retrieve it. For large exports, consider splitting by entity or period to avoid query threshold limits.</div>
+      </div>
+    </div>
+
+    <div class="cmd-card" data-category="data">
+      <div class="cmd-header" onclick="toggleCmd(this)">
+        <span class="cmd-name">uploadFile</span>
+        <span class="cmd-badge badge-daily">Daily Use</span>
+        <span class="cmd-desc">Upload a local file to the EPM Cloud Inbox for use in data rules</span>
+        <span class="cmd-chevron">▼</span>
+      </div>
+      <div class="cmd-body">
+        <div class="cmd-syntax"><button class="cmd-copy-btn" onclick="copyCmd(this)">Copy</button><span style="color:#6a737d"># Syntax</span>
+epmautomate uploadFile <span style="color:#79c0ff">LOCAL_FILE_PATH</span> [TARGET_FOLDER]
+
+<span style="color:#6a737d"># Upload today's GL extract to Inbox</span>
+epmautomate uploadFile ./extracts/GL_ActualsDaily_20250321.csv inbox
+
+<span style="color:#6a737d"># Upload metadata file</span>
+epmautomate uploadFile ./metadata/Entity_hierarchy.csv inbox</div>
+        <div class="cmd-notes"><strong>Inbox vs Outbox:</strong> Upload to <code>inbox</code> for files that Data Integration will read. Files exported by the system land in <code>outbox</code> — use <code>downloadFile</code> to retrieve them.</div>
+      </div>
+    </div>
+
+    <div class="cmd-card" data-category="data">
+      <div class="cmd-header" onclick="toggleCmd(this)">
+        <span class="cmd-name">downloadFile</span>
+        <span class="cmd-badge badge-daily">Daily Use</span>
+        <span class="cmd-desc">Download a file from the EPM Cloud Outbox to a local path</span>
+        <span class="cmd-chevron">▼</span>
+      </div>
+      <div class="cmd-body">
+        <div class="cmd-syntax"><button class="cmd-copy-btn" onclick="copyCmd(this)">Copy</button><span style="color:#6a737d"># Syntax</span>
+epmautomate downloadFile <span style="color:#79c0ff">FILE_NAME</span> [LOCAL_PATH]
+
+<span style="color:#6a737d"># Download exported data file</span>
+epmautomate downloadFile "Vision_Budget_FY2025.csv" ./downloads/
+
+<span style="color:#6a737d"># Download job log from last run</span>
+epmautomate downloadFile "jobs.log" ./logs/</div>
+      </div>
+    </div>
+
+    <div class="cmd-card" data-category="data">
+      <div class="cmd-header" onclick="toggleCmd(this)">
+        <span class="cmd-name">listFiles</span>
+        <span class="cmd-badge badge-admin">Admin</span>
+        <span class="cmd-desc">List all files currently in the EPM Cloud Inbox and Outbox</span>
+        <span class="cmd-chevron">▼</span>
+      </div>
+      <div class="cmd-body">
+        <div class="cmd-syntax"><button class="cmd-copy-btn" onclick="copyCmd(this)">Copy</button>epmautomate listFiles
+
+<span style="color:#6a737d"># Useful in scripts to verify file upload succeeded before running data rule</span>
+epmautomate listFiles | grep "GL_ActualsDaily" &amp;&amp; echo "File confirmed in Inbox"</div>
+      </div>
+    </div>
+
+  </div><!-- end data section -->
+
+
+  <!-- SECTION: BUSINESS RULES -->
+  <div class="ar-section" id="section-rules">
+    <div class="ar-section-hdr">
+      <span class="ar-section-icon">⚙</span>
+      <span class="ar-section-title">Business Rules &amp; Calculations</span>
+      <span class="ar-section-count">4 commands</span>
+    </div>
+
+    <div class="cmd-card" data-category="rules">
+      <div class="cmd-header" onclick="toggleCmd(this)">
+        <span class="cmd-name">runBusinessRule</span>
+        <span class="cmd-badge badge-daily">Daily Use</span>
+        <span class="cmd-desc">Execute a single business rule (Groovy or Calc Script)</span>
+        <span class="cmd-chevron">▼</span>
+      </div>
+      <div class="cmd-body">
+        <div class="cmd-syntax"><button class="cmd-copy-btn" onclick="copyCmd(this)">Copy</button><span style="color:#6a737d"># Syntax</span>
+epmautomate runBusinessRule <span style="color:#79c0ff">RULE_NAME</span> [PARAM=VALUE ...]
+
+<span style="color:#6a737d"># Run master calculation after data load</span>
+epmautomate runBusinessRule "Master_Calc_Sequence"
+
+<span style="color:#6a737d"># Run with runtime parameters (RTP)</span>
+epmautomate runBusinessRule "Vision_Revenue_Spread" Scenario=Budget Year=FY2025
+
+<span style="color:#6a737d"># Run IT allocation rule</span>
+epmautomate runBusinessRule "IT_Overhead_Allocation" Scenario=Budget Year=FY2025</div>
+        <div class="cmd-params">
+          <div class="param-row"><span class="param-name">RULE_NAME</span><span class="param-desc">Exact Calculation Manager rule name. Case-sensitive.</span></div>
+          <div class="param-row"><span class="param-name">PARAM=VALUE</span><span class="param-opt">Optional</span><span class="param-desc">Runtime prompt values as KEY=VALUE pairs. Key must exactly match the RTP name in Calculation Manager (case-sensitive).</span></div>
+        </div>
+        <div class="cmd-notes"><strong>RTP case sensitivity:</strong> <code>Scenario=Budget</code> works if the RTP is named "Scenario". <code>scenario=Budget</code> will not pass the value. This matches the Groovy executeRule() behaviour.</div>
+      </div>
+    </div>
+
+    <div class="cmd-card" data-category="rules">
+      <div class="cmd-header" onclick="toggleCmd(this)">
+        <span class="cmd-name">runBusinessRuleSet</span>
+        <span class="cmd-badge badge-daily">Daily Use</span>
+        <span class="cmd-desc">Execute a Calculation Manager rule set (chained rules in sequence)</span>
+        <span class="cmd-chevron">▼</span>
+      </div>
+      <div class="cmd-body">
+        <div class="cmd-syntax"><button class="cmd-copy-btn" onclick="copyCmd(this)">Copy</button><span style="color:#6a737d"># Syntax</span>
+epmautomate runBusinessRuleSet <span style="color:#79c0ff">RULESET_NAME</span> [PARAM=VALUE ...]
+
+<span style="color:#6a737d"># Run Vision nightly batch rule chain</span>
+epmautomate runBusinessRuleSet "Vision_Nightly_Chain" Scenario=Budget Year=FY2025
+
+<span style="color:#6a737d"># Budget cycle master sequence</span>
+epmautomate runBusinessRuleSet "Budget_Cycle_Master"</div>
+        <div class="cmd-vision"><div class="cmd-vision-lbl">Vision Corp Pattern</div>The nightly batch runs a Rule Set containing: 1) Headcount Cascade → 2) IT Allocation → 3) Validation → in that order. Stop-on-Error is enabled — if Validation fails, the chain halts and Finance is alerted via job log.</div>
+      </div>
+    </div>
+
+    <div class="cmd-card" data-category="rules">
+      <div class="cmd-header" onclick="toggleCmd(this)">
+        <span class="cmd-name">refreshCube</span>
+        <span class="cmd-badge badge-admin">Admin</span>
+        <span class="cmd-desc">Refresh the Essbase database outline after metadata changes</span>
+        <span class="cmd-chevron">▼</span>
+      </div>
+      <div class="cmd-body">
+        <div class="cmd-syntax"><button class="cmd-copy-btn" onclick="copyCmd(this)">Copy</button><span style="color:#6a737d"># Syntax</span>
+epmautomate refreshCube [APPLICATION_NAME]
+
+<span style="color:#6a737d"># Refresh Vision application after metadata import</span>
+epmautomate refreshCube Vision</div>
+        <div class="cmd-notes"><strong>When to run:</strong> Always after importing dimension metadata. Without a refresh, new/changed members exist in the Planning repository but not in the Essbase outline — forms and rules referencing them will fail.</div>
+      </div>
+    </div>
+
+    <div class="cmd-card" data-category="rules">
+      <div class="cmd-header" onclick="toggleCmd(this)">
+        <span class="cmd-name">clearDataByProfile</span>
+        <span class="cmd-badge badge-admin">Admin</span>
+        <span class="cmd-desc">Clear Essbase data for a specific intersection profile</span>
+        <span class="cmd-chevron">▼</span>
+      </div>
+      <div class="cmd-body">
+        <div class="cmd-syntax"><button class="cmd-copy-btn" onclick="copyCmd(this)">Copy</button><span style="color:#6a737d"># Syntax</span>
+epmautomate clearDataByProfile <span style="color:#79c0ff">PROFILE_NAME</span>
+
+<span style="color:#6a737d"># Clear Vision Budget Working before re-seeding from Actuals</span>
+epmautomate clearDataByProfile "Clear_Budget_Working_FY2026"</div>
+        <div class="cmd-notes"><strong>Caution:</strong> This is irreversible without a snapshot restore. Always take a snapshot before clearing significant data intersections. The profile must be pre-defined in the application.</div>
+      </div>
+    </div>
+
+  </div><!-- end rules section -->
+
+  <!-- SECTION: METADATA -->
+  <div class="ar-section" id="section-meta">
+    <div class="ar-section-hdr">
+      <span class="ar-section-icon">🗂</span>
+      <span class="ar-section-title">Metadata Import &amp; Export</span>
+      <span class="ar-section-count">4 commands</span>
+    </div>
+
+    <div class="cmd-card" data-category="meta">
+      <div class="cmd-header" onclick="toggleCmd(this)">
+        <span class="cmd-name">importMetadata</span>
+        <span class="cmd-badge badge-admin">Admin</span>
+        <span class="cmd-desc">Import dimension metadata from a file into Planning</span>
+        <span class="cmd-chevron">▼</span>
+      </div>
+      <div class="cmd-body">
+        <div class="cmd-syntax"><button class="cmd-copy-btn" onclick="copyCmd(this)">Copy</button><span style="color:#6a737d"># Syntax</span>
+epmautomate importMetadata <span style="color:#79c0ff">JOB_NAME</span> <span style="color:#79c0ff">FILE_NAME</span>
+
+<span style="color:#6a737d"># Import new entity hierarchy file</span>
+epmautomate uploadFile ./metadata/Entity_FY2026.csv inbox
+epmautomate importMetadata "Entity_Import_Job" "Entity_FY2026.csv"
+epmautomate refreshCube Vision   <span style="color:#6a737d"># Always refresh after metadata import</span></div>
+        <div class="cmd-notes"><strong>Best practice:</strong> Chain upload → import → refreshCube in sequence. Each step must complete successfully before the next runs. Add error checking between steps in production scripts.</div>
+      </div>
+    </div>
+
+    <div class="cmd-card" data-category="meta">
+      <div class="cmd-header" onclick="toggleCmd(this)">
+        <span class="cmd-name">exportMetadata</span>
+        <span class="cmd-badge badge-admin">Admin</span>
+        <span class="cmd-desc">Export dimension metadata to a file in the Outbox</span>
+        <span class="cmd-chevron">▼</span>
+      </div>
+      <div class="cmd-body">
+        <div class="cmd-syntax"><button class="cmd-copy-btn" onclick="copyCmd(this)">Copy</button><span style="color:#6a737d"># Syntax</span>
+epmautomate exportMetadata <span style="color:#79c0ff">JOB_NAME</span> <span style="color:#79c0ff">FILE_NAME</span>
+
+<span style="color:#6a737d"># Export Entity dimension for EDM comparison</span>
+epmautomate exportMetadata "Entity_Export_Job" "Entity_Export_$(date +%Y%m%d).csv"
+epmautomate downloadFile "Entity_Export_$(date +%Y%m%d).csv" ./metadata/exports/</div>
+      </div>
+    </div>
+
+    <div class="cmd-card" data-category="meta">
+      <div class="cmd-header" onclick="toggleCmd(this)">
+        <span class="cmd-name">importDimension</span>
+        <span class="cmd-badge badge-admin">Admin</span>
+        <span class="cmd-desc">Import a single dimension from a flat file (simpler than importMetadata for single dims)</span>
+        <span class="cmd-chevron">▼</span>
+      </div>
+      <div class="cmd-body">
+        <div class="cmd-syntax"><button class="cmd-copy-btn" onclick="copyCmd(this)">Copy</button><span style="color:#6a737d"># Syntax</span>
+epmautomate importDimension <span style="color:#79c0ff">APPLICATION</span> <span style="color:#79c0ff">PLAN_TYPE</span> <span style="color:#79c0ff">DIMENSION</span> <span style="color:#79c0ff">FILE_NAME</span> [IMPORT_TYPE]
+
+<span style="color:#6a737d"># Import Account dimension into Vision OEP_FS plan type</span>
+epmautomate importDimension Vision OEP_FS Account Account_FY2026.csv Replace</div>
+        <div class="cmd-params">
+          <div class="param-row"><span class="param-name">IMPORT_TYPE</span><span class="param-opt">Optional</span><span class="param-desc"><code>Replace</code> replaces all members. <code>Merge</code> adds/updates without removing. Default is <code>Replace</code>.</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cmd-card" data-category="meta">
+      <div class="cmd-header" onclick="toggleCmd(this)">
+        <span class="cmd-name">exportDimension</span>
+        <span class="cmd-badge badge-admin">Admin</span>
+        <span class="cmd-desc">Export a single dimension to a flat file</span>
+        <span class="cmd-chevron">▼</span>
+      </div>
+      <div class="cmd-body">
+        <div class="cmd-syntax"><button class="cmd-copy-btn" onclick="copyCmd(this)">Copy</button>epmautomate exportDimension <span style="color:#79c0ff">APPLICATION</span> <span style="color:#79c0ff">PLAN_TYPE</span> <span style="color:#79c0ff">DIMENSION</span> <span style="color:#79c0ff">FILE_NAME</span>
+
+<span style="color:#6a737d"># Export Account dimension for audit</span>
+epmautomate exportDimension Vision OEP_FS Account Account_Backup_$(date +%Y%m%d).csv</div>
+      </div>
+    </div>
+  </div><!-- end meta section -->
+
+  <!-- SECTION: SUBVARS -->
+  <div class="ar-section" id="section-vars">
+    <div class="ar-section-hdr">
+      <span class="ar-section-icon">🔧</span>
+      <span class="ar-section-title">Substitution Variables &amp; App Settings</span>
+      <span class="ar-section-count">3 commands</span>
+    </div>
+
+    <div class="cmd-card" data-category="vars">
+      <div class="cmd-header" onclick="toggleCmd(this)">
+        <span class="cmd-name">setSubstitutionVariable</span>
+        <span class="cmd-badge badge-daily">Daily Use</span>
+        <span class="cmd-desc">Update a substitution variable value — all 50+ forms advance automatically</span>
+        <span class="cmd-chevron">▼</span>
+      </div>
+      <div class="cmd-body">
+        <div class="cmd-syntax"><button class="cmd-copy-btn" onclick="copyCmd(this)">Copy</button><span style="color:#6a737d"># Syntax</span>
+epmautomate setSubstitutionVariable <span style="color:#79c0ff">APPLICATION|ALL</span> <span style="color:#79c0ff">VARIABLE_NAME</span> <span style="color:#79c0ff">VALUE</span>
+
+<span style="color:#6a737d"># Advance period at month-end — all forms update automatically</span>
+epmautomate setSubstitutionVariable Vision CurPeriod Apr
+epmautomate setSubstitutionVariable Vision CurYear FY2025
+
+<span style="color:#6a737d"># Update all applications simultaneously</span>
+epmautomate setSubstitutionVariable ALL CurPeriod Apr
+
+<span style="color:#6a737d"># Update FX rate for monthly close</span>
+epmautomate setSubstitutionVariable Vision FxRate_EUR 1.085</div>
+        <div class="cmd-vision"><div class="cmd-vision-lbl">Vision Corp — Month-End Sequence</div>
+At 11pm on the last business day of each month, the nightly batch calls:
+setSubstitutionVariable CurPeriod [next_month]
+setSubstitutionVariable PriorYear [updated_if_needed]
+All 50+ forms and all FRS reports advance their column ranges automatically. Finance arrives to current numbers every morning.</div>
+      </div>
+    </div>
+
+    <div class="cmd-card" data-category="vars">
+      <div class="cmd-header" onclick="toggleCmd(this)">
+        <span class="cmd-name">getSubstitutionVariable</span>
+        <span class="cmd-badge badge-admin">Admin</span>
+        <span class="cmd-desc">Read current substitution variable values</span>
+        <span class="cmd-chevron">▼</span>
+      </div>
+      <div class="cmd-body">
+        <div class="cmd-syntax"><button class="cmd-copy-btn" onclick="copyCmd(this)">Copy</button><span style="color:#6a737d"># Syntax</span>
+epmautomate getSubstitutionVariable <span style="color:#79c0ff">APPLICATION|ALL</span> [name=VARIABLE_NAME]
+
+<span style="color:#6a737d"># Get specific variable</span>
+epmautomate getSubstitutionVariable Vision name=CurPeriod
+
+<span style="color:#6a737d"># Get all variables for Vision application</span>
+epmautomate getSubstitutionVariable Vision
+
+<span style="color:#6a737d"># Use in bash script to read current period</span>
+CURPERIOD=$(epmautomate getSubstitutionVariable Vision name=CurPeriod | grep "CurPeriod" | awk '{print $2}')
+echo "Current period: $CURPERIOD"</div>
+      </div>
+    </div>
+
+    <div class="cmd-card" data-category="vars">
+      <div class="cmd-header" onclick="toggleCmd(this)">
+        <span class="cmd-name">skipUpdate</span>
+        <span class="cmd-badge badge-admin">Admin</span>
+        <span class="cmd-desc">Skip the next monthly Oracle EPM Cloud update for this environment</span>
+        <span class="cmd-chevron">▼</span>
+      </div>
+      <div class="cmd-body">
+        <div class="cmd-syntax"><button class="cmd-copy-btn" onclick="copyCmd(this)">Copy</button><span style="color:#6a737d"># Skip next monthly update (use sparingly — max 2 consecutive skips)</span>
+epmautomate skipUpdate
+
+<span style="color:#6a737d"># Check current skip status</span>
+epmautomate skipUpdate status</div>
+        <div class="cmd-notes"><strong>Use case:</strong> Skip the monthly update if it lands during budget close week or a critical go-live period. Oracle allows a maximum of 2 consecutive skips. After 2 skips, the update is mandatory.</div>
+      </div>
+    </div>
+  </div><!-- end vars section -->
+
+  <!-- SECTION: SNAPSHOTS -->
+  <div class="ar-section" id="section-snapshot">
+    <div class="ar-section-hdr">
+      <span class="ar-section-icon">💾</span>
+      <span class="ar-section-title">Snapshots &amp; LCM</span>
+      <span class="ar-section-count">4 commands</span>
+    </div>
+
+    <div class="cmd-card" data-category="snapshot">
+      <div class="cmd-header" onclick="toggleCmd(this)">
+        <span class="cmd-name">exportSnapshot</span>
+        <span class="cmd-badge badge-essential">Essential</span>
+        <span class="cmd-desc">Export a full application backup snapshot to the Outbox</span>
+        <span class="cmd-chevron">▼</span>
+      </div>
+      <div class="cmd-body">
+        <div class="cmd-syntax"><button class="cmd-copy-btn" onclick="copyCmd(this)">Copy</button><span style="color:#6a737d"># Syntax</span>
+epmautomate exportSnapshot <span style="color:#79c0ff">SNAPSHOT_NAME</span>
+
+<span style="color:#6a737d"># Create daily backup snapshot</span>
+epmautomate exportSnapshot "Vision_Daily_$(date +%Y%m%d)"
+
+<span style="color:#6a737d"># Before any major change — always snapshot first</span>
+epmautomate exportSnapshot "Vision_PreMetadataChange_$(date +%Y%m%d_%H%M)"
+epmautomate downloadFile "Vision_PreMetadataChange_$(date +%Y%m%d_%H%M).zip" ./backups/</div>
+        <div class="cmd-notes"><strong>Best practice:</strong> Run exportSnapshot + downloadFile nightly. Oracle recommends downloading the maintenance snapshot to a local server every day. A snapshot you cannot retrieve is not a backup.</div>
+      </div>
+    </div>
+
+    <div class="cmd-card" data-category="snapshot">
+      <div class="cmd-header" onclick="toggleCmd(this)">
+        <span class="cmd-name">importSnapshot</span>
+        <span class="cmd-badge badge-admin">Admin</span>
+        <span class="cmd-desc">Restore an environment from a snapshot (full or partial restore)</span>
+        <span class="cmd-chevron">▼</span>
+      </div>
+      <div class="cmd-body">
+        <div class="cmd-syntax"><button class="cmd-copy-btn" onclick="copyCmd(this)">Copy</button><span style="color:#6a737d"># Syntax</span>
+epmautomate importSnapshot <span style="color:#79c0ff">SNAPSHOT_NAME</span>
+
+<span style="color:#6a737d"># Restore from yesterday's backup</span>
+epmautomate uploadFile ./backups/Vision_Daily_20250320.zip
+epmautomate importSnapshot "Vision_Daily_20250320"</div>
+        <div class="cmd-notes"><strong>Critical:</strong> importSnapshot overwrites existing environment configuration. Use only in Test environments for testing restore procedures. Production restores typically require Oracle Support involvement for large environments.</div>
+      </div>
+    </div>
+
+    <div class="cmd-card" data-category="snapshot">
+      <div class="cmd-header" onclick="toggleCmd(this)">
+        <span class="cmd-name">copySnapshotFromInstance</span>
+        <span class="cmd-badge badge-admin">Admin</span>
+        <span class="cmd-desc">Copy a snapshot from one EPM Cloud instance to another (Prod to Test migration)</span>
+        <span class="cmd-chevron">▼</span>
+      </div>
+      <div class="cmd-body">
+        <div class="cmd-syntax"><button class="cmd-copy-btn" onclick="copyCmd(this)">Copy</button><span style="color:#6a737d"># Syntax</span>
+epmautomate copySnapshotFromInstance <span style="color:#79c0ff">SOURCE_URL</span> <span style="color:#79c0ff">SOURCE_USER</span> <span style="color:#79c0ff">SOURCE_PWD_FILE</span> <span style="color:#79c0ff">SNAPSHOT_NAME</span>
+
+<span style="color:#6a737d"># Copy prod snapshot to test for regression testing</span>
+epmautomate copySnapshotFromInstance \
+  https://vision-prod.planning.ocp.oraclecloud.com/epmcloud \
+  <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="c7a6a3aaaea987b1aeb4aea8a9e9a4a8aa">[email&#160;protected]</a> ./passwords/vision-prod.epw \
+  "Vision_Daily_20250321"</div>
+        <div class="cmd-notes"><strong>Use case:</strong> After monthly production update, refresh test with latest prod data. Critical for pre-release testing before production go-live. Note: Essbase version compatibility matters from 25.09 (see What's New 25.09).</div>
+      </div>
+    </div>
+
+    <div class="cmd-card" data-category="snapshot">
+      <div class="cmd-header" onclick="toggleCmd(this)">
+        <span class="cmd-name">listMigrationArtifacts</span>
+        <span class="cmd-badge badge-admin">Admin</span>
+        <span class="cmd-desc">List artifacts available in Migration (LCM)</span>
+        <span class="cmd-chevron">▼</span>
+      </div>
+      <div class="cmd-body">
+        <div class="cmd-syntax"><button class="cmd-copy-btn" onclick="copyCmd(this)">Copy</button>epmautomate listMigrationArtifacts <span style="color:#79c0ff">SNAPSHOT_NAME</span>
+
+<span style="color:#6a737d"># List what is inside a snapshot before restoring</span>
+epmautomate listMigrationArtifacts "Vision_Daily_20250321"</div>
+      </div>
+    </div>
+  </div><!-- end snapshot section -->
+
+  <!-- SECTION: SECURITY -->
+  <div class="ar-section" id="section-security">
+    <div class="ar-section-hdr">
+      <span class="ar-section-icon">🛡</span>
+      <span class="ar-section-title">Security &amp; User Management</span>
+      <span class="ar-section-count">4 commands</span>
+    </div>
+
+    <div class="cmd-card" data-category="security">
+      <div class="cmd-header" onclick="toggleCmd(this)">
+        <span class="cmd-name">addUsers</span>
+        <span class="cmd-badge badge-admin">Admin</span>
+        <span class="cmd-desc">Provision users and assign roles from a CSV file</span>
+        <span class="cmd-chevron">▼</span>
+      </div>
+      <div class="cmd-body">
+        <div class="cmd-syntax"><button class="cmd-copy-btn" onclick="copyCmd(this)">Copy</button><span style="color:#6a737d"># CSV format: Username,FirstName,LastName,Email,ServiceRole,AppRole</span>
+<span style="color:#6a737d"># Example users.csv row:</span>
+<span style="color:#6a737d"># <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="402a332d29342800362933292f2e6e232f2d">[email&#160;protected]</a>,John,Smith,<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="543e27393d203c14223d273d3b3a7a373b39">[email&#160;protected]</a>,User,Planner</span>
+
+epmautomate uploadFile ./security/new_users.csv
+epmautomate addUsers "new_users.csv"</div>
+        <div class="cmd-notes"><strong>Bulk onboarding:</strong> Use at the start of each budget cycle to provision seasonal planners or new employees. Remove inactive users promptly — unused accounts are a SOX audit finding.</div>
+      </div>
+    </div>
+
+    <div class="cmd-card" data-category="security">
+      <div class="cmd-header" onclick="toggleCmd(this)">
+        <span class="cmd-name">removeUsers</span>
+        <span class="cmd-badge badge-admin">Admin</span>
+        <span class="cmd-desc">Deprovision users from EPM Cloud</span>
+        <span class="cmd-chevron">▼</span>
+      </div>
+      <div class="cmd-body">
+        <div class="cmd-syntax"><button class="cmd-copy-btn" onclick="copyCmd(this)">Copy</button>epmautomate removeUsers <span style="color:#79c0ff">USERS_FILE</span>
+
+<span style="color:#6a737d"># Remove departed employees — run quarterly from HR feed</span>
+epmautomate uploadFile ./security/departed_users.csv
+epmautomate removeUsers "departed_users.csv"</div>
+      </div>
+    </div>
+
+    <div class="cmd-card" data-category="security">
+      <div class="cmd-header" onclick="toggleCmd(this)">
+        <span class="cmd-name">exportUserAuditInfo</span>
+        <span class="cmd-badge badge-admin">Admin</span>
+        <span class="cmd-desc">Export user access audit report for SOX/compliance review</span>
+        <span class="cmd-chevron">▼</span>
+      </div>
+      <div class="cmd-body">
+        <div class="cmd-syntax"><button class="cmd-copy-btn" onclick="copyCmd(this)">Copy</button><span style="color:#6a737d"># Syntax</span>
+epmautomate exportUserAuditInfo <span style="color:#79c0ff">REPORT_TYPE</span> <span style="color:#79c0ff">FILE_NAME</span>
+
+<span style="color:#6a737d"># Export quarterly access review for SOX</span>
+epmautomate exportUserAuditInfo ALL "Vision_Access_Audit_Q1_2025.csv"
+epmautomate downloadFile "Vision_Access_Audit_Q1_2025.csv" ./audit/</div>
+        <div class="cmd-vision"><div class="cmd-vision-lbl">SOX Compliance</div>Run exportUserAuditInfo quarterly and after any budget cycle. Provides a complete list of who has access to what roles. Hand to internal audit as evidence of access control review.</div>
+      </div>
+    </div>
+
+    <div class="cmd-card" data-category="security">
+      <div class="cmd-header" onclick="toggleCmd(this)">
+        <span class="cmd-name">exportAppAuditData</span>
+        <span class="cmd-badge badge-admin">Admin</span>
+        <span class="cmd-desc">Export data change audit records (who changed what and when)</span>
+        <span class="cmd-chevron">▼</span>
+      </div>
+      <div class="cmd-body">
+        <div class="cmd-syntax"><button class="cmd-copy-btn" onclick="copyCmd(this)">Copy</button>epmautomate exportAppAuditData <span style="color:#79c0ff">START_DATE</span> <span style="color:#79c0ff">END_DATE</span> <span style="color:#79c0ff">FILE_NAME</span>
+
+<span style="color:#6a737d"># Export March data change audit for auditors</span>
+epmautomate exportAppAuditData "03/01/2025" "03/31/2025" "Vision_DataAudit_Mar2025.csv"
+epmautomate downloadFile "Vision_DataAudit_Mar2025.csv" ./audit/</div>
+        <div class="cmd-notes"><strong>Prerequisite:</strong> Application audit must be enabled in Application Settings before any data is entered. Enabling audit after data exists does not capture historical changes.</div>
+      </div>
+    </div>
+  </div><!-- end security section -->
+
+  <!-- SECTION: WORKFLOW -->
+  <div class="ar-section" id="section-workflow">
+    <div class="ar-section-hdr">
+      <span class="ar-section-icon">✅</span>
+      <span class="ar-section-title">Workflow &amp; Approvals</span>
+      <span class="ar-section-count">2 commands</span>
+    </div>
+
+    <div class="cmd-card" data-category="workflow">
+      <div class="cmd-header" onclick="toggleCmd(this)">
+        <span class="cmd-name">lockPlanningUnit</span>
+        <span class="cmd-badge badge-admin">Admin</span>
+        <span class="cmd-desc">Lock a planning unit after CFO approval — prevents all further edits</span>
+        <span class="cmd-chevron">▼</span>
+      </div>
+      <div class="cmd-body">
+        <div class="cmd-syntax"><button class="cmd-copy-btn" onclick="copyCmd(this)">Copy</button><span style="color:#6a737d"># Syntax</span>
+epmautomate lockPlanningUnit <span style="color:#79c0ff">APPLICATION</span> <span style="color:#79c0ff">SCENARIO</span> <span style="color:#79c0ff">YEAR</span>
+
+<span style="color:#6a737d"># Lock all Vision Budget planning units after CFO sign-off</span>
+epmautomate lockPlanningUnit Vision Budget FY2025
+
+<span style="color:#6a737d"># Lock specific entity (requires entity filter in newer versions)</span>
+epmautomate lockPlanningUnit Vision Budget FY2025</div>
+        <div class="cmd-vision"><div class="cmd-vision-lbl">Vision Corp — Budget Lock Pattern</div>After CFO approves all 12 entities in the approval workflow, Finance Admin runs lockPlanningUnit. All budget data is frozen. Any subsequent change requires an explicit adminunlock + justification in the audit log. This is the SOX control point.</div>
+      </div>
+    </div>
+
+    <div class="cmd-card" data-category="workflow">
+      <div class="cmd-header" onclick="toggleCmd(this)">
+        <span class="cmd-name">resetService</span>
+        <span class="cmd-badge badge-admin">Admin</span>
+        <span class="cmd-desc">Switch the environment between Administration and Normal mode</span>
+        <span class="cmd-chevron">▼</span>
+      </div>
+      <div class="cmd-body">
+        <div class="cmd-syntax"><button class="cmd-copy-btn" onclick="copyCmd(this)">Copy</button><span style="color:#6a737d"># Switch to Admin mode — blocks non-admin users</span>
+epmautomate resetService true
+
+<span style="color:#6a737d"># Return to Normal mode — users can log in again</span>
+epmautomate resetService false</div>
+        <div class="cmd-notes"><strong>Use case:</strong> During major metadata changes or a full data reload, switch to Admin mode to prevent users from accessing stale or partially-updated data. Always return to Normal mode immediately after the maintenance window.</div>
+      </div>
+    </div>
+  </div><!-- end workflow section -->
+
+  <!-- SECTION: DIAGNOSTICS -->
+  <div class="ar-section" id="section-diag">
+    <div class="ar-section-hdr">
+      <span class="ar-section-icon">🩺</span>
+      <span class="ar-section-title">Diagnostics &amp; Reporting</span>
+      <span class="ar-section-count">3 commands</span>
+    </div>
+
+    <div class="cmd-card" data-category="diag">
+      <div class="cmd-header" onclick="toggleCmd(this)">
+        <span class="cmd-name">runReportingObjectJobset</span>
+        <span class="cmd-badge badge-daily">Daily Use</span>
+        <span class="cmd-desc">Run a report job set (multiple FRS or Reports objects in sequence)</span>
+        <span class="cmd-chevron">▼</span>
+      </div>
+      <div class="cmd-body">
+        <div class="cmd-syntax"><button class="cmd-copy-btn" onclick="copyCmd(this)">Copy</button>epmautomate runReportingObjectJobset <span style="color:#79c0ff">JOBSET_NAME</span>
+
+<span style="color:#6a737d"># Run Vision CFO Board Pack nightly</span>
+epmautomate runReportingObjectJobset "Vision_CFO_Daily_Pack"
+
+<span style="color:#6a737d"># Run month-end close pack</span>
+epmautomate runReportingObjectJobset "Vision_MonthEnd_Pack"</div>
+        <div class="cmd-vision"><div class="cmd-vision-lbl">Vision Corp Pattern</div>The nightly batch ends with runReportingObjectJobset to generate the CFO morning pack. Finance finds PDF reports in their inbox each morning — zero manual steps required.</div>
+      </div>
+    </div>
+
+    <div class="cmd-card" data-category="diag">
+      <div class="cmd-header" onclick="toggleCmd(this)">
+        <span class="cmd-name">simulateConcurrentUsage</span>
+        <span class="cmd-badge badge-admin">Admin</span>
+        <span class="cmd-desc">Simulate concurrent users opening/saving forms and running rules — load testing</span>
+        <span class="cmd-chevron">▼</span>
+      </div>
+      <div class="cmd-body">
+        <div class="cmd-syntax"><button class="cmd-copy-btn" onclick="copyCmd(this)">Copy</button><span style="color:#6a737d"># Syntax (EPM 25.08+: Save Form runs without specifying cells)</span>
+epmautomate simulateConcurrentUsage <span style="color:#79c0ff">REQUIREMENTS_ZIP</span> [iterations=N] [email=addr]
+
+<span style="color:#6a737d"># Run with 10 iterations, email results to admin</span>
+epmautomate uploadFile ConcurrentUsageFiles.zip inbox
+epmautomate simulateConcurrentUsage "ConcurrentUsageFiles.zip" iterations=10 <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="aacfc7cbc3c697cbcec7c3c4eadcc3d9c3c5c484c9c5c7">[email&#160;protected]</a></div>
+        <div class="cmd-notes"><strong>EPM 25.08 enhancement:</strong> Save Form use case can now run without specifying cells — simulate opening and saving forms to trigger all attached rules. Use before budget cycle opens to verify performance under load (50 concurrent planners).</div>
+      </div>
+    </div>
+
+    <div class="cmd-card" data-category="diag">
+      <div class="cmd-header" onclick="toggleCmd(this)">
+        <span class="cmd-name">getDimensionOverview</span>
+        <span class="cmd-badge badge-admin">Admin</span>
+        <span class="cmd-desc">Export a summary of dimension member counts and hierarchy statistics</span>
+        <span class="cmd-chevron">▼</span>
+      </div>
+      <div class="cmd-body">
+        <div class="cmd-syntax"><button class="cmd-copy-btn" onclick="copyCmd(this)">Copy</button>epmautomate getDimensionOverview <span style="color:#79c0ff">APPLICATION</span> <span style="color:#79c0ff">FILE_NAME</span>
+
+<span style="color:#6a737d"># Get Vision dimension stats</span>
+epmautomate getDimensionOverview Vision "Vision_DimOverview.csv"
+epmautomate downloadFile "Vision_DimOverview.csv" ./admin/</div>
+      </div>
+    </div>
+  </div><!-- end diag section -->
+
+  <!-- SECTION: NIGHTLY SCRIPT TEMPLATE -->
+  <div class="ar-section" id="section-nightly">
+    <div class="ar-section-hdr">
+      <span class="ar-section-icon">🌙</span>
+      <span class="ar-section-title">Vision Corp — Complete Nightly Batch Script</span>
+    </div>
+    <p>Copy this as your starting template. Adapt environment URL, credentials path, and rule names. Designed to run via cron at 11pm on weeknights.</p>
+
+    <div class="script-box">
+      <div class="script-lbl">vision-nightly.sh — Production Nightly Batch</div>
+      <button class="cmd-copy-btn" style="position:absolute;top:12px;right:12px" onclick="copyScript()">Copy All</button>
+      <div class="script-body" id="nightly-script">#!/bin/bash
+# ═══════════════════════════════════════════════════════════════
+# VISION CORPORATION — Nightly EPM Automate Batch
+# Runs: 11pm weeknights via cron
+# Requires: Java 17, epmautomate installed, vision-prod.epw
+# ═══════════════════════════════════════════════════════════════
+
+<span class="sv">EPM</span>=<span class="ss">"epmautomate"</span>
+<span class="sv">URL</span>=<span class="ss">"https://vision-prod.planning.ocp.oraclecloud.com/epmcloud"</span>
+<span class="sv">USER</span>=<span class="ss">"<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="650401080c0b25130c160c0a0b4b060a08">[email&#160;protected]</a>"</span>
+<span class="sv">PWD</span>=<span class="ss">"./passwords/vision-prod.epw"</span>
+<span class="sv">DATE</span>=$(date +%Y%m%d)
+<span class="sv">LOG</span>=<span class="ss">"./logs/nightly_${DATE}.log"</span>
+
+<span class="sc"># Trap ensures logout even on failure</span>
+<span class="sk">trap</span> <span class="ss">"${EPM} logout; echo 'Session closed' >> ${LOG}"</span> EXIT
+
+echo <span class="ss">"=== Vision Nightly Batch ${DATE} ==="</span> >> <span class="sv">$LOG</span>
+
+<span class="sc"># ── Step 1: Authenticate ───────────────────────────────────────</span>
+<span class="sk">$EPM</span> login <span class="sv">$USER</span> <span class="sv">$PWD</span> <span class="sv">$URL</span> >> <span class="sv">$LOG</span> 2>&amp;1
+<span class="sk">if</span> [ $? -ne 0 ]; <span class="sk">then</span>
+  echo <span class="ss">"FATAL: Login failed"</span> >> <span class="sv">$LOG</span>; exit 1
+<span class="sk">fi</span>
+
+<span class="sc"># ── Step 2: Upload yesterday GL extract ────────────────────────</span>
+<span class="sk">$EPM</span> uploadFile ./extracts/GL_Actuals_<span class="sv">$DATE</span>.csv inbox >> <span class="sv">$LOG</span> 2>&amp;1
+
+<span class="sc"># ── Step 3: Load actuals via Data Integration (Replace mode) ───</span>
+<span class="sk">$EPM</span> runDataRule <span class="ss">"Vision_US_Actuals"</span> <span class="ss">"Mar"</span> <span class="ss">"Mar"</span> REPLACE COMMIT >> <span class="sv">$LOG</span> 2>&amp;1
+<span class="sk">$EPM</span> runDataRule <span class="ss">"Vision_EU_Actuals"</span> <span class="ss">"Mar"</span> <span class="ss">"Mar"</span> REPLACE COMMIT >> <span class="sv">$LOG</span> 2>&amp;1
+<span class="sk">$EPM</span> runDataRule <span class="ss">"Vision_APAC_Actuals"</span> <span class="ss">"Mar"</span> <span class="ss">"Mar"</span> REPLACE COMMIT >> <span class="sv">$LOG</span> 2>&amp;1
+
+<span class="sc"># ── Step 4: Advance substitution variables ─────────────────────</span>
+<span class="sk">$EPM</span> setSubstitutionVariable Vision CurPeriod Mar >> <span class="sv">$LOG</span> 2>&amp;1
+<span class="sk">$EPM</span> setSubstitutionVariable Vision CurYear FY2025 >> <span class="sv">$LOG</span> 2>&amp;1
+
+<span class="sc"># ── Step 5: Run master calculation chain ───────────────────────</span>
+<span class="sk">$EPM</span> runBusinessRuleSet <span class="ss">"Vision_Nightly_Chain"</span> \
+  Scenario=Actual Year=FY2025 >> <span class="sv">$LOG</span> 2>&amp;1
+<span class="sk">if</span> [ $? -ne 0 ]; <span class="sk">then</span>
+  echo <span class="ss">"ERROR: Calc chain failed — check job console"</span> >> <span class="sv">$LOG</span>
+  <span class="sc"># Send alert email (optional — use mailx or sendmail)</span>
+  exit 1
+<span class="sk">fi</span>
+
+<span class="sc"># ── Step 6: Generate CFO morning report pack ───────────────────</span>
+<span class="sk">$EPM</span> runReportingObjectJobset <span class="ss">"Vision_CFO_Daily_Pack"</span> >> <span class="sv">$LOG</span> 2>&amp;1
+
+<span class="sc"># ── Step 7: Export snapshot + download backup ──────────────────</span>
+<span class="sk">$EPM</span> exportSnapshot <span class="ss">"Vision_Daily_${DATE}"</span> >> <span class="sv">$LOG</span> 2>&amp;1
+<span class="sk">$EPM</span> downloadFile <span class="ss">"Vision_Daily_${DATE}.zip"</span> ./backups/ >> <span class="sv">$LOG</span> 2>&amp;1
+
+<span class="sc"># ── Logout handled by trap ─────────────────────────────────────</span>
+echo <span class="ss">"=== Nightly batch COMPLETE ==="</span> >> <span class="sv">$LOG</span>
+exit 0</div>
+    </div>
+
+    <div class="callout tip"><span class="ci">💡</span><strong>Schedule with cron:</strong> Add to crontab: <code>0 23 * * 1-5 /opt/scripts/vision-nightly.sh</code> — runs at 11pm Monday through Friday. Add error email notification to catch failures before Finance arrives at 8am.</div>
+    <div class="callout warn"><span class="ci">⚠</span><strong>Deprecated from 26.02:</strong> <code>setIPAllowList</code> and <code>getIPAllowList</code> commands will be removed. Migrate to Network Perimeter in OCI Identity before February 2026.</div>
+  </div><!-- end nightly section -->
+
+<!-- SCRIPT -->
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+(function(){
+  var s=document.getElementById('stars');
+  for(var i=0;i<80;i++){
+    var d=document.createElement('div');d.className='star';
+    var sz=Math.random()*1.8+0.3;
+    d.style.cssText='width:'+sz+'px;height:'+sz+'px;top:'+Math.random()*100+'%;left:'+Math.random()*100+'%;--d:'+(2+Math.random()*4)+'s;--delay:'+Math.random()*5+'s;--op:'+(0.1+Math.random()*0.3);
+    s.appendChild(d);
+  }
+})();
+
+// ── Toggle command cards ─────────────────────────────────────────
+function toggleCmd(header){
+  var card = header.closest('.cmd-card');
+  card.classList.toggle('open');
+}
+
+// ── Copy command syntax ──────────────────────────────────────────
+function copyCmd(btn){
+  var block = btn.closest('.cmd-syntax');
+  // Get text content without the button text
+  var text = block.innerText.replace(/^Copy\n?/,'').trim();
+  navigator.clipboard.writeText(text).then(function(){
+    btn.textContent = '✓ Copied';
+    btn.classList.add('copied');
+    setTimeout(function(){ btn.textContent='Copy'; btn.classList.remove('copied'); }, 1800);
+  }).catch(function(){
+    // Fallback for non-HTTPS
+    var ta = document.createElement('textarea');
+    ta.value = text; ta.style.position='fixed'; ta.style.opacity='0';
+    document.body.appendChild(ta); ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    btn.textContent = '✓ Copied'; btn.classList.add('copied');
+    setTimeout(function(){ btn.textContent='Copy'; btn.classList.remove('copied'); }, 1800);
+  });
+}
+
+function copyScript(){
+  var el = document.getElementById('nightly-script');
+  var text = el.innerText;
+  navigator.clipboard.writeText(text).catch(function(){
+    var ta=document.createElement('textarea');ta.value=text;
+    ta.style.cssText='position:fixed;opacity:0';
+    document.body.appendChild(ta);ta.select();document.execCommand('copy');
+    document.body.removeChild(ta);
+  });
+  event.target.textContent='✓ Copied';
+  setTimeout(function(){ event.target.textContent='Copy All'; }, 1800);
+}
+
+// ── Search / filter ──────────────────────────────────────────────
+var debounce;
+document.getElementById('ar-search').addEventListener('input', function(){
+  clearTimeout(debounce);
+  var q = this.value.toLowerCase().trim();
+  debounce = setTimeout(function(){ filterCommands(q); }, 150);
+});
+
+function filterCommands(q){
+  var cards = document.querySelectorAll('.cmd-card');
+  var anyVisible = false;
+  cards.forEach(function(card){
+    var name = (card.querySelector('.cmd-name') || {}).textContent || '';
+    var desc = (card.querySelector('.cmd-desc') || {}).textContent || '';
+    var body = card.textContent || '';
+    var match = !q || name.toLowerCase().includes(q) || desc.toLowerCase().includes(q) || body.toLowerCase().includes(q);
+    card.setAttribute('data-hidden', match ? 'false' : 'true');
+    if(match) anyVisible = true;
+  });
+  // Show/hide section headers based on visible cards
+  document.querySelectorAll('.ar-section').forEach(function(sec){
+    if(sec.id === 'section-prereqs' || sec.id === 'section-nightly') return;
+    var visible = Array.from(sec.querySelectorAll('.cmd-card')).some(function(c){
+      return c.getAttribute('data-hidden') !== 'true';
+    });
+    sec.style.display = (!q || visible) ? '' : 'none';
+  });
+  document.ge
+<script src="branding.js"></script>
+</body>
+</html>

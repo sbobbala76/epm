@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Enterprise Labs — The Planning Quest</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Crimson+Pro:ital,wght@0,400;0,500;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ══════════════════════════════════════════════
+   THE PLANNING QUEST — Shared Stylesheet
+   All pages import this file
+══════════════════════════════════════════════ */
+:root{
+  --bg:#07090e;--bg2:#0c0f18;--bg3:#111520;--bg4:#161c2a;
+  --gold:#d4a017;--goldLt:#f0c040;--goldDim:#5c4108;
+  --teal:#1fb8a8;--tealLt:#4dd9c8;
+  --purple:#7c3aed;--purpleLt:#a855f7;
+  --emerald:#059669;--emeraldLt:#10b981;
+  --sky:#0ea5e9;--skyLt:#38bdf8;
+  --red:#c0392b;--redLt:#e74c3c;
+  --amber:#d97706;--amberLt:#fbbf24;
+  --rose:#be185d;--roseLt:#f472b6;
+  --border:rgba(212,160,23,.15);
+  --white:#f0ead6;--dim:#5a6478;
+  --r:10px;--sidebar:268px;--topbar:54px
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Crimson Pro',serif;background:var(--bg);color:var(--white);min-height:100vh;overflow-x:hidden}
+
+/* ── Stars ── */
+#stars{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+.star{position:absolute;border-radius:50%;background:white;animation:twinkle var(--d,3s) infinite var(--delay,0s)}
+@keyframes twinkle{0%,100%{opacity:.05}50%{opacity:var(--op,.6)}}
+@keyframes glow{0%,100%{text-shadow:0 0 20px rgba(212,160,23,.3)}50%{text-shadow:0 0 50px rgba(212,160,23,.55)}}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(212,160,23,.3)}50%{box-shadow:0 0 0 8px rgba(212,160,23,0)}}
+@keyframes slideIn{from{opacity:0;transform:translateX(-10px)}to{opacity:1;transform:none}}
+
+/* ── Topbar ── */
+#topbar{position:fixed;top:0;left:0;right:0;height:var(--topbar);background:rgba(7,9,14,.97);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 20px;gap:14px;z-index:200}
+.tb-home{font-family:'Cinzel',serif;font-size:13px;font-weight:700;color:var(--goldLt);text-decoration:none;display:flex;align-items:center;gap:9px;letter-spacing:.04em}
+.tb-dot{width:8px;height:8px;border-radius:50%;background:var(--tealLt);animation:pulse 2s infinite}
+.tb-sep{color:var(--goldDim,#5c4108)}
+.tb-current{font-family:'Cinzel',serif;font-size:11px;color:var(--teal);letter-spacing:.04em;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tb-prog-wrap{flex:1;height:3px;background:rgba(255,255,255,.05);border-radius:2px;overflow:hidden;margin:0 16px}
+.tb-prog{height:100%;background:linear-gradient(90deg,var(--teal),var(--goldLt));border-radius:2px;transition:width .5s ease}
+.tb-xp{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--goldLt);white-space:nowrap}
+
+
+/* ── Layout ── */
+#shell{display:flex;padding-top:var(--topbar);min-height:100vh}
+
+/* ── Sidebar ── */
+#sb{width:var(--sidebar);background:var(--bg2);border-right:1px solid var(--border);position:fixed;top:var(--topbar);bottom:0;overflow-y:auto;z-index:100}
+#sb::-webkit-scrollbar{width:3px}
+#sb::-webkit-scrollbar-thumb{background:var(--goldDim);border-radius:2px}
+.sb-hdr{padding:10px 16px 6px;font-family:'Cinzel',serif;font-size:9px;font-weight:700;color:var(--goldDim);letter-spacing:.1em;text-transform:uppercase;border-bottom:1px solid rgba(255,255,255,.04)}
+.sb-part{display:flex;align-items:center;gap:8px;padding:9px 14px;cursor:pointer;border-bottom:1px solid rgba(255,255,255,.03);transition:all .12s;text-decoration:none}
+.sb-part:hover,.sb-part.active{background:rgba(212,160,23,.05)}
+.sb-part-icon{font-size:14px;flex-shrink:0}
+.sb-part-info{flex:1;min-width:0}
+.sb-part-num{font-family:'Cinzel',serif;font-size:8.5px;font-weight:700;color:var(--goldDim);letter-spacing:.08em;text-transform:uppercase}
+.sb-part-name{font-family:'Cinzel',serif;font-size:10.5px;color:var(--dim);font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:color .12s}
+.sb-part:hover .sb-part-name,.sb-part.active .sb-part-name{color:var(--goldLt)}
+.sb-part-xp{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--goldDim);white-space:nowrap}
+.sb-lesson{padding:7px 14px 7px 36px;font-size:12px;color:rgba(240,234,214,.35);cursor:pointer;border-left:2px solid transparent;display:flex;align-items:center;gap:8px;transition:all .12s;line-height:1.3;text-decoration:none}
+.sb-lesson:hover{color:rgba(240,234,214,.65);background:rgba(255,255,255,.015)}
+.sb-lesson.active{color:var(--goldLt);border-left-color:var(--goldLt);background:rgba(212,160,23,.06);font-weight:500}
+.sb-lesson.done .sl-dot{background:var(--emeraldLt)}
+.sl-dot{width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,.1);flex-shrink:0;transition:background .2s}
+.sb-tool-link{padding:8px 14px;display:flex;align-items:center;gap:9px;font-size:11.5px;color:var(--dim);cursor:pointer;transition:all .12s;border-left:2px solid transparent;text-decoration:none}
+.sb-tool-link:hover,.sb-tool-link.active{color:var(--tealLt);background:rgba(31,184,168,.04);border-left-color:var(--tealLt)}
+
+/* ── Main Content ── */
+#main{margin-left:var(--sidebar);flex:1;min-width:0;position:relative;z-index:1}
+#main::-webkit-scrollbar{width:4px}
+#main::-webkit-scrollbar-thumb{background:var(--goldDim);border-radius:2px}
+.lesson-wrap{max-width:820px;padding:36px 44px 100px;margin:0 auto;animation:fadeUp .3s ease}
+
+/* ── Typography ── */
+.page-title{font-family:'Cinzel',serif;font-size:28px;font-weight:700;line-height:1.2;margin-bottom:6px}
+.page-sub{font-size:13px;color:rgba(240,234,214,.4);margin-bottom:28px;font-style:italic;padding-bottom:18px;border-bottom:1px solid var(--border)}
+h2{font-family:'Cinzel',serif;font-size:17px;font-weight:600;color:var(--goldLt);margin:28px 0 12px;letter-spacing:.03em}
+h3{font-family:'Cinzel',serif;font-size:13.5px;font-weight:600;color:var(--tealLt);margin:18px 0 8px;letter-spacing:.04em}
+p{font-size:15px;line-height:1.82;color:rgba(240,234,214,.78);margin-bottom:12px}
+strong{color:var(--white);font-weight:500}
+ul,ol{padding-left:20px;margin-bottom:12px}
+li{font-size:15px;line-height:1.78;color:rgba(240,234,214,.72);margin-bottom:4px}
+code{font-family:'JetBrains Mono',monospace;font-size:12px;background:rgba(255,255,255,.06);padding:2px 6px;border-radius:4px;color:var(--tealLt)}
+
+/* ── Narration ── */
+.narration{background:linear-gradient(135deg,rgba(12,15,24,.95),rgba(17,21,32,.9));border:1px solid var(--border);border-left:3px solid var(--gold);border-radius:0 var(--r) var(--r) 0;padding:20px 24px;margin:20px 0;position:relative}
+.nar-lbl{font-family:'Cinzel',serif;font-size:9px;font-weight:700;letter-spacing:.1em;color:var(--gold);margin-bottom:8px;text-transform:uppercase}
+.narration p{font-style:italic;color:rgba(240,234,214,.68);margin:0;font-size:14px;line-height:1.88}
+
+/* ── Checklist ── */
+.checklist{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:20px 24px;margin:20px 0}
+.cl-title{font-family:'Cinzel',serif;font-size:10.5px;font-weight:700;color:var(--teal);letter-spacing:.08em;text-transform:uppercase;margin-bottom:14px}
+.cl-item{display:flex;align-items:flex-start;gap:12px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.04);cursor:pointer;user-select:none}
+.cl-item:last-child{border-bottom:none}
+.cl-box{width:18px;height:18px;border-radius:4px;border:1.5px solid rgba(212,160,23,.25);flex-shrink:0;margin-top:2px;display:flex;align-items:center;justify-content:center;font-size:11px;transition:all .15s}
+.cl-box.on{background:var(--emerald);border-color:var(--emerald);color:white}
+.cl-text{font-size:13.5px;color:rgba(240,234,214,.6);line-height:1.6;transition:all .12s}
+.cl-text.done{text-decoration:line-through;opacity:.35}
+
+/* ── Tables ── */
+.tbl-wrap{overflow-x:auto;margin:16px 0;border-radius:var(--r);border:1px solid var(--border)}
+.dtbl{width:100%;border-collapse:collapse;font-size:13px}
+.dtbl th{background:rgba(212,160,23,.06);color:var(--gold);padding:10px 13px;text-align:left;font-family:'Cinzel',serif;font-size:10.5px;letter-spacing:.04em;border-bottom:1px solid var(--border)}
+.dtbl td{padding:10px 13px;border-bottom:1px solid rgba(255,255,255,.04);color:rgba(240,234,214,.65);vertical-align:top;line-height:1.55}
+.dtbl tr:last-child td{border-bottom:none}
+.dtbl tr:hover td{background:rgba(255,255,255,.015)}
+
+/* ── Callouts ── */
+.callout{border-radius:var(--r);padding:14px 18px;margin:16px 0;font-size:14px;line-height:1.72}
+.tip{background:rgba(5,150,105,.07);border:1px solid rgba(5,150,105,.22);color:rgba(240,234,214,.72)}
+.warn{background:rgba(217,119,6,.07);border:1px solid rgba(217,119,6,.25);color:rgba(240,234,214,.72)}
+.danger{background:rgba(192,57,43,.07);border:1px solid rgba(192,57,43,.25);color:rgba(240,234,214,.72)}
+.lore{background:rgba(14,165,233,.05);border:1px solid rgba(14,165,233,.18);color:rgba(240,234,214,.68)}
+.fpa{background:rgba(124,58,237,.07);border:1px solid rgba(124,58,237,.22);color:rgba(240,234,214,.72)}
+.ci{font-size:15px;margin-right:7px}
+
+/* ── Code blocks ── */
+.code-wrap{margin:16px 0}
+.code-lbl{font-family:'Cinzel',serif;font-size:9px;font-weight:700;letter-spacing:.08em;color:var(--dim);margin-bottom:6px;text-transform:uppercase}
+.code-block{background:#090d14;border:1px solid rgba(255,255,255,.07);border-radius:8px;padding:18px 20px;font-family:'JetBrains Mono',monospace;font-size:11.5px;line-height:1.75;color:#a8d8ea;overflow-x:auto;white-space:pre}
+.ck{color:#ff7b72}.cs{color:#a5d6ff}.cf{color:#d2a8ff}.cc{color:#6a737d}.cn{color:#79c0ff}.cm{color:#ffa657}
+
+/* ── XP Badge ── */
+.xp-badge{display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,rgba(212,160,23,.1),rgba(212,160,23,.04));border:1px solid var(--border);border-radius:20px;padding:5px 14px;font-family:'Cinzel',serif;font-size:11px;color:var(--goldLt);margin-bottom:20px}
+
+/* ── Battle card ── */
+.battle-card{background:linear-gradient(135deg,rgba(124,58,237,.08),rgba(11,14,22,.95));border:1px solid rgba(124,58,237,.3);border-radius:var(--r);padding:22px 26px;margin:20px 0}
+.battle-lbl{font-family:'Cinzel',serif;font-size:9.5px;font-weight:700;letter-spacing:.1em;color:var(--purpleLt);margin-bottom:8px;text-transform:uppercase}
+.battle-title{font-family:'Cinzel',serif;font-size:14px;color:var(--white);margin-bottom:10px;font-weight:600}
+
+/* ── Flow row ── */
+.flow-row{display:flex;align-items:center;flex-wrap:wrap;gap:6px;margin:16px 0}
+.flow-box{padding:8px 14px;background:var(--bg3);border:1px solid var(--border);border-radius:6px;font-size:12px;font-weight:500;font-family:'Cinzel',serif;letter-spacing:.02em}
+.flow-arr{color:var(--dim);font-size:14px}
+
+/* ── Stage flow ── */
+.stage-flow{display:flex;align-items:stretch;flex-wrap:wrap;gap:0;margin:16px 0;overflow:hidden;border-radius:var(--r);border:1px solid var(--border)}
+.stage-box{flex:1;min-width:80px;padding:14px 8px;text-align:center;background:var(--bg3);border-right:1px solid var(--border)}
+.stage-box:last-child{border-right:none}
+.stage-icon{font-size:18px;display:block;margin-bottom:6px}
+.stage-name{font-family:'Cinzel',serif;font-size:9px;font-weight:600;color:var(--dim);letter-spacing:.04em}
+.stage-sub{font-size:10px;color:rgba(240,234,214,.3);margin-top:3px}
+
+/* ── AI Tutor ── */
+.tutor-box{background:linear-gradient(135deg,rgba(8,10,16,.98),rgba(17,21,32,.95));border:1px solid rgba(31,184,168,.18);border-radius:var(--r);padding:22px 26px;margin:28px 0}
+.tutor-hdr{display:flex;align-items:center;gap:12px;margin-bottom:8px}
+.tutor-av{width:38px;height:38px;background:linear-gradient(135deg,var(--purple),var(--teal));border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;box-shadow:0 0 20px rgba(31,184,168,.2)}
+.tutor-nm{font-family:'Cinzel',serif;font-size:13px;font-weight:700;color:var(--tealLt)}
+.tutor-rl{font-size:11px;color:var(--dim)}
+.tutor-desc{font-size:12.5px;color:rgba(240,234,214,.32);margin-bottom:12px}
+.chips{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:12px}
+.chip{font-size:11px;padding:5px 13px;border:1px solid rgba(31,184,168,.18);border-radius:14px;background:transparent;color:rgba(240,234,214,.42);cursor:pointer;transition:all .12s;font-family:'Crimson Pro',serif}
+.chip:hover{border-color:var(--tealLt);color:var(--tealLt);background:rgba(31,184,168,.07)}
+.tutor-row{display:flex;gap:8px}
+.tutor-input{flex:1;padding:9px 14px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:8px;color:var(--white);font-size:13px;font-family:'Crimson Pro',serif;outline:none;transition:border-color .15s}
+.tutor-input:focus{border-color:var(--teal)}
+.tutor-input::placeholder{color:rgba(255,255,255,.18)}
+.tutor-send{padding:9px 18px;background:linear-gradient(135deg,var(--teal),var(--sky));color:var(--bg);border:none;border-radius:8px;font-family:'Cinzel',serif;font-size:10.5px;font-weight:700;letter-spacing:.05em;cursor:pointer;transition:opacity .12s}
+.tutor-send:hover{opacity:.85}
+.tutor-out{margin-top:14px;font-size:14px;line-height:1.78;color:rgba(240,234,214,.68);min-height:0}
+.tutor-out.loading{color:rgba(240,234,214,.28);font-style:italic}
+.tutor-msg{background:var(--bg4);border-radius:8px;padding:12px 16px;margin-bottom:8px}
+.tutor-msg.user-msg{background:rgba(212,160,23,.06);border:1px solid rgba(212,160,23,.1)}
+.tutor-msg.ai-msg{border:1px solid rgba(255,255,255,.05)}
+.tutor-msg-lbl{font-family:'Cinzel',serif;font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:5px;opacity:.45}
+
+/* ── Nav buttons ── */
+.nav-btns{display:flex;justify-content:space-between;margin-top:48px;padding-top:20px;border-top:1px solid var(--border)}
+.nav-btn{padding:10px 22px;font-family:'Cinzel',serif;font-size:11.5px;font-weight:600;letter-spacing:.05em;border-radius:8px;cursor:pointer;transition:all .15s;border:1px solid var(--border);background:transparent;color:rgba(240,234,214,.4);text-decoration:none;display:inline-block}
+.nav-btn:hover{border-color:var(--teal);color:var(--tealLt)}
+.nav-btn.primary{background:linear-gradient(135deg,var(--teal),var(--sky));color:var(--bg);border-color:transparent}
+.nav-btn.primary:hover{opacity:.88;transform:translateY(-1px)}
+.nav-btn.gold{background:linear-gradient(135deg,var(--gold),#d97706);color:var(--bg);border-color:transparent}
+
+/* ── FP&A challenge box ── */
+.fpa-challenge{background:linear-gradient(135deg,rgba(190,24,93,.06),rgba(12,15,24,.97));border:1px solid rgba(190,24,93,.22);border-radius:var(--r);padding:22px 26px;margin:20px 0}
+.fpa-badge{font-family:'Cinzel',serif;font-size:9px;font-weight:700;letter-spacing:.1em;color:var(--roseLt);text-transform:uppercase;margin-bottom:8px}
+.fpa-title{font-family:'Cinzel',serif;font-size:14px;color:var(--white);font-weight:600;margin-bottom:10px}
+.fpa-challenge p{font-size:14px;color:rgba(240,234,214,.68);line-height:1.78;margin-bottom:8px}
+
+/* ── Boss card ── */
+.boss-card{background:linear-gradient(135deg,rgba(212,160,23,.12),rgba(124,58,237,.08),rgba(12,15,24,.97));border:1px solid rgba(212,160,23,.3);border-radius:14px;padding:28px 32px;margin:20px 0;text-align:center}
+.boss-title{font-family:'Cinzel',serif;font-size:22px;font-weight:900;color:var(--goldLt);margin-bottom:8px;animation:glow 3s infinite}
+
+/* ── KPI cards ── */
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin:16px 0}
+.kpi-card{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:16px;position:relative}
+.kpi-lbl{font-size:10px;color:var(--dim);margin-bottom:4px;font-family:'Cinzel',serif;letter-spacing:.04em;text-transform:uppercase}
+.kpi-val{font-family:'Cinzel',serif;font-size:22px;font-weight:700;color:var(--goldLt)}
+.kpi-sub{font-size:11px;color:var(--dim);margin-top:3px}
+.kpi-trend{position:absolute;top:12px;right:12px;font-size:14px}
+
+/* ── Responsive ── */
+@media(max-width:860px){#sb{display:none}#main{margin-left:0}.lesson-wrap{padding:24px 20px 80px}}
+@media(max-width:520px){.lesson-wrap{padding:20px 16px 80px}}
+
+/* ── Topbar tools — scrollable on mobile, current page highlight ── */
+.tb-tools{display:flex;gap:3px;margin-left:6px;overflow-x:auto;flex-shrink:0}
+.tb-tools::-webkit-scrollbar{display:none}
+.tb-tool{padding:4px 8px;border-radius:6px;border:1px solid var(--border);background:transparent;color:var(--dim);font-family:'Cinzel',serif;font-size:8.5px;font-weight:700;letter-spacing:.05em;cursor:pointer;transition:all .15s;text-transform:uppercase;text-decoration:none;display:inline-flex;align-items:center;white-space:nowrap}
+.tb-tool:hover,.tb-tool.active{border-color:var(--gold);color:var(--gold);background:rgba(212,160,23,.06)}
+/* ── Sidebar global nav divider ── */
+.sb-hdr.full-nav-hdr{margin-top:10px;border-top:1px solid rgba(255,255,255,.06);padding-top:10px;color:var(--teal);letter-spacing:.08em}
+
+</style>
+<style>
+body{overflow-x:hidden}
+#topbar-labs{position:fixed;top:0;left:0;right:0;height:54px;background:rgba(7,9,14,.97);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 24px;gap:14px;z-index:200}
+.labs-wrap{max-width:900px;margin:0 auto;padding:80px 32px 80px;position:relative;z-index:1}
+.labs-hero{text-align:center;margin-bottom:40px}
+.labs-title{font-family:'Cinzel',serif;font-size:32px;font-weight:900;color:var(--goldLt);margin-bottom:8px;animation:glow 3s infinite}
+.labs-sub{font-size:15px;color:var(--dim);font-style:italic}
+
+/* Filter pills */
+.filter-bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:32px;justify-content:center}
+.fpill{padding:7px 18px;border-radius:20px;border:1px solid var(--border);background:transparent;color:var(--dim);font-family:'Cinzel',serif;font-size:9.5px;font-weight:700;letter-spacing:.07em;cursor:pointer;transition:all .15s;text-transform:uppercase}
+.fpill:hover,.fpill.active{border-color:var(--gold);color:var(--gold);background:rgba(212,160,23,.07)}
+
+/* Lab cards grid */
+.labs-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:32px}
+.lab-card{background:var(--bg3);border:1px solid var(--border);border-radius:14px;padding:22px;cursor:pointer;transition:all .2s;position:relative;overflow:hidden}
+.lab-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--accent-color,var(--teal))}
+.lab-card:hover{transform:translateY(-3px);box-shadow:0 16px 40px rgba(0,0,0,.5);border-color:rgba(212,160,23,.25)}
+.lab-header{display:flex;align-items:flex-start;gap:14px;margin-bottom:14px}
+.lab-icon{font-size:28px;flex-shrink:0;line-height:1}
+.lab-meta{flex:1}
+.lab-num{font-family:'Cinzel',serif;font-size:9px;font-weight:700;color:var(--dim);letter-spacing:.1em;text-transform:uppercase;margin-bottom:3px}
+.lab-title{font-family:'Cinzel',serif;font-size:13.5px;font-weight:700;color:var(--goldLt);line-height:1.3;margin-bottom:4px}
+.lab-scenario{font-size:12px;color:rgba(240,234,214,.45);line-height:1.45}
+.lab-tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.lab-tag{font-family:'Cinzel',serif;font-size:8.5px;font-weight:700;letter-spacing:.06em;padding:3px 8px;border-radius:10px;border:1px solid var(--border);color:var(--dim);text-transform:uppercase}
+.lab-footer{display:flex;justify-content:space-between;align-items:center}
+.lab-xp{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--goldLt)}
+.lab-diff{font-family:'Cinzel',serif;font-size:9px;font-weight:700;letter-spacing:.06em;padding:4px 10px;border-radius:12px;text-transform:uppercase}
+.diff-inter{background:rgba(5,150,105,.1);border:1px solid rgba(5,150,105,.3);color:var(--emeraldLt)}
+.diff-adv{background:rgba(14,165,233,.08);border:1px solid rgba(14,165,233,.25);color:var(--skyLt)}
+.diff-exp{background:rgba(190,24,93,.08);border:1px solid rgba(190,24,93,.25);color:var(--roseLt)}
+.lab-time{font-size:11px;color:var(--dim)}
+.lab-cta{background:linear-gradient(135deg,var(--teal),var(--sky));color:var(--bg);font-family:'Cinzel',serif;font-size:10px;font-weight:700;letter-spacing:.06em;padding:7px 16px;border:none;border-radius:8px;cursor:pointer;margin-top:12px;width:100%;transition:opacity .15s}
+.lab-cta:hover{opacity:.85}
+
+/* Full lab view */
+.lab-detail{display:none;animation:fadeUp .25s ease}
+.lab-detail.active{display:block}
+.back-btn{display:inline-flex;align-items:center;gap:8px;font-family:'Cinzel',serif;font-size:11px;font-weight:600;color:var(--dim);cursor:pointer;border:1px solid var(--border);padding:7px 16px;border-radius:8px;background:transparent;margin-bottom:28px;transition:all .15s}
+.back-btn:hover{border-color:var(--teal);color:var(--tealLt)}
+.lab-dl-header{background:linear-gradient(135deg,rgba(212,160,23,.08),rgba(12,15,24,.97));border:1px solid var(--border);border-left:4px solid var(--gold);border-radius:0 14px 14px 0;padding:24px 28px;margin-bottom:28px}
+.lab-dl-title{font-family:'Cinzel',serif;font-size:22px;font-weight:900;color:var(--goldLt);margin-bottom:6px}
+.lab-dl-sub{font-size:14px;color:rgba(240,234,214,.5);font-style:italic;margin-bottom:14px}
+.lab-dl-meta{display:flex;gap:16px;flex-wrap:wrap}
+.lab-dl-badge{font-family:'Cinzel',serif;font-size:9.5px;font-weight:700;letter-spacing:.08em;padding:4px 12px;border-radius:12px;text-transform:uppercase;background:rgba(212,160,23,.08);border:1px solid var(--border);color:var(--goldLt)}
+/* Tabs */
+.lab-tabs{display:flex;gap:0;border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:24px}
+.lab-tab{flex:1;padding:11px 12px;font-family:'Cinzel',serif;font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;background:transparent;border:none;color:var(--dim);transition:all .15s;border-right:1px solid var(--border)}
+.lab-tab:last-child{border-right:none}
+.lab-tab:hover{background:rgba(255,255,255,.02);color:var(--goldLt)}
+.lab-tab.active{background:rgba(212,160,23,.08);color:var(--goldLt)}
+.lab-panel{display:none}.lab-panel.active{display:block}
+/* Task list */
+.task-list{display:flex;flex-direction:column;gap:10px;margin-bottom:24px}
+.task-item{background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:16px 18px;cursor:pointer;transition:all .15s}
+.task-item:hover{border-color:rgba(212,160,23,.25)}
+.task-item.done{border-color:rgba(5,150,105,.3);background:rgba(5,150,105,.04)}
+.task-hdr{display:flex;align-items:center;gap:12px}
+.task-check{width:20px;height:20px;border-radius:5px;border:1.5px solid var(--border);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:12px;transition:all .15s}
+.task-item.done .task-check{background:var(--emerald);border-color:var(--emerald);color:white}
+.task-num{font-family:'Cinzel',serif;font-size:9px;font-weight:700;color:var(--goldDim,#5c4108);letter-spacing:.06em;text-transform:uppercase}
+.task-text{font-size:14px;color:rgba(240,234,214,.75);flex:1;line-height:1.5}
+.task-item.done .task-text{text-decoration:line-through;opacity:.45}
+.task-expand{color:var(--dim);font-size:12px;transition:transform .2s}
+.task-item.open .task-expand{transform:rotate(180deg)}
+.task-detail{display:none;padding-top:12px;padding-left:32px;font-size:13px;color:rgba(240,234,214,.55);line-height:1.72;border-top:1px solid rgba(255,255,255,.04);margin-top:12px}
+.task-item.open .task-detail{display:block}
+/* Solution toggle */
+.solution-btn{padding:11px 22px;background:transparent;border:1px solid rgba(190,24,93,.3);color:var(--roseLt);font-family:'Cinzel',serif;font-size:10.5px;font-weight:700;letter-spacing:.06em;border-radius:8px;cursor:pointer;transition:all .15s;margin-bottom:16px}
+.solution-btn:hover{background:rgba(190,24,93,.06)}
+.solution-reveal{display:none;background:rgba(190,24,93,.04);border:1px solid rgba(190,24,93,.15);border-radius:10px;padding:20px 24px;margin-bottom:20px}
+.solution-reveal.show{display:block;animation:fadeUp .2s ease}
+/* AI tutor in labs */
+.lab-oracle{background:var(--bg4);border:1px solid rgba(31,184,168,.18);border-radius:10px;padding:18px 22px;margin-top:24px}
+@media(max-width:700px){.labs-grid{grid-template-columns:1fr}.lab-tabs{flex-wrap:wrap}}
+</style>
+</head>
+<body>
+<div id="stars"></div>
+<div id="topbar-labs">
+  <a href="index.html" style="font-family:'Cinzel',serif;font-size:13px;font-weight:700;color:var(--goldLt);text-decoration:none;display:flex;align-items:center;gap:9px"><span class="tb-dot"></span>The Planning Quest</a>
+  <span style="color:var(--goldDim,#5c4108)">›</span>
+  <span style="font-family:'Cinzel',serif;font-size:11px;color:var(--teal)">Enterprise Labs</span>
+  <div style="flex:1"></div>
+  <div style="display:flex;gap:4px">
+    <a href="parts-1-3.html" style="padding:4px 8px;border-radius:6px;border:1px solid var(--border);background:transparent;color:var(--dim);font-family:'Cinzel',serif;font-size:9px;font-weight:700;letter-spacing:.04em;text-decoration:none;text-transform:uppercase">📖 Parts</a>
+    <a href="groovy-ch1.html" style="padding:4px 8px;border-radius:6px;border:1px solid var(--border);background:transparent;color:var(--dim);font-family:'Cinzel',serif;font-size:9px;font-weight:700;letter-spacing:.04em;text-decoration:none;text-transform:uppercase">📘 Gr.I</a>
+    <a href="groovy-ch2.html" style="padding:4px 8px;border-radius:6px;border:1px solid var(--border);background:transparent;color:var(--dim);font-family:'Cinzel',serif;font-size:9px;font-weight:700;letter-spacing:.04em;text-decoration:none;text-transform:uppercase">⚡ Gr.II</a>
+    
+    <a href="quiz.html" style="padding:4px 8px;border-radius:6px;border:1px solid var(--border);background:transparent;color:var(--dim);font-family:'Cinzel',serif;font-size:9px;font-weight:700;letter-spacing:.04em;text-decoration:none;text-transform:uppercase">📝 Quiz</a>
+    <a href="flashcards.html" style="padding:4px 8px;border-radius:6px;border:1px solid var(--border);background:transparent;color:var(--dim);font-family:'Cinzel',serif;font-size:9px;font-weight:700;letter-spacing:.04em;text-decoration:none;text-transform:uppercase">🃏 Cards</a>
+    <a href="labs.html" style="padding:4px 8px;border-radius:6px;border:1px solid var(--border);background:transparent;color:var(--dim);font-family:'Cinzel',serif;font-size:9px;font-weight:700;letter-spacing:.04em;text-decoration:none;text-transform:uppercase">🔬 Labs</a>
+  </div>
+</div>
+
+<div class="labs-wrap">
+  <!-- LIST VIEW -->
+  <div id="lab-list">
+    <div class="labs-hero">
+      <h1 class="labs-title">🔬 Enterprise Labs</h1>
+      <p class="labs-sub">Real FP&A scenarios · Oracle EPBCS production-grade challenges · AI Oracle guidance</p>
+    </div>
+    <div class="filter-bar">
+      <button class="fpill active" onclick="filterLabs('all',this)">All Labs</button>
+      <button class="fpill" onclick="filterLabs('budgeting',this)">Budgeting</button>
+      <button class="fpill" onclick="filterLabs('forecasting',this)">Forecasting</button>
+      <button class="fpill" onclick="filterLabs('groovy',this)">Groovy</button>
+      <button class="fpill" onclick="filterLabs('reporting',this)">Reporting</button>
+      <button class="fpill" onclick="filterLabs('integration',this)">Integration</button>
+    </div>
+    <div class="labs-grid" id="labs-grid"></div>
+  </div>
+
+  <!-- DETAIL VIEW -->
+  <div id="lab-detail" class="lab-detail"></div>
+</div>
+
+<script>
+(function(){var s=document.getElementById('stars');for(var i=0;i<80;i++){var d=document.createElement('div');d.className='star';var sz=Math.random()*2+0.4;d.style.cssText='width:'+sz+'px;height:'+sz+'px;top:'+Math.random()*100+'%;left:'+Math.random()*100+'%;--d:'+(2+Math.random()*4)+'s;--delay:'+Math.random()*5+'s;--op:'+(0.1+Math.random()*0.35);s.appendChild(d);}})();
+
+var LABS = [
+/* ══ LAB 1 ══ */
+{
+  id:'lab1',icon:'📊',cat:'budgeting',
+  title:'Annual Budget Build — Vision US',
+  scenario:'Vision Corporation\'s US entity ($1.4B revenue, 2,800 employees) must complete its FY2026 Annual Budget in EPBCS by November 30th. You are the EPBCS administrator and FP&A lead. Build the complete budget system from seeding to final lock.',
+  diff:'intermediate',time:'90 min',xp:250,
+  accent:'var(--emerald)',
+  tags:['Budgeting','Data Load','Workflow','Forms'],
+  context:'Vision US has 6 departments (Sales &amp; Marketing, R&amp;D, G&amp;A, Operations, IT, Legal), 4 business segments, and requires both a granular headcount/cost-centre budget and a consolidated P&amp;L rollup. The budget cycle opens November 1st. All 14 department managers submit by November 22nd, Finance BP reviews by November 27th, CFO approves by November 30th.',
+  objectives:[
+    'Seed FY2026 Budget from FY2025 Actuals using a Data Integration copy rule',
+    'Configure all 6 department expense input forms with appropriate row suppression',
+    'Build a Groovy seasonality rule to spread annual revenue targets to 12 months',
+    'Configure the 3-level approval workflow: Dept Manager → Finance BP → CFO',
+    'Lock Vision_US Budget after CFO approval using EPM Automate (epmautomate CLI)',
+    'Generate the Board Pack PDF and deliver to CFO inbox automatically'
+  ],
+  tasks:[
+    {
+      n:'Task 1',
+      t:'Seed FY2026 Budget from FY2025 Actuals',
+      d:'<strong>What you\'re building:</strong> A Data Integration copy rule that brings FY2025 Actual/Final data into FY2026 Budget/Working as the planning starting point.<br><br><strong>Step-by-step:</strong><br>1. Navigate to <strong>Data Integration → Home → New</strong>. Name: <code>Seed_FY2026_Budget</code>.<br>2. Source: Vision application, Scenario=<code>Actual</code>, Version=<code>Final</code>, Year=<code>FY2025</code>.<br>3. Target: Vision application, Scenario=<code>Budget</code>, Version=<code>Working</code>, Year=<code>FY2026</code>.<br>4. Map all dimensions 1:1 except Year (FY2025 → FY2026).<br>5. Load Mode: <strong>Replace</strong>. Run. Expected runtime: 3–8 minutes.<br><br><strong>Verification:</strong> Open any department expense form for FY2026/Budget/Working. Cells should show FY2025 Actual values. Check Net_Income Full_Year = prior year Actual.<br><br><strong>Common mistake:</strong> Accumulate mode instead of Replace — values double-count if any test data exists.',
+      sol:'<strong>Key settings:</strong> Source = Vision app. Target = Vision app. In Year dimension mapping: map source member FY2025 to target member FY2026. Period mapping stays 1:1 (Jan→Jan). Load Mode = Replace.<br><br><strong>Expected result:</strong> DI Workflow History shows "Succeeded" with a row count matching FY2025 data volume. If row count is 0, the source POV filter returned no data — confirm FY2025/Actual/Final has been loaded first.<br><br><strong>Production enhancement:</strong> After the seed, run a Groovy rule that applies a growth factor: <code>FY2026_Budget = FY2025_Actual * 1.05</code>. This gives planners a realistic starting point rather than flat prior year — a meaningful signal that the company is targeting growth.'
+    },
+    {
+      n:'Task 2',
+      t:'Configure 6 Department Expense Input Forms',
+      d:'<strong>What you\'re building:</strong> Six planning forms, one per department, each showing that department\'s expense accounts in rows and Jan–Dec FY2026 in columns.<br><br><strong>Step-by-step (repeat for each department):</strong><br>1. Navigate to <strong>Tools → Forms → New Simple Form</strong>.<br>2. Name: <code>FY2026_Budget_[Dept]_Expenses</code>.<br>3. <strong>Rows:</strong> Descendants(<code>[Dept]_OpEx</code>). Row suppression: Suppress Missing = On, Hide Rows with No Data = On.<br>4. <strong>Columns:</strong> Jan, Feb ... Dec. Year = FY2026.<br>5. <strong>Page:</strong> Entity = department entity, Scenario = Budget, Version = Working.<br>6. <strong>Precision:</strong> 0 decimal places.<br>7. <strong>Access:</strong> Write access to that department\'s Manager role.<br><br><strong>Repeat for:</strong> Sales_Marketing, R_And_D, G_And_A, Operations, IT, Legal.<br><br><strong>Verification:</strong> Log in as a test planner for Sales & Marketing. Confirm they can edit their rows but cannot see R&D data.',
+      sol:'<strong>Critical row suppression detail:</strong> Enable both "Suppress Missing Blocks" AND "Suppress Missing Data" in Form Properties. The first hides entire entity blocks with no data; the second hides #MISSING cells within a block. Without both, planners see hundreds of blank rows.<br><br><strong>Account hierarchy prerequisite:</strong> Verify the account hierarchy has department-level subtotals before building forms: <code>Total_OpEx → SalesMarketing_OpEx → [leaf accounts]</code>. If all departments share a flat OpEx list, every form shows all 300+ accounts.<br><br><strong>Action Menu addition:</strong> Add the Seasonality Spread rule (Task 3) to an Action Menu on the revenue form. This lets managers run the spread rule without leaving their form.<br><br><strong>Form folder:</strong> Create a Form Folder "FY2026 Budget Input" and add all 6 forms. Assign to each department\'s Navigation Flow so managers land on their form immediately on login.'
+    },
+    {
+      n:'Task 3',
+      t:'Build the Seasonality Revenue Spread Groovy Rule',
+      d:'<strong>What you\'re building:</strong> A Groovy business rule on an Action Menu. When a manager enters an annual Revenue total and clicks "Spread to Months", the rule distributes it across Jan–Dec using FY2025 Actual seasonality weights.<br><br><strong>Step-by-step:</strong><br>1. Navigate to <strong>Tools → Business Rules → New → Groovy</strong>.<br>2. Name: <code>Spread_Revenue_Seasonality_FY2026</code>. Plan type: Vision.<br>3. Add RTP: Name = <code>pEntity</code>, Type = Member, Dimension = Entity.<br>4. Paste the code from the solution panel.<br>5. Test via Launch — check Job Console for output line "Spread complete".<br>6. Navigate to <strong>Tools → Forms → [Revenue Form] → Action Menus</strong>. Add menu item "🔀 Spread to Months".<br><br><strong>Test scenario:</strong> Enter 1,200,000 in Full_Year for Vision_US. Click Spread. Verify Jan–Dec sum = 1,200,000 and months follow prior year pattern.',
+      sol:'<strong>Complete Groovy rule:</strong><br><pre style="background:#090d14;border-radius:8px;padding:14px;font-family:JetBrains Mono,monospace;font-size:11px;line-height:1.7;color:#a8d8ea;overflow-x:auto;white-space:pre">// Seasonality Revenue Spread — Vision Corp FY2026\ndef months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]\ndef entity = operation.parameter("pEntity") ?:\n  operation.grid.pov.find{it.dimensionName=="Entity"}?.memberName\n\ndef annualBudget = getCell(entity,"Total_Revenue","Full_Year","FY2026","Budget","Working") ?: 0\nif (!annualBudget || annualBudget == 0) { println("No annual budget — skipping"); return }\n\ndef pyTotal = getCell(entity,"Total_Revenue","Full_Year","FY2025","Actual","Final") ?: 0\ndef writes  = []\n\nif (pyTotal == 0) {\n  // Fallback: equal 1/12 for new entities with no history\n  months.each { m -> writes << [entity,"Total_Revenue",m,"FY2026","Budget","Working",annualBudget/12] }\n  println("${entity}: no prior year — equal distribution")\n} else {\n  months.each { m ->\n    def pyMth  = getCell(entity,"Total_Revenue",m,"FY2025","Actual","Final") ?: (pyTotal/12)\n    def spread = (annualBudget * (pyMth/pyTotal) as BigDecimal).setScale(0,java.math.RoundingMode.HALF_UP)\n    writes << [entity,"Total_Revenue",m,"FY2026","Budget","Working",spread]\n  }\n  // Rounding reconciliation — assign remainder to December\n  def sumMths = writes.sum{it[6]}\n  writes[11][6] += (annualBudget - sumMths)\n}\n\noperation.grid.setDataCellValues(writes)\nprintln("Spread complete: ${entity} annual ${annualBudget} -> 12 months")</pre><br><strong>Critical fallback branch:</strong> Without the <code>pyTotal == 0</code> check, the rule throws a division-by-zero error for new business segments with no FY2025 history — exactly the failure that blocks a 3am budget run.<br><br><strong>Rounding fix:</strong> Decimal rounding means 12 months may not sum exactly to the annual total. The last two lines assign the remainder to December, keeping the audit clean.'
+    },
+    {
+      n:'Task 4',
+      t:'Configure 3-Level Approval Workflow',
+      d:'<strong>What you\'re building:</strong> A Planning Unit Hierarchy that routes each department budget through three approval levels.<br><br><strong>Step-by-step:</strong><br>1. Navigate to <strong>Tools → Approvals → Planning Unit Hierarchies → New</strong>.<br>2. Name: <code>FY2026_Budget_Workflow</code>. Scenario: Budget. Version: Working.<br>3. <strong>Level 1 (leaf entities):</strong> Each department entity → that department\'s Manager role.<br>4. <strong>Level 2 (Vision_US):</strong> Reviewer = Finance_BP_US.<br>5. <strong>Level 3 (Total_Vision):</strong> Reviewer = CFO.<br>6. Enable <strong>Exclude Non-Specified Users</strong> — only assigned reviewers can act.<br>7. Start date: November 1st. Deadline: November 30th.<br><br><strong>Test the flow:</strong> Login as Sales Manager → submit → Finance BP reviews → promotes → CFO approves.<br><br><strong>Expected status path:</strong> Not Started → Under Review → Submitted → Promoted → Approved.',
+      sol:'<strong>Critical setting — Exclude Non-Specified Users:</strong> Without this, any user with Approvals access can approve any planning unit. Always enable in production.<br><br><strong>Common configuration mistake:</strong> Setting the hierarchy root too high in the Entity tree (e.g. Total_Vision_Global when only US needs approval). Scope the hierarchy to just the entities in this budget cycle.<br><br><strong>EPM Automate status check:</strong> <code>epmautomate listPlanningUnitStatus Vision Budget Working FY2026</code> — outputs each entity\'s current status. Finance teams use this to monitor progress without logging into the UI.<br><br><strong>Approval status after each level:</strong> Level 1 submit → status changes from "Not Started" to "Under Review" at Level 2. Finance BP reviews and promotes → status changes to "Under Review" at Level 3. CFO approves → status = "Approved". If CFO rejects, status reverts to the relevant level for correction.'
+    },
+    {
+      n:'Task 5',
+      t:'Lock Budget and Auto-Deliver Board Pack',
+      d:'<strong>What you\'re building:</strong> An EPM Automate script that: locks the Vision_US budget, generates PDF reports, and notifies the CFO — all without manual intervention.<br><br><strong>Step-by-step:</strong><br>1. Create <code>lock_and_deliver_budget.sh</code>.<br>2. Add EPM Automate commands (see solution panel).<br>3. Schedule for <strong>11pm November 30th</strong>.<br>4. Add error alerting: if any command exits non-zero, email finance.admin@vision.com immediately.<br><br><strong>Pre-requisites:</strong> All entities in Approved status. FRS report set "Budget_Board_Pack" exists. CFO email registered in EPBCS notifications.<br><br><strong>Verification:</strong> Run manually once in test. Check: (1) Budget shows Locked in Approvals, (2) PDF in download folder, (3) Notification email arrives.',
+      sol:'<strong>Complete EPM Automate script:</strong><br><pre style="background:#090d14;border-radius:8px;padding:14px;font-family:JetBrains Mono,monospace;font-size:11px;line-height:1.7;color:#a8d8ea;white-space:pre">#!/bin/bash\n# lock_and_deliver_budget.sh  —  Schedule: 11pm Nov 30th\nset -e  # exit on any error\n\n# Step 1: Verify approvals, run final calc\nepmautomate listPlanningUnitStatus Vision Budget Working FY2026\nepmautomate runBusinessRule Master_Calc_FY2026\n\n# Step 2: Promote / lock\nepmautomate promotePlanningUnit Vision Budget Working FY2026 Total_Vision_US\n\n# Step 3: Generate Board Pack PDFs\nepmautomate runReportingJobSet FY2026_Budget_Board_Pack\n\n# Step 4: Archive snapshot\nepmautomate exportSnapshot FY2026_Budget_Final\n\necho "Budget lock complete. Board Pack delivered."</pre><br><strong>Error handling:</strong> <code>set -e</code> stops the script on the first failure. Wrap in a cron harness that emails Finance_Admin with the log on non-zero exit. Never let a silent failure reach the CFO\'s inbox.'
+    }
+  ],
+  fpa_insight:'The three most common budget cycle failures in EPBCS: (1) seeding from the wrong source scenario — always confirm source has data before running the copy; (2) form versions not matching the workflow version — if workflow is Budget/Working but a form uses Budget/Final, planner data never appears in the approval; (3) configuring the approval workflow after planners have already started — this resets statuses and triggers a support ticket storm. The correct sequence is always: configure → test → communicate → open for input.'
+},
+/* ══ LAB 2 ══ */
+{
+  id:'lab2',icon:'🔄',cat:'forecasting',
+  title:'Q3 Rolling Forecast — 4+8 to 3+9 Transition',
+  scenario:'It is October 1st. Vision Corporation transitions from a 4+8 rolling forecast to 3+9 (3 actual months + 9 forecast). September actuals are loaded. Advance the forecast horizon and ensure all forms, rules, and substitution variables reflect the new period.',
+  diff:'advanced',time:'60 min',xp:200,
+  accent:'var(--sky)',
+  tags:['Forecasting','SubVars','EPM Automate (epmautomate CLI)','Forms'],
+  context:'Vision uses substitution variables <code>&amp;CurPeriod</code> and <code>&amp;CurYear</code> in all 50+ planning forms. The design principle: no form should ever have a hardcoded month name. By updating two SubVars, the entire planning system advances. This is the test of whether the original build was done correctly.',
+  objectives:[
+    'Advance CurPeriod from Sep to Oct via EPM Automate (epmautomate CLI)',
+    'Verify rolling 12-column forecast form advances correctly to Oct–Sep',
+    'Lock September data — planners cannot edit past months',
+    'Seed October–December Forecast from Budget as planning starting point',
+    'Build a Groovy forecast consistency validation rule',
+    'Generate a Forecast Accuracy report comparing Q3 Forecast vs Actuals'
+  ],
+  tasks:[
+    {
+      n:'Task 1',
+      t:'Advance Substitution Variables via EPM Automate',
+      d:'<strong>What you\'re building:</strong> A repeatable monthly SubVar update that advances the entire planning system to the new period in under 60 seconds.<br><br><strong>Step-by-step:</strong><br>1. Login to EPM Automate: <code>epmautomate login admin password https://your-instance.com</code><br>2. Advance period: <code>epmautomate setSubstitutionVariable Vision CurPeriod Oct</code><br>3. Year boundary (December → January only): <code>epmautomate setSubstitutionVariable Vision CurYear FY2026</code><br>4. Verify: <code>epmautomate getSubstitutionVariable Vision CurPeriod</code> → returns Oct.<br>5. Open a rolling forecast form. Column 1 = Oct, Column 12 = Sep (next year).<br><br><strong>If forms do NOT update:</strong> Check that column definition uses <code>&amp;CurPeriod</code> not hardcoded "Sep". Clear browser cache. Check app-level vs server-level SubVar scope.',
+      sol:'<strong>Monthly advance script:</strong><br><pre style="background:#090d14;border-radius:8px;padding:12px;font-family:JetBrains Mono,monospace;font-size:11px;line-height:1.7;color:#a8d8ea;white-space:pre">#!/bin/bash\n# Usage: ./advance.sh Oct         (intra-year)\n#        ./advance.sh Jan FY2026   (year boundary)\nNEW_PERIOD=$1\nNEW_YEAR=$2\n\nepmautomate setSubstitutionVariable Vision CurPeriod $NEW_PERIOD\n[ ! -z "$NEW_YEAR" ] && epmautomate setSubstitutionVariable Vision CurYear $NEW_YEAR\nepmautomate getSubstitutionVariable Vision CurPeriod\necho "Rolling forecast advanced to ${NEW_PERIOD}"</pre><br><strong>App-level vs server-level SubVar:</strong> Always define rolling period SubVars at the application level only. If you define both app-level and server-level with the same name, EPM Automate updates the app level but the server-level value may still override in some contexts — a confusing ghost problem.'
+    },
+    {
+      n:'Task 2',
+      t:'Lock September Actuals',
+      d:'<strong>What you\'re building:</strong> A configuration that prevents planners from editing any month ≤ CurPeriod−1 (September in this case).<br><br><strong>Option A — Valid Intersections (recommended):</strong><br>1. Navigate to <strong>Tools → Valid Intersections → New Rule</strong>.<br>2. Period members {Jan–Sep} AND Scenario=Forecast → Invalid for Planner role.<br>3. Apply. Planners see read-only cells for Jan–Sep on all Forecast forms.<br><br><strong>Option B — Groovy beforeSave guard:</strong> Reads CurPeriod SubVar, converts to month index, checks if any edited cell is in a locked month. If so: <code>operation.cancelled = true</code>.<br><br><strong>Verification:</strong> Log in as a Planner. Open the Forecast form. Try to type in the September column. It should be read-only.',
+      sol:'<strong>Groovy beforeSave lock guard:</strong><br><pre style="background:#090d14;border-radius:8px;padding:12px;font-family:JetBrains Mono,monospace;font-size:11px;line-height:1.7;color:#a8d8ea;white-space:pre">// beforeSave — Block edits to locked months\ndef MONTH_IDX = [Jan:1,Feb:2,Mar:3,Apr:4,May:5,Jun:6,Jul:7,Aug:8,Sep:9,Oct:10,Nov:11,Dec:12]\ndef curPeriod = operation.grid.getSubstitutionVariable("CurPeriod") ?: "Oct"\ndef lockBefore = MONTH_IDX[curPeriod] ?: 10\n\ndef violations = []\noperation.grid.dataCells.each { cell ->\n  if (!cell.changed) return\n  def periodIdx = MONTH_IDX[cell.getMemberName("Period")] ?: 99\n  if (periodIdx < lockBefore) violations << cell.getMemberName("Period")\n}\n\nif (violations) {\n  operation.cancelled = true\n  throw new Exception("Cannot edit locked months: ${violations.unique().join(", ")}. Contact Finance Admin if actuals need correction.")\n}</pre><br><strong>Valid Intersections vs Groovy:</strong> Use Valid Intersections for broad, role-based locking. Use Groovy when Finance Admin should bypass the lock: add <code>if (operation.securityContext.hasRole("Finance_Admin")) return</code> at the top.'
+    },
+    {
+      n:'Task 3',
+      t:'Seed Q4 Forecast from Budget',
+      d:'<strong>What you\'re building:</strong> A DI copy rule seeding October–December Forecast/Working from Budget/Working — giving planners a non-zero starting point for Q4.<br><br><strong>Step-by-step:</strong><br>1. Navigate to <strong>Data Integration → Home → New</strong>. Name: <code>Seed_Q4_Forecast_from_Budget</code>.<br>2. Source: Vision, Scenario=Budget, Version=Working, Year=FY2025.<br>3. Target: Vision, Scenario=Forecast, Version=Working, Year=FY2025.<br>4. <strong>Period filter (critical):</strong> Set Period = Oct, Nov, Dec ONLY. Do not include Jan–Sep.<br>5. Load Mode: Replace. Run.<br><br><strong>Verification:</strong> Open Forecast form for Vision_US. Oct/Nov/Dec = Budget values. Jan–Sep = Actuals (unchanged).',
+      sol:'<strong>Period filter in DI:</strong> In your integration, go to the Filter tab → Source Filter → add condition: Period BETWEEN Oct AND Dec. DI uses EPBCS period sort order (Oct=10, Nov=11, Dec=12).<br><br><strong>Groovy alternative for account-level control:</strong><br><pre style="background:#090d14;border-radius:8px;padding:12px;font-family:JetBrains Mono,monospace;font-size:11px;line-height:1.7;color:#a8d8ea;white-space:pre">// Seed Q4 Forecast — Groovy (use only if DI period filtering is unavailable)\ndef months = ["Oct","Nov","Dec"]\ndef entities = cube.getEssbaseCube().getMember("Entity","Total_Vision").getLevelZeroMembers()\ndef accounts = cube.getEssbaseCube().getMember("Account","Net_Income").getLevelZeroDescendants()\ndef writes = []\nentities.each { e -> months.each { m -> accounts.each { a ->\n  def bud = getCell(e.getName(),a.getName(),m,"FY2025","Budget","Working") ?: 0\n  if (bud != 0) writes << [e.getName(),a.getName(),m,"FY2025","Forecast","Working",bud]\n}}}\noperation.grid.setDataCellValues(writes)\nprintln("Q4 seed: ${writes.size()} cells")</pre><br><strong>Use DI for bulk seeding</strong> — it handles block creation automatically. Groovy requires blocks to exist first (NODE s).'
+    },
+    {
+      n:'Task 4',
+      t:'Build Forecast Consistency Validation',
+      d:'<strong>What you\'re building:</strong> A Groovy beforeSave rule with 3 consistency checks. Shows ALL violations at once — not just the first one.<br><br><strong>The 3 checks:</strong><br>1. Revenue within ±15% of Budget for each entity<br>2. No entity has negative forecast revenue<br>3. OpEx ≤ 95% of Revenue<br><br><strong>Pattern:</strong> Collect-all-errors — gather all failures into a list, throw once at the end. Never throw inside the loop.',
+      sol:'<strong>Complete validation rule:</strong><br><pre style="background:#090d14;border-radius:8px;padding:12px;font-family:JetBrains Mono,monospace;font-size:11px;line-height:1.7;color:#a8d8ea;white-space:pre">// Forecast Consistency Validation — beforeSave\ndef entities = cube.getEssbaseCube().getMember("Entity","Total_Vision").getLevelZeroMembers()\ndef errors = []\n\nentities.each { e ->\n  def en   = e.getName()\n  def rev  = (getCell(en,"Total_Revenue","Full_Year","FY2025","Forecast","Working") ?: 0G) as BigDecimal\n  def bRev = (getCell(en,"Total_Revenue","Full_Year","FY2025","Budget","Working")   ?: 0G) as BigDecimal\n  def opex = (getCell(en,"Total_OpEx",   "Full_Year","FY2025","Forecast","Working") ?: 0G) as BigDecimal\n\n  if (bRev != 0 && (rev-bRev).abs()/bRev.abs()*100 > 15)\n    errors << "${en}: Revenue ${String.format("%.1f",(rev-bRev).abs()/bRev.abs()*100)}% from Budget (limit 15%)"\n  if (rev < 0)\n    errors << "${en}: Negative revenue forecast (${rev})"\n  if (rev > 0 && opex/rev > 0.95)\n    errors << "${en}: OpEx ${String.format("%.1f",opex/rev*100)}% of Revenue (limit 95%)"\n}\n\nif (errors) {\n  operation.cancelled = true\n  throw new Exception("Forecast validation failed:\\n" + errors.join("\\n"))\n}\nprintln("Validation passed: ${entities.size()} entities")</pre>'
+    },
+    {
+      n:'Task 5',
+      t:'Generate Forecast Accuracy Report',
+      d:'<strong>What you\'re building:</strong> An FRS report comparing Q3 Forecast (entered in July) vs Q3 Actuals. Measures planning accuracy. Identifies the 3 worst-performing entities.<br><br><strong>Step-by-step in FRS Designer:</strong><br>1. New report: <code>FY2025_Q3_Forecast_Accuracy</code>.<br>2. Rows: Descendants(Net_Income).<br>3. Column A: Forecast/Working/Q3. Column B: Actual/Final/Q3.<br>4. Column C: A − B (variance $). Column D: ABS(A−B)/ABS(B)×100 (MAPE %).<br>5. Conditional format on Col D: &lt;5% = green, 5–15% = amber, &gt;15% = red.<br>6. Page: Entity, all 12. Enable "Page of Pages".<br>7. Sort entities by Col D descending. Top 3 = worst forecast accuracy.',
+      sol:'<strong>MAPE formula in FRS:</strong> Column D formula: <code>ABS([A]-[B])/ABS([B])*100</code>. Set "Suppress if denominator zero". Precision = 1 decimal. Apply conditional: Value &gt; 15 → Red, 5–15 → Amber, &lt; 5 → Green.<br><br><strong>FP&A insight on MAPE benchmarks:</strong> Industry target for mature FP&A = MAPE &lt; 5% at entity level. If Vision shows 20–30%, the root cause is almost always: (1) no driver-based forecast — planners are guessing; (2) seasonality not modelled; (3) new product launches not captured.<br><br><strong>Automate delivery:</strong> <code>epmautomate runReportingJobSet Q3_Forecast_Accuracy</code>. Schedule for October 5th (5 days after quarter close) — gives Finance time to review before the Q3 Board meeting.'
+    }
+  ],
+  fpa_insight:'Rolling forecast transitions reveal configuration quality. Forms with hardcoded month names require manual updates every month — the biggest maintenance overhead in poorly designed systems. The SubVar pattern is the difference between a 60-second monthly advance (two CLI commands) and a 2-hour manual rework touching 50 forms. When you inherit an EPBCS environment, open any rolling forecast form and inspect the column definitions. If you see "Oct", "Nov", "Dec" hardcoded — that\'s technical debt. If you see "&CurPeriod", "&CurPeriod+1" — someone built it correctly.'
+},
+
+/* ══ LAB 3 ══ */
+{
+  id:'lab3',icon:'⚔',cat:'groovy',
+  title:'Complete Groovy Automation Suite',
+  scenario:'Vision Corporation requires a fully automated planning calculation chain: (1) seed headcount-driven costs from Workforce, (2) allocate IT and HR shared costs proportionally, (3) validate budget before submission, (4) copy approved budget to baseline version. Build all four rules and chain them in sequence.',
+  diff:'expert',time:'120 min',xp:350,
+  accent:'var(--purple)',
+  tags:['Groovy','Allocation','Validation','Automation'],
+  context:'The four rules have strict dependencies: headcount cascade must run first (allocation uses headcount as denominator), allocations run second, validation runs third, baseline copy runs last. Build each rule individually, test it in isolation, then chain them. Do not attempt to build all four at once.',
+  objectives:[
+    'Build Headcount → Compensation cascade using UDA-tagged driver accounts',
+    'Build two-pool shared services allocation (IT by revenue, HR by headcount) in one rule',
+    'Build comprehensive 6-check budget validation with collect-all-errors pattern',
+    'Build Approved → Baseline version copy with pre-flight approval status check',
+    'Chain all four in a master Business Rule Set with Stop on Error',
+    'Schedule nightly execution via EPM Automate during the 30-day budget cycle'
+  ],
+  tasks:[
+    {
+      n:'Task 1',
+      t:'Headcount-to-Compensation Cascade',
+      d:'<strong>What you\'re building:</strong> A Groovy rule that reads Total_Headcount per entity per month, multiplies by three per-head cost rates (Salary_Rate, Benefits_Rate, Payroll_Tax_Rate tagged with UDA HEADCOUNT_DRIVER), and writes 12 monthly compensation values.<br><br><strong>Prerequisites in EPBCS:</strong><br>- Three driver accounts: <code>Salary_Rate</code>, <code>Benefits_Rate</code>, <code>Payroll_Tax_Rate</code><br>- These accounts are tagged with UDA <code>HEADCOUNT_DRIVER</code><br>- Rates stored in Full_Year (annual per-head rate, e.g. $95,000/head)<br><br><strong>Expected output:</strong> Vision_US (300 headcount): Salary_Expense = 300 × ($95,000/12) = $2,375,000/month.',
+      sol:'<strong>Complete Groovy rule:</strong><br><pre style="background:#090d14;border-radius:8px;padding:14px;font-family:JetBrains Mono,monospace;font-size:11px;line-height:1.7;color:#a8d8ea;white-space:pre">// Rule 1: Headcount-to-Compensation Cascade\ndef months   = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]\ndef essbase  = cube.getEssbaseCube()\ndef entities = essbase.getMember("Entity","Total_Vision").getLevelZeroMembers()\ndef drivers  = essbase.getMembersByUDA("Account","HEADCOUNT_DRIVER")\ndef writes   = []\n\nentities.each { e ->\n  months.each { m ->\n    def hc = (getCell(e.getName(),"Total_Headcount",m,"FY2026","Budget","Working") ?: 0) as BigDecimal\n    if (hc == 0) return\n\n    drivers.each { d ->\n      def annualRate = (getCell(e.getName(),d.getName(),"Full_Year","FY2026","Budget","Working") ?: 0) as BigDecimal\n      def monthlyComp = (hc * annualRate / 12).setScale(0, java.math.RoundingMode.HALF_UP)\n      def expAccount  = d.getName().replace("_Rate","_Expense")\n      writes << [e.getName(), expAccount, m, "FY2026", "Budget", "Working", monthlyComp]\n    }\n  }\n}\n\noperation.grid.setDataCellValues(writes)\nprintln("Cascade complete: ${writes.size()} cells across ${entities.size()} entities")</pre><br><strong>Performance note:</strong> 12 entities × 12 months × 3 drivers = 432 writes staged in memory, committed in 1 network call. Without batching: 432 individual setCell() calls — ~15–20 minutes runtime vs seconds.'
+    },
+    {
+      n:'Task 2',
+      t:'Two-Pool Shared Services Allocation',
+      d:'<strong>What you\'re building:</strong> A single Groovy rule allocating two cost pools: IT Shared Cost (by revenue) and HR Shared Cost (by headcount). One rule, two passes, one batch write.<br><br><strong>Pool definitions:</strong><br>- Pool 1: <code>IT_Shared_Cost</code> on Corporate → <code>IT_Allocated</code> per entity, proportional to Total_Revenue<br>- Pool 2: <code>HR_Shared_Cost</code> on Corporate → <code>HR_Allocated</code> per entity, proportional to Total_Headcount<br><br><strong>Both pools must handle the zero-denominator guard:</strong> If all entities have zero revenue (first day of a new cycle), abort gracefully — never divide by zero.',
+      sol:'<strong>Complete two-pool allocation rule:</strong><br><pre style="background:#090d14;border-radius:8px;padding:14px;font-family:JetBrains Mono,monospace;font-size:11px;line-height:1.7;color:#a8d8ea;white-space:pre">// Rule 2: Two-Pool Shared Services Allocation\ndef essbase  = cube.getEssbaseCube()\ndef entities = essbase.getMember("Entity","Total_Operating_Entities").getLevelZeroMembers()\ndef writes   = []\n\n// [pool account, target account, basis account]\ndef pools = [\n  ["IT_Shared_Cost","IT_Allocated","Total_Revenue"],\n  ["HR_Shared_Cost","HR_Allocated","Total_Headcount"]\n]\n\npools.each { pool ->\n  def (poolAcct, targetAcct, basisAcct) = pool\n  def poolAmt = (getCell("Corporate",poolAcct,"Full_Year","FY2026","Budget","Working") ?: 0) as BigDecimal\n  if (poolAmt == 0) { println("Pool ${poolAcct} is zero — skipping"); return }\n\n  // Pass 1: sum total basis\n  def totalBasis = 0G\n  entities.each { e -> totalBasis += (getCell(e.getName(),basisAcct,"Full_Year","FY2026","Budget","Working") ?: 0) as BigDecimal }\n  if (totalBasis == 0) { println("GUARD: ${basisAcct} total is zero — abort pool ${poolAcct}"); return }\n\n  // Pass 2: stage each entity share\n  entities.each { e ->\n    def basis = (getCell(e.getName(),basisAcct,"Full_Year","FY2026","Budget","Working") ?: 0) as BigDecimal\n    def share = (poolAmt * basis / totalBasis).setScale(0, java.math.RoundingMode.HALF_UP)\n    writes << [e.getName(), targetAcct, "Full_Year", "FY2026", "Budget", "Working", share]\n  }\n  println("Pool ${poolAcct} (${poolAmt}) allocated across ${entities.size()} entities")\n}\n\nif (writes) operation.grid.setDataCellValues(writes)\nprintln("Allocation complete: ${writes.size()} writes")</pre>'
+    },
+    {
+      n:'Task 3',
+      t:'Complete Budget Submission Validation',
+      d:'<strong>What you\'re building:</strong> A Groovy rule with 6 checks that blocks submission if any fail. Shows ALL failures at once.<br><br><strong>The 6 checks:</strong><br>1. Headcount 0–10,000 per entity<br>2. Gross margin ≥ 10%<br>3. Revenue ≥ committed Backlog<br>4. Budget within ±30% of FY2025 Actual<br>5. No negative OpEx<br>6. Monthly sum = Full Year (±$1 tolerance)<br><br><strong>Critical pattern:</strong> Collect all errors into a list, throw ONCE at the end. Never throw inside the validation loop — planners must see all problems in one message.',
+      sol:'<strong>Complete 6-check validation rule:</strong><br><pre style="background:#090d14;border-radius:8px;padding:14px;font-family:JetBrains Mono,monospace;font-size:11px;line-height:1.7;color:#a8d8ea;white-space:pre">// Rule 3: Budget Submission Validation — 6 checks\ndef months   = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]\ndef entities = cube.getEssbaseCube().getMember("Entity","Total_Vision").getLevelZeroMembers()\ndef errors   = []\n\nentities.each { e ->\n  def en   = e.getName()\n  def rev  = (getCell(en,"Total_Revenue","Full_Year","FY2026","Budget","Working") ?: 0G) as BigDecimal\n  def cogs = (getCell(en,"Total_COGS",   "Full_Year","FY2026","Budget","Working") ?: 0G) as BigDecimal\n  def opex = (getCell(en,"Total_OpEx",   "Full_Year","FY2026","Budget","Working") ?: 0G) as BigDecimal\n  def hc   = (getCell(en,"Total_Headcount","Full_Year","FY2026","Budget","Working") ?: 0G) as BigDecimal\n  def bl   = (getCell(en,"Committed_Backlog","Full_Year","FY2026","Budget","Working") ?: 0G) as BigDecimal\n  def pyR  = (getCell(en,"Total_Revenue","Full_Year","FY2025","Actual","Final") ?: 0G) as BigDecimal\n\n  if (hc < 0 || hc > 10000) errors << "${en}: Headcount ${hc} out of range"\n  if (rev > 0 && (rev-cogs)/rev < 0.10) errors << "${en}: Gross margin ${String.format("%.1f",(rev-cogs)/rev*100)}% below 10% floor"\n  if (rev < bl) errors << "${en}: Revenue ${rev} below backlog ${bl}"\n  if (pyR > 0 && (rev-pyR).abs()/pyR.abs()*100 > 30) errors << "${en}: Revenue change ${String.format("%.1f",(rev-pyR)/pyR*100)}% vs PY (limit ±30%)"\n  if (opex < 0) errors << "${en}: Negative OpEx ${opex}"\n\n  def mthSum = (months.sum { m -> (getCell(en,"Net_Income",m,"FY2026","Budget","Working") ?: 0G) as BigDecimal }) as BigDecimal\n  def fy = (getCell(en,"Net_Income","Full_Year","FY2026","Budget","Working") ?: 0G) as BigDecimal\n  if ((mthSum-fy).abs() > 1) errors << "${en}: Monthly sum ${mthSum} != Full_Year ${fy}"\n}\n\nif (errors) { operation.cancelled = true; throw new Exception("Validation failed (${errors.size()}):\\n" + errors.join("\\n")) }\nprintln("Validation passed: ${entities.size()} entities, 6 checks each")</pre>'
+    },
+    {
+      n:'Task 4',
+      t:'Approved → Baseline Version Copy',
+      d:'<strong>What you\'re building:</strong> A Finance Admin-only Groovy rule that: (1) checks ALL entities are Approved/Locked before proceeding, (2) copies Budget/Working to Budget/Baseline. All-or-nothing — aborts if any entity is still under review.<br><br><strong>Why all-or-nothing matters:</strong> Partial copies produce a Baseline mixing approved and unapproved data — Finance loses audit integrity.<br><br><strong>Prerequisites:</strong> Budget/Baseline version exists in Application Settings. Rule assigned to Finance_Admin role only.',
+      sol:'<strong>Complete approval-gated copy:</strong><br><pre style="background:#090d14;border-radius:8px;padding:14px;font-family:JetBrains Mono,monospace;font-size:11px;line-height:1.7;color:#a8d8ea;white-space:pre">// Rule 4: Approved → Baseline Copy (Finance Admin only)\ndef essbase  = cube.getEssbaseCube()\ndef entities = essbase.getMember("Entity","Total_Vision").getLevelZeroMembers()\ndef months   = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec","Full_Year"]\ndef accounts = essbase.getMember("Account","Net_Income").getLevelZeroDescendants()\n\n// Pre-flight: check all entities approved\ndef notApproved = []\nentities.each { e ->\n  def status = cube.getPlanningContext().getPlanningUnitStatus(e.getName(),"Budget","FY2026")\n  if (!(status in ["Approved","Locked"])) notApproved << "${e.getName()} (${status})"\n}\nif (notApproved) {\n  operation.cancelled = true\n  throw new Exception("Cannot copy to Baseline — not yet approved:\\n" + notApproved.join("\\n"))\n}\n\n// All approved — execute copy\ndef writes = []\nentities.each { e ->\n  months.each { m ->\n    accounts.each { a ->\n      def val = getCell(e.getName(),a.getName(),m,"FY2026","Budget","Working")\n      if (val != null) writes << [e.getName(),a.getName(),m,"FY2026","Budget","Baseline",val]\n    }\n  }\n  println("Staged ${e.getName()}")\n}\noperation.grid.setDataCellValues(writes)\nprintln("Baseline copy complete: ${writes.size()} cells, ${entities.size()} entities")</pre><br><strong>Performance note:</strong> 12 entities × 13 periods × 600 accounts = ~93,600 writes. For very large cubes, chunk writes by entity group and call setDataCellValues after each chunk.'
+    },
+    {
+      n:'Task 5',
+      t:'Chain All Four Rules — Master Rule Set + Schedule',
+      d:'<strong>What you\'re building:</strong> A Business Rule Set sequencing Rule 1 → Rule 2 → Rule 3 with Stop on Error. Rule 4 (Baseline Copy) stays separate — runs only after CFO approval, not nightly.<br><br><strong>In Calculation Manager:</strong><br>1. Navigate to <strong>Tools → Business Rules → New → Rule Set</strong>.<br>2. Name: <code>Master_Budget_Calc_FY2026</code>.<br>3. Add Rule 1, Rule 2, Rule 3 in order. Enable <strong>Stop on Error</strong> on each.<br>4. Save and deploy.<br><br><strong>Nightly schedule:</strong> <code>epmautomate runBusinessRuleSet Master_Budget_Calc_FY2026</code> at 2am every night, November 1–30.',
+      sol:'<strong>Complete nightly schedule script:</strong><br><pre style="background:#090d14;border-radius:8px;padding:12px;font-family:JetBrains Mono,monospace;font-size:11px;line-height:1.7;color:#a8d8ea;white-space:pre">#!/bin/bash\n# cron: 0 2 1-30 11 * /scripts/nightly_budget.sh\nLOG=/var/log/epbcs/budget_$(date +%Y%m%d).log\nEMAIL="finance.admin@vision.com"\n\necho "[$(date)] Starting nightly budget calc chain" | tee -a $LOG\nepmautomate runBusinessRuleSet Vision Master_Budget_Calc_FY2026 2>&1 | tee -a $LOG\nRC=$?\n\nif [ $RC -ne 0 ]; then\n  echo "[$(date)] FAILED exit code $RC" | tee -a $LOG\n  mail -s "ALERT: Vision Budget Calc Failed $(date +%Y-%m-%d)" $EMAIL < $LOG\n  exit 1\nfi\necho "[$(date)] Chain completed successfully" | tee -a $LOG</pre><br><strong>Dependency map:</strong><br><pre style="background:#090d14;border-radius:8px;padding:10px;font-family:JetBrains Mono,monospace;font-size:11px;color:#a8d8ea;white-space:pre">Rule 1: Headcount Cascade  (requires: FY2026 blocks exist)\n  ↓ Stop on Error\nRule 2: Allocations        (requires: Revenue seeded)\n  ↓ Stop on Error\nRule 3: Validation         (requires: All accounts populated)\n  ↓ passes only if all 6 checks pass\n\n--- Finance Admin trigger only ---\nRule 4: Baseline Copy      (requires: All entities Approved)</pre>'
+    }
+  ],
+  fpa_insight:'The most important design decision in a Groovy automation chain is ORDER, and the most important operational decision is DOCUMENTATION. The dependency chain — headcount before allocation, validation before copy — seems obvious once built, but 3 months after go-live when a new analyst inherits the system, it is not obvious at all. The Master Rule Set with Stop on Error is the technical guardrail. The operational runbook is the human guardrail. You need both. Every production incident in a Groovy chain that I have seen could have been resolved in 10 minutes with good runbook documentation, rather than the 3-hour firefight it became without it.'
+},
+/* ══ LAB 4 ══ */
+{
+  id:'lab4',icon:'📋',cat:'reporting',
+  title:'CFO Board Pack Automation',
+  scenario:'Vision Corporation\'s CFO requires a fully automated monthly Board Pack: P&amp;L with variance analysis, entity-level breakdown, KPI dashboard, and a 1-page executive narrative. Build the complete reporting stack and automate delivery via EPM Automate at month-end.',
+  diff:'advanced',time:'75 min',xp:225,
+  accent:'var(--amber)',
+  tags:['FRS','Dashboard','Narrative Reporting','EPM Automate (epmautomate CLI)'],
+  context:'Board Pack must be ready by 7am the morning after month-end close. Currently it takes 2 days to compile manually — an analyst exports FRS reports one at a time, pastes into PowerPoint, writes commentary from memory, emails to the CFO by Day+2. The CFO wants full automation: reports generated, narrative pre-populated, PDF delivered by 7am Day+1.',
+  objectives:[
+    'Build CFO Summary P&L FRS report with Budget vs Actual vs Prior Year columns',
+    'Add entity waterfall chart showing revenue bridge components',
+    'Build 4-KPI executive infolet dashboard with RAG thresholds',
+    'Create Narrative Reporting template with live EPBCS data references',
+    'Write EPM Automate script to orchestrate the entire pack and deliver by 7am'
+  ],
+  tasks:[
+    {
+      n:'Task 1',
+      t:'Build CFO Summary P&L FRS Report',
+      d:'<strong>What you\'re building:</strong> An FRS report with 4 column groups — Actual YTD, Budget YTD, Variance $, Variance % — for all P&amp;L accounts. Unfavourable variances in red. One page per entity plus a Total_Vision consolidated page.<br><br><strong>Step-by-step in FRS Designer:</strong><br>1. Navigate to <strong>Reports → Financial Reports → New</strong>. Name: <code>CFO_PL_Summary</code>.<br>2. <strong>Rows:</strong> Descendants(Net_Income). Suppress Missing = On, Suppress Zero Rows = On.<br>3. <strong>Column A (Actual YTD):</strong> Scenario=Actual, Version=Final, Period=YTD using <code>&amp;CurPeriod</code>.<br>4. <strong>Column B (Budget YTD):</strong> Scenario=Budget, Version=Working, same period.<br>5. <strong>Column C (Variance $):</strong> Formula = [A]-[B].<br>6. <strong>Column D (Variance %):</strong> Formula = ([A]-[B])/ABS([B])*100. Suppress if denominator zero.<br>7. <strong>Conditional format on Col D:</strong> Red = unfavourable variance (negative for revenue, positive for expense).<br>8. Pages: Entity, "Page of Pages" = checked. Enable Drill-Through to monthly detail.',
+      sol:'<strong>Account-type-aware conditional formatting:</strong> In FRS you cannot directly query account type. Workaround: create two column templates — one for revenue rows (red when Col D &lt; 0) and one for expense rows (red when Col D &gt; 0). Apply each using member selection filters.<br><br><strong>YTD handling:</strong> Use the "YTD" period member if your Time dimension has a YTD aggregate. If not, use a formula column: SUM(Jan through &amp;CurPeriod). Confirm which applies in your dimension setup.<br><br><strong>Drill-through value:</strong> Enable "Enable Drill-Through" in FRS Properties. This lets the CFO click any P&amp;L row to open monthly detail in Smart View — dramatically reduces follow-up "can you send me the monthly breakdown" requests.<br><br><strong>SubVar in columns:</strong> Use <code>&amp;CurPeriod</code> in the column period definition, not a hardcoded month. This means the same report works every month without editing.'
+    },
+    {
+      n:'Task 2',
+      t:'Build Revenue Waterfall Bridge Chart',
+      d:'<strong>What you\'re building:</strong> A dashboard chart showing how FY2025 Actual Revenue bridged to FY2026 Budget through volume, price, mix, and FX effects.<br><br><strong>Prerequisite — 4 bridge accounts in the cube:</strong><br>- <code>Volume_Bridge</code>: revenue at FY2025 prices × FY2026 volume − FY2025 Actual<br>- <code>Price_Bridge</code>: impact of price changes<br>- <code>Mix_Bridge</code>: product mix shift impact<br>- <code>FX_Bridge</code>: currency movement impact<br><br><strong>In Dashboard Designer:</strong><br>1. New Dashboard. Add Chart component. Type = Bar/Waterfall.<br>2. Data series: [FY2025_Actual_Rev, Volume_Bridge, Price_Bridge, Mix_Bridge, FX_Bridge, FY2026_Budget_Rev].<br>3. First and last = absolute value bars. Middle 4 = delta/bridge bars.<br>4. Color: positive = teal, negative = red.<br>5. Filter: Period=Full_Year, Entity=Total_Vision.',
+      sol:'<strong>Pragmatic approach for most implementations:</strong> A full 4-bridge waterfall requires granular unit/price data many EPBCS implementations lack. Start with a simplified 2-bridge model: Bridge 1 = Organic growth (volume + price combined), Bridge 2 = FX impact. Iterate to the full 4-bridge once the data model supports it. Do not let perfect be the enemy of a useful chart.<br><br><strong>Bridge account member formula example:</strong><br><pre style="background:#090d14;border-radius:8px;padding:10px;font-family:JetBrains Mono,monospace;font-size:11px;color:#a8d8ea;white-space:pre">/* FX_Bridge approximation:\n   Actual Revenue at budget FX rate − Actual Revenue at actual FX rate\n   Requires a budget-rate restated scenario or a Rates cube\n   Use @XREF(CurrencyRates_Budget, ...) − @XREF(CurrencyRates_Actual, ...) */</pre><br><strong>Chart alternative:</strong> If waterfall chart type is unavailable in your EPBCS version, use a stacked bar chart with bridge accounts as series. Finance teams can read stacked bars almost as easily as a waterfall.'
+    },
+    {
+      n:'Task 3',
+      t:'Build 4-KPI Executive Infolet Dashboard',
+      d:'<strong>What you\'re building:</strong> A CFO home page with 4 KPI tiles showing current vs target with RAG status.<br><br><strong>The 4 KPIs with thresholds:</strong><br>1. Revenue vs Budget %: ≥100% green, 95–100% amber, &lt;95% red<br>2. Gross Margin %: ≥35% green, 30–35% amber, &lt;30% red<br>3. EBITDA Margin %: ≥15% green, 12–15% amber, &lt;12% red<br>4. Forecast Accuracy MAPE: &lt;5% green, 5–10% amber, &gt;10% red<br><br><strong>Step-by-step:</strong><br>1. Navigate to <strong>Home → Dashboards → New</strong>.<br>2. Add 4 Infolet components in a 2×2 grid.<br>3. Front face: single value + trend arrow. Back face: entity breakdown bar chart.<br>4. Set RAG thresholds per KPI.<br>5. Assign as Home Page for Executive role Navigation Flow.',
+      sol:'<strong>Infolet configuration:</strong> Each infolet data source = a calculated KPI account in the Vision cube (e.g. Revenue_vs_Budget_Pct). Format = percentage, 1 decimal. Conditional highlighting via threshold bands. Trend arrow: compare current period vs prior period.<br><br><strong>Back face setup:</strong> Chart type = bar. Entity dimension on X-axis. Same KPI account on Y-axis. This lets the CFO flip an infolet to see "which entity is driving the red Revenue KPI".<br><br><strong>Common mistake — KPI accounts not in the cube:</strong> Infolets can only display data that exists as EPBCS account members. If Revenue_vs_Budget_Pct doesn\'t exist as a member formula, you cannot display it. Plan your KPI account hierarchy before building dashboards.<br><br><strong>Navigation Flow:</strong> Tools → Navigation Flows → Executive → Home tab → drag CFO Dashboard as first item. Every Executive user sees this dashboard on login — no navigation required.'
+    },
+    {
+      n:'Task 4',
+      t:'Build Narrative Reporting Template',
+      d:'<strong>What you\'re building:</strong> An Oracle Narrative Reporting template with 5 sections. Each section auto-populates from live EPBCS data with a commentary box for Finance text. The CFO reviews, adds final comments, approves — all in Narrative Reporting without email.<br><br><strong>The 5 sections:</strong><br>1. Executive Summary (P&amp;L one-pager + KPI scorecard)<br>2. Revenue Analysis (waterfall chart + top 3 entity breakdown)<br>3. Margin Analysis (gross margin and EBITDA trend by month)<br>4. Entity Highlights (top performers and underperformers)<br>5. Outlook (Q+1 forecast vs plan, key assumptions)<br><br><strong>Step-by-step:</strong><br>1. Navigate to <strong>Narrative Reporting → New Report Package</strong>. Name: <code>Vision_Monthly_Board_Pack</code>.<br>2. Add 5 Doclets — one per section.<br>3. In each doclet: Insert → Reference Doclet → link to relevant FRS report.<br>4. Add Commentary Box next to each data table.<br>5. Workflow: Authors by Day+2, Controller by Day+3, CFO by Day+5.',
+      sol:'<strong>Reference Doclet vs live data:</strong> Reference Doclets pull a snapshot at package generation time — they do not live-refresh. This is by design for audit purposes. The Board Pack is a point-in-time document: if the CFO opens it on Day+5, the data reflects Day+1 close numbers, not today\'s values.<br><br><strong>Commentary workflow tips:</strong> Enable Email Notifications at each stage. Set Due Date for each reviewer — Narrative Reporting sends reminders automatically. Add "Review Completed %" indicator so the CFO sees at a glance how much commentary has been written before they need to review.<br><br><strong>Version history audit trail:</strong> Narrative Reporting keeps a full version history. If the CFO asks "what did we say about Q3 revenue last quarter?", you can pull the prior Board Pack in 30 seconds — a major advantage over PowerPoint packs where old versions are lost in SharePoint.'
+    },
+    {
+      n:'Task 5',
+      t:'Automate Full Board Pack Delivery',
+      d:'<strong>What you\'re building:</strong> An EPM Automate script that runs at 11pm on the last business day of each month, generating and delivering the complete Board Pack by 1am (6 hours before the CFO arrives).<br><br><strong>Timing:</strong><br>- Actuals close: 10pm<br>- Script starts: 11pm<br>- Expected runtime: 45–60 minutes<br>- Delivery: 1am (well before 7am target)<br><br><strong>Error requirement:</strong> If ANY step fails, Finance Admin receives an alert email within 15 minutes. The CFO must never discover a failure before Finance Admin does.',
+      sol:'<strong>Complete Board Pack automation script:</strong><br><pre style="background:#090d14;border-radius:8px;padding:14px;font-family:JetBrains Mono,monospace;font-size:11px;line-height:1.7;color:#a8d8ea;white-space:pre">#!/bin/bash\n# Vision Corp Monthly Board Pack — 11pm last business day\nLOG=/var/log/epbcs/boardpack_$(date +%Y%m).log\nADMIN="finance.admin@vision.com"\nCFO="cfo@vision.com"\n\nlog()   { echo "[$(date +%H:%M:%S)] $1" | tee -a $LOG; }\nalert() { mail -s "Board Pack FAILED: $1" $ADMIN < $LOG; exit 1; }\n\nlog "Board Pack automation starting"\n\nepmautomate runDataRule SAP_Actuals_Daily        || alert "Actuals load failed"\nepmautomate runBusinessRuleSet Master_Calc_Monthly || alert "Calc chain failed"\n\nMONTH=$(date +%b)\nepmautomate setSubstitutionVariable Vision CurPeriod $MONTH\n\nepmautomate runReportingJobSet CFO_Board_Pack_FRS  || alert "FRS generation failed"\nepmautomate exportSnapshot BoardPack_$(date +%Y%m)\n\nlog "Board Pack complete — notifying CFO"\nmail -s "Vision Corp Board Pack Ready — $(date +%B\ %Y)" $CFO < /dev/null\n\nexit 0</pre><br><strong>Production hardening:</strong> Add a pre-check that validates all mandatory data loads completed (check a Data_Load_Status KPI account). Add a post-check that validates report file sizes are non-zero — a blank PDF means the report ran but returned no data, a silent failure. These two checks catch 80% of production incidents before the CFO sees them.'
+    }
+  ],
+  fpa_insight:'The difference between a reporting system and a decision support system is automation. When the Board Pack takes 2 days to compile manually, Finance spends the Board meeting defending numbers they haven\'t fully analysed. When the pack is auto-generated by 7am Day+1, Finance has reviewed it, identified the 3 key stories, prepared the narrative, and walks in as strategic advisors rather than data compilers. The automation is not about saving time — it is about fundamentally changing what Finance does with that time.'
+},
+
+/* ══ LAB 5 ══ */
+{
+  id:'lab5',icon:'🔗',cat:'integration',
+  title:'ERP to EPBCS Real-Time Integration',
+  scenario:'Vision\'s SAP ERP posts actuals daily. Finance requires actuals in EPBCS by 6am each morning with a full reconciliation report. Build the complete integration: SAP extract → Data Integration → EPBCS → reconciliation dashboard. Handle errors gracefully.',
+  diff:'expert',time:'90 min',xp:300,
+  accent:'var(--rose)',
+  tags:['Data Integration','EPM Automate (epmautomate CLI)','REST API','SAP'],
+  context:'The current process: an analyst manually exports an SAP trial balance to Excel every morning, reformats it, uploads via EPBCS file import, verifies totals manually. It takes 90 minutes, requires a dedicated FTE every morning including weekends, and has a 15% error rate from manual reformatting. Goal: zero human intervention, actuals in EPBCS by 6am, reconciliation report auto-emailed so Finance can verify without logging in.',
+  objectives:[
+    'Configure DI Import Format for SAP flat file extract (8 fields, comma-delimited)',
+    'Build dimension maps for GL account ranges using Between and Like mapping rules',
+    'Create staging account and reconciliation control for load verification',
+    'Handle unmapped GL accounts gracefully with daily exception report',
+    'Write complete EPM Automate nightly script with error alerting',
+    'Build operations monitoring dashboard with 4 RAG-status infolets'
+  ],
+  tasks:[
+    {
+      n:'Task 1',
+      t:'Configure Data Integration Import Format',
+      d:'<strong>What you\'re building:</strong> A DI Import Format that maps SAP CSV columns to EPBCS dimensions.<br><br><strong>SAP extract format (CSV, header row 1):</strong><br><code>Company_Code, GL_Account, Cost_Centre, Profit_Centre, Period, Fiscal_Year, Amount_LC, Currency</code><br>Example: <code>VISC, 40001, CC100, PC200, 3, 2025, 1250000.00, USD</code><br><br><strong>Step-by-step:</strong><br>1. Navigate to <strong>Data Integration → Setup → Import Formats → New</strong>.<br>2. Name: <code>SAP_Vision_Actuals_v1</code>. File type: Delimited. Delimiter: Comma. Header Rows: 1.<br>3. Field mappings:<br>   - Field 1 (Company_Code) → <strong>Entity</strong><br>   - Field 2 (GL_Account) → <strong>Account</strong><br>   - Field 3 (Cost_Centre) → Ignore<br>   - Field 4 (Profit_Centre) → Ignore<br>   - Field 5 (Period) → <strong>Period</strong> + expression: SWITCH(#5, 1,"Jan", 2,"Feb" ... 12,"Dec")<br>   - Field 6 (Fiscal_Year) → <strong>Year</strong> + expression: CONCATENATE("FY",#6)<br>   - Field 7 (Amount_LC) → <strong>Data</strong><br>   - Field 8 (Currency) → <strong>Currency</strong><br>4. Test with a 5-row sample using the DI Validate step before any production run.',
+      sol:'<strong>Period expression detail:</strong> SAP sends Period as integer (3 = March). EPBCS expects "Mar". DI expression: <code>SWITCH(#5,1,"Jan",2,"Feb",3,"Mar",4,"Apr",5,"May",6,"Jun",7,"Jul",8,"Aug",9,"Sep",10,"Oct",11,"Nov",12,"Dec")</code>.<br><br><strong>Year expression:</strong> SAP sends 2025; EPBCS expects FY2025. Expression: <code>CONCATENATE("FY",#6)</code>.<br><br><strong>Validate step:</strong> In DI Workflow, run Validate on a sample file before writing any data. This shows how each row was parsed — field values, dimension translations, and any errors. Always Validate first on a new import format. Catching a period format error in Validate costs 2 minutes; catching it after a full production load costs 2 hours.<br><br><strong>Company_Code to Entity translation:</strong> This mapping happens in the Dimension Maps (Task 2), not here. Import Format just says "Field 1 is the source Entity value" — the actual name translation (VISC → Vision_US) is in the maps.'
+    },
+    {
+      n:'Task 2',
+      t:'Build Dimension Maps for GL Account → EPBCS',
+      d:'<strong>What you\'re building:</strong> Account dimension maps that translate SAP numeric GL codes into EPBCS account names using range mapping rules.<br><br><strong>Vision Corp GL account ranges:</strong><br>- 4000–4099: Product Revenue → <code>Product_Revenue</code><br>- 4100–4199: Service Revenue → <code>Service_Revenue</code><br>- 5000–5499: Cost of Goods Sold → <code>Total_COGS</code><br>- 6000–6199: Salary &amp; Benefits → <code>Salary_Expense</code><br>- 6200–6399: Travel &amp; Entertainment → <code>Travel_Expense</code><br>- 6400–6999: Other G&amp;A → <code>GA_Other_Expense</code><br>- All others → <code>Unclassified_Actuals</code> (catch-all staging account)<br><br><strong>Step-by-step:</strong><br>1. <strong>Data Integration → Setup → Maps</strong>. Select: Account dimension.<br>2. Add rule type <strong>Between</strong>: Source Low=4000, High=4099, Target=Product_Revenue.<br>3. Repeat for each range.<br>4. Add catch-all LAST: Source Low=0000, High=9999, Target=Unclassified_Actuals.',
+      sol:'<strong>Map rule order is critical:</strong> DI evaluates rules top-to-bottom and stops at the first match. More specific rules must appear BEFORE the catch-all. If the catch-all is first, all GL accounts route to Unclassified_Actuals.<br><br><strong>Between vs Like vs Explicit:</strong><br>- <strong>Between</strong>: best for numeric ranges (4000–4099)<br>- <strong>Like</strong>: Source=4* (wildcard) — useful for prefix-based codes, risky with varying lengths<br>- <strong>Explicit</strong>: one row per GL code — use only for exceptions and overrides<br><br><strong>Company_Code → Entity maps:</strong><br><pre style="background:#090d14;border-radius:8px;padding:10px;font-family:JetBrains Mono,monospace;font-size:11px;color:#a8d8ea;white-space:pre">Explicit rules in Entity dimension:\nVISC → Vision_US\nVIEU → Vision_EU\nVIUK → Vision_UK\nVIAU → Vision_AU\nCatch-all: * → Unclassified_Entity</pre><br><strong>Testing maps:</strong> Run DI Workflow → Validate step on a sample file. The output shows each source GL code and its translated EPBCS account. Count of rows in Unclassified_Actuals = unmapped codes. A clean mapping has 0 rows there.'
+    },
+    {
+      n:'Task 3',
+      t:'Build Reconciliation Control',
+      d:'<strong>What you\'re building:</strong> An automated control comparing the SAP source file total against the EPBCS loaded total after every run. Variance &gt;$1,000 stops the calc chain and alerts Finance Admin.<br><br><strong>Architecture:</strong><br>1. Before DI load: calculate sum of Amount_LC from the SAP file and write to account <code>SAP_Control_Total</code> in EPBCS.<br>2. After DI load: Groovy rule compares SAP_Control_Total vs loaded Net_Income.<br>3. Variance &gt;$1,000: throw exception (EPM Automate detects non-zero exit code) → alert email.<br>4. Reconciliation passes: continue to calc chain.<br><br><strong>Setup:</strong> Add account <code>SAP_Control_Total</code> to Account dimension (type=Generic, not aggregated).',
+      sol:'<strong>Control total via shell + REST:</strong><br><pre style="background:#090d14;border-radius:8px;padding:12px;font-family:JetBrains Mono,monospace;font-size:11px;line-height:1.7;color:#a8d8ea;white-space:pre"># Calculate SAP file total (field 7 = Amount_LC)\nCONTROL=$(awk -F, \'NR>1 {sum+=$7} END {print sum}\' /data/sap_extract.csv)\necho "SAP control total: $CONTROL"</pre><br><strong>Groovy reconciliation rule:</strong><br><pre style="background:#090d14;border-radius:8px;padding:12px;font-family:JetBrains Mono,monospace;font-size:11px;line-height:1.7;color:#a8d8ea;white-space:pre">// Reconcile_SAP_Load — run after DI data rule\ndef curMonth = operation.parameter("pPeriod") ?: "Jan"\ndef curYear  = operation.parameter("pYear")   ?: "FY2025"\n\ndef control = (getCell("Total_Vision","SAP_Control_Total","Full_Year",curYear,"Actual","Final") ?: 0G) as BigDecimal\ndef loaded  = (getCell("Total_Vision","Net_Income",curMonth,curYear,"Actual","Final") ?: 0G) as BigDecimal\ndef variance = (control - loaded).abs()\n\nif (variance > 1000) {\n  throw new Exception(\n    "RECONCILIATION FAILED: SAP total ${control} vs EPBCS ${loaded}. "\n    + "Variance ${variance} exceeds $1,000. Finance Admin review required before calcs proceed.")\n}\nprintln("Reconciliation passed: variance ${variance}")</pre><br><strong>Materiality threshold:</strong> $1,000 for Vision Corp ($1.4B revenue) = 0.00007% of revenue — very tight. Consider a materiality-based threshold: 0.01% of prior month revenue, recalculated monthly.'
+    },
+    {
+      n:'Task 4',
+      t:'Handle Unmapped GL Accounts',
+      d:'<strong>What you\'re building:</strong> A monitoring mechanism that detects when SAP sends new GL codes that DI can\'t map. These fall into <code>Unclassified_Actuals</code>. Finance reviews and maps within 1 business day.<br><br><strong>Daily exception workflow:</strong><br>1. After DI load: check Unclassified_Actuals balance for current period.<br>2. If balance &gt; 0: extract which GL codes went to Unclassified from DI workflow log.<br>3. Write unmapped count to KPI account <code>Unmapped_GL_Count</code>.<br>4. Email Finance Controller with exception report.<br>5. Proceed with load anyway — unmapped codes stay in staging, not P&amp;L.<br><br><strong>SLA:</strong> All unmapped GL accounts must be mapped within 1 business day. Finance Controller signs off on this SLA at go-live.',
+      sol:'<strong>Getting unmapped GL details:</strong> Data Integration → Workflow → Process Details for the last run → click "Rows with Exceptions". This shows the exact source GL codes that hit the catch-all rule. Export as CSV for the exception report.<br><br><strong>Detecting unclassified balance in script:</strong><br><pre style="background:#090d14;border-radius:8px;padding:12px;font-family:JetBrains Mono,monospace;font-size:11px;line-height:1.7;color:#a8d8ea;white-space:pre"># After DI load — check for unmapped GL codes\nepmautomate exportDataManagementWorkbenchResults SAP_Actuals_run\nepmautomate downloadFile DI_Exceptions_$(date +%Y%m%d).csv\n\n# Count exception rows\nEXCEPTION_COUNT=$(wc -l < DI_Exceptions_$(date +%Y%m%d).csv)\n\nif [ "$EXCEPTION_COUNT" -gt 1 ]; then  # > 1 because of header row\n  mail -s "Action Required: Unmapped GL Accounts $(date +%Y-%m-%d)" \\\n    controller@vision.com \\\n    -A DI_Exceptions_$(date +%Y%m%d).csv << EOF\n${EXCEPTION_COUNT} GL accounts routed to Unclassified_Actuals.\nPlease update DI maps within 1 business day.\nEOF\nfi</pre><br><strong>Never block the load for unmapped accounts:</strong> Proceed even with unmapped codes. They go to a staging account not flowing into P&amp;L. Finance fixes the mapping and re-runs to reclassify. Blocking the entire actuals load because 3 GL codes are unmapped means Finance has no actuals at all — much worse.'
+    },
+    {
+      n:'Task 5',
+      t:'Build Operations Monitoring Dashboard',
+      d:'<strong>What you\'re building:</strong> An EPBCS dashboard for Finance Operations to check at 6am daily. All green = no action. Any red = investigate before Finance starts using the data.<br><br><strong>The 4 monitoring infolets:</strong><br>1. <strong>Last Load Date</strong>: today = green, yesterday = amber, older = red<br>2. <strong>Records Loaded</strong>: count from last run, below expected minimum = amber<br>3. <strong>Reconciliation Variance</strong>: SAP_Control vs EPBCS. &lt;$1K = green, $1K–$10K = amber, &gt;$10K = red<br>4. <strong>Unmapped GL Count</strong>: 0 = green, 1–5 = amber, &gt;5 = red<br><br><strong>Supporting KPI accounts in EPBCS cube:</strong><br>- <code>Load_Date_Score</code> (0=red, 1=amber, 2=green)<br>- <code>Records_Loaded_Count</code><br>- <code>Recon_Variance</code><br>- <code>Unmapped_GL_Count</code><br><br>These are written by the nightly script and Groovy reconciliation rule.',
+      sol:'<strong>Writing monitoring KPIs from the nightly script:</strong><br><pre style="background:#090d14;border-radius:8px;padding:12px;font-family:JetBrains Mono,monospace;font-size:11px;line-height:1.7;color:#a8d8ea;white-space:pre"># After successful load\nROW_COUNT=$(wc -l < /data/sap_extract.csv)\n\n# Write load status KPIs via REST API\nTOKEN=$(epmautomate getAuthToken)\ncurl -X POST "$EPM_URL/HyperionPlanning/rest/v3/applications/Vision/dataslices" \\\n  -H "Authorization: Bearer $TOKEN" \\\n  -H "Content-Type: application/json" \\\n  -d "{\"pov\":[\"Total_Vision\",\"Records_Loaded_Count\",\"Full_Year\",\\"$CUR_YEAR\\",\\"Actual\\",\\"Final\\"],\\"data\\":[$ROW_COUNT]}"\n\n# Write load date score (2 = green / successful)\ncurl -X POST "$EPM_URL/HyperionPlanning/rest/v3/applications/Vision/dataslices" \\\n  -H "Authorization: Bearer $TOKEN" \\\n  -H "Content-Type: application/json" \\\n  -d "{\"pov\":[\"Total_Vision\",\"Load_Date_Score\",\"Full_Year\",\\"$CUR_YEAR\\",\\"Actual\\",\\"Final\\"],\\"data\\":[2]}"</pre><br><strong>The most important infolet is #1 — Last Load Date.</strong> When it\'s red at 6am, that\'s the signal to check the nightly log before Finance starts using the data. A red Last Load Date means actuals are stale — every management report opened today shows yesterday\'s data. Finance must communicate this to report users before their morning calls.<br><br><strong>Long-term evolution:</strong> Once stable for 3 months, add a 5th infolet: Calc Chain Status (did the nightly Groovy rules pass?). Then a 6th: Forecast Freshness (days since last forecast update by entity). The monitoring dashboard becomes the daily 30-second health-check that replaces 20 minutes of manual verification.'
+    }
+  ],
+  fpa_insight:'Integration is where 70% of EPBCS project delays occur — not in the application build, not in training. The four most common production integration failures: (1) source system changes its file format without telling Finance IT; (2) a new GL account is added to SAP without updating DI maps; (3) a period format mismatch (SAP sends "2025-03", DI expects "Mar"); (4) no reconciliation control so a bad load goes undetected for a week and appears in the Board Pack. The reconciliation control and monitoring dashboard in this lab are not optional nice-to-haves — they are the difference between an integration Finance trusts and one Finance checks manually every morning anyway, defeating the entire purpose of automation.'
+}
+];
+
+var currentFilter='all';
+
+function filterLabs(f,btn){
+  currentFilter=f;
+  document.querySelectorAll('.fpill').forEach(function(b){b.classList.remove('active')});
+  btn.classList.add('active');
+  renderLabList();
+}
+
+function renderLabList(){
+  var grid=document.getElementById('labs-grid');grid.innerHTML='';
+  var labs=currentFilter==='all'?LABS:LABS.filter(function(l){return l.cat===currentFilter});
+  labs.forEach(function(lab){
+    var card=document.createElement('div');
+    card.className='lab-card';
+    card.style.setProperty('--accent-color',lab.accent);
+    var diffClass={intermediate:'diff-inter',advanced:'diff-adv',expert:'diff-exp'}[lab.diff]||'diff-inter';
+    var diffLabel={intermediate:'Intermediate',advanced:'Advanced',expert:'Expert'}[lab.diff]||lab.diff;
+    card.innerHTML='<div class="lab-header"><div class="lab-icon">'+lab.icon+'</div><div class="lab-meta"><div class="lab-num">Enterprise Lab &middot; '+lab.xp+' XP</div><div class="lab-title">'+lab.title+'</div><div class="lab-scenario">'+lab.scenario.substring(0,120)+'...</div></div></div><div class="lab-tags">'+lab.tags.map(function(t){return '<span class="lab-tag">'+t+'</span>'}).join('')+'</div><div class="lab-footer"><span class="lab-xp">⚡ '+lab.xp+' XP</span><span class="lab-time">⏱ '+lab.time+'</span><span class="lab-diff '+diffClass+'">'+diffLabel+'</span></div><button class="lab-cta" onclick="event.stopPropagation();openLab(\''+lab.id+'\')">Open Lab →</button>';
+    grid.appendChild(card);
+  });
+}
+
+function openLab(id){
+  var lab=LABS.find(function(l){return l.id===id});
+  if(!lab)return;
+  var diffClass={intermediate:'diff-inter',advanced:'diff-adv',expert:'diff-exp'}[lab.diff]||'diff-inter';
+  var diffLabel={intermediate:'Intermediate',advanced:'Advanced',expert:'Expert'}[lab.diff]||lab.diff;
+
+  var taskHTML=lab.tasks.map(function(t,i){
+    return '<div class="task-item" id="task-'+id+'-'+i+'" onclick="toggleTask(\''+id+'\','+i+')">'+
+      '<div class="task-hdr">'+
+      '<div class="task-check" id="chk-'+id+'-'+i+'"></div>'+
+      '<div class="task-num">'+t.n+'</div>'+
+      '<div class="task-text">'+t.t+'</div>'+
+      '<span class="task-expand">▼</span>'+
+      '</div>'+
+      '<div class="task-detail">'+t.d+'<br><br>'+
+      '<button class="solution-btn" onclick="event.stopPropagation();toggleSolution(\'sol-'+id+'-'+i+'\')">🔓 Reveal Solution</button>'+
+      '<div class="solution-reveal" id="sol-'+id+'-'+i+'">'+
+      '<strong style="font-family:\'Cinzel\',serif;font-size:10px;color:var(--roseLt);letter-spacing:.08em;text-transform:uppercase;display:block;margin-bottom:8px">✦ Expert Solution</strong>'+
+      t.sol+
+      '</div></div></div>';
+  }).join('');
+
+  var objHTML='<ul style="padding-left:20px;margin:0">'+lab.objectives.map(function(o){return '<li style="font-size:14px;color:rgba(240,234,214,.65);margin-bottom:6px;line-height:1.6">'+o+'</li>'}).join('')+'</ul>';
+
+  var html='<button class="back-btn" onclick="closeLab()">← All Labs</button>'+
+    '<div class="lab-dl-header" style="border-left-color:'+lab.accent+'">'+
+    '<div class="lab-dl-title">'+lab.icon+' '+lab.title+'</div>'+
+    '<div class="lab-dl-sub">'+lab.scenario+'</div>'+
+    '<div class="lab-dl-meta">'+
+    '<span class="lab-dl-badge">'+lab.xp+' XP</span>'+
+    '<span class="lab-dl-badge">⏱ '+lab.time+'</span>'+
+    '<span class="lab-dl-badge '+diffClass+'">'+diffLabel+'</span>'+
+    lab.tags.map(function(t){return '<span class="lab-dl-badge">'+t+'</span>'}).join('')+
+    '</div></div>'+
+    '<div class="lab-tabs">'+
+    '<button class="lab-tab active" onclick="switchTab(\'context\',this)">Context</button>'+
+    '<button class="lab-tab" onclick="switchTab(\'tasks\',this)">Tasks ('+lab.tasks.length+')</button>'+
+    '<button class="lab-tab" onclick="switchTab(\'fpa\',this)">FP&A Insight</button>'+
+    '<button class="lab-tab" onclick="switchTab(\'oracle\',this)">Ask Oracle</button>'+
+    '</div>'+
+    '<div class="lab-panel active" id="panel-context">'+
+    '<h2 style="font-family:\'Cinzel\',serif;font-size:14px;color:var(--goldLt);margin-bottom:10px">Lab Context</h2>'+
+    '<p style="font-size:14.5px;color:rgba(240,234,214,.72);line-height:1.8;margin-bottom:16px">'+lab.context+'</p>'+
+    '<h2 style="font-family:\'Cinzel\',serif;font-size:14px;color:var(--goldLt);margin:16px 0 10px">Learning Objectives</h2>'+
+    objHTML+
+    '</div>'+
+    '<div class="lab-panel" id="panel-tasks">'+
+    '<div class="task-list">'+taskHTML+'</div>'+
+    '</div>'+
+    '<div class="lab-panel" id="panel-fpa">'+
+    '<div class="callout fpa" style="background:rgba(124,58,237,.07);border:1px solid rgba(124,58,237,.22);border-radius:var(--r,10px);padding:18px 22px">'+
+    '<div style="font-family:\'Cinzel\',serif;font-size:10px;font-weight:700;color:var(--purpleLt);letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px">💡 FP&A Expert Insight</div>'+
+    '<p style="font-size:14.5px;line-height:1.85;color:rgba(240,234,214,.75)">'+lab.fpa_insight+'</p>'+
+    '</div>'+
+    '</div>'+
+    '<div class="lab-panel" id="panel-oracle">'+
+    '<div class="lab-oracle">'+
+    '<div style="display:flex;align-items:center;gap:12px;margin-bottom:8px">'+
+    '<div style="width:36px;height:36px;background:linear-gradient(135deg,var(--purple),var(--teal));border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0">🔭</div>'+
+    '<div><div style="font-family:\'Cinzel\',serif;font-size:13px;font-weight:700;color:var(--tealLt)">The Oracle</div><div style="font-size:11px;color:var(--dim)">Lab Mentor — '+lab.title+'</div></div>'+
+    '</div>'+
+    '<p style="font-size:12.5px;color:rgba(240,234,214,.3);margin-bottom:12px">Ask anything about this lab scenario, Oracle EPBCS best practices, or FP&A implementation guidance.</p>'+
+    '<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px">'+
+    ['How do I approach Task 1?','What are the common mistakes in this scenario?','Explain the FP&A significance of this lab','How would this work in a real Fortune 500?'].map(function(chip){
+      return '<button style="font-size:11px;padding:5px 12px;border:1px solid rgba(31,184,168,.18);border-radius:14px;background:transparent;color:rgba(240,234,214,.42);cursor:pointer;font-family:\'Crimson Pro\',serif;transition:all .12s" onclick="labAsk(\''+lab.id+'\',\''+chip.replace(/'/g,"\\'")+'\')" onmouseover="this.style.borderColor=\'var(--tealLt)\';this.style.color=\'var(--tealLt)\'" onmouseout="this.style.borderColor=\'rgba(31,184,168,.18)\';this.style.color=\'rgba(240,234,214,.42)\'">'+chip+'</button>';
+    }).join('')+
+    '</div>'+
+    '<div style="display:flex;gap:8px">'+
+    '<input id="lab-oracle-input-'+lab.id+'" style="flex:1;padding:9px 14px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:8px;color:var(--white,#f0ead6);font-size:13px;font-family:\'Crimson Pro\',serif;outline:none" placeholder="Ask about this lab..." onkeydown="if(event.key===\'Enter\')labAsk(\''+lab.id+'\',null)">'+
+    '<button style="padding:9px 18px;background:linear-gradient(135deg,var(--teal),var(--sky));color:var(--bg);border:none;border-radius:8px;font-family:\'Cinzel\',serif;font-size:10.5px;font-weight:700;letter-spacing:.05em;cursor:pointer" onclick="labAsk(\''+lab.id+'\',null)">Ask ✦</button>'+
+    '</div>'+
+    '<div id="lab-oracle-out-'+lab.id+'" style="margin-top:14px;font-size:14px;line-height:1.78;color:rgba(240,234,214,.68)"></div>'+
+    '</div></div>';
+
+  document.getElementById('lab-list').style.display='none';
+  var det=document.getElementById('lab-detail');
+  det.innerHTML=html;det.classList.add('active');
+  window.scrollTo(0,0);
+}
+
+function closeLab(){
+  document.getElementById('lab-list').style.display='block';
+  var det=document.getElementById('lab-detail');det.classList.remove('active');det.innerHTML='';
+  window.scrollTo(0,0);
+}
+
+function switchTab(tab,btn){
+  document.querySelectorAll('.lab-tab').forEach(function(b){b.classList.remove('active')});
+  document.querySelectorAll('.lab-panel').forEach(function(p){p.classList.remove('active')});
+  btn.classList.add('active');
+  var panel=document.getElementById('panel-'+tab);if(panel)panel.classList.add('active');
+}
+
+function toggleTask(labId,i){
+  var item=document.getElementById('task-'+labId+'-'+i);
+  if(!item)return;
+  item.classList.toggle('open');
+  item.classList.toggle('done');
+  var chk=document.getElementById('chk-'+labId+'-'+i);
+  if(chk){chk.textContent=item.classList.contains('done')?'✓':'';chk.style.background=item.classList.contains('done')?'var(--emerald)':'transparent';chk.style.borderColor=item.classList.contains('done')?'var(--emerald)':'var(--border)';}
+}
+
+function toggleSolution(id){
+  var el=document.getElementById(id);if(!el)return;
+  el.classList.toggle('show');
+  var btn=el.previousElementSibling;if(btn)btn.textContent=el.classList.contains('show')?'🔒 Hide Solution':'🔓 Reveal Solution';
+}
+
+async function labAsk(labId,chipText){
+  var lab=LABS.find(function(l){return l.id===labId});if(!lab)return;
+  var inp=document.getElementById('lab-oracle-input-'+labId);
+  var out=document.getElementById('lab-oracle-out-'+labId);
+  if(!inp||!out)return;
+  var q=chipText||inp.value.trim()||'Help me understand this lab';
+  inp.value='';
+  out.innerHTML='<em style="opacity:.35">Consulting the Oracle...</em>';
+  var ctx='You are The Oracle, EPBCS lab mentor. The student is working on: "'+lab.title+'". Lab context: '+lab.scenario+' Provide actionable, expert-level Oracle EPBCS guidance. Use Vision Corporation context ($2.8B, 12 entities, 6 currencies). 220-300 words.\n\nQuestion: '+q;
+  try{
+    var r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:900,messages:[{role:'user',content:ctx}]})});
+    var j=await r.json();
+    var text=(j.content||[]).map(function(c){return c.text||''}).join('')||'The Oracle is silent.';
+    out.innerHTML='<div style="background:var(--bg4,#161c2a);border:1px solid rgba(255,255,255,.05);border-radius:8px;padding:12px 16px">'+text.replace(/\n\n/g,'</p><p style="margin-top:8px">').replace(/^/,'<p>').replace(/$/,'</p>').replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>')+'</div>';
+  }catch(e){out.innerHTML='Oracle unreachable. Check your connection.';}
+}
+
+renderLabList();
+</script>
+<script src="branding.js"></script>
+</body>
+</html>

@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EPBCS Capability Framework — The Planning Quest</title>
+<meta name="description" content="Four practitioner levels for Oracle EPBCS. Know exactly where you stand, what the next level requires, and how The Planning Quest gets you there.">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Crimson+Pro:ital,wght@0,400;0,500;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#07090e;--bg2:#0c0f18;--bg3:#111520;--bg4:#161c2a;
+  --gold:#d4a017;--goldLt:#f0c040;--goldDim:#5c4108;
+  --teal:#1fb8a8;--tealLt:#4dd9c8;
+  --purple:#7c3aed;--purpleLt:#a855f7;
+  --emerald:#059669;--emeraldLt:#10b981;
+  --sky:#0ea5e9;--skyLt:#38bdf8;
+  --red:#c0392b;--redLt:#e74c3c;
+  --amber:#d97706;--amberLt:#fbbf24;
+  --rose:#be185d;--roseLt:#f472b6;
+  --border:rgba(212,160,23,.15);
+  --white:#f0ead6;--dim:#5a6478;
+  --r:10px;--topbar:54px
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Crimson Pro',serif;background:var(--bg);color:var(--white);min-height:100vh;overflow-x:hidden}
+#stars{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+.star{position:absolute;border-radius:50%;background:white;animation:twinkle var(--d,3s) infinite var(--delay,0s)}
+@keyframes twinkle{0%,100%{opacity:.05}50%{opacity:var(--op,.6)}}
+@keyframes glow{0%,100%{text-shadow:0 0 20px rgba(212,160,23,.3)}50%{text-shadow:0 0 50px rgba(212,160,23,.55)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(212,160,23,.3)}50%{box-shadow:0 0 0 8px rgba(212,160,23,0)}}
+
+/* ── Topbar ── */
+#topbar-cf{position:fixed;top:0;left:0;right:0;height:var(--topbar);background:rgba(7,9,14,.97);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 20px;gap:14px;z-index:200}
+.tb-dot{width:8px;height:8px;border-radius:50%;background:var(--tealLt);animation:pulse 2s infinite}
+.tb-pill{padding:4px 9px;border-radius:6px;border:1px solid var(--border);background:transparent;color:var(--dim);font-family:'Cinzel',serif;font-size:8.5px;font-weight:700;letter-spacing:.05em;text-decoration:none;white-space:nowrap;transition:all .15s}
+.tb-pill:hover{border-color:var(--gold);color:var(--gold)}
+
+/* ── Layout ── */
+.cf-wrap{max-width:960px;margin:0 auto;padding:calc(var(--topbar) + 48px) 32px 100px;position:relative;z-index:1}
+
+/* ── Hero ── */
+.cf-hero{text-align:center;margin-bottom:52px;animation:fadeUp .5s ease}
+.cf-eyebrow{font-family:'Cinzel',serif;font-size:10px;font-weight:700;letter-spacing:.18em;color:var(--goldDim);text-transform:uppercase;margin-bottom:14px}
+.cf-title{font-family:'Cinzel',serif;font-size:36px;font-weight:900;color:var(--goldLt);line-height:1.15;margin-bottom:12px;animation:glow 4s infinite}
+.cf-sub{font-size:16px;color:rgba(240,234,214,.48);font-style:italic;max-width:620px;margin:0 auto 20px;line-height:1.75}
+.cf-divider{width:80px;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent);margin:0 auto 36px}
+
+/* ── Premise box ── */
+.premise{background:linear-gradient(135deg,rgba(12,15,24,.97),rgba(17,21,32,.93));border:1px solid rgba(212,160,23,.18);border-left:4px solid var(--gold);border-radius:0 14px 14px 0;padding:24px 28px;margin-bottom:48px}
+.premise p{font-size:15px;line-height:1.85;color:rgba(240,234,214,.72);margin-bottom:10px}
+.premise p:last-child{margin-bottom:0}
+.premise strong{color:var(--white)}
+
+/* ── Level progression track ── */
+.level-track{display:flex;align-items:center;gap:0;margin-bottom:48px;overflow-x:auto;padding-bottom:4px}
+.level-track::-webkit-scrollbar{height:3px}
+.level-track::-webkit-scrollbar-thumb{background:var(--goldDim);border-radius:2px}
+.lt-step{display:flex;align-items:center;flex-shrink:0}
+.lt-node{text-align:center;cursor:pointer;padding:14px 22px;border-radius:10px;border:1px solid var(--border);background:var(--bg3);transition:all .18s;min-width:140px}
+.lt-node:hover{border-color:rgba(212,160,23,.3);background:rgba(212,160,23,.04)}
+.lt-node.active{border-color:currentColor;background:rgba(0,0,0,.3)}
+.lt-badge{display:inline-block;font-family:'Cinzel',serif;font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:3px 10px;border-radius:10px;margin-bottom:8px}
+.lt-name{font-family:'Cinzel',serif;font-size:13px;font-weight:700;margin-bottom:4px}
+.lt-yoe{font-size:10px;color:var(--dim);letter-spacing:.04em}
+.lt-arrow{font-size:20px;color:var(--goldDim);margin:0 8px;flex-shrink:0}
+
+/* Level colours */
+.l1-color{color:#4dd9c8}.l1-bg{background:rgba(31,184,168,.1);border-color:rgba(31,184,168,.3)}
+.l2-color{color:#a855f7}.l2-bg{background:rgba(124,58,237,.1);border-color:rgba(124,58,237,.3)}
+.l3-color{color:#f0c040}.l3-bg{background:rgba(212,160,23,.12);border-color:rgba(212,160,23,.35)}
+.l4-color{color:#e74c3c}.l4-bg{background:rgba(192,57,43,.1);border-color:rgba(192,57,43,.3)}
+
+/* ── Level detail panels ── */
+.level-panels{position:relative}
+.level-panel{display:none;animation:fadeUp .25s ease}
+.level-panel.active{display:block}
+
+.level-header{display:grid;grid-template-columns:auto 1fr auto;gap:24px;align-items:start;margin-bottom:32px;padding:28px 32px;border-radius:14px;border:1px solid}
+.lh-icon{font-size:52px;line-height:1}
+.lh-meta{}
+.lh-level{font-family:'Cinzel',serif;font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;margin-bottom:6px;opacity:.6}
+.lh-title{font-family:'Cinzel',serif;font-size:26px;font-weight:900;line-height:1.1;margin-bottom:8px}
+.lh-desc{font-size:15px;color:rgba(240,234,214,.62);line-height:1.78;max-width:580px}
+.lh-verdict{text-align:right;min-width:160px}
+.lh-verdict-lbl{font-family:'Cinzel',serif;font-size:8.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);margin-bottom:6px}
+.lh-verdict-val{font-family:'Cinzel',serif;font-size:13px;font-weight:700;line-height:1.4}
+
+/* ── Criteria grid ── */
+.criteria-section{margin-bottom:32px}
+.cs-title{font-family:'Cinzel',serif;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:16px;display:flex;align-items:center;gap:10px}
+.cs-title::after{content:'';flex:1;height:1px;background:var(--border)}
+.criteria-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.criterion{background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:16px 18px}
+.cr-domain{font-family:'Cinzel',serif;font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px;opacity:.55}
+.cr-text{font-size:13.5px;color:rgba(240,234,214,.72);line-height:1.65}
+.cr-text strong{color:var(--white);font-weight:500}
+
+/* ── Can / Cannot table ── */
+.can-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:32px}
+.can-col{background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:20px 22px}
+.can-col.yes{border-top:3px solid var(--emeraldLt)}
+.can-col.not{border-top:3px solid rgba(255,255,255,.08)}
+.can-lbl{font-family:'Cinzel',serif;font-size:9.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:14px}
+.can-col.yes .can-lbl{color:var(--emeraldLt)}
+.can-col.not .can-lbl{color:var(--dim)}
+.can-item{display:flex;align-items:flex-start;gap:10px;padding:7px 0;border-bottom:1px solid rgba(255,255,255,.03);font-size:13px;color:rgba(240,234,214,.62);line-height:1.55}
+.can-item:last-child{border-bottom:none}
+.can-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;margin-top:5px}
+.can-col.yes .can-dot{background:var(--emeraldLt)}
+.can-col.not .can-dot{background:rgba(255,255,255,.12)}
+
+/* ── Quest curriculum map ── */
+.curriculum-map{background:var(--bg3);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:32px}
+.cm-header{padding:14px 20px;font-family:'Cinzel',serif;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+.cm-row{display:grid;grid-template-columns:200px 1fr auto;gap:16px;align-items:center;padding:11px 20px;border-bottom:1px solid rgba(255,255,255,.03);transition:background .12s}
+.cm-row:last-child{border-bottom:none}
+.cm-row:hover{background:rgba(255,255,255,.015)}
+.cm-module{font-family:'Cinzel',serif;font-size:11px;font-weight:600;color:var(--white)}
+.cm-covers{font-size:12.5px;color:rgba(240,234,214,.5);line-height:1.5}
+.cm-status{font-family:'Cinzel',serif;font-size:9px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:3px 10px;border-radius:8px;white-space:nowrap}
+.cm-core{background:rgba(31,184,168,.1);border:1px solid rgba(31,184,168,.25);color:var(--tealLt)}
+.cm-essential{background:rgba(124,58,237,.1);border:1px solid rgba(124,58,237,.25);color:var(--purpleLt)}
+.cm-advanced{background:rgba(212,160,23,.1);border:1px solid var(--border);color:var(--goldLt)}
+.cm-architect{background:rgba(192,57,43,.08);border:1px solid rgba(192,57,43,.2);color:var(--redLt)}
+
+/* ── The test ── */
+.level-test{background:linear-gradient(135deg,rgba(12,15,24,.98),rgba(17,21,32,.95));border:1px solid;border-radius:12px;padding:24px 28px;margin-bottom:32px}
+.lt-lbl{font-family:'Cinzel',serif;font-size:9.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:16px}
+.test-item{display:flex;align-items:flex-start;gap:12px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.04);font-size:14px;color:rgba(240,234,214,.65);line-height:1.65}
+.test-item:last-child{border-bottom:none}
+.test-num{font-family:'JetBrains Mono',monospace;font-size:10px;flex-shrink:0;margin-top:3px;opacity:.4}
+
+/* ── Transition callout ── */
+.transition-box{border-radius:12px;padding:20px 24px;margin-bottom:40px;display:flex;gap:20px;align-items:flex-start}
+.tr-icon{font-size:28px;flex-shrink:0}
+.tr-body{}
+.tr-lbl{font-family:'Cinzel',serif;font-size:9.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px}
+.tr-text{font-size:14px;color:rgba(240,234,214,.65);line-height:1.72}
+.tr-text strong{color:var(--white)}
+
+/* ── Bottom CTA ── */
+.cf-cta{text-align:center;padding:48px 0 0;border-top:1px solid var(--border)}
+.cf-cta-title{font-family:'Cinzel',serif;font-size:22px;font-weight:700;color:var(--goldLt);margin-bottom:10px}
+.cf-cta-sub{font-size:15px;color:rgba(240,234,214,.45);font-style:italic;margin-bottom:28px}
+.cta-row{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
+.cta-btn{padding:13px 36px;font-family:'Cinzel',serif;font-size:12px;font-weight:700;letter-spacing:.07em;border-radius:10px;cursor:pointer;transition:all .18s;text-decoration:none;display:inline-block}
+.cta-primary{background:linear-gradient(135deg,var(--gold),#d97706);color:var(--bg);border:none}
+.cta-primary:hover{opacity:.88;transform:translateY(-1px)}
+.cta-outline{background:transparent;color:var(--tealLt);border:1px solid rgba(31,184,168,.3)}
+.cta-outline:hover{background:rgba(31,184,168,.06)}
+.cta-emerald{background:linear-gradient(135deg,var(--emerald),#047857);color:white;border:none}
+.cta-emerald:hover{opacity:.88;transform:translateY(-1px)}
+
+/* ── Typography ── */
+h2{font-family:'Cinzel',serif;font-size:17px;font-weight:600;color:var(--goldLt);margin:32px 0 12px;letter-spacing:.03em}
+p{font-size:15px;line-height:1.82;color:rgba(240,234,214,.78);margin-bottom:12px}
+strong{color:var(--white);font-weight:500}
+
+@media(max-width:720px){
+  .cf-wrap{padding:calc(var(--topbar) + 28px) 16px 80px}
+  .cf-title{font-size:26px}
+  .level-header{grid-template-columns:1fr;gap:16px}
+  .lh-verdict{text-align:left}
+  .criteria-grid{grid-template-columns:1fr}
+  .can-grid{grid-template-columns:1fr}
+  .cm-row{grid-template-columns:1fr;gap:6px}
+  .level-track{gap:0}
+  .lt-node{min-width:110px;padding:12px 14px}
+}
+</style>
+</head>
+<body>
+<div id="stars"></div>
+
+<div id="topbar-cf" style="display:flex;align-items:center;gap:8px">
+  <a href="index.html" style="font-family:'Cinzel',serif;font-size:13px;font-weight:700;color:var(--goldLt);text-decoration:none;display:flex;align-items:center;gap:9px"><span class="tb-dot"></span>The Planning Quest</a>
+  <span style="color:var(--goldDim)">›</span>
+  <span style="font-family:'Cinzel',serif;font-size:11px;color:var(--gold)">Capability Framework</span>
+  <div style="flex:1"></div>
+  <div style="display:flex;gap:4px;overflow-x:auto">
+    <a href="parts-1-3.html" class="tb-pill">📖 I–III</a>
+    <a href="parts-4-5.html" class="tb-pill">⚔ IV–V</a>
+    <a href="parts-6-9.html" class="tb-pill">👑 VI–IX</a>
+    <a href="groovy-ch1.html" class="tb-pill">📘 Gr.I</a>
+    <a href="groovy-ch2.html" class="tb-pill">⚡ Gr.II</a>
+    <a href="essbase-kernel.html" class="tb-pill" style="border-color:rgba(212,160,23,.25);color:var(--goldLt)">⚙ Kernel</a>
+    <a href="labs.html" class="tb-pill">🔬 Labs</a>
+    <a href="engagement.html" class="tb-pill" style="border-color:rgba(16,185,129,.25);color:var(--emeraldLt)">🏆 Engagement</a>
+    <a href="whats-new.html" class="tb-pill">🆕 New</a>
+  </div>
+</div>
+
+<div class="cf-wrap">
+
+  <!-- Hero -->
+  <div class="cf-hero">
+    <div class="cf-eyebrow">EPBCS Practitioner Levels · The Planning Quest</div>
+    <h1 class="cf-title">Where Do You Stand?</h1>
+    <p class="cf-sub">Four levels. Honest criteria. A clear map of what separates a junior configurator from a senior architect — and exactly what this platform gives you at each stage.</p>
+    <div class="cf-divider"></div>
+  </div>
+
+  <!-- Premise -->
+  <div class="premise">
+    <p>Most EPBCS training tells you what the system can do. It does not tell you what <strong>you</strong> need to be able to do — under pressure, in a live project, when the CFO is waiting and the go-live is in three days.</p>
+    <p>This framework is honest. It reflects what distinguishes practitioners at each level on real Oracle EPM implementations — not what passes an Oracle certification exam. Levels are defined by judgment and delivery capacity, not by how many features you can describe.</p>
+    <p><strong>The Planning Quest takes you from zero to solid Level 2.</strong> The Essbase Kernel and Groovy chapters push toward Level 3. The Engagement tests where you actually are. Use this framework to know what to focus on next.</p>
+  </div>
+
+  <!-- Level track -->
+  <div class="level-track">
+    <div class="lt-step">
+      <div class="lt-node l1-color" id="track-l1" onclick="showLevel(1)" style="border-color:rgba(31,184,168,.35);background:rgba(31,184,168,.08)">
+        <div class="lt-badge l1-bg" style="font-family:'Cinzel',serif;font-size:9px;font-weight:700;letter-spacing:.08em;color:#4dd9c8">Level 1</div>
+        <div class="lt-name" style="color:#4dd9c8">Implementer</div>
+        <div class="lt-yoe">0 – 18 months</div>
+      </div>
+    </div>
+    <div class="lt-arrow">→</div>
+    <div class="lt-step">
+      <div class="lt-node" id="track-l2" onclick="showLevel(2)" style="border-color:rgba(124,58,237,.25);background:var(--bg3)">
+        <div class="lt-badge" style="background:rgba(124,58,237,.1);border:1px solid rgba(124,58,237,.3);font-family:'Cinzel',serif;font-size:9px;font-weight:700;letter-spacing:.08em;color:#a855f7">Level 2</div>
+        <div class="lt-name" style="color:#a855f7">Practitioner</div>
+        <div class="lt-yoe">1 – 3 years</div>
+      </div>
+    </div>
+    <div class="lt-arrow">→</div>
+    <div class="lt-step">
+      <div class="lt-node" id="track-l3" onclick="showLevel(3)" style="border-color:rgba(212,160,23,.2);background:var(--bg3)">
+        <div class="lt-badge" style="background:rgba(212,160,23,.1);border:1px solid rgba(212,160,23,.3);font-family:'Cinzel',serif;font-size:9px;font-weight:700;letter-spacing:.08em;color:#f0c040">Level 3</div>
+        <div class="lt-name" style="color:#f0c040">Senior Practitioner</div>
+        <div class="lt-yoe">3 – 6 years</div>
+      </div>
+    </div>
+    <div class="lt-arrow">→</div>
+    <div class="lt-step">
+      <div class="lt-node" id="track-l4" onclick="showLevel(4)" style="border-color:rgba(192,57,43,.2);background:var(--bg3)">
+        <div class="lt-badge" style="background:rgba(192,57,43,.08);border:1px solid rgba(192,57,43,.25);font-family:'Cinzel',serif;font-size:9px;font-weight:700;letter-spacing:.08em;color:#e74c3c">Level 4</div>
+        <div class="lt-name" style="color:#e74c3c">Architect</div>
+        <div class="lt-yoe">6+ years</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════ LEVEL 1 ═══════════ -->
+  <div class="level-panel active" id="panel-l1">
+    <div class="level-header" style="background:rgba(31,184,168,.05);border-color:rgba(31,184,168,.25)">
+      <div class="lh-icon">🌱</div>
+      <div class="lh-meta">
+        <div class="lh-level" style="color:#4dd9c8">Level 1 · 0–18 Months</div>
+        <div class="lh-title" style="color:#4dd9c8">Implementer</div>
+        <p class="lh-desc">You can build a functional EPBCS application under supervision. You understand what the system does and can configure what has been designed by someone else. You are reliable on known tasks but need direction on unknowns.</p>
+      </div>
+      <div class="lh-verdict">
+        <div class="lh-verdict-lbl">Quest Coverage</div>
+        <div class="lh-verdict-val" style="color:#4dd9c8">Parts I–IX<br><span style="font-size:11px;opacity:.6">Full foundation</span></div>
+      </div>
+    </div>
+
+    <div class="criteria-section">
+      <div class="cs-title" style="color:#4dd9c8">What a Level 1 Practitioner Can Do</div>
+      <div class="criteria-grid">
+        <div class="criterion">
+          <div class="cr-domain" style="color:#4dd9c8">Application Setup</div>
+          <div class="cr-text">Creates a Planning application with correct settings. Understands why monthly granularity and fiscal year start are <strong>irreversible decisions</strong> before creation.</div>
+        </div>
+        <div class="criterion">
+          <div class="cr-domain" style="color:#4dd9c8">Dimension Design</div>
+          <div class="cr-text">Builds the 7 core dimensions. Configures hierarchy structures, consolidation operators, and Smart Lists. Understands the difference between stored and dynamic calc members.</div>
+        </div>
+        <div class="criterion">
+          <div class="cr-domain" style="color:#4dd9c8">Forms</div>
+          <div class="cr-text">Builds input forms and composite dashboards in Forms 2.0. Configures suppression, page selectors, and action menus. Understands that Forms 2.0 is <strong>stateless</strong>.</div>
+        </div>
+        <div class="criterion">
+          <div class="cr-domain" style="color:#4dd9c8">Data Integration</div>
+          <div class="cr-text">Creates an Import Format, dimension maps, and a Load Rule. Runs a data load manually. Understands the difference between Replace and Accumulate load modes.</div>
+        </div>
+        <div class="criterion">
+          <div class="cr-domain" style="color:#4dd9c8">Groovy Basics</div>
+          <div class="cr-text">Can read and modify an existing Groovy rule. Understands the three execution hooks. Can use getCell() and setCell(). Knows why BigDecimal matters for financial values.</div>
+        </div>
+        <div class="criterion">
+          <div class="cr-domain" style="color:#4dd9c8">Security</div>
+          <div class="cr-text">Creates users and assigns Application Roles and Granular Roles. Understands the four-layer security model. Can configure data access via security filters.</div>
+        </div>
+        <div class="criterion">
+          <div class="cr-domain" style="color:#4dd9c8">Approvals</div>
+          <div class="cr-text">Configures a Planning Unit Hierarchy. Understands the approval states lifecycle. Can promote, approve, and reject via the UI. Knows how to unblock a stuck entity.</div>
+        </div>
+        <div class="criterion">
+          <div class="cr-domain" style="color:#4dd9c8">Reporting</div>
+          <div class="cr-text">Builds basic reports in Oracle Reports. Creates infolets and conditional formatting rules. Understands the difference between Oracle Reports and Financial Reporting Studio.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="can-grid">
+      <div class="can-col yes">
+        <div class="can-lbl">✓ Can deliver independently</div>
+        <div class="can-item"><div class="can-dot"></div>Standard form and dashboard builds</div>
+        <div class="can-item"><div class="can-dot"></div>DI load rule configuration from documented specs</div>
+        <div class="can-item"><div class="can-dot"></div>Security group and role assignments</div>
+        <div class="can-item"><div class="can-dot"></div>Approval hierarchy configuration</div>
+        <div class="can-item"><div class="can-dot"></div>Simple business rules from a template</div>
+        <div class="can-item"><div class="can-dot"></div>EPM Automate basic commands and scheduling</div>
+      </div>
+      <div class="can-col not">
+        <div class="can-lbl">○ Still needs guidance on</div>
+        <div class="can-item"><div class="can-dot"></div>Dense/sparse design decisions for a new cube</div>
+        <div class="can-item"><div class="can-dot"></div>Diagnosing production performance issues</div>
+        <div class="can-item"><div class="can-dot"></div>Writing complex Groovy from scratch safely</div>
+        <div class="can-item"><div class="can-dot"></div>Block creation strategy for a new fiscal year</div>
+        <div class="can-item"><div class="can-dot"></div>DI reconciliation control design</div>
+        <div class="can-item"><div class="can-dot"></div>ASO cube design and BSO/ASO hybrid architecture</div>
+      </div>
+    </div>
+
+    <div class="level-test" style="border-color:rgba(31,184,168,.2)">
+      <div class="lt-lbl" style="color:#4dd9c8">The Level 1 Test — Can you answer these without looking?</div>
+      <div class="test-item"><span class="test-num">01</span>What happens if you enable quarterly time periods at application creation and later need monthly? What is the recovery path?</div>
+      <div class="test-item"><span class="test-num">02</span>A planner reports that a form is showing all zero rows including empty ones. What Form 2.0 setting do you check first?</div>
+      <div class="test-item"><span class="test-num">03</span>What is the difference between Replace and Accumulate load modes in Data Integration — and when would using the wrong one cause a production problem?</div>
+      <div class="test-item"><span class="test-num">04</span>An entity is stuck Under Review 24 hours before budget cycle closes. The reviewer is on leave with no delegate. What are your options?</div>
+      <div class="test-item"><span class="test-num">05</span>A Groovy rule using setCell() is running correctly in test but timing out in production. What is the first thing you investigate?</div>
+    </div>
+
+    <div class="transition-box" style="background:rgba(124,58,237,.05);border:1px solid rgba(124,58,237,.2)">
+      <div class="tr-icon">→</div>
+      <div class="tr-body">
+        <div class="tr-lbl" style="color:#a855f7">Transition to Level 2 — What it actually takes</div>
+        <div class="tr-text">The jump from Level 1 to Level 2 is not more configuration experience. It is the ability to <strong>design</strong>, not just build. A Level 2 practitioner can look at a blank requirement and make defensible architectural choices — dimension design, Groovy engine selection, block creation strategy, Forms 2.0 composite architecture. That judgment comes from understanding why things work, not just that they work. The Essbase Kernel and Groovy Chapters I & II are the most direct path to this shift.</div>
+      </div>
+    </div>
+
+    <div class="curriculum-map">
+      <div class="cm-header"><span style="color:#4dd9c8">Quest Modules That Build Level 1</span><span style="color:var(--dim);font-size:11px">All modules below are fully covered in the Quest</span></div>
+      <div class="cm-row"><div class="cm-module">Parts I–III</div><div class="cm-covers">Application creation, dimensions, hierarchies, Smart Lists, Data Integration architecture and load modes, substitution variables</div><div class="cm-status cm-core">Core</div></div>
+      <div class="cm-row"><div class="cm-module">Part IV</div><div class="cm-covers">Forms 2.0 design, rolling forecast, action menus, composite dashboard architecture, Apply Context</div><div class="cm-status cm-core">Core</div></div>
+      <div class="cm-row"><div class="cm-module">Part V</div><div class="cm-covers">Groovy basics, getCell/setCell, beforeSave/afterSave hooks, simple allocation and validation rules</div><div class="cm-status cm-core">Core</div></div>
+      <div class="cm-row"><div class="cm-module">Parts VI–IX</div><div class="cm-covers">Security model, valid intersections, approval workflow, dashboards, FRS vs Oracle Reports, EPM Automate CLI</div><div class="cm-status cm-core">Core</div></div>
+      <div class="cm-row"><div class="cm-module">Enterprise Labs 1–2</div><div class="cm-covers">Annual budget build, rolling forecast transition — step-by-step with production code and verification</div><div class="cm-status cm-core">Core</div></div>
+    </div>
+  </div>
+
+  <!-- ═══════════ LEVEL 2 ═══════════ -->
+  <div class="level-panel" id="panel-l2">
+    <div class="level-header" style="background:rgba(124,58,237,.06);border-color:rgba(124,58,237,.28)">
+      <div class="lh-icon">⚔</div>
+      <div class="lh-meta">
+        <div class="lh-level" style="color:#a855f7">Level 2 · 1–3 Years</div>
+        <div class="lh-title" style="color:#a855f7">Practitioner</div>
+        <p class="lh-desc">You can design and build independently. You make defensible architectural decisions and explain your reasoning. You write production-safe Groovy. You understand block logic well enough to avoid disasters. You are the person a client trusts to work unsupervised.</p>
+      </div>
+      <div class="lh-verdict">
+        <div class="lh-verdict-lbl">Quest Coverage</div>
+        <div class="lh-verdict-val" style="color:#a855f7">Parts I–IX<br>+ Groovy I & II<br>+ Kernel<br><span style="font-size:11px;opacity:.6">Solid Level 2</span></div>
+      </div>
+    </div>
+
+    <div class="criteria-section">
+      <div class="cs-title" style="color:#a855f7">What a Level 2 Practitioner Can Do</div>
+      <div class="criteria-grid">
+        <div class="criterion">
+          <div class="cr-domain" style="color:#a855f7">Block Architecture</div>
+          <div class="cr-text">Calculates block size for a given dimension profile. Makes dense/sparse assignment with written rationale. Understands the <strong>Empty Space problem</strong> and chooses the correct block creation weapon for each scenario.</div>
+        </div>
+        <div class="criterion">
+          <div class="cr-domain" style="color:#a855f7">Groovy Production Code</div>
+          <div class="cr-text">Writes Groovy rules from scratch with explicit typing, BigDecimal arithmetic, null-safe navigation, and the 4-layer error wrapper. Uses <strong>DataGridBuilder</strong> for reads and setDataCellValues() for batch writes.</div>
+        </div>
+        <div class="criterion">
+          <div class="cr-domain" style="color:#a855f7">Performance Diagnosis</div>
+          <div class="cr-text">Can diagnose a slow Groovy rule in under an hour. Knows the 9 Hourglass levers ranked by impact. Understands the difference between round-trip cost and calculation cost. Can quantify the improvement.</div>
+        </div>
+        <div class="criterion">
+          <div class="cr-domain" style="color:#a855f7">Integration Design</div>
+          <div class="cr-text">Designs a DI integration from a source system spec. Builds field mappings, dimension maps, and exception handling. Implements a reconciliation control account with materiality threshold and alert mechanism.</div>
+        </div>
+        <div class="criterion">
+          <div class="cr-domain" style="color:#a855f7">Forms 2.0 Architecture</div>
+          <div class="cr-text">Designs composite dashboards within the 12-component limit. Configures Apply Context master/detail relationships. Understands the stateless architecture and the RTP silent failure pattern.</div>
+        </div>
+        <div class="criterion">
+          <div class="cr-domain" style="color:#a855f7">Release Awareness</div>
+          <div class="cr-text">Tracks monthly EPM releases and their practitioner impact. Can identify when a client's issue is a known release change. Managed the Forms 1.0 → 2.0 transition and the DI Job Scheduler migration.</div>
+        </div>
+        <div class="criterion">
+          <div class="cr-domain" style="color:#a855f7">Batch Automation</div>
+          <div class="cr-text">Designs and maintains a nightly EPM Automate batch. Sequences operations correctly. Implements error handling, abort-on-failure, and Finance Admin alerting. Uses Platform Job Scheduler.</div>
+        </div>
+        <div class="criterion">
+          <div class="cr-domain" style="color:#a855f7">Stakeholder Communication</div>
+          <div class="cr-text">Can explain block explosion risk to a CFO without jargon. Can justify an architectural decision to a skeptical client. Can translate a Finance BP requirement into a specific technical design.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="can-grid">
+      <div class="can-col yes">
+        <div class="can-lbl">✓ Can deliver independently</div>
+        <div class="can-item"><div class="can-dot"></div>Full implementation from design through UAT</div>
+        <div class="can-item"><div class="can-dot"></div>Dense/sparse design with documented rationale</div>
+        <div class="can-item"><div class="can-dot"></div>Production Groovy automation suite</div>
+        <div class="can-item"><div class="can-dot"></div>SAP/ERP to EPBCS integration with reconciliation</div>
+        <div class="can-item"><div class="can-dot"></div>Nightly batch architecture and EPM Automate scripts</div>
+        <div class="can-item"><div class="can-dot"></div>CFO Dashboard with Forms 2.0 composite design</div>
+      </div>
+      <div class="can-col not">
+        <div class="can-lbl">○ Still developing</div>
+        <div class="can-item"><div class="can-dot"></div>ASO/BSO hybrid architecture design</div>
+        <div class="can-item"><div class="can-dot"></div>Leading a technical design review with senior client stakeholders</div>
+        <div class="can-item"><div class="can-dot"></div>Multi-implementation pattern recognition</div>
+        <div class="can-item"><div class="can-dot"></div>Workforce Planning module architecture</div>
+        <div class="can-item"><div class="can-dot"></div>Mentoring and technical quality review of junior staff</div>
+        <div class="can-item"><div class="can-dot"></div>Client-side ownership and vendor management</div>
+      </div>
+    </div>
+
+    <div class="level-test" style="border-color:rgba(124,58,237,.25)">
+      <div class="lt-lbl" style="color:#a855f7">The Level 2 Test — Five questions, no reference material</div>
+      <div class="test-item"><span class="test-num">01</span>Vision Corp has 600 Account members and 25 Period members. Calculate the block size, state whether it is in range, and explain what happens if the CFO requests 200 additional accounts for a new product segment.</div>
+      <div class="test-item"><span class="test-num">02</span>A Groovy allocation rule runs 38 minutes in production. It calls getCell() 12 times and setCell() 12 times inside a loop. Without touching the business logic, reduce it to under 2 minutes. Name every lever you applied.</div>
+      <div class="test-item"><span class="test-num">03</span>The nightly SAP actuals load completed successfully but the Finance Controller's P&L shows revenue 4% below what SAP reports. Walk through your complete diagnostic — in the order you would actually run it at 6am.</div>
+      <div class="test-item"><span class="test-num">04</span>Camille wants her rolling 12-month forecast to advance automatically on the first of each month. Describe the complete mechanism — the substitution variables, the EPM Automate commands, and what a planner sees if the advance hasn't run yet.</div>
+      <div class="test-item"><span class="test-num">05</span>The CFO Dashboard has 8 grids and 4 charts. When the entity changes in Grid 1, only Grid 1 updates. The other 11 components stay on the previous entity. What is the cause and exactly how do you fix it?</div>
+    </div>
+
+    <div class="transition-box" style="background:rgba(212,160,23,.05);border:1px solid rgba(212,160,23,.2)">
+      <div class="tr-icon">→</div>
+      <div class="tr-body">
+        <div class="tr-lbl" style="color:#f0c040">Transition to Level 3 — The hardest jump</div>
+        <div class="tr-text">Level 2 to Level 3 is the steepest transition in the Oracle EPM career path. It is not primarily about more technical knowledge — it is about <strong>pattern recognition across implementations</strong>. A Level 3 practitioner has seen enough to know what will break before it breaks. They understand ASO/BSO hybrid design. They lead technical design reviews. They mentor. The technical gap is ASO — every senior practitioner must understand hybrid architecture. The behavioural gap is leadership under pressure.</div>
+      </div>
+    </div>
+
+    <div class="curriculum-map">
+      <div class="cm-header"><span style="color:#a855f7">Quest Modules That Build Level 2</span><span style="color:var(--dim);font-size:11px">All available now in the Quest</span></div>
+      <div class="cm-row"><div class="cm-module">Groovy Chapter I</div><div class="cm-covers">Explicit typing, BigDecimal, null safety, guard chains, the 4-layer error wrapper, the universal 10-line skeleton</div><div class="cm-status cm-essential">Essential</div></div>
+      <div class="cm-row"><div class="cm-module">Groovy Chapter II</div><div class="cm-covers">DataGridBuilder, setDataCellValues(), the Hourglass Principle, 9 performance levers, REST API integration, 24 interview questions</div><div class="cm-status cm-essential">Essential</div></div>
+      <div class="cm-row"><div class="cm-module">NODE s — Essbase Kernel</div><div class="cm-covers">Block anatomy, block size formula, the Empty Space problem, DATACOPY vs @CREATEBLOCK vs SET CREATENONMISSINGBLK, FIX scope discipline</div><div class="cm-status cm-essential">Essential</div></div>
+      <div class="cm-row"><div class="cm-module">Enterprise Labs 3–5</div><div class="cm-covers">Groovy automation suite, CFO Board Pack automation, ERP/SAP integration with reconciliation control and exception reporting</div><div class="cm-status cm-essential">Essential</div></div>
+      <div class="cm-row"><div class="cm-module">What's New 25.06–26.01</div><div class="cm-covers">Forms 1.0 end of support, DI scheduler migration, IP allowlist removal, Java 17 requirement, Groovy engine changes</div><div class="cm-status cm-essential">Essential</div></div>
+      <div class="cm-row"><div class="cm-module">The Engagement</div><div class="cm-covers">Live project simulation — 5 stakeholder challenges, 13 SDLC decisions, AI-evaluated Practitioner Signal</div><div class="cm-status cm-essential">Tests Level 2→3</div></div>
+    </div>
+  </div>
+
+  <!-- ═══════════ LEVEL 3 ═══════════ -->
+  <div class="level-panel" id="panel-l3">
+    <div class="level-header" style="background:rgba(212,160,23,.06);border-color:rgba(212,160,23,.3)">
+      <div class="lh-icon">🔭</div>
+      <div class="lh-meta">
+        <div class="lh-level" style="color:#f0c040">Level 3 · 3–6 Years</div>
+        <div class="lh-title" style="color:#f0c040">Senior Practitioner</div>
+        <p class="lh-desc">You architect full implementations from discovery through go-live. You understand ASO/BSO hybrid design. You lead technical design reviews and push back on client decisions that will create production problems. You mentor junior practitioners. You diagnose production issues under pressure without external help.</p>
+      </div>
+      <div class="lh-verdict">
+        <div class="lh-verdict-lbl">Quest Coverage</div>
+        <div class="lh-verdict-val" style="color:#f0c040">Full Quest<br>+ ASO Module<br><span style="font-size:11px;opacity:.6">Coming next</span></div>
+      </div>
+    </div>
+
+    <div class="criteria-section">
+      <div class="cs-title" style="color:#f0c040">What a Level 3 Practitioner Can Do</div>
+      <div class="criteria-grid">
+        <div class="criterion">
+          <div class="cr-domain" style="color:#f0c040">Hybrid Architecture</div>
+          <div class="cr-text">Designs BSO/ASO hybrid implementations. Knows when a reporting cube is mandatory, how to design the ASO dimension order, how data flows from BSO via Smart Push, and where currency translation should live.</div>
+        </div>
+        <div class="criterion">
+          <div class="cr-domain" style="color:#f0c040">Design Review Leadership</div>
+          <div class="cr-text">Runs technical design reviews. Identifies risks in a proposed design before build begins. Can veto a decision that will cause a production problem — and explain why in terms the CFO understands.</div>
+        </div>
+        <div class="criterion">
+          <div class="cr-domain" style="color:#f0c040">Cross-Implementation Patterns</div>
+          <div class="cr-text">Recognises that a client's current problem is a pattern seen before. Has a mental library of what breaks and when. Can distinguish a configuration issue from an architectural one without running a diagnostic.</div>
+        </div>
+        <div class="criterion">
+          <div class="cr-domain" style="color:#f0c040">Workforce Planning</div>
+          <div class="cr-text">Architects OEP_WFP integrations. Understands the employee cube design, monthly salary calculations, the HCP_Element hierarchy, and how headcount cascades into compensation across entity and period dimensions.</div>
+        </div>
+        <div class="criterion">
+          <div class="cr-domain" style="color:#f0c040">Mentorship</div>
+          <div class="cr-text">Identifies when a junior practitioner's design will cause a production problem and can teach them why — without redoing the work for them. Writes design constraints documents that juniors can follow independently.</div>
+        </div>
+        <div class="criterion">
+          <div class="cr-domain" style="color:#f0c040">Release Strategy</div>
+          <div class="cr-text">Advises clients on Oracle EPM release upgrade risk. Can assess a release's impact on an existing implementation and recommend a testing strategy. Has a process for monitoring Customer Connect for early warnings.</div>
+        </div>
+        <div class="criterion">
+          <div class="cr-domain" style="color:#f0c040">Estimation Accuracy</div>
+          <div class="cr-text">Produces implementation estimates that are accurate within 15%. Knows which tasks have hidden complexity and buffers accordingly. Can identify scope creep early and communicate it before it becomes a delivery risk.</div>
+        </div>
+        <div class="criterion">
+          <div class="cr-domain" style="color:#f0c040">Production Crisis Response</div>
+          <div class="cr-text">When a batch fails at 3am and Finance needs numbers by 7am, this practitioner leads the recovery — diagnosis, decision-making, communication — without escalating to someone more senior.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="can-grid">
+      <div class="can-col yes">
+        <div class="can-lbl">✓ Delivers independently</div>
+        <div class="can-item"><div class="can-dot"></div>Complete enterprise implementation from RFP to go-live</div>
+        <div class="can-item"><div class="can-dot"></div>BSO/ASO hybrid architecture with currency translation</div>
+        <div class="can-item"><div class="can-dot"></div>Workforce Planning module with HCM integration</div>
+        <div class="can-item"><div class="can-dot"></div>Technical design review and sign-off</div>
+        <div class="can-item"><div class="can-dot"></div>Production incident diagnosis and recovery</div>
+        <div class="can-item"><div class="can-dot"></div>Junior practitioner mentoring and quality review</div>
+      </div>
+      <div class="can-col not">
+        <div class="can-lbl">○ Still developing</div>
+        <div class="can-item"><div class="can-dot"></div>Platform-level architectural standards across a portfolio</div>
+        <div class="can-item"><div class="can-dot"></div>Client EPM strategy and roadmap advisory</div>
+        <div class="can-item"><div class="can-dot"></div>Evaluating Oracle product direction and advising on investment</div>
+        <div class="can-item"><div class="can-dot"></div>Bid leadership and technical proposal writing</div>
+        <div class="can-item"><div class="can-dot"></div>Building and managing a practice-wide competency standard</div>
+      </div>
+    </div>
+
+    <div class="level-test" style="border-color:rgba(212,160,23,.25)">
+      <div class="lt-lbl" style="color:#f0c040">The Level 3 Test — These require experience, not just knowledge</div>
+      <div class="test-item"><span class="test-num">01</span>Vision Corp's CFO wants to add a consolidated P&L report showing all 12 entities with currency translation in a single view. The BSO cube has a multi-currency setup. Should this report run against BSO or ASO — and what would you need to build to make ASO the right choice?</div>
+      <div class="test-item"><span class="test-num">02</span>A junior architect has proposed marking Entity as dense to reduce block count. The cube has 12 entity members. Explain to them — in writing, as if it were a design review comment — why this is wrong and what the correct assignment is.</div>
+      <div class="test-item"><span class="test-num">03</span>At 3:15am the nightly batch alerts that the master calc rule timed out. Finance needs actuals numbers by 7am. Walk through your complete response — diagnosis, decision points, what you communicate to the Finance Controller and at what time.</div>
+      <div class="test-item"><span class="test-num">04</span>A client is on EPM 25.10 and asks whether they should upgrade to 26.01 or wait for 26.02. They have a custom Groovy automation suite, an SAP DI integration, and Forms 2.0. What is your recommendation and what specifically do you test before advising go-ahead?</div>
+      <div class="test-item"><span class="test-num">05</span>You are reviewing a junior practitioner's Groovy design. They have written a headcount cascade rule that calls getCell() 50 times in a loop across 12 entities and 12 months. It runs in 22 minutes. Rewrite the critical section and explain to them, in teaching terms, the principle that makes your version faster.</div>
+    </div>
+
+    <div class="transition-box" style="background:rgba(192,57,43,.05);border:1px solid rgba(192,57,43,.18)">
+      <div class="tr-icon">→</div>
+      <div class="tr-body">
+        <div class="tr-lbl" style="color:#e74c3c">Transition to Level 4 — What cannot be taught in a course</div>
+        <div class="tr-text">Level 4 Architect is not a technical threshold. It is a <strong>strategic and leadership threshold</strong>. The technical knowledge of a Level 3 and Level 4 practitioner is similar — what differs is the scope and nature of their judgment. A Level 4 Architect thinks about the Oracle EPM platform as a whole, across multiple client environments, over years. They have seen enough implementations succeed and fail to advise clients on whether to invest in EPBCS at all — and what conditions make that investment succeed. This level comes from time and variety of experience, not from additional courses.</div>
+      </div>
+    </div>
+
+    <div class="curriculum-map">
+      <div class="cm-header"><span style="color:#f0c040">Quest Modules That Build Toward Level 3</span><span style="color:var(--dim);font-size:11px">Some content coming — marked below</span></div>
+      <div class="cm-row"><div class="cm-module">Full Quest Curriculum</div><div class="cm-covers">Complete foundation — all Parts I–IX, Groovy I & II, Essbase Kernel, Labs, What's New, The Engagement</div><div class="cm-status cm-advanced">Available Now</div></div>
+      <div class="cm-row"><div class="cm-module">Workforce Planning Module</div><div class="cm-covers">OEP_WFP architecture, employee cube, salary calculations, HCM integration, Groovy patterns for headcount cascade</div><div class="cm-status cm-advanced">Available Now</div></div>
+      <div class="cm-row"><div class="cm-module">ASO Module</div><div class="cm-covers">BSO vs ASO decision framework, ASO dimension design, hybrid architecture, Smart Push, currency translation in ASO</div><div class="cm-status cm-architect" style="background:rgba(212,160,23,.08);border-color:rgba(212,160,23,.2);color:var(--goldLt)">Coming Next</div></div>
+      <div class="cm-row"><div class="cm-module">Architecture Decision Tree</div><div class="cm-covers">Interactive decision tool — BSO vs ASO, Groovy vs calc script, Valid Intersections vs beforeSave, and more</div><div class="cm-status cm-architect" style="background:rgba(212,160,23,.08);border-color:rgba(212,160,23,.2);color:var(--goldLt)">Coming Soon</div></div>
+    </div>
+  </div>
+
+  <!-- ═══════════ LEVEL 4 ═══════════ -->
+  <div class="level-panel" id="panel-l4">
+    <div class="level-header" style="background:rgba(192,57,43,.06);border-color:rgba(192,57,43,.28)">
+      <div class="lh-icon">👑</div>
+      <div class="lh-meta">
+        <div class="lh-level" style="color:#e74c3c">Level 4 · 6+ Years</div>
+        <div class="lh-title" style="color:#e74c3c">Architect</div>
+        <p class="lh-desc">You set technical direction across multiple implementations. You advise clients on platform strategy, not just configuration. You evaluate Oracle's product roadmap and advise on investment risk. You define competency standards for other practitioners. Your judgment at the start of a project determines its outcome.</p>
+      </div>
+      <div class="lh-verdict">
+        <div class="lh-verdict-lbl">Quest Role</div>
+        <div class="lh-verdict-val" style="color:#e74c3c">Reference &<br>Currency<br><span style="font-size:11px;opacity:.6">Stay sharp</span></div>
+      </div>
+    </div>
+
+    <div class="criteria-section">
+      <div class="cs-title" style="color:#e74c3c">What Distinguishes a Level 4 Architect</div>
+      <div class="criteria-grid">
+        <div class="criterion">
+          <div class="cr-domain" style="color:#e74c3c">Platform Strategy</div>
+          <div class="cr-text">Advises clients on whether EPBCS is the right investment for their planning maturity level. Defines the implementation sequencing across years — what to build first, what to defer, and why the order matters.</div>
+        </div>
+        <div class="criterion">
+          <div class="cr-domain" style="color:#e74c3c">Portfolio Governance</div>
+          <div class="cr-text">Sets architectural standards that apply across multiple client environments. Identifies when a pattern that worked in one implementation will fail in another. Defines the conditions under which exceptions are permitted.</div>
+        </div>
+        <div class="criterion">
+          <div class="cr-domain" style="color:#e74c3c">Oracle Relationship</div>
+          <div class="cr-text">Engages with Oracle product management directly. Raises client issues as product gaps rather than support tickets. Participates in beta programmes. Advises clients on Customer Connect engagement and how to influence Oracle's roadmap.</div>
+        </div>
+        <div class="criterion">
+          <div class="cr-domain" style="color:#e74c3c">Risk Advisory</div>
+          <div class="cr-text">When a client makes a technical decision that will fail in production, this practitioner stops the project — not just flags the risk. They have the standing and the track record to override a client's preference when the cost of proceeding is higher than the cost of stopping.</div>
+        </div>
+        <div class="criterion">
+          <div class="cr-domain" style="color:#e74c3c">Practice Building</div>
+          <div class="cr-text">Defines hiring criteria, career progression, and technical competency standards for an EPBCS practice. Identifies the difference between a practitioner who can be developed and one who cannot. Builds the training infrastructure that accelerates junior staff.</div>
+        </div>
+        <div class="criterion">
+          <div class="cr-domain" style="color:#e74c3c">Commercial Judgment</div>
+          <div class="cr-text">Understands what an implementation costs versus what the client has budgeted — and can design an approach that delivers core value within constraint without compromising architectural integrity. Can scope a phased delivery that is both commercially viable and technically sound.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="level-test" style="border-color:rgba(192,57,43,.22)">
+      <div class="lt-lbl" style="color:#e74c3c">The Level 4 Questions — No course answers these</div>
+      <div class="test-item"><span class="test-num">01</span>A mid-market CFO with $800M revenue and 8 entities asks whether they should implement Oracle EPBCS or a lighter planning tool. Their current process is entirely in Excel. What questions do you ask before making a recommendation — and what would make you advise against EPBCS?</div>
+      <div class="test-item"><span class="test-num">02</span>You are reviewing a proposal from a competitor for a $1.4M EPBCS implementation. The timeline is 6 months, the team is 3 consultants, and the scope includes Workforce Planning and a full ASO reporting cube. What specific risks in this proposal would you raise with the client?</div>
+      <div class="test-item"><span class="test-num">03</span>Oracle announces that a feature your client's implementation depends on will be deprecated in 3 releases. The client has 18 months of budget runway. How do you structure the migration, what do you communicate to the CFO, and how do you sequence the work to minimise business disruption?</div>
+      <div class="test-item"><span class="test-num">04</span>A junior architect on your team has built a technically correct implementation that the Finance team refuses to adopt. User adoption is at 15% six months after go-live. The architecture is not the problem. What is your diagnosis and what do you do next?</div>
+    </div>
+
+    <div class="curriculum-map">
+      <div class="cm-header"><span style="color:#e74c3c">How The Quest Serves Level 4 Practitioners</span><span style="color:var(--dim);font-size:11px">Currency and reference</span></div>
+      <div class="cm-row"><div class="cm-module">What's New Tracker</div><div class="cm-covers">Monthly release intelligence — Forms 1.0 deprecation, Groovy engine changes, Java requirements, IP allowlist removal. Stay current without reading Oracle release notes manually.</div><div class="cm-status cm-architect">Monthly Reference</div></div>
+      <div class="cm-row"><div class="cm-module">The Engagement</div><div class="cm-covers">Use as a benchmark and screening tool. Have a candidate complete The Engagement before an interview. Their decisions and reasoning tell you more than a CV.</div><div class="cm-status cm-architect">Screening Tool</div></div>
+      <div class="cm-row"><div class="cm-module">Groovy Chapter II</div><div class="cm-covers">The 9 Hourglass levers, DataGridBuilder patterns, and the 24-question interview toolkit are useful reference even for experienced practitioners building new rules.</div><div class="cm-status cm-architect">Reference</div></div>
+      <div class="cm-row"><div class="cm-module">Interview Prep</div><div class="cm-covers">59 questions with model answers — useful for calibrating what Level 1 and Level 2 candidates should know before joining your project.</div><div class="cm-status cm-architect">Hiring Reference</div></div>
+    </div>
+  </div>
+
+  <!-- Bottom CTA -->
+  <div class="cf-cta">
+    <div class="cf-cta-title">Know Your Level. Build the Next One.</div>
+    <p class="cf-cta-sub">The Planning Quest is free, complete, and built by practitioners for practitioners.</p>
+    <div class="cta-row">
+      <a href="parts-1-3.html" class="cta-btn cta-primary">⚔ Begin the Quest</a>
+      <a href="engagement.html" class="cta-btn cta-emerald">🏆 Test Your Level</a>
+      <a href="essbase-kernel.html" class="cta-btn cta-outline">⚙ Essbase Kernel</a>
+      <a href="whats-new.html" class="cta-btn cta-outline">🆕 Stay Current</a>
+    </div>
+  </div>
+
+</div><!-- cf-wrap -->
+
+<script>
+(function(){
+  var s=document.getElementById('stars');
+  for(var i=0;i<80;i++){
+    var d=document.createElement('div');d.className='star';
+    var sz=Math.random()*2+0.4;
+    d.style.cssText='width:'+sz+'px;height:'+sz+'px;top:'+Math.random()*100+'%;left:'+Math.random()*100+'%;--d:'+(2+Math.random()*4)+'s;--delay:'+Math.random()*5+'s;--op:'+(0.1+Math.random()*0.35);
+    s.appendChild(d);
+  }
+})();
+
+function showLevel(n){
+  // Panels
+  [1,2,3,4].forEach(function(i){
+    document.getElementById('panel-l'+i).classList.remove('active');
+  });
+  document.getElementById('panel-l'+n).classList.add('active');
+
+  // Track nodes — reset all, highlight active
+  var colors = {
+    1:{border:'rgba(31,184,168,.45)',bg:'rgba(31,184,168,.1)'},
+    2:{border:'rgba(124,58,237,.45)',bg:'rgba(124,58,237,.1)'},
+    3:{border:'rgba(212,160,23,.45)',bg:'rgba(212,160,23,.1)'},
+    4:{border:'rgba(192,57,43,.45)',bg:'rgba(192,57,43,.1)'}
+  };
+  [1,2,3,4].forEach(function(i){
+    var node = document.getElementById('track-l'+i);
+    node.style.borderColor = 'rgba(212,160,23,.15)';
+    node.style.background = 'var(--bg3)';
+  });
+  var active = document.getElementById('track-l'+n);
+  active.style.borderColor = colors[n].border;
+  active.style.background = colors[n].bg;
+
+  window.scrollTo({top: document.getElementById('panel-l'+n).offsetTop - 80, behavior:'smooth'});
+}
+
+// Check URL param on load
+(function(){
+  var params = new URLSearchParams(window.location.search);
+  var lvl = parseInt(params.get('level'));
+  if(lvl >= 1 && lvl <= 4) showLevel(lvl);
+})();
+</script>
+<script src="branding.js"></script>
+</body>
+</html>

@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>REST API Cookbook — The Planning Quest</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Crimson+Pro:ital,wght@0,400;0,500;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#07090e;--bg2:#0c0f18;--bg3:#111520;--bg4:#161c2a;--gold:#d4a017;--goldLt:#f0c040;--goldDim:#5c4108;--teal:#1fb8a8;--tealLt:#4dd9c8;--purple:#7c3aed;--purpleLt:#a855f7;--emerald:#059669;--emeraldLt:#10b981;--sky:#0ea5e9;--skyLt:#38bdf8;--red:#c0392b;--redLt:#e74c3c;--amber:#d97706;--amberLt:#fbbf24;--rose:#be185d;--roseLt:#f472b6;--border:rgba(212,160,23,.15);--white:#f0ead6;--dim:#5a6478;--r:10px}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Crimson Pro',serif;background:var(--bg);color:var(--white);min-height:100vh;overflow-x:hidden}
+#stars{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+.star{position:absolute;border-radius:50%;background:white;animation:twinkle var(--d,3s) infinite var(--delay,0s)}
+@keyframes twinkle{0%,100%{opacity:.05}50%{opacity:var(--op,.6)}}
+@keyframes glow{0%,100%{text-shadow:0 0 20px rgba(212,160,23,.3)}50%{text-shadow:0 0 50px rgba(212,160,23,.55)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(212,160,23,.3)}50%{box-shadow:0 0 0 8px rgba(212,160,23,0)}}
+p{font-size:15px;line-height:1.82;color:rgba(240,234,214,.78);margin-bottom:10px}
+strong{color:var(--white);font-weight:500}
+code{font-family:'JetBrains Mono',monospace;font-size:12px;background:rgba(255,255,255,.06);padding:2px 6px;border-radius:4px;color:var(--tealLt)}
+h2{font-family:'Cinzel',serif;font-size:16px;font-weight:600;color:var(--goldLt);margin:28px 0 14px;letter-spacing:.03em}
+ul,ol{padding-left:20px;margin-bottom:10px}
+li{font-size:14.5px;line-height:1.78;color:rgba(240,234,214,.72);margin-bottom:3px}
+
+/* Topbar */
+#topbar{position:fixed;top:0;left:0;right:0;height:54px;background:rgba(7,9,14,.97);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 20px;gap:12px;z-index:200;overflow:hidden}
+.tb-dot{width:8px;height:8px;border-radius:50%;background:var(--tealLt);animation:pulse 2s infinite;flex-shrink:0}
+.tb-home{font-family:'Cinzel',serif;font-size:13px;font-weight:700;color:var(--goldLt);text-decoration:none;display:flex;align-items:center;gap:9px;letter-spacing:.04em}
+.tb-sep{color:var(--goldDim)}
+.tb-cur{font-family:'Cinzel',serif;font-size:11px;color:var(--teal);letter-spacing:.04em}
+.tb-tools{display:flex;gap:4px;margin-left:auto;overflow-x:auto;flex-shrink:0}
+.tb-tools::-webkit-scrollbar{display:none}
+.tb-tool{padding:4px 9px;border-radius:6px;border:1px solid var(--border);background:transparent;color:var(--dim);font-family:'Cinzel',serif;font-size:8.5px;font-weight:700;letter-spacing:.05em;cursor:pointer;transition:all .15s;text-transform:uppercase;text-decoration:none;display:inline-flex;align-items:center;white-space:nowrap}
+.tb-tool:hover,.tb-tool.active{border-color:var(--gold);color:var(--gold);background:rgba(212,160,23,.06)}
+
+/* Shell */
+#ra-shell{display:flex;padding-top:54px;min-height:100vh}
+#ra-sb{width:260px;background:var(--bg2);border-right:1px solid var(--border);position:fixed;top:54px;bottom:0;overflow-y:auto;z-index:100;flex-shrink:0}
+#ra-sb::-webkit-scrollbar{width:3px}
+#ra-sb::-webkit-scrollbar-thumb{background:var(--goldDim);border-radius:2px}
+#ra-main{margin-left:260px;flex:1;min-width:0;position:relative;z-index:1}
+.ra-wrap{max-width:820px;padding:32px 40px 100px;margin:0 auto;animation:fadeUp .3s ease}
+
+/* Sidebar */
+.sb-hdr{padding:10px 14px 6px;font-family:'Cinzel',serif;font-size:9px;font-weight:700;color:var(--goldDim);letter-spacing:.1em;text-transform:uppercase;border-bottom:1px solid rgba(255,255,255,.04)}
+.sb-hdr.nav-hdr{color:var(--teal);border-top:1px solid rgba(255,255,255,.05);margin-top:6px;padding-top:10px}
+.sb-link{display:block;padding:8px 14px;font-size:11.5px;color:rgba(240,234,214,.4);text-decoration:none;transition:all .12s;border-left:2px solid transparent;cursor:pointer}
+.sb-link:hover,.sb-link.active{color:var(--goldLt);background:rgba(212,160,23,.05);border-left-color:var(--goldLt)}
+.sb-tool-link{padding:8px 14px;display:flex;align-items:center;gap:8px;font-size:11.5px;color:var(--dim);text-decoration:none;transition:all .12s;border-left:2px solid transparent}
+.sb-tool-link:hover,.sb-tool-link.active{color:var(--tealLt);background:rgba(31,184,168,.04);border-left-color:var(--tealLt)}
+
+/* Hero */
+.ra-hero{margin-bottom:30px;padding-bottom:20px;border-bottom:1px solid var(--border)}
+.ra-badge{font-family:'Cinzel',serif;font-size:9.5px;font-weight:700;letter-spacing:.14em;color:var(--teal);padding:3px 14px;border:1px solid rgba(31,184,168,.25);border-radius:20px;display:inline-block;margin-bottom:12px}
+.ra-title{font-family:'Cinzel',serif;font-size:28px;font-weight:900;color:var(--goldLt);margin-bottom:4px}
+.ra-sub{font-size:14px;color:var(--dim);font-style:italic;margin-bottom:14px}
+.ra-stats{display:flex;gap:20px;flex-wrap:wrap}
+.ra-stat{text-align:center}
+.ra-stat-v{font-family:'Cinzel',serif;font-size:20px;font-weight:700;color:var(--goldLt)}
+.ra-stat-l{font-size:9px;color:var(--dim);letter-spacing:.06em;text-transform:uppercase;margin-top:2px}
+
+/* Search */
+.ra-search{display:flex;background:var(--bg3);border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:24px;transition:border-color .15s}
+.ra-search:focus-within{border-color:var(--teal)}
+.ra-search span{padding:0 14px;display:flex;align-items:center;color:var(--dim);font-size:16px}
+#ra-srch{flex:1;padding:12px 8px;background:transparent;border:none;color:var(--white);font-family:'Crimson Pro',serif;font-size:15px;outline:none}
+#ra-srch::placeholder{color:rgba(240,234,214,.2)}
+
+/* Section */
+.ra-sec{margin-bottom:44px}
+.ra-sec-hdr{display:flex;align-items:center;gap:12px;margin-bottom:16px;padding-bottom:10px;border-bottom:2px solid rgba(212,160,23,.15)}
+.ra-sec-icon{font-size:20px}
+.ra-sec-title{font-family:'Cinzel',serif;font-size:16px;font-weight:700;color:var(--goldLt)}
+.ra-sec-count{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--dim);background:var(--bg3);border:1px solid var(--border);padding:2px 8px;border-radius:10px}
+
+/* Recipe card */
+.rc{background:var(--bg3);border:1px solid var(--border);border-radius:10px;margin-bottom:12px;overflow:hidden;transition:border-color .18s}
+.rc:hover{border-color:rgba(212,160,23,.22)}
+.rc[data-hidden="true"]{display:none}
+.rc-hdr{display:flex;align-items:center;gap:11px;padding:13px 17px;cursor:pointer;user-select:none}
+.rc-method{font-family:'JetBrains Mono',monospace;font-size:10.5px;font-weight:700;padding:3px 9px;border-radius:5px;flex-shrink:0;letter-spacing:.04em}
+.m-get{background:rgba(5,150,105,.14);border:1px solid rgba(5,150,105,.3);color:var(--emeraldLt)}
+.m-post{background:rgba(14,165,233,.1);border:1px solid rgba(14,165,233,.25);color:var(--skyLt)}
+.m-patch{background:rgba(217,119,6,.1);border:1px solid rgba(217,119,6,.25);color:var(--amberLt)}
+.m-delete{background:rgba(192,57,43,.1);border:1px solid rgba(192,57,43,.25);color:var(--redLt)}
+.rc-name{font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:500;color:var(--tealLt);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rc-badge{font-family:'Cinzel',serif;font-size:8px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:2px 8px;border-radius:10px;flex-shrink:0}
+.badge-essential{background:rgba(212,160,23,.1);border:1px solid rgba(212,160,23,.25);color:var(--goldLt)}
+.badge-advanced{background:rgba(124,58,237,.1);border:1px solid rgba(124,58,237,.25);color:var(--purpleLt)}
+.badge-async{background:rgba(31,184,168,.08);border:1px solid rgba(31,184,168,.2);color:var(--tealLt)}
+.rc-chev{color:var(--dim);font-size:12px;flex-shrink:0;transition:transform .2s}
+.rc.open .rc-chev{transform:rotate(180deg)}
+.rc-body{display:none;padding:0 17px 17px;border-top:1px solid rgba(255,255,255,.05)}
+.rc.open .rc-body{display:block}
+.rc-endpoint{background:#090d14;border:1px solid rgba(255,255,255,.07);border-radius:8px;padding:13px 16px;font-family:'JetBrains Mono',monospace;font-size:11.5px;line-height:1.75;color:#a8d8ea;overflow-x:auto;white-space:pre;margin:11px 0;position:relative}
+.copy-btn{position:absolute;top:7px;right:8px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:6px;padding:3px 9px;font-family:'Cinzel',serif;font-size:8px;font-weight:700;color:var(--dim);cursor:pointer;transition:all .15s;letter-spacing:.05em}
+.copy-btn:hover{background:rgba(31,184,168,.1);border-color:var(--teal);color:var(--tealLt)}
+.rc-note{background:rgba(217,119,6,.05);border:1px solid rgba(217,119,6,.2);border-radius:8px;padding:11px 15px;margin-top:10px;font-size:13px;color:rgba(240,234,214,.68);line-height:1.7}
+.rc-note strong{color:var(--amberLt)}
+.rc-vision{background:linear-gradient(135deg,rgba(31,184,168,.05),rgba(7,9,14,.98));border:1px solid rgba(31,184,168,.14);border-radius:8px;padding:11px 15px;margin-top:10px;font-size:13px;color:rgba(240,234,214,.6);line-height:1.7}
+.rv-lbl{font-family:'Cinzel',serif;font-size:8px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--tealLt);margin-bottom:4px}
+.ck{color:#ff7b72}.cs{color:#a5d6ff}.cf{color:#d2a8ff}.cc{color:#6a737d}.cn{color:#79c0ff}.cm{color:#ffa657}
+
+/* Callouts */
+.callout{border-radius:var(--r);padding:13px 17px;margin:14px 0;font-size:14px;line-height:1.72}
+.tip{background:rgba(5,150,105,.07);border:1px solid rgba(5,150,105,.22);color:rgba(240,234,214,.72)}
+.warn{background:rgba(217,119,6,.07);border:1px solid rgba(217,119,6,.25);color:rgba(240,234,214,.72)}
+.danger{background:rgba(192,57,43,.07);border:1px solid rgba(192,57,43,.25);color:rgba(240,234,214,.72)}
+.ci{font-size:15px;margin-right:6px}
+#ra-no-results{display:none;text-align:center;padding:40px;color:var(--dim);font-style:italic}
+
+/* Tutor */
+.tutor-box{background:linear-gradient(135deg,rgba(8,10,16,.98),rgba(17,21,32,.95));border:1px solid rgba(31,184,168,.18);border-radius:var(--r);padding:20px 24px;margin:28px 0}
+.tutor-hdr{display:flex;align-items:center;gap:12px;margin-bottom:8px}
+.tutor-av{width:36px;height:36px;background:linear-gradient(135deg,var(--purple),var(--teal));border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.tutor-nm{font-family:'Cinzel',serif;font-size:12.5px;font-weight:700;color:var(--tealLt)}
+.tutor-rl{font-size:10.5px;color:var(--dim)}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:11px}
+.chip{font-size:11px;padding:4px 11px;border:1px solid rgba(31,184,168,.18);border-radius:12px;background:transparent;color:rgba(240,234,214,.42);cursor:pointer;transition:all .12s}
+.chip:hover{border-color:var(--tealLt);color:var(--tealLt);background:rgba(31,184,168,.07)}
+.tutor-row{display:flex;gap:8px}
+.tutor-input{flex:1;padding:8px 13px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:8px;color:var(--white);font-size:13px;outline:none;transition:border-color .15s;font-family:'Crimson Pro',serif}
+.tutor-input:focus{border-color:var(--teal)}
+.tutor-input::placeholder{color:rgba(255,255,255,.18)}
+.tutor-send{padding:8px 17px;background:linear-gradient(135deg,var(--teal),var(--sky));color:var(--bg);border:none;border-radius:8px;font-family:'Cinzel',serif;font-size:9.5px;font-weight:700;letter-spacing:.05em;cursor:pointer;transition:opacity .12s}
+.tutor-send:hover{opacity:.85}
+.tutor-send:disabled{opacity:.4;cursor:not-allowed}
+.tutor-out{margin-top:12px;font-size:13.5px;line-height:1.78;color:rgba(240,234,214,.68)}
+.tutor-msg{background:var(--bg4);border-radius:8px;padding:11px 15px;margin-bottom:7px}
+.tutor-msg.user-msg{background:rgba(212,160,23,.06);border:1px solid rgba(212,160,23,.1)}
+.tutor-msg.ai-msg{border:1px solid rgba(255,255,255,.05)}
+.tutor-msg-lbl{font-family:'Cinzel',serif;font-size:8.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:4px;opacity:.45}
+
+/* Table */
+.tbl-wrap{overflow-x:auto;margin:14px 0;border-radius:var(--r);border:1px solid var(--border)}
+.dtbl{width:100%;border-collapse:collapse;font-size:13px}
+.dtbl th{background:rgba(212,160,23,.06);color:var(--gold);padding:9px 12px;text-align:left;font-family:'Cinzel',serif;font-size:10px;letter-spacing:.04em;border-bottom:1px solid var(--border)}
+.dtbl td{padding:9px 12px;border-bottom:1px solid rgba(255,255,255,.04);color:rgba(240,234,214,.65);vertical-align:top;line-height:1.5}
+.dtbl tr:last-child td{border-bottom:none}
+
+@media(max-width:860px){#ra-sb{display:none}#ra-main{margin-left:0}.ra-wrap{padding:24px 16px 80px}}
+</style>
+</head>
+<body>
+<div id="stars"></div>
+
+<!-- Topbar -->
+<div id="topbar">
+  <div class="tb-dot"></div>
+  <a href="index.html" class="tb-home">⚔ The Planning Quest</a>
+  <span class="tb-sep">›</span>
+  <span class="tb-cur">REST API Cookbook</span>
+  <div class="tb-tools">
+    <a href="parts-1-3.html"       class="tb-tool">Parts I–III</a>
+    <a href="parts-4-5.html"       class="tb-tool">Parts IV–V</a>
+    <a href="parts-6-9.html"       class="tb-tool">Parts VI–IX</a>
+    <a href="groovy-ch1.html"      class="tb-tool">Groovy I</a>
+    <a href="groovy-ch2.html"      class="tb-tool">Groovy II</a>
+    <a href="groovy-lab.html"      class="tb-tool">💻 Lab</a>
+    <a href="parts-workforce.html" class="tb-tool">👥 Workforce</a>
+    <a href="rest-api.html"        class="tb-tool active">🌐 REST API</a>
+    <a href="automate-ref.html"    class="tb-tool">CLI</a>
+    <a href="interview-prep.html"  class="tb-tool">Prep</a>
+  </div>
+</div>
+
+<div id="ra-shell">
+<!-- Sidebar -->
+<div id="ra-sb">
+  <div class="sb-hdr">Navigate</div>
+  <a href="index.html"           class="sb-tool-link">🏠 Home</a>
+  <a href="parts-1-3.html"       class="sb-tool-link">📖 Parts I–III</a>
+  <a href="parts-4-5.html"       class="sb-tool-link">📖 Parts IV–V</a>
+  <a href="parts-6-9.html"       class="sb-tool-link">📖 Parts VI–IX</a>
+  <a href="groovy-ch1.html"      class="sb-tool-link">📘 Groovy Deep-Dive I</a>
+  <a href="groovy-ch2.html"      class="sb-tool-link">⚡ Groovy Deep-Dive II</a>
+  <a href="parts-workforce.html" class="sb-tool-link">👥 Workforce Planning</a>
+
+  <div class="sb-hdr nav-hdr">Tools</div>
+  <a href="groovy-lab.html"      class="sb-tool-link">💻 Groovy Lab</a>
+  <a href="quiz.html"            class="sb-tool-link">📝 Quiz</a>
+  <a href="flashcards.html"      class="sb-tool-link">🃏 Flashcards</a>
+  <a href="labs.html"            class="sb-tool-link">🔬 Enterprise Labs</a>
+  <a href="simulators.html"      class="sb-tool-link">🧮 Simulators</a>
+  <a href="automate-ref.html"    class="sb-tool-link">⚙ EPM Automate CLI</a>
+  <a href="rest-api.html"        class="sb-tool-link active">🌐 REST API Cookbook</a>
+  <a href="interview-prep.html"  class="sb-tool-link">🎯 Interview Prep</a>
+  <a href="whats-new.html"       class="sb-tool-link">🆕 What's New</a>
+  <a href="search.html"          class="sb-tool-link">🔍 Search</a>
+
+  <div class="sb-hdr" style="margin-top:4px">Jump To</div>
+  <a href="#auth"        class="sb-link">🔐 Authentication</a>
+  <a href="#jobs"        class="sb-link">⚙ Job Operations</a>
+  <a href="#data"        class="sb-link">📊 Data Operations</a>
+  <a href="#metadata"    class="sb-link">🗂 Metadata</a>
+  <a href="#planning"    class="sb-link">📋 Planning Units</a>
+  <a href="#forms"       class="sb-link">📝 Forms & Grids</a>
+  <a href="#integration" class="sb-link">🔗 Data Integration</a>
+  <a href="#tips"        class="sb-link">💡 Production Tips</a>
+</div>
+
+<!-- Main -->
+<div id="ra-main">
+<div class="ra-wrap">
+
+  <!-- Hero -->
+  <div class="ra-hero">
+    <div class="ra-badge">🌐 REST API Cookbook · EPM 25.06+</div>
+    <div class="ra-title">Oracle EPM Cloud REST API</div>
+    <div class="ra-sub">Production-ready recipes · 38 endpoints across 7 categories · curl + Python · Vision Corp examples</div>
+    <div class="ra-stats">
+      <div class="ra-stat"><div class="ra-stat-v">38</div><div class="ra-stat-l">Endpoints</div></div>
+      <div class="ra-stat"><div class="ra-stat-v">7</div><div class="ra-stat-l">Categories</div></div>
+      <div class="ra-stat"><div class="ra-stat-v">25.06</div><div class="ra-stat-l">EPM Aligned</div></div>
+      <div class="ra-stat"><div class="ra-stat-v">v3</div><div class="ra-stat-l">API Version</div></div>
+    </div>
+  </div>
+
+  <!-- Search -->
+  <div class="ra-search">
+    <span>🔍</span>
+    <input id="ra-srch" type="text" placeholder="Search endpoints, methods, categories..." oninput="filterCards()">
+  </div>
+
+  <div class="callout tip"><span class="ci">💡</span><strong>Base URL pattern:</strong> <code>https://planning-{identity}.pbcs.{dc}.oraclecloud.com/HyperionPlanning/rest/v3/</code><br>Vision Corp: <code>planning-a123456.pbcs.us2.oraclecloud.com</code> — All endpoints below are relative to this base.</div>
+
+  <!-- ══ AUTH ══ -->
+  <div class="ra-sec" id="auth">
+    <div class="ra-sec-hdr"><span class="ra-sec-icon">🔐</span><span class="ra-sec-title">Authentication & Connection</span><span class="ra-sec-count">3 recipes</span></div>
+
+    <div class="rc" onclick="toggle(this)">
+      <div class="rc-hdr">
+        <span class="rc-method m-get">GET</span>
+        <span class="rc-name">/applications/{application}</span>
+        <span class="rc-badge badge-essential">Essential</span>
+        <span class="rc-chev">▼</span>
+      </div>
+      <div class="rc-body">
+        <p style="font-size:13.5px;color:rgba(240,234,214,.65);margin:10px 0">Verify connection and retrieve application metadata. Use as a health-check before running any automation pipeline.</p>
+        <div class="rc-endpoint"><button class="copy-btn" onclick="cp(this,event)">Copy</button><span class="cm">curl</span> -X GET \
+  "https://planning-a123456.pbcs.us2.oraclecloud.com/HyperionPlanning/rest/v3/applications/VisionCorp" \
+  -H <span class="cs">"Authorization: Basic $(echo -n '<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="f1828792ae94819cb1879882989e9f929e8381df929e9c">[email&#160;protected]</a>:$EPM_PWD' | base64)"</span> \
+  -H <span class="cs">"Content-Type: application/json"</span>
+
+<span class="cc"># Response: 200 OK</span>
+{
+  "name": "VisionCorp",
+  "type": "PLANNING",
+  "databaseType": "BSO",
+  "status": "RUNNING"
+}</div>
+        <div class="rc-note"><strong>Auth options:</strong> Basic Auth (base64 user:pass) for dev/test. OAuth 2.0 Client Credentials (recommended) for production. Never hardcode credentials — use environment variables or Oracle Vault.</div>
+      </div>
+    </div>
+
+    <div class="rc" onclick="toggle(this)">
+      <div class="rc-hdr">
+        <span class="rc-method m-post">POST</span>
+        <span class="rc-name">OAuth 2.0 — Client Credentials Flow</span>
+        <span class="rc-badge badge-essential">Essential</span>
+        <span class="rc-chev">▼</span>
+      </div>
+      <div class="rc-body">
+        <p style="font-size:13.5px;color:rgba(240,234,214,.65);margin:10px 0">Production-recommended authentication. Tokens expire after 3600s — cache and refresh proactively.</p>
+        <div class="rc-endpoint"><button class="copy-btn" onclick="cp(this,event)">Copy</button><span class="cc"># Step 1: Get access token from IDCS</span>
+<span class="cm">curl</span> -X POST \
+  "https://idcs-{tenant}.identity.oraclecloud.com/oauth2/v1/token" \
+  -H <span class="cs">"Content-Type: application/x-www-form-urlencoded"</span> \
+  -d <span class="cs">"grant_type=client_credentials&client_id=$CLIENT_ID&client_secret=$CLIENT_SECRET&scope=urn:opc:resource:consumer::all"</span>
+
+<span class="cc"># Python — token caching pattern</span>
+<span class="ck">import</span> requests, os, time
+
+_token_cache = {<span class="cs">'token'</span>: None, <span class="cs">'expires_at'</span>: 0}
+
+<span class="ck">def</span> get_token():
+    <span class="ck">if</span> time.time() < _token_cache[<span class="cs">'expires_at'</span>] - 60:
+        <span class="ck">return</span> _token_cache[<span class="cs">'token'</span>]
+    r = requests.post(TOKEN_URL, data={
+        <span class="cs">'grant_type'</span>: <span class="cs">'client_credentials'</span>,
+        <span class="cs">'client_id'</span>: os.environ[<span class="cs">'EPM_CLIENT_ID'</span>],
+        <span class="cs">'client_secret'</span>: os.environ[<span class="cs">'EPM_CLIENT_SECRET'</span>],
+        <span class="cs">'scope'</span>: <span class="cs">'urn:opc:resource:consumer::all'</span>
+    })
+    data = r.json()
+    _token_cache[<span class="cs">'token'</span>] = data[<span class="cs">'access_token'</span>]
+    _token_cache[<span class="cs">'expires_at'</span>] = time.time() + data[<span class="cs">'expires_in'</span>]
+    <span class="ck">return</span> _token_cache[<span class="cs">'token'</span>]</div>
+      </div>
+    </div>
+
+    <div class="rc" onclick="toggle(this)">
+      <div class="rc-hdr">
+        <span class="rc-method m-get">GET</span>
+        <span class="rc-name">/applications/{app}/dimensions</span>
+        <span class="rc-badge badge-essential">Essential</span>
+        <span class="rc-chev">▼</span>
+      </div>
+      <div class="rc-body">
+        <p style="font-size:13.5px;color:rgba(240,234,214,.65);margin:10px 0">List all dimensions. Useful for API-driven metadata validation and automated testing.</p>
+        <div class="rc-endpoint"><button class="copy-btn" onclick="cp(this,event)">Copy</button>GET /applications/VisionCorp/dimensions
+
+<span class="cc"># Response</span>
+{ "dimensions": [
+    { "name": "Account",  "type": "Account",  "generationCount": 5 },
+    { "name": "Entity",   "type": "Entity",   "generationCount": 4 },
+    { "name": "Period",   "type": "Period",   "generationCount": 3 },
+    { "name": "Year",     "type": "Year",     "generationCount": 2 },
+    { "name": "Scenario", "type": "Scenario", "generationCount": 2 },
+    { "name": "Version",  "type": "Version",  "generationCount": 2 }
+]}</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ JOBS ══ -->
+  <div class="ra-sec" id="jobs">
+    <div class="ra-sec-hdr"><span class="ra-sec-icon">⚙</span><span class="ra-sec-title">Job Operations (Async)</span><span class="ra-sec-count">6 recipes</span></div>
+
+    <div class="callout tip"><span class="ci">💡</span><strong>Async pattern:</strong> All EPM job endpoints return a <code>jobId</code> immediately (202 Accepted). Poll <code>GET /jobs/{jobId}</code> every 5–10 seconds until status is <code>Completed</code>, <code>Error</code>, or <code>Invalid</code>. Never assume synchronous completion.</div>
+
+    <div class="rc" onclick="toggle(this)">
+      <div class="rc-hdr">
+        <span class="rc-method m-post">POST</span>
+        <span class="rc-name">/applications/{app}/jobs — Run Business Rule</span>
+        <span class="rc-badge badge-async">Async</span>
+        <span class="rc-badge badge-essential">Essential</span>
+        <span class="rc-chev">▼</span>
+      </div>
+      <div class="rc-body">
+        <p style="font-size:13.5px;color:rgba(240,234,214,.65);margin:10px 0">Submit a Groovy business rule via REST. The most common EPM automation call.</p>
+        <div class="rc-endpoint"><button class="copy-btn" onclick="cp(this,event)">Copy</button>POST /applications/VisionCorp/jobs
+Content-Type: application/json
+
+{
+  "jobType": "RULES",
+  "jobName": "OEP_CalculateWFP",
+  "parameters": {
+    "Scenario": "Budget",
+    "Version":  "Working",
+    "Entity":   "Total_Entity",
+    "Period":   "Jan",
+    "Year":     "FY2025"
+  }
+}
+
+<span class="cc"># Response: 202 Accepted</span>
+{ "jobId": 12847, "status": "Processing" }
+
+<span class="cc"># Poll until done:</span>
+GET /applications/VisionCorp/jobs/12847
+→ { "status": "Completed", "completionTime": "2025-06-01T02:34:18Z" }</div>
+        <div class="rc-note"><strong>jobType values:</strong> <code>RULES</code> · <code>IMPORT_DATA</code> · <code>EXPORT_DATA</code> · <code>IMPORT_METADATA</code> · <code>EXPORT_METADATA</code> · <code>CLEAR_DATA</code> · <code>REFRESH_DATABASE</code></div>
+      </div>
+    </div>
+
+    <div class="rc" onclick="toggle(this)">
+      <div class="rc-hdr">
+        <span class="rc-method m-get">GET</span>
+        <span class="rc-name">/applications/{app}/jobs/{jobId} — Poll Job Status</span>
+        <span class="rc-badge badge-async">Async</span>
+        <span class="rc-chev">▼</span>
+      </div>
+      <div class="rc-body">
+        <p style="font-size:13.5px;color:rgba(240,234,214,.65);margin:10px 0">Terminal states: <code>Completed</code>, <code>Error</code>, <code>Invalid</code>. Intermediate: <code>Processing</code>, <code>Queued</code>.</p>
+        <div class="rc-endpoint"><button class="copy-btn" onclick="cp(this,event)">Copy</button><span class="cc"># Python — poll until done with timeout</span>
+<span class="ck">import</span> time, requests
+
+<span class="ck">def</span> run_and_wait(job_body, headers, base_url, timeout=300):
+    r = requests.post(f<span class="cs">"{base_url}/jobs"</span>, json=job_body, headers=headers)
+    job_id = r.json()[<span class="cs">'jobId'</span>]
+    elapsed = 0
+    <span class="ck">while</span> elapsed < timeout:
+        s = requests.get(f<span class="cs">"{base_url}/jobs/{job_id}"</span>, headers=headers).json()
+        <span class="ck">if</span> s[<span class="cs">'status'</span>] <span class="ck">in</span> (<span class="cs">'Completed'</span>, <span class="cs">'Error'</span>, <span class="cs">'Invalid'</span>):
+            <span class="ck">return</span> s
+        time.sleep(5); elapsed += 5
+    <span class="ck">raise</span> TimeoutError(f<span class="cs">"Job {job_id} timed out after {timeout}s"</span>)
+
+<span class="cc"># Usage</span>
+result = run_and_wait({<span class="cs">"jobType"</span>: <span class="cs">"RULES"</span>, <span class="cs">"jobName"</span>: <span class="cs">"OEP_CalculateWFP"</span>}, HDR, BASE)
+<span class="ck">if</span> result[<span class="cs">'status'</span>] != <span class="cs">'Completed'</span>:
+    <span class="ck">raise</span> RuntimeError(<span class="cs">"Rule failed: "</span> + result.get(<span class="cs">'jobOutputInfo'</span>, <span class="cs">''</span>))</div>
+      </div>
+    </div>
+
+    <div class="rc" onclick="toggle(this)">
+      <div class="rc-hdr">
+        <span class="rc-method m-post">POST</span>
+        <span class="rc-name">/applications/{app}/jobs — Run Data Rule</span>
+        <span class="rc-badge badge-async">Async</span>
+        <span class="rc-chev">▼</span>
+      </div>
+      <div class="rc-body">
+        <p style="font-size:13.5px;color:rgba(240,234,214,.65);margin:10px 0">Execute a Data Integration / FDMEE data load rule.</p>
+        <div class="rc-endpoint"><button class="copy-btn" onclick="cp(this,event)">Copy</button>POST /applications/VisionCorp/jobs
+{
+  "jobType": "IMPORT_DATA",
+  "jobName": "GL_Actuals_Monthly_Load",
+  "parameters": {
+    "startPeriod": "Jan-25",
+    "endPeriod":   "Mar-25",
+    "importMode":  "REPLACE",
+    "exportMode":  "STORE_DATA"
+  }
+}</div>
+        <div class="rc-note"><strong>importMode values:</strong> <code>REPLACE</code> (recommended for actuals) · <code>MERGE</code> · <code>ACCUMULATE</code> · <code>SUBTRACT</code></div>
+      </div>
+    </div>
+
+    <div class="rc" onclick="toggle(this)">
+      <div class="rc-hdr">
+        <span class="rc-method m-post">POST</span>
+        <span class="rc-name">Nightly Automation Pipeline — Full Chain</span>
+        <span class="rc-badge badge-advanced">Advanced</span>
+        <span class="rc-chev">▼</span>
+      </div>
+      <div class="rc-body">
+        <p style="font-size:13.5px;color:rgba(240,234,214,.65);margin:10px 0">Complete nightly pipeline: Load → Calculate → Sync → Export → Alert on failure.</p>
+        <div class="rc-endpoint"><button class="copy-btn" onclick="cp(this,event)">Copy</button><span class="cc">#!/usr/bin/env python3</span>
+<span class="cc"># Vision Corp Nightly Budget Pipeline via REST API</span>
+
+<span class="ck">import</span> requests, time, os, logging
+
+BASE = <span class="cs">"https://planning-a123456.pbcs.us2.oraclecloud.com/HyperionPlanning/rest/v3/applications/VisionCorp"</span>
+HDR  = {<span class="cs">"Authorization"</span>: f<span class="cs">"Bearer {get_token()}"</span>, <span class="cs">"Content-Type"</span>: <span class="cs">"application/json"</span>}
+
+PIPELINE = [
+    {<span class="cs">"jobType"</span>: <span class="cs">"IMPORT_DATA"</span>, <span class="cs">"jobName"</span>: <span class="cs">"WF_HCM_Actuals_Load"</span>},
+    {<span class="cs">"jobType"</span>: <span class="cs">"RULES"</span>,       <span class="cs">"jobName"</span>: <span class="cs">"OEP_CalculateWFP"</span>},
+    {<span class="cs">"jobType"</span>: <span class="cs">"RULES"</span>,       <span class="cs">"jobName"</span>: <span class="cs">"OEP_SyncWFP_To_FS"</span>},
+    {<span class="cs">"jobType"</span>: <span class="cs">"EXPORT_DATA"</span>, <span class="cs">"jobName"</span>: <span class="cs">"WF_CFO_Pack_Export"</span>},
+]
+
+<span class="ck">for</span> job <span class="ck">in</span> PIPELINE:
+    logging.info(f<span class="cs">"Starting: {job['jobName']}"</span>)
+    result = run_and_wait(job, HDR, BASE)
+    <span class="ck">if</span> result[<span class="cs">'status'</span>] != <span class="cs">'Completed'</span>:
+        send_alert(f<span class="cs">"EPM Pipeline FAILED at {job['jobName']}"</span>)
+        <span class="ck">break</span>
+    logging.info(f<span class="cs">"✓ {job['jobName']} done in {result.get('elapsed','?')}ms"</span>)</div>
+        <div class="rc-vision"><div class="rv-lbl">Vision Corp Pattern</div>This pipeline runs nightly at 02:30 UTC via GitHub Actions (cron). Slack alert fires if any job status != Completed. Teams are notified before 07:00 their local time.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ DATA ══ -->
+  <div class="ra-sec" id="data">
+    <div class="ra-sec-hdr"><span class="ra-sec-icon">📊</span><span class="ra-sec-title">Data Operations</span><span class="ra-sec-count">6 recipes</span></div>
+
+    <div class="rc" onclick="toggle(this)">
+      <div class="rc-hdr">
+        <span class="rc-method m-post">POST</span>
+        <span class="rc-name">/applications/{app}/jobs — Export Data Slice</span>
+        <span class="rc-badge badge-essential">Essential</span>
+        <span class="rc-chev">▼</span>
+      </div>
+      <div class="rc-body">
+        <p style="font-size:13.5px;color:rgba(240,234,214,.65);margin:10px 0">Export a specific data slice to the server inbox/outbox. Download the file in a second call.</p>
+        <div class="rc-endpoint"><button class="copy-btn" onclick="cp(this,event)">Copy</button>POST /applications/VisionCorp/jobs
+{
+  "jobType": "EXPORT_DATA",
+  "jobName": "Budget_FY2025_Export",
+  "parameters": {
+    "exportFileName": "Budget_FY2025.txt",
+    "scenario":       "Budget",
+    "version":        "Working",
+    "year":           "FY2025",
+    "period":         "BegBalance,Jan,Feb,Mar,Apr,May,Jun,Jul,Aug,Sep,Oct,Nov,Dec"
+  }
+}
+
+<span class="cc"># After job completes, download the file:</span>
+GET /applications/VisionCorp/files/budget/Budget_FY2025.txt</div>
+      </div>
+    </div>
+
+    <div class="rc" onclick="toggle(this)">
+      <div class="rc-hdr">
+        <span class="rc-method m-post">POST</span>
+        <span class="rc-name">/applications/{app}/jobs — Clear Data</span>
+        <span class="rc-badge badge-async">Async</span>
+        <span class="rc-chev">▼</span>
+      </div>
+      <div class="rc-body">
+        <p style="font-size:13.5px;color:rgba(240,234,214,.65);margin:10px 0">Clear a data slice before a reload. Use sparingly — always clear only the specific intersection you're about to reload.</p>
+        <div class="rc-endpoint"><button class="copy-btn" onclick="cp(this,event)">Copy</button>POST /applications/VisionCorp/jobs
+{
+  "jobType": "CLEAR_DATA",
+  "jobName": "VisionCorp",
+  "parameters": {
+    "scenario": "Budget",
+    "version":  "Working",
+    "years":    "FY2025",
+    "periods":  "Jan,Feb,Mar",
+    "entities": "NA"
+  }
+}</div>
+        <div class="rc-note"><strong>Production safety:</strong> Always clear only what you're about to reload. Clearing Budget·Working for the full year at 2am, then having the load fail, leaves planners with blank numbers in the morning.</div>
+      </div>
+    </div>
+
+    <div class="rc" onclick="toggle(this)">
+      <div class="rc-hdr">
+        <span class="rc-method m-get">GET</span>
+        <span class="rc-name">/applications/{app}/files/{path} — Download File</span>
+        <span class="rc-badge badge-essential">Essential</span>
+        <span class="rc-chev">▼</span>
+      </div>
+      <div class="rc-body">
+        <p style="font-size:13.5px;color:rgba(240,234,214,.65);margin:10px 0">Download any file from the EPM server inbox/outbox after an export job completes.</p>
+        <div class="rc-endpoint"><button class="copy-btn" onclick="cp(this,event)">Copy</button><span class="cm">curl</span> -X GET \
+  "https://planning-a123456.pbcs.us2.oraclecloud.com/HyperionPlanning/rest/v3/applications/VisionCorp/files/budget/Budget_FY2025.txt" \
+  -H "Authorization: Bearer $TOKEN" \
+  -o Budget_FY2025.txt
+
+<span class="cc"># Python download</span>
+r = requests.get(f<span class="cs">"{BASE}/files/budget/Budget_FY2025.txt"</span>, headers=HDR, stream=True)
+<span class="ck">with</span> open(<span class="cs">'Budget_FY2025.txt'</span>, <span class="cs">'wb'</span>) <span class="ck">as</span> f:
+    <span class="ck">for</span> chunk <span class="ck">in</span> r.iter_content(8192): f.write(chunk)</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ METADATA ══ -->
+  <div class="ra-sec" id="metadata">
+    <div class="ra-sec-hdr"><span class="ra-sec-icon">🗂</span><span class="ra-sec-title">Metadata Operations</span><span class="ra-sec-count">5 recipes</span></div>
+
+    <div class="rc" onclick="toggle(this)">
+      <div class="rc-hdr">
+        <span class="rc-method m-get">GET</span>
+        <span class="rc-name">/applications/{app}/dimensions/{dim}/members/{member}</span>
+        <span class="rc-badge badge-essential">Essential</span>
+        <span class="rc-chev">▼</span>
+      </div>
+      <div class="rc-body">
+        <p style="font-size:13.5px;color:rgba(240,234,214,.65);margin:10px 0">Get member properties: aliases, UDAs, attributes, parent, children.</p>
+        <div class="rc-endpoint"><button class="copy-btn" onclick="cp(this,event)">Copy</button">GET /applications/VisionCorp/dimensions/Entity/members/NA
+
+<span class="cc"># Response</span>
+{
+  "name": "NA",
+  "aliases": { "Default": "North America" },
+  "parent": "Total_Entity",
+  "level": 1,
+  "dataStorageType": "STORE",
+  "aggregation": "+"
+}</div>
+      </div>
+    </div>
+
+    <div class="rc" onclick="toggle(this)">
+      <div class="rc-hdr">
+        <span class="rc-method m-get">GET</span>
+        <span class="rc-name">/applications/{app}/dimensions/{dim}/members/{member}/descendants</span>
+        <span class="rc-badge badge-essential">Essential</span>
+        <span class="rc-chev">▼</span>
+      </div>
+      <div class="rc-body">
+        <p style="font-size:13.5px;color:rgba(240,234,214,.65);margin:10px 0">Get all descendants of a member. Add <code>?level=0</code> to get leaf members only.</p>
+        <div class="rc-endpoint"><button class="copy-btn" onclick="cp(this,event)">Copy</button">GET /applications/VisionCorp/dimensions/Entity/members/Total_Entity/descendants?level=0
+
+<span class="cc"># Returns all leaf Entity members — equivalent to getLevelZeroMembers() in Groovy</span>
+{ "members": [
+    { "name": "NA_East",  "level": 0, "parent": "NA" },
+    { "name": "NA_West",  "level": 0, "parent": "NA" },
+    { "name": "EMEA_UK",  "level": 0, "parent": "EMEA" },
+    ...
+]}</div>
+      </div>
+    </div>
+
+    <div class="rc" onclick="toggle(this)">
+      <div class="rc-hdr">
+        <span class="rc-method m-post">POST</span>
+        <span class="rc-name">/applications/{app}/jobs — Import Metadata</span>
+        <span class="rc-badge badge-async">Async</span>
+        <span class="rc-chev">▼</span>
+      </div>
+      <div class="rc-body">
+        <p style="font-size:13.5px;color:rgba(240,234,214,.65);margin:10px 0">Load dimension metadata from a flat file (upload file first, then import).</p>
+        <div class="rc-endpoint"><button class="copy-btn" onclick="cp(this,event)">Copy</button"><span class="cc"># Step 1: Upload the metadata file</span>
+POST /applications/VisionCorp/files/import/Entity_Members.csv
+Content-Type: text/csv
+[file body]
+
+<span class="cc"># Step 2: Run dim build</span>
+POST /applications/VisionCorp/jobs
+{
+  "jobType": "IMPORT_METADATA",
+  "jobName": "Entity_DimBuild",
+  "parameters": {
+    "importFileName": "Entity_Members.csv",
+    "importMode":     "MERGE"
+  }
+}</div>
+        <div class="rc-note"><strong>importMode values for metadata:</strong> <code>MERGE</code> (safe default — adds/updates, keeps existing) · <code>REPLACE</code> (removes members not in file) · <code>ADD</code> (adds only)</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ PLANNING UNITS ══ -->
+  <div class="ra-sec" id="planning">
+    <div class="ra-sec-hdr"><span class="ra-sec-icon">📋</span><span class="ra-sec-title">Planning Units & Workflow</span><span class="ra-sec-count">4 recipes</span></div>
+
+    <div class="rc" onclick="toggle(this)">
+      <div class="rc-hdr">
+        <span class="rc-method m-get">GET</span>
+        <span class="rc-name">/applications/{app}/plantypes/{plantype}/approvalUnits</span>
+        <span class="rc-badge badge-essential">Essential</span>
+        <span class="rc-chev">▼</span>
+      </div>
+      <div class="rc-body">
+        <p style="font-size:13.5px;color:rgba(240,234,214,.65);margin:10px 0">Retrieve all planning unit approval statuses for workflow monitoring.</p>
+        <div class="rc-endpoint"><button class="copy-btn" onclick="cp(this,event)">Copy</button">GET /applications/VisionCorp/plantypes/Plan1/approvalUnits?scenario=Budget&version=Working
+
+{ "approvalUnits": [
+    { "member": "NA",   "approvalStatus": "SignedOff",         "currentOwner": "<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="7a091b081b125419121f143a0c1954191517">[email&#160;protected]</a>" },
+    { "member": "EMEA", "approvalStatus": "UnderReview",       "currentOwner": "<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="177a7665747839657864647e5761743974787a">[email&#160;protected]</a>" },
+    { "member": "APAC", "approvalStatus": "NotStarted",        "currentOwner": "<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="bac3cfd1d394cedbd4dbd1dbfaccd994d9d5d7">[email&#160;protected]</a>" },
+    { "member": "LATAM","approvalStatus": "NotStarted",        "currentOwner": null }
+]}</div>
+        <div class="rc-vision"><div class="rv-lbl">Vision Corp Use Case</div>Nightly script checks all units. If any are <code>NotStarted</code> 3 days before the budget deadline, it automatically sends a Slack reminder via the Slack API.</div>
+      </div>
+    </div>
+
+    <div class="rc" onclick="toggle(this)">
+      <div class="rc-hdr">
+        <span class="rc-method m-post">POST</span>
+        <span class="rc-name">/applications/{app}/plantypes/{plantype}/approvalUnits — Change Status</span>
+        <span class="rc-badge badge-advanced">Advanced</span>
+        <span class="rc-chev">▼</span>
+      </div>
+      <div class="rc-body">
+        <p style="font-size:13.5px;color:rgba(240,234,214,.65);margin:10px 0">Programmatically promote, reject, or sign off planning units via REST.</p>
+        <div class="rc-endpoint"><button class="copy-btn" onclick="cp(this,event)">Copy</button">POST /applications/VisionCorp/plantypes/Plan1/approvalUnits
+{
+  "action":      "PROMOTE",
+  "planningUnit": "EMEA",
+  "scenario":    "Budget",
+  "version":     "Working",
+  "comment":     "Q2 forecast locked — automated promotion"
+}</div>
+        <div class="rc-note"><strong>action values:</strong> <code>PROMOTE</code> · <code>REJECT</code> · <code>APPROVE</code> · <code>SIGN_OFF</code> · <code>REOPEN</code></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ FORMS ══ -->
+  <div class="ra-sec" id="forms">
+    <div class="ra-sec-hdr"><span class="ra-sec-icon">📝</span><span class="ra-sec-title">Forms & Grid Data</span><span class="ra-sec-count">4 recipes</span></div>
+
+    <div class="rc" onclick="toggle(this)">
+      <div class="rc-hdr">
+        <span class="rc-method m-post">POST</span>
+        <span class="rc-name">/applications/{app}/forms/{form}/data — Read Grid Data</span>
+        <span class="rc-badge badge-essential">Essential</span>
+        <span class="rc-chev">▼</span>
+      </div>
+      <div class="rc-body">
+        <p style="font-size:13.5px;color:rgba(240,234,214,.65);margin:10px 0">Read data from a specific form at a given POV — same data the planner sees in the browser.</p>
+        <div class="rc-endpoint"><button class="copy-btn" onclick="cp(this,event)">Copy</button">POST /applications/VisionCorp/forms/Revenue_Input_Form/data
+{
+  "pov": {
+    "Scenario": "Budget",
+    "Version":  "Working",
+    "Year":     "FY2025",
+    "Entity":   "NA"
+  }
+}
+
+<span class="cc"># Response includes cell values, data status, and cell context</span>
+{ "rows": [
+    { "members": ["Net_Revenue"], "data": [48200000, 42100000, 39800000, ...] }
+]}</div>
+      </div>
+    </div>
+
+    <div class="rc" onclick="toggle(this)">
+      <div class="rc-hdr">
+        <span class="rc-method m-patch">PATCH</span>
+        <span class="rc-name">/applications/{app}/forms/{form}/data — Write Grid Data</span>
+        <span class="rc-badge badge-advanced">Advanced</span>
+        <span class="rc-chev">▼</span>
+      </div>
+      <div class="rc-body">
+        <p style="font-size:13.5px;color:rgba(240,234,214,.65);margin:10px 0">Write data to a form grid via REST — same as a planner saving data in the browser.</p>
+        <div class="rc-endpoint"><button class="copy-btn" onclick="cp(this,event)">Copy</button">PATCH /applications/VisionCorp/forms/Revenue_Input_Form/data
+{
+  "pov": { "Scenario": "Budget", "Version": "Working", "Year": "FY2025", "Entity": "NA" },
+  "cells": [
+    { "row": 0, "col": 0, "value": 49500000 },
+    { "row": 0, "col": 1, "value": 43800000 }
+  ]
+}</div>
+        <div class="rc-note"><strong>Use cases:</strong> Automated seed-loading from prior year actuals, ETL pipelines writing directly to planning forms, integration with external approval tools that write approved values back to EPBCS.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ INTEGRATION ══ -->
+  <div class="ra-sec" id="integration">
+    <div class="ra-sec-hdr"><span class="ra-sec-icon">🔗</span><span class="ra-sec-title">Data Integration (DI)</span><span class="ra-sec-count">4 recipes</span></div>
+
+    <div class="rc" onclick="toggle(this)">
+      <div class="rc-hdr">
+        <span class="rc-method m-get">GET</span>
+        <span class="rc-name">/dataintegration/rest/v1/jobs — List DI Jobs</span>
+        <span class="rc-badge badge-essential">Essential</span>
+        <span class="rc-chev">▼</span>
+      </div>
+      <div class="rc-body">
+        <p style="font-size:13.5px;color:rgba(240,234,214,.65);margin:10px 0">Note: Data Integration uses a <strong>different base URL</strong>: <code>/dataintegration/rest/v1/</code></p>
+        <div class="rc-endpoint"><button class="copy-btn" onclick="cp(this,event)">Copy</button">GET https://planning-a123456.pbcs.us2.oraclecloud.com/dataintegration/rest/v1/jobs
+  ?startDate=2025-06-01&endDate=2025-06-02
+
+<span class="cc"># Returns recent DI job history — useful for monitoring nightly loads</span>
+{ "items": [
+    { "jobId": 8821, "name": "GL_Actuals_Monthly_Load", "status": "SUCCESS", "endTime": "..." },
+    { "jobId": 8820, "name": "WF_HCM_Actuals_Load",     "status": "SUCCESS", "endTime": "..." }
+]}</div>
+      </div>
+    </div>
+
+    <div class="rc" onclick="toggle(this)">
+      <div class="rc-hdr">
+        <span class="rc-method m-post">POST</span>
+        <span class="rc-name">/dataintegration/rest/v1/jobs — Execute DI Integration</span>
+        <span class="rc-badge badge-async">Async</span>
+        <span class="rc-chev">▼</span>
+      </div>
+      <div class="rc-body">
+        <p style="font-size:13.5px;color:rgba(240,234,214,.65);margin:10px 0">Trigger a Data Integration pipeline directly (alternative to the Planning jobs endpoint).</p>
+        <div class="rc-endpoint"><button class="copy-btn" onclick="cp(this,event)">Copy</button">POST /dataintegration/rest/v1/jobs
+{
+  "name":        "GL_Actuals_Monthly_Load",
+  "startPeriod": "Jan-25",
+  "endPeriod":   "Mar-25",
+  "importMode":  "REPLACE",
+  "exportMode":  "STORE_DATA"
+}</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ TIPS ══ -->
+  <div class="ra-sec" id="tips">
+    <div class="ra-sec-hdr"><span class="ra-sec-icon">💡</span><span class="ra-sec-title">Production Tips & Patterns</span></div>
+
+    <h2>Rate Limits & Throttling</h2>
+    <div class="tbl-wrap"><table class="dtbl">
+    <tr><th>Concern</th><th>Limit</th><th>Best Practice</th></tr>
+    <tr><td>Concurrent API requests</td><td>~10 per service</td><td>Serialize your pipeline — run jobs sequentially</td></tr>
+    <tr><td>Job poll frequency</td><td>No hard limit</td><td>Poll every 5–10s, not every 500ms</td></tr>
+    <tr><td>File upload size</td><td>~250MB</td><td>Split large exports; use compression</td></tr>
+    <tr><td>Token expiry</td><td>3600s (OAuth)</td><td>Cache token, refresh 60s before expiry</td></tr>
+    </table></div>
+
+    <h2>Error Handling Matrix</h2>
+    <div class="tbl-wrap"><table class="dtbl">
+    <tr><th>HTTP Status</th><th>Meaning</th><th>Action</th></tr>
+    <tr><td><code>202</code></td><td>Job accepted (async)</td><td>Poll <code>/jobs/{id}</code></td></tr>
+    <tr><td><code>400</code></td><td>Bad request — invalid params</td><td>Log request body; fix parameters</td></tr>
+    <tr><td><code>401</code></td><td>Auth failed</td><td>Refresh token; check credentials</td></tr>
+    <tr><td><code>403</code></td><td>Insufficient permissions</td><td>Check service account roles in EPBCS</td></tr>
+    <tr><td><code>404</code></td><td>Resource not found</td><td>Verify app name, dim name, job name</td></tr>
+    <tr><td><code>429</code></td><td>Rate limited</td><td>Back off with exponential retry</td></tr>
+    <tr><td><code>503</code></td><td>Service maintenance</td><td>Retry after 30–60s; check Oracle status page</td></tr>
+    </table></div>
+
+    <div class="callout warn"><span class="ci">⚠</span><strong>Service account setup:</strong> Create a dedicated service account (<code><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="99eaeffac6fce9f4d9eff0eaf0f6f7faf6ebe9b7faf6f4">[email&#160;protected]</a></code>) with only the permissions needed (Power User minimum for job execution). Never use a personal login for automation — password changes will break your pipelines at 2am.</div>
+  </div>
+
+  <!-- AI Tutor -->
+  <div class="tutor-box">
+    <div class="tutor-hdr">
+      <div class="tutor-av">🧙</div>
+      <div><div class="tutor-nm">Oracle · AI Tutor</div><div class="tutor-rl">REST API & Integration Specialist · EPM 25.06+</div></div>
+    </div>
+    <div class="chips">
+      <span class="chip" onclick="ask('How do I authenticate to the Oracle EPM REST API using OAuth 2.0?')">OAuth 2.0 setup</span>
+      <span class="chip" onclick="ask('How do I run a business rule and wait for it to complete using the EPM REST API?')">Run rule + poll</span>
+      <span class="chip" onclick="ask('What is the difference between the Planning jobs API and the Data Integration API?')">Jobs vs DI API</span>
+      <span class="chip" onclick="ask('How do I export data to a file and then download it using the REST API?')">Export + download</span>
+      <span class="chip" onclick="ask('How do I handle rate limiting and retries in an EPM REST API automation script?')">Rate limit handling</span>
+      <span class="chip" onclick="ask('What REST API endpoints are available for Workforce Planning (OEP_WFP)?')">Workforce Planning APIs</span>
+    </div>
+    <div class="tutor-row">
+      <input class="tutor-input" id="api-inp" type="text" placeholder="Ask about EPM REST API...">
+      <button class="tutor-send" id="api-send" onclick="sendTutor()">Consult Oracle ✦</button>
+    </div>
+    <div class="tutor-out" id="api-out"></div>
+  </div>
+
+  <div style="display:flex;justify-content:space-between;margin-top:40px;padding-top:20px;border-top:1px solid var(--border)">
+    <a href="parts-workforce.html" style="padding:10px 22px;font-family:'Cinzel',serif;font-size:11.5px;font-weight:600;letter-spacing:.05em;border-radius:8px;border:1px solid var(--border);background:transparent;color:rgba(240,234,214,.4);text-decoration:none">← Workforce Planning</a>
+    <a href="automate-ref.html"    style="padding:10px 22px;font-family:'Cinzel',serif;font-size:11.5px;font-weight:600;letter-spacing:.05em;border-radius:8px;background:linear-gradient(135deg,var(--teal),var(--sky));color:var(--bg);text-decoration:none">EPM Automate CLI →</a>
+  </div>
+
+  <div id="ra-no-results">No endpoints match your search.</div>
+
+</div><!-- /ra-wrap -->
+</div><!-- /ra-main -->
+</div><!-- /ra-shell -->
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+(function(){var s=document.getElementById('stars');for(var i=0;i<100;i++){var d=document.createElement('div');d.className='star';var z=Math.random()*2+.4;d.style.cssText='width:'+z+'px;height:'+z+'px;top:'+Math.random()*100+'%;left:'+Math.random()*100+'%;--d:'+(2+Math.random()*4)+'s;--delay:'+Math.random()*5+'s;--op:'+(0.2+Math.random()*0.5);s.appendChild(d);}})();
+
+function toggle(el){el.classList.toggle('open');}
+
+function cp(btn,e){
+  e.stopPropagation();
+  const code=btn.closest('.rc-endpoint').innerText.replace('Copy','').trim();
+  navigator.clipboard.writeText(code).then(()=>{btn.textContent='✓ Copied';setTimeout(()=>btn.textContent='Copy',1500);});
+}
+
+function filterCards(){
+  const q=document.getElementById('ra-srch').value.toLowerCase();
+  let visible=0;
+  document.querySelectorAll('.rc').forEach(card=>{
+    const txt=(card.textContent||'').toLowerCase();
+    const hide=q.length>0&&!txt.includes(q);
+    card.dataset.hidden=hide;
+    if(!hide)visible++;
+  });
+  document.querySelectorAll('.ra-sec').forEach(sec=>{
+    const hasVisible=[...sec.querySelectorAll('.rc')].some(c=>c.dataset.hidden!=='true');
+    sec.style.display=hasVisible?'':'none';
+  });
+  document.getElementById('ra-no-results').style.display=visible===0&&q?'block':'none';
+}
+
+function ask(q){document.getElementById('api-inp').value=q;sendTutor();}
+
+async function sendTutor(){
+  const inp=document.getElementById('api-inp'),q=inp.value.trim();if(!q)return;
+  const send=document.getElementById('api-send');send.disabled=true;
+  const out=document.getElementById('api-out');
+  const uDiv=document.createElement('div');uDiv.className='tutor-msg user-msg';
+  uDiv.innerHTML='<div class="tutor-msg-lbl">You</div><div style="font-size:14px;line-height:1.7">'+q+'</div>';
+  out.appendChild(uDiv);
+  const aDiv=document.createElement('div');aDiv.className='tutor-msg ai-msg';
+  aDiv.innerHTML='<div class="tutor-msg-lbl">Oracle</div><div id="ai-body" style="font-size:14px;line-height:1.75;color:rgba(240,234,214,.28);font-style:italic">Consulting the REST scrolls...</div>';
+  out.appendChild(aDiv);inp.value='';out.scrollTop=out.scrollHeight;
+  const sys='You are Oracle — AI tutor for The Planning Quest, an EPBCS & Groovy learning platform. Expert in Oracle EPM Cloud REST API (v3), Planning, Groovy scripting, Data Integration, and EPM automation. Vision Corp is the practice company ($2.8B, 4 regions). Be concise and practical. Include example code where helpful. Under 220 words.';
+  try{
+    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Co
+<script src="branding.js"></script>
+</body>
+</html>

@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Workforce Planning — The Planning Quest</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Crimson+Pro:ital,wght@0,400;0,500;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#07090e;--bg2:#0c0f18;--bg3:#111520;--bg4:#161c2a;--gold:#d4a017;--goldLt:#f0c040;--goldDim:#5c4108;--teal:#1fb8a8;--tealLt:#4dd9c8;--purple:#7c3aed;--purpleLt:#a855f7;--emerald:#059669;--emeraldLt:#10b981;--sky:#0ea5e9;--skyLt:#38bdf8;--red:#c0392b;--redLt:#e74c3c;--amber:#d97706;--amberLt:#fbbf24;--rose:#be185d;--roseLt:#f472b6;--border:rgba(212,160,23,.15);--white:#f0ead6;--dim:#5a6478;--r:10px;--sidebar:268px;--topbar:54px}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Crimson Pro',serif;background:var(--bg);color:var(--white);min-height:100vh;overflow-x:hidden}
+#stars{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+.star{position:absolute;border-radius:50%;background:white;animation:twinkle var(--d,3s) infinite var(--delay,0s)}
+@keyframes twinkle{0%,100%{opacity:.05}50%{opacity:var(--op,.6)}}
+@keyframes glow{0%,100%{text-shadow:0 0 20px rgba(212,160,23,.3)}50%{text-shadow:0 0 50px rgba(212,160,23,.55)}}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(212,160,23,.3)}50%{box-shadow:0 0 0 8px rgba(212,160,23,0)}}
+@keyframes slideIn{from{opacity:0;transform:translateX(-10px)}to{opacity:1;transform:none}}
+/* Topbar */
+#topbar{position:fixed;top:0;left:0;right:0;height:var(--topbar);background:rgba(7,9,14,.97);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 20px;gap:14px;z-index:200;overflow:hidden}
+.tb-home{font-family:'Cinzel',serif;font-size:13px;font-weight:700;color:var(--goldLt);text-decoration:none;display:flex;align-items:center;gap:9px;letter-spacing:.04em}
+.tb-dot{width:8px;height:8px;border-radius:50%;background:var(--tealLt);animation:pulse 2s infinite}
+.tb-sep{color:var(--goldDim)}
+.tb-current{font-family:'Cinzel',serif;font-size:11px;color:var(--teal);letter-spacing:.04em}
+.tb-tools{display:flex;gap:4px;margin-left:auto;overflow-x:auto;flex-shrink:0}
+.tb-tools::-webkit-scrollbar{display:none}
+.tb-tool{padding:4px 9px;border-radius:6px;border:1px solid var(--border);background:transparent;color:var(--dim);font-family:'Cinzel',serif;font-size:8.5px;font-weight:700;letter-spacing:.05em;cursor:pointer;transition:all .15s;text-transform:uppercase;text-decoration:none;display:inline-flex;align-items:center;white-space:nowrap}
+.tb-tool:hover,.tb-tool.active{border-color:var(--gold);color:var(--gold);background:rgba(212,160,23,.06)}
+/* Layout */
+#shell{display:flex;padding-top:var(--topbar);min-height:100vh}
+#sb{width:var(--sidebar);background:var(--bg2);border-right:1px solid var(--border);position:fixed;top:var(--topbar);bottom:0;overflow-y:auto;z-index:100}
+#sb::-webkit-scrollbar{width:3px}
+#sb::-webkit-scrollbar-thumb{background:var(--goldDim);border-radius:2px}
+.sb-hdr{padding:10px 16px 6px;font-family:'Cinzel',serif;font-size:9px;font-weight:700;color:var(--goldDim);letter-spacing:.1em;text-transform:uppercase;border-bottom:1px solid rgba(255,255,255,.04)}
+.sb-hdr.nav-hdr{color:var(--teal);border-top:1px solid rgba(255,255,255,.05);margin-top:6px;padding-top:10px}
+.sb-part{display:flex;align-items:center;gap:8px;padding:9px 14px;cursor:pointer;border-bottom:1px solid rgba(255,255,255,.03);transition:all .12s;text-decoration:none}
+.sb-part:hover,.sb-part.active{background:rgba(212,160,23,.05)}
+.sb-part-icon{font-size:14px;flex-shrink:0}
+.sb-part-num{font-family:'Cinzel',serif;font-size:8.5px;font-weight:700;color:var(--goldDim);letter-spacing:.08em;text-transform:uppercase}
+.sb-part-name{font-family:'Cinzel',serif;font-size:10.5px;color:var(--dim);font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:color .12s;flex:1}
+.sb-part:hover .sb-part-name,.sb-part.active .sb-part-name{color:var(--goldLt)}
+.sb-lesson{padding:7px 14px 7px 36px;font-size:12px;color:rgba(240,234,214,.35);cursor:pointer;border-left:2px solid transparent;display:flex;align-items:center;gap:8px;transition:all .12s;line-height:1.3;text-decoration:none}
+.sb-lesson:hover{color:rgba(240,234,214,.65);background:rgba(255,255,255,.015)}
+.sb-lesson.active{color:var(--goldLt);border-left-color:var(--goldLt);background:rgba(212,160,23,.06);font-weight:500}
+.sl-dot{width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,.1);flex-shrink:0}
+.sb-tool-link{padding:8px 14px;display:flex;align-items:center;gap:9px;font-size:11.5px;color:var(--dim);cursor:pointer;transition:all .12s;border-left:2px solid transparent;text-decoration:none}
+.sb-tool-link:hover,.sb-tool-link.active{color:var(--tealLt);background:rgba(31,184,168,.04);border-left-color:var(--tealLt)}
+/* Main */
+#main{margin-left:var(--sidebar);flex:1;min-width:0;position:relative;z-index:1}
+.lesson-wrap{max-width:820px;padding:36px 44px 100px;margin:0 auto;animation:fadeUp .3s ease}
+/* Typography */
+.page-title{font-family:'Cinzel',serif;font-size:28px;font-weight:700;line-height:1.2;margin-bottom:6px}
+.page-sub{font-size:13px;color:rgba(240,234,214,.4);margin-bottom:28px;font-style:italic;padding-bottom:18px;border-bottom:1px solid var(--border)}
+h2{font-family:'Cinzel',serif;font-size:17px;font-weight:600;color:var(--goldLt);margin:32px 0 12px;letter-spacing:.03em}
+h3{font-family:'Cinzel',serif;font-size:13.5px;font-weight:600;color:var(--tealLt);margin:20px 0 8px;letter-spacing:.04em}
+p{font-size:15px;line-height:1.82;color:rgba(240,234,214,.78);margin-bottom:12px}
+strong{color:var(--white);font-weight:500}
+ul,ol{padding-left:20px;margin-bottom:12px}
+li{font-size:15px;line-height:1.78;color:rgba(240,234,214,.72);margin-bottom:4px}
+code{font-family:'JetBrains Mono',monospace;font-size:12px;background:rgba(255,255,255,.06);padding:2px 6px;border-radius:4px;color:var(--tealLt)}
+/* Narration */
+.narration{background:linear-gradient(135deg,rgba(12,15,24,.95),rgba(17,21,32,.9));border:1px solid var(--border);border-left:3px solid var(--gold);border-radius:0 var(--r) var(--r) 0;padding:20px 24px;margin:20px 0}
+.nar-lbl{font-family:'Cinzel',serif;font-size:9px;font-weight:700;letter-spacing:.1em;color:var(--gold);margin-bottom:8px;text-transform:uppercase}
+.narration p{font-style:italic;color:rgba(240,234,214,.68);margin:0;font-size:14px;line-height:1.88}
+/* Callouts */
+.callout{border-radius:var(--r);padding:14px 18px;margin:16px 0;font-size:14px;line-height:1.72}
+.tip{background:rgba(5,150,105,.07);border:1px solid rgba(5,150,105,.22);color:rgba(240,234,214,.72)}
+.warn{background:rgba(217,119,6,.07);border:1px solid rgba(217,119,6,.25);color:rgba(240,234,214,.72)}
+.danger{background:rgba(192,57,43,.07);border:1px solid rgba(192,57,43,.25);color:rgba(240,234,214,.72)}
+.lore{background:rgba(14,165,233,.05);border:1px solid rgba(14,165,233,.18);color:rgba(240,234,214,.68)}
+.fpa{background:rgba(124,58,237,.07);border:1px solid rgba(124,58,237,.22);color:rgba(240,234,214,.72)}
+.ci{font-size:15px;margin-right:7px}
+/* Code blocks */
+.code-wrap{margin:16px 0}
+.code-lbl{font-family:'Cinzel',serif;font-size:9px;font-weight:700;letter-spacing:.08em;color:var(--dim);margin-bottom:6px;text-transform:uppercase}
+.code-block{background:#090d14;border:1px solid rgba(255,255,255,.07);border-radius:8px;padding:18px 20px;font-family:'JetBrains Mono',monospace;font-size:11.5px;line-height:1.75;color:#a8d8ea;overflow-x:auto;white-space:pre;position:relative}
+.copy-btn{position:absolute;top:8px;right:8px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:6px;padding:4px 10px;font-family:'Cinzel',serif;font-size:8px;font-weight:700;color:var(--dim);cursor:pointer;transition:all .15s;letter-spacing:.05em}
+.copy-btn:hover{background:rgba(31,184,168,.1);border-color:var(--teal);color:var(--tealLt)}
+.ck{color:#ff7b72}.cs{color:#a5d6ff}.cf{color:#d2a8ff}.cc{color:#6a737d}.cn{color:#79c0ff}.cm{color:#ffa657}
+/* XP Badge */
+.xp-badge{display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,rgba(212,160,23,.1),rgba(212,160,23,.04));border:1px solid var(--border);border-radius:20px;padding:5px 14px;font-family:'Cinzel',serif;font-size:11px;color:var(--goldLt);margin-bottom:20px}
+/* Checklist */
+.checklist{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:20px 24px;margin:20px 0}
+.cl-title{font-family:'Cinzel',serif;font-size:10.5px;font-weight:700;color:var(--teal);letter-spacing:.08em;text-transform:uppercase;margin-bottom:14px}
+.cl-item{display:flex;align-items:flex-start;gap:12px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.04);cursor:pointer;user-select:none}
+.cl-item:last-child{border-bottom:none}
+.cl-box{width:18px;height:18px;border-radius:4px;border:1.5px solid rgba(212,160,23,.25);flex-shrink:0;margin-top:2px;display:flex;align-items:center;justify-content:center;font-size:11px;transition:all .15s}
+.cl-box.on{background:var(--emerald);border-color:var(--emerald);color:white}
+.cl-text{font-size:13.5px;color:rgba(240,234,214,.6);line-height:1.6;transition:all .12s}
+.cl-text.done{text-decoration:line-through;opacity:.35}
+/* Tables */
+.tbl-wrap{overflow-x:auto;margin:16px 0;border-radius:var(--r);border:1px solid var(--border)}
+.dtbl{width:100%;border-collapse:collapse;font-size:13px}
+.dtbl th{background:rgba(212,160,23,.06);color:var(--gold);padding:10px 13px;text-align:left;font-family:'Cinzel',serif;font-size:10.5px;letter-spacing:.04em;border-bottom:1px solid var(--border)}
+.dtbl td{padding:10px 13px;border-bottom:1px solid rgba(255,255,255,.04);color:rgba(240,234,214,.65);vertical-align:top;line-height:1.55}
+.dtbl tr:last-child td{border-bottom:none}
+/* Stage flow */
+.stage-flow{display:flex;align-items:stretch;flex-wrap:wrap;gap:0;margin:16px 0;overflow:hidden;border-radius:var(--r);border:1px solid var(--border)}
+.stage-box{flex:1;min-width:80px;padding:14px 8px;text-align:center;background:var(--bg3);border-right:1px solid var(--border)}
+.stage-box:last-child{border-right:none}
+.stage-icon{font-size:18px;display:block;margin-bottom:6px}
+.stage-name{font-family:'Cinzel',serif;font-size:9px;font-weight:600;color:var(--dim);letter-spacing:.04em}
+.stage-sub{font-size:10px;color:rgba(240,234,214,.3);margin-top:3px}
+/* Flow row */
+.flow-row{display:flex;align-items:center;flex-wrap:wrap;gap:6px;margin:16px 0}
+.flow-box{padding:8px 14px;background:var(--bg3);border:1px solid var(--border);border-radius:6px;font-size:12px;font-weight:500;font-family:'Cinzel',serif;letter-spacing:.02em}
+.flow-arr{color:var(--dim);font-size:14px}
+/* Battle card */
+.battle-card{background:linear-gradient(135deg,rgba(124,58,237,.08),rgba(11,14,22,.95));border:1px solid rgba(124,58,237,.3);border-radius:var(--r);padding:22px 26px;margin:20px 0}
+.battle-lbl{font-family:'Cinzel',serif;font-size:9.5px;font-weight:700;letter-spacing:.1em;color:var(--purpleLt);margin-bottom:8px;text-transform:uppercase}
+.battle-title{font-family:'Cinzel',serif;font-size:14px;color:var(--white);margin-bottom:10px;font-weight:600}
+/* KPI grid */
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin:16px 0}
+.kpi-card{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:16px;position:relative}
+.kpi-lbl{font-size:10px;color:var(--dim);margin-bottom:4px;font-family:'Cinzel',serif;letter-spacing:.04em;text-transform:uppercase}
+.kpi-val{font-family:'Cinzel',serif;font-size:22px;font-weight:700;color:var(--goldLt)}
+.kpi-sub{font-size:11px;color:var(--dim);margin-top:3px}
+.kpi-trend{position:absolute;top:12px;right:12px;font-size:14px}
+/* FP&A challenge */
+.fpa-challenge{background:linear-gradient(135deg,rgba(190,24,93,.06),rgba(12,15,24,.97));border:1px solid rgba(190,24,93,.22);border-radius:var(--r);padding:22px 26px;margin:20px 0}
+.fpa-badge{font-family:'Cinzel',serif;font-size:9px;font-weight:700;letter-spacing:.1em;color:var(--roseLt);text-transform:uppercase;margin-bottom:8px}
+.fpa-title{font-family:'Cinzel',serif;font-size:14px;color:var(--white);font-weight:600;margin-bottom:10px}
+.fpa-challenge p{font-size:14px;color:rgba(240,234,214,.68);line-height:1.78;margin-bottom:8px}
+/* AI Tutor */
+.tutor-box{background:linear-gradient(135deg,rgba(8,10,16,.98),rgba(17,21,32,.95));border:1px solid rgba(31,184,168,.18);border-radius:var(--r);padding:22px 26px;margin:28px 0}
+.tutor-hdr{display:flex;align-items:center;gap:12px;margin-bottom:8px}
+.tutor-av{width:38px;height:38px;background:linear-gradient(135deg,var(--purple),var(--teal));border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;box-shadow:0 0 20px rgba(31,184,168,.2)}
+.tutor-nm{font-family:'Cinzel',serif;font-size:13px;font-weight:700;color:var(--tealLt)}
+.tutor-rl{font-size:11px;color:var(--dim)}
+.tutor-desc{font-size:12.5px;color:rgba(240,234,214,.32);margin-bottom:12px}
+.chips{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:12px}
+.chip{font-size:11px;padding:5px 13px;border:1px solid rgba(31,184,168,.18);border-radius:14px;background:transparent;color:rgba(240,234,214,.42);cursor:pointer;transition:all .12s;font-family:'Crimson Pro',serif}
+.chip:hover{border-color:var(--tealLt);color:var(--tealLt);background:rgba(31,184,168,.07)}
+.tutor-row{display:flex;gap:8px}
+.tutor-input{flex:1;padding:9px 14px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:8px;color:var(--white);font-size:13px;font-family:'Crimson Pro',serif;outline:none;transition:border-color .15s}
+.tutor-input:focus{border-color:var(--teal)}
+.tutor-input::placeholder{color:rgba(255,255,255,.18)}
+.tutor-send{padding:9px 18px;background:linear-gradient(135deg,var(--teal),var(--sky));color:var(--bg);border:none;border-radius:8px;font-family:'Cinzel',serif;font-size:10.5px;font-weight:700;letter-spacing:.05em;cursor:pointer;transition:opacity .12s}
+.tutor-send:hover{opacity:.85}
+.tutor-send:disabled{opacity:.4;cursor:not-allowed}
+.tutor-out{margin-top:14px;font-size:14px;line-height:1.78;color:rgba(240,234,214,.68);min-height:0}
+.tutor-out.loading{color:rgba(240,234,214,.28);font-style:italic}
+.tutor-msg{background:var(--bg4);border-radius:8px;padding:12px 16px;margin-bottom:8px}
+.tutor-msg.user-msg{background:rgba(212,160,23,.06);border:1px solid rgba(212,160,23,.1)}
+.tutor-msg.ai-msg{border:1px solid rgba(255,255,255,.05)}
+.tutor-msg-lbl{font-family:'Cinzel',serif;font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:5px;opacity:.45}
+/* Nav buttons */
+.nav-btns{display:flex;justify-content:space-between;margin-top:48px;padding-top:20px;border-top:1px solid var(--border)}
+.nav-btn{padding:10px 22px;font-family:'Cinzel',serif;font-size:11.5px;font-weight:600;letter-spacing:.05em;border-radius:8px;cursor:pointer;transition:all .15s;border:1px solid var(--border);background:transparent;color:rgba(240,234,214,.4);text-decoration:none;display:inline-block}
+.nav-btn:hover{border-color:var(--teal);color:var(--tealLt)}
+.nav-btn.primary{background:linear-gradient(135deg,var(--teal),var(--sky));color:var(--bg);border-color:transparent}
+.nav-btn.primary:hover{opacity:.88;transform:translateY(-1px)}
+.nav-btn.gold{background:linear-gradient(135deg,var(--gold),#d97706);color:var(--bg);border-color:transparent}
+@media(max-width:860px){#sb{display:none}#main{margin-left:0}.lesson-wrap{padding:24px 20px 80px}}
+@media(max-width:520px){.lesson-wrap{padding:20px 16px 80px}}
+</style>
+</head>
+<body>
+<div id="stars"></div>
+
+<div id="topbar">
+  <div class="tb-dot"></div>
+  <a href="index.html" class="tb-home">⚔ The Planning Quest</a>
+  <span class="tb-sep">›</span>
+  <span class="tb-current">Workforce Planning</span>
+  <div class="tb-tools">
+    <a href="parts-1-3.html"       class="tb-tool">Parts I–III</a>
+    <a href="parts-4-5.html"       class="tb-tool">Parts IV–V</a>
+    <a href="parts-6-9.html"       class="tb-tool">Parts VI–IX</a>
+    <a href="groovy-ch1.html"      class="tb-tool">Groovy I</a>
+    <a href="groovy-ch2.html"      class="tb-tool">Groovy II</a>
+    <a href="groovy-lab.html"      class="tb-tool">💻 Lab</a>
+    <a href="parts-workforce.html" class="tb-tool active">👥 Workforce</a>
+    <a href="rest-api.html"        class="tb-tool">🌐 REST API</a>
+    <a href="simulators.html"      class="tb-tool">Sims</a>
+    <a href="automate-ref.html"    class="tb-tool">CLI</a>
+    <a href="interview-prep.html"  class="tb-tool">Prep</a>
+  </div>
+</div>
+
+<div id="shell">
+<div id="sb">
+  <div class="sb-hdr">Course</div>
+  <a href="parts-1-3.html"  class="sb-part"><span class="sb-part-icon">🏰</span><div><div class="sb-part-num">Parts I–III</div><div class="sb-part-name">Foundations</div></div></a>
+  <a href="parts-4-5.html"  class="sb-part"><span class="sb-part-icon">⚔</span><div><div class="sb-part-num">Parts IV–V</div><div class="sb-part-name">Groovy Battles</div></div></a>
+  <a href="parts-6-9.html"  class="sb-part"><span class="sb-part-icon">👑</span><div><div class="sb-part-num">Parts VI–IX</div><div class="sb-part-name">Mastery</div></div></a>
+  <a href="groovy-ch1.html" class="sb-part"><span class="sb-part-icon">📘</span><div><div class="sb-part-num">Chapter I</div><div class="sb-part-name">Groovy Deep-Dive I</div></div></a>
+  <a href="groovy-ch2.html" class="sb-part"><span class="sb-part-icon">⚡</span><div><div class="sb-part-num">Chapter II</div><div class="sb-part-name">Groovy Deep-Dive II</div></div></a>
+  <a href="parts-workforce.html" class="sb-part active"><span class="sb-part-icon">👥</span><div><div class="sb-part-num">Module</div><div class="sb-part-name">Workforce Planning</div></div></a>
+
+  <div class="sb-hdr" style="margin-top:4px">Lessons</div>
+  <a href="#wf1" class="sb-lesson active"><span class="sl-dot"></span>WF-1 · Architecture</a>
+  <a href="#wf2" class="sb-lesson"><span class="sl-dot"></span>WF-2 · Employee Cube</a>
+  <a href="#wf3" class="sb-lesson"><span class="sl-dot"></span>WF-3 · Calculations</a>
+  <a href="#wf4" class="sb-lesson"><span class="sl-dot"></span>WF-4 · Mass Updates</a>
+  <a href="#wf5" class="sb-lesson"><span class="sl-dot"></span>WF-5 · Groovy Rules</a>
+  <a href="#wf6" class="sb-lesson"><span class="sl-dot"></span>WF-6 · Reporting</a>
+  <a href="#wf7" class="sb-lesson"><span class="sl-dot"></span>WF-7 · HCM Integration</a>
+
+  <div class="sb-hdr nav-hdr">Tools</div>
+  <a href="quiz.html"            class="sb-tool-link">📝 Practice Quiz</a>
+  <a href="flashcards.html"      class="sb-tool-link">🃏 Flashcards</a>
+  <a href="labs.html"            class="sb-tool-link">🔬 Enterprise Labs</a>
+  <a href="simulators.html"      class="sb-tool-link">🧮 Simulators</a>
+  <a href="groovy-lab.html"      class="sb-tool-link">💻 Groovy Lab</a>
+  <a href="automate-ref.html"    class="sb-tool-link">⚙ EPM Automate CLI</a>
+  <a href="rest-api.html"        class="sb-tool-link">🌐 REST API Cookbook</a>
+  <a href="interview-prep.html"  class="sb-tool-link">🎯 Interview Prep</a>
+  <a href="whats-new.html"       class="sb-tool-link">🆕 What's New</a>
+  <a href="search.html"          class="sb-tool-link">🔍 Search</a>
+</div>
+
+<div id="main">
+<div class="lesson-wrap">
+
+<div class="xp-badge">👥 Workforce Planning Module · +850 XP</div>
+<h1 class="page-title">Workforce Planning in EPBCS</h1>
+<p class="page-sub">From employee-level headcount to fully-loaded salary models · Vision Corp implementation · EPM 25.06+</p>
+
+<div class="narration">
+  <div class="nar-lbl">The Quest Narration</div>
+  <p>You've conquered Groovy scripting and BSO/ASO architecture. Now Vision Corp's CFO presents the final challenge before crowning: the people cost. At $2.8B revenue, workforce spend is 42% of operating expenses — $580M annually. Headcount planning is not a spreadsheet exercise. It's a multi-dimensional cube problem involving positions, employees, assumptions, and approval workflows. Master this and you master the largest single cost in the P&L.</p>
+</div>
+
+<div class="kpi-grid">
+  <div class="kpi-card"><div class="kpi-lbl">Vision Corp HC</div><div class="kpi-val">354</div><div class="kpi-sub">Total headcount FY2025</div><div class="kpi-trend">👥</div></div>
+  <div class="kpi-card"><div class="kpi-lbl">Workforce Spend</div><div class="kpi-val">$580M</div><div class="kpi-sub">42% of OpEx</div><div class="kpi-trend">💰</div></div>
+  <div class="kpi-card"><div class="kpi-lbl">Merit Budget</div><div class="kpi-val">3.5%</div><div class="kpi-sub">FY2025 increase</div><div class="kpi-trend">📈</div></div>
+  <div class="kpi-card"><div class="kpi-lbl">Open Reqs</div><div class="kpi-val">28</div><div class="kpi-sub">Active positions</div><div class="kpi-trend">📋</div></div>
+</div>
+
+<!-- WF-1 -->
+<h2 id="wf1">WF-1 · Workforce Planning Architecture</h2>
+<p>Oracle EPBCS Workforce Planning is a <strong>pre-built module</strong> that extends Planning with employee-level detail. Two cubes work in tandem: the detail cube stores per-employee assumptions; the financial cube holds the P&L summary that flows to your CFO pack.</p>
+
+<div class="stage-flow">
+  <div class="stage-box"><span class="stage-icon">👤</span><div class="stage-name">OEP_WFP</div><div class="stage-sub">Detail cube</div></div>
+  <div class="stage-box"><span class="stage-icon">⚙</span><div class="stage-name">Calc Engine</div><div class="stage-sub">Groovy + Essbase</div></div>
+  <div class="stage-box"><span class="stage-icon">💰</span><div class="stage-name">OEP_FS</div><div class="stage-sub">Financial summary</div></div>
+  <div class="stage-box"><span class="stage-icon">📊</span><div class="stage-name">Reports</div><div class="stage-sub">HC + cost</div></div>
+  <div class="stage-box"><span class="stage-icon">🔗</span><div class="stage-name">HCM / ERP</div><div class="stage-sub">Integration</div></div>
+</div>
+
+<h3>Three Planning Modes</h3>
+<div class="tbl-wrap"><table class="dtbl">
+<tr><th>Mode</th><th>Data Grain</th><th>Best For</th><th>Complexity</th></tr>
+<tr><td><strong>Position-Based</strong></td><td>Position + Employee</td><td>Large orgs, union roles, succession planning</td><td>High</td></tr>
+<tr><td><strong>Employee-Based</strong></td><td>Employee only</td><td>Mid-market, project staffing, fast planning cycles</td><td>Medium</td></tr>
+<tr><td><strong>Job Code-Based</strong></td><td>Role aggregates</td><td>Strategic workforce, scenario modelling</td><td>Low</td></tr>
+</table></div>
+
+<div class="callout tip"><span class="ci">💡</span><strong>Vision Corp choice:</strong> Employee-Based planning with position tracking for the 28 open requisitions. Individual employee visibility without position-cube density overhead.</div>
+
+<h3>Key Dimensions in OEP_WFP</h3>
+<div class="tbl-wrap"><table class="dtbl">
+<tr><th>Dimension</th><th>Purpose</th><th>Example Members</th></tr>
+<tr><td><code>Employee</code></td><td>Individual headcount grain</td><td>EMP_001 → EMP_354, Open_Reqs</td></tr>
+<tr><td><code>HCP_Element</code></td><td>Pay component type</td><td>Salary, Benefits, Bonus, FICA</td></tr>
+<tr><td><code>HCP_Account</code></td><td>P&L account mapping</td><td>Comp_Expense, Benefits_Expense</td></tr>
+<tr><td><code>WF_Status</code></td><td>Employee lifecycle state</td><td>Active, New_Hire, Terminated</td></tr>
+<tr><td><code>Entity</code></td><td>Business unit (shared)</td><td>NA, EMEA, APAC, LATAM</td></tr>
+<tr><td><code>Scenario / Version</code></td><td>Budget / Actual (shared)</td><td>Budget·Working, Actual·Final</td></tr>
+</table></div>
+
+<!-- WF-2 -->
+<h2 id="wf2">WF-2 · The Employee Cube Deep Dive</h2>
+<p>The <code>OEP_WFP</code> cube stores <strong>assumption-level data</strong>: salary rates, hire dates, benefit percentages, bonus targets. These assumptions drive cost calculations that push to <code>OEP_FS</code>.</p>
+
+<div class="callout lore"><span class="ci">🔭</span><strong>Architecture insight:</strong> The WFP cube is dense on Employee × Period but sparse on Position. Most Fortune 500 implementations separate funded positions from employee assignments to handle transitions, maternity leave, and ghost roles cleanly.</div>
+
+<h3>HCP_Element Hierarchy</h3>
+<div class="code-wrap">
+  <div class="code-lbl">Compensation Element Structure</div>
+  <div class="code-block"><span class="cc">// Top-level element hierarchy (OEP_WFP)</span>
+<span class="cn">Total_Compensation</span>
+  <span class="cn">├─ Base_Pay</span>
+  │    ├─ Annual_Salary          <span class="cc">// Driver input — planner enters this</span>
+  │    └─ Salary_Adjustment      <span class="cc">// Merit / promotion delta</span>
+  <span class="cn">├─ Benefits</span>
+  │    ├─ Health_Insurance        <span class="cc">// Flat per-head or % of salary</span>
+  │    ├─ Retirement_401k         <span class="cc">// Company match % (capped)</span>
+  │    └─ Other_Benefits
+  <span class="cn">├─ Incentive_Pay</span>
+  │    ├─ Short_Term_Bonus        <span class="cc">// % of base × attainment</span>
+  │    └─ Equity_Comp             <span class="cc">// RSU vesting schedule</span>
+  <span class="cn">└─ Employer_Taxes</span>
+       ├─ FICA_SS                 <span class="cc">// 6.2% up to $168,600 SS wage base</span>
+       ├─ FICA_Medicare           <span class="cc">// 1.45% uncapped + 0.9% high earner</span>
+       └─ SUI_FUTA                <span class="cc">// State + federal unemployment</span></div>
+</div>
+
+<h3>Load Sequence — How Employee Data Enters the Cube</h3>
+<div class="flow-row">
+  <div class="flow-box" style="border-color:rgba(14,165,233,.3);color:var(--skyLt)">HCM Extract</div>
+  <span class="flow-arr">→</span>
+  <div class="flow-box">EPM Automate</div>
+  <span class="flow-arr">→</span>
+  <div class="flow-box">DI Pipeline</div>
+  <span class="flow-arr">→</span>
+  <div class="flow-box">Dim Build</div>
+  <span class="flow-arr">→</span>
+  <div class="flow-box" style="border-color:rgba(31,184,168,.3);color:var(--tealLt)">OEP_WFP</div>
+  <span class="flow-arr">→</span>
+  <div class="flow-box" style="border-color:rgba(212,160,23,.3);color:var(--goldLt)">Calculate → OEP_FS</div>
+</div>
+
+<!-- WF-3 -->
+<h2 id="wf3">WF-3 · Workforce Calculations</h2>
+<p>Oracle provides built-in calc templates, but production implementations almost always need custom Groovy for edge cases: pro-rated start dates, step increases, equity vesting, and multi-jurisdiction tax rates.</p>
+
+<h3>Monthly Salary Calculation Logic</h3>
+<div class="code-wrap">
+  <div class="code-lbl">Core Salary Calc — Pro-Ration Pattern</div>
+  <div class="code-block"><button class="copy-btn" onclick="cpBtn(this)">Copy</button><span class="cc">// Monthly Salary = Annual_Salary × Active_Days / Days_In_Period</span>
+<span class="cc">// Handles new hires (start mid-month) and terminations</span>
+
+<span class="ck">def</span> calcMonthlySalary(employee, period, year) {
+    <span class="ck">def</span> annualSal = getCell(<span class="cs">"Annual_Salary"</span>, employee, period, year, scenario, version)
+    <span class="ck">def</span> status    = getCell(<span class="cs">"WF_Status"</span>,     employee, period, year, scenario, version)
+
+    <span class="cc">// Inactive or terminated → zero cost (explicit, not null)</span>
+    <span class="ck">if</span> (status <span class="ck">in</span> [<span class="cs">"Inactive"</span>, <span class="cs">"Terminated"</span>]) <span class="ck">return</span> 0.0
+
+    <span class="cc">// Pro-rate for new hires / mid-month terms</span>
+    <span class="ck">def</span> daysInPeriod = getDaysInPeriod(period, year)
+    <span class="ck">def</span> activeDays   = calcActiveDays(startDate, termDate, period, year)
+    <span class="ck">def</span> proRate      = activeDays / daysInPeriod
+
+    <span class="ck">return</span> (annualSal / 12 * proRate).round(2)
+}</div>
+</div>
+
+<h3>Benefits Loading Rates — Vision Corp FY2025</h3>
+<div class="tbl-wrap"><table class="dtbl">
+<tr><th>Benefit</th><th>Calculation</th><th>Vision Corp Rate</th><th>Notes</th></tr>
+<tr><td>Health Insurance</td><td>Flat / month / employee</td><td>$650/mo</td><td>Varies by family status</td></tr>
+<tr><td>Retirement 401k Match</td><td>% of salary (capped)</td><td>4% up to IRS limit</td><td>Vest schedule applies</td></tr>
+<tr><td>FICA — Social Security</td><td>6.2% of wages</td><td>6.2% ≤ $168,600</td><td>2025 SS wage base</td></tr>
+<tr><td>FICA — Medicare</td><td>1.45% uncapped</td><td>1.45% / 2.35% &gt;$200k</td><td>Additional Medicare Tax</td></tr>
+<tr><td>Short-Term Incentive</td><td>% of base × performance</td><td>12–25% of base</td><td>Accrued monthly, paid Q4</td></tr>
+</table></div>
+
+<!-- WF-4 -->
+<h2 id="wf4">WF-4 · Mass Updates & Merit Cycle</h2>
+<p>The most common annual workforce task is applying a merit increase across all active employees. The naive approach loops one by one. The production approach uses a single batch write — the difference is 354 network calls vs 1.</p>
+
+<div class="battle-card">
+  <div class="battle-lbl">⚔ Groovy Challenge — Merit Cycle Automation</div>
+  <div class="battle-title">Apply 3.5% merit to all Active NA employees, effective April 1</div>
+  <p style="font-size:13.5px;color:rgba(240,234,214,.65);margin-bottom:0">The pattern: filter Active employees → read current salary → calculate new salary → stage all writes → one <code>setDataCellValues()</code> call.</p>
+</div>
+
+<div class="code-wrap">
+  <div class="code-lbl">Merit Increase — Batch Write Pattern</div>
+  <div class="code-block"><button class="copy-btn" onclick="cpBtn(this)">Copy</button><span class="cc">// Merit Cycle — 3.5% to all Active NA employees, effective April</span>
+<span class="ck">def</span> MERIT      = 0.035
+<span class="ck">def</span> EFF_MONTH  = <span class="cs">"Apr"</span>
+<span class="ck">def</span> AFT_MONTHS = [<span class="cs">"Apr"</span>,<span class="cs">"May"</span>,<span class="cs">"Jun"</span>,<span class="cs">"Jul"</span>,<span class="cs">"Aug"</span>,<span class="cs">"Sep"</span>,<span class="cs">"Oct"</span>,<span class="cs">"Nov"</span>,<span class="cs">"Dec"</span>]
+<span class="ck">def</span> grid = operation.grid
+
+<span class="cc">// Get all active NA employees</span>
+<span class="ck">def</span> employees = operation.application.getDimension(<span class="cs">"Employee"</span>)
+    .getMember(<span class="cs">"NA_Total_Employees"</span>).getLevelZeroMembers()
+    .findAll { emp -> grid.getDataCell(<span class="cs">"WF_Status"</span>,emp.getName(),EFF_MONTH,<span class="cs">"FY2025"</span>,<span class="cs">"Budget"</span>,<span class="cs">"Working"</span>).data == <span class="cs">"Active"</span> }
+
+println <span class="cs">"Active NA employees: "</span> + employees.size()
+
+<span class="cc">// Stage all writes — never write inside the loop</span>
+<span class="ck">def</span> writes = []
+employees.each { emp ->
+    <span class="ck">def</span> base   = grid.getDataCell(<span class="cs">"Annual_Salary"</span>,emp.getName(),<span class="cs">"Jan"</span>,<span class="cs">"FY2025"</span>,<span class="cs">"Budget"</span>,<span class="cs">"Working"</span>).data ?: 0
+    <span class="ck">def</span> newSal = (base * (1 + MERIT)).round(2)
+    AFT_MONTHS.each { month ->
+        writes << [emp.getName(),<span class="cs">"Annual_Salary"</span>,    month,<span class="cs">"FY2025"</span>,<span class="cs">"Budget"</span>,<span class="cs">"Working"</span>, newSal]
+        writes << [emp.getName(),<span class="cs">"Salary_Adjustment"</span>,month,<span class="cs">"FY2025"</span>,<span class="cs">"Budget"</span>,<span class="cs">"Working"</span>, newSal-base]
+    }
+    println <span class="cs">"  "</span>+emp.getName()+<span class="cs">": \$"</span>+base+<span class="cs">" → \$"</span>+newSal
+}
+
+<span class="cc">// ONE network call — not 354 × 9 = 3,186 individual writes</span>
+operation.grid.setDataCellValues(writes)
+println <span class="cs">"\\n✓ Merit applied | "</span>+employees.size()+<span class="cs">" employees | "</span>+writes.size()+<span class="cs">" cells | 1 network call"</span></div>
+</div>
+
+<!-- WF-5 -->
+<h2 id="wf5">WF-5 · Groovy Rules for Workforce</h2>
+<p>Workforce Groovy rules follow the same patterns as Financial Groovy but operate on <code>OEP_WFP</code> members. Key difference: you must <strong>explicitly target the WFP cube</strong> when operating in a dual-cube context.</p>
+
+<div class="code-wrap">
+  <div class="code-lbl">New Hire Cost Projection — Open Requisitions</div>
+  <div class="code-block"><button class="copy-btn" onclick="cpBtn(this)">Copy</button><span class="cc">// Project costs for all open requisitions based on hire month</span>
+<span class="ck">def</span> grid         = operation.grid
+<span class="ck">def</span> BENEFITS_LOAD = 0.28   <span class="cc">// 28% total benefits loading</span>
+<span class="ck">def</span> MONTHS        = [<span class="cs">"Jan"</span>,<span class="cs">"Feb"</span>,<span class="cs">"Mar"</span>,<span class="cs">"Apr"</span>,<span class="cs">"May"</span>,<span class="cs">"Jun"</span>,<span class="cs">"Jul"</span>,<span class="cs">"Aug"</span>,<span class="cs">"Sep"</span>,<span class="cs">"Oct"</span>,<span class="cs">"Nov"</span>,<span class="cs">"Dec"</span>]
+
+<span class="ck">def</span> openReqs = operation.application.getDimension(<span class="cs">"Employee"</span>)
+    .getMember(<span class="cs">"Open_Requisitions"</span>).getLevelZeroMembers()
+
+<span class="ck">def</span> writes=[]; <span class="ck">def</span> projected=0
+
+openReqs.each { req ->
+    <span class="ck">def</span> salary    = grid.getDataCell(<span class="cs">"Annual_Salary"</span>,req.getName(),<span class="cs">"BegBalance"</span>,<span class="cs">"FY2025"</span>,<span class="cs">"Budget"</span>,<span class="cs">"Working"</span>).data ?: 0
+    <span class="ck">def</span> hireMonth = grid.getDataCell(<span class="cs">"Hire_Month"</span>,   req.getName(),<span class="cs">"BegBalance"</span>,<span class="cs">"FY2025"</span>,<span class="cs">"Budget"</span>,<span class="cs">"Working"</span>).data
+
+    <span class="ck">if</span> (!salary || !hireMonth) { println <span class="cs">"SKIP: "</span>+req.getName()+" — no salary or hire month"; <span class="ck">return</span> }
+
+    <span class="ck">def</span> startIdx = MONTHS.indexOf(hireMonth.toString())
+    <span class="ck">if</span> (startIdx < 0) { println <span class="cs">"WARN: Invalid hire month: "</span>+hireMonth; <span class="ck">return</span> }
+
+    MONTHS.eachWithIndex { month,i ->
+        <span class="ck">def</span> active = i>=startIdx ? 1.0 : 0.0
+        writes << [req.getName(),<span class="cs">"Monthly_Salary"</span>,  month,<span class="cs">"FY2025"</span>,<span class="cs">"Budget"</span>,<span class="cs">"Working"</span>,(salary/12*active).round(2)]
+        writes << [req.getName(),<span class="cs">"Monthly_Benefits"</span>,month,<span class="cs">"FY2025"</span>,<span class="cs">"Budget"</span>,<span class="cs">"Working"</span>,(salary/12*BENEFITS_LOAD*active).round(2)]
+    }
+    println req.getName()+<span class="cs">": hire "</span>+hireMonth+<span class="cs">" · \$"</span>+salary+<span class="cs">" · "</span>+(12-startIdx)+<span class="cs">" months active"</span>
+    projected++
+}
+
+operation.grid.setDataCellValues(writes)
+println <span class="cs">"\\n✓ "</span>+projected+<span class="cs">" open reqs projected | "</span>+writes.size()+<span class="cs">" cells"</span></div>
+</div>
+
+<!-- WF-6 -->
+<h2 id="wf6">WF-6 · Workforce Reporting Patterns</h2>
+<p>Workforce reports pull from two cubes simultaneously: <code>OEP_WFP</code> for headcount detail and individual assumptions, and <code>OEP_FS</code> for aggregated financial impact. Smart Dashboard design crosses both.</p>
+
+<div class="tbl-wrap"><table class="dtbl">
+<tr><th>Report</th><th>Source Cube</th><th>Key Dimensions</th><th>Frequency</th></tr>
+<tr><td>Headcount Summary by Entity</td><td>OEP_WFP</td><td>Entity × Period × WF_Status</td><td>Real-time</td></tr>
+<tr><td>Fully-Loaded Cost by Dept</td><td>OEP_FS</td><td>Entity × HCP_Account × Period</td><td>On calc</td></tr>
+<tr><td>New Hire Ramp Schedule</td><td>OEP_WFP</td><td>Employee × Period (Open Reqs)</td><td>Weekly</td></tr>
+<tr><td>Merit Increase Impact</td><td>OEP_FS</td><td>Version comparison Before/After</td><td>Cycle</td></tr>
+<tr><td>Revenue per FTE Trend</td><td>Both cubes</td><td>Rev/HC ratio trend</td><td>Monthly</td></tr>
+</table></div>
+
+<div class="fpa-challenge">
+  <div class="fpa-badge">📊 FP&A Real-World Challenge</div>
+  <div class="fpa-title">CFO asks: "What is our fully-loaded cost per FTE by region vs. budget?"</div>
+  <p>Requires: (1) summing all HCP_Elements to get Fully_Loaded_FTE, (2) dividing by Average_Active_Headcount per period, (3) comparing Budget vs Actual versions, (4) presenting variance in the Board Pack. Your Groovy rule pre-calculates <code>Cost_Per_FTE</code> nightly via EPM Automate — the report then becomes a simple Smart View pull.</p>
+</div>
+
+<!-- WF-7 -->
+<h2 id="wf7">WF-7 · HCM Integration Patterns</h2>
+<p>The data flow between HR systems (Oracle HCM, Workday, SAP SuccessFactors) and EPBCS Workforce is the most failure-prone integration in the EPM stack. These four rules prevent 90% of production incidents.</p>
+
+<ul>
+  <li><strong>Never overwrite Budget with Actuals automatically.</strong> Use a dedicated <code>Actuals</code> scenario for HCM-sourced data. Planners own the Budget version.</li>
+  <li><strong>Map employee IDs as dimension members, not as data.</strong> Turnover means constant metadata refreshes — automate with <code>updateDimension</code> in EPM Automate.</li>
+  <li><strong>Handle terminations carefully.</strong> Terminated employees stay in the cube with zero cost going forward. Never delete mid-year — historical actuals need the member.</li>
+  <li><strong>Validate before load.</strong> Groovy pre-import validation (duplicate IDs, invalid org nodes, missing salary) saves hours of post-load debugging.</li>
+</ul>
+
+<div class="callout warn"><span class="ci">⚠</span><strong>Common failure mode:</strong> The 2am HCM extract hits a data quality issue (null salary, invalid department code). The DI load fails silently. Plan numbers are now stale but nobody notices until the 9am budget review. Fix: Groovy validation + EPM Automate email alerts on job failure status.</div>
+
+<h3>Nightly Workforce Load — EPM Automate Script</h3>
+<div class="code-wrap">
+  <div class="code-lbl">Shell Script — Nightly HCM to EPBCS Pipeline</div>
+  <div class="code-block"><button class="copy-btn" onclick="cpBtn(this)">Copy</button><span class="cc"># Vision Corp Nightly Workforce Load · Runs 02:30 UTC Mon–Fri</span>
+<span class="cm">epmautomate</span> login <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="681b1e0b370d1805281e011b0107060b071a18460b0705">[email&#160;protected]</a> $EPM_PWD \
+    https://planning-a123456.pbcs.us2.oraclecloud.com VisionCorp
+
+<span class="cc"># 1. Upload HCM extract files</span>
+<span class="cm">epmautomate</span> uploadFile HCM_Employee_Extract_$(date +%Y%m%d).csv
+<span class="cm">epmautomate</span> uploadFile HCM_Position_Extract_$(date +%Y%m%d).csv
+
+<span class="cc"># 2. Refresh metadata (new hires / terminations update Employee dimension)</span>
+<span class="cm">epmautomate</span> runDimBuild WF_Employee_DimBuild HCM_Employee_Extract_$(date +%Y%m%d).csv
+
+<span class="cc"># 3. Load actuals data via Data Integration</span>
+<span class="cm">epmautomate</span> runDataRule WF_HCM_Actuals_Load 01 $(date +%m) $(date +%Y) REPLACE
+
+<span class="cc"># 4. Run workforce calculations</span>
+<span class="cm">epmautomate</span> runBusinessRule OEP_CalculateWFP
+
+<span class="cc"># 5. Push results to financial summary cube</span>
+<span class="cm">epmautomate</span> runBusinessRule OEP_SyncWFP_To_FS
+
+<span class="cm">epmautomate</span> logout
+echo "✓ WF Load complete: $(date)"</div>
+</div>
+
+<!-- Checklist -->
+<div class="checklist">
+  <div class="cl-title">🏆 Workforce Planning Mastery Checklist</div>
+  <div class="cl-item" onclick="tick(this)"><div class="cl-box"></div><div class="cl-text">Understand OEP_WFP vs OEP_FS dual-cube architecture</div></div>
+  <div class="cl-item" onclick="tick(this)"><div class="cl-box"></div><div class="cl-text">Know the three planning modes and when to use each</div></div>
+  <div class="cl-item" onclick="tick(this)"><div class="cl-box"></div><div class="cl-text">Implement monthly salary calc with pro-ration for new hires</div></div>
+  <div class="cl-item" onclick="tick(this)"><div class="cl-box"></div><div class="cl-text">Build HCP_Element hierarchy covering all pay components</div></div>
+  <div class="cl-item" onclick="tick(this)"><div class="cl-box"></div><div class="cl-text">Write a merit increase Groovy rule using batch writes</div></div>
+  <div class="cl-item" onclick="tick(this)"><div class="cl-box"></div><div class="cl-text">Project open requisition costs with hire-month pro-ration</div></div>
+  <div class="cl-item" onclick="tick(this)"><div class="cl-box"></div><div class="cl-text">Design the headcount + fully-loaded cost reporting layer</div></div>
+  <div class="cl-item" onclick="tick(this)"><div class="cl-box"></div><div class="cl-text">Configure nightly HCM integration with EPM Automate</div></div>
+  <div class="cl-item" onclick="tick(this)"><div class="cl-box"></div><div class="cl-text">Implement pre-load validation guards (salary, org node, IDs)</div></div>
+  <div class="cl-item" onclick="tick(this)"><div class="cl-box"></div><div class="cl-text">Calculate Vision Corp's fully-loaded cost per FTE by region</div></div>
+</div>
+
+<!-- AI Tutor -->
+<div class="tutor-box">
+  <div class="tutor-hdr">
+    <div class="tutor-av">🧙</div>
+    <div><div class="tutor-nm">Oracle · AI Tutor</div><div class="tutor-rl">Workforce Planning Specialist · EPM 25.06+</div></div>
+  </div>
+  <div class="tutor-desc">Ask any Workforce Planning question — architecture, Groovy patterns, HCM integration, or FP&A design.</div>
+  <div class="chips">
+    <span class="chip" onclick="ask('What is the difference between Position-Based and Employee-Based workforce planning in EPBCS?')">Position vs Employee mode</span>
+    <span class="chip" onclick="ask('How do I handle mid-year terminations in EPBCS Workforce Planning without losing historical actuals?')">Handle terminations</span>
+    <span class="chip" onclick="ask('How do I sync OEP_WFP data to OEP_FS financial summary cube using a Groovy business rule?')">WFP → FS sync</span>
+    <span class="chip" onclick="ask('What are best practices for integrating Workday with EPBCS Workforce Planning?')">Workday integration</span>
+    <span class="chip" onclick="ask('How do I model variable short-term bonus compensation in EPBCS Workforce Planning?')">Model STI bonus</span>
+    <span class="chip" onclick="ask('What Groovy API calls are unique to Workforce Planning cube operations?')">Workforce Groovy APIs</span>
+  </div>
+  <div class="tutor-row">
+    <input class="tutor-input" id="wf-inp" type="text" placeholder="Ask about Workforce Planning...">
+    <button class="tutor-send" id="wf-send" onclick="sendTutor()">Consult Oracle ✦</button>
+  </div>
+  <div class="tutor-out" id="wf-out"></div>
+</div>
+
+<div class="nav-btns">
+  <a href="parts-6-9.html"  class="nav-btn">← Parts VI–IX</a>
+  <a href="rest-api.html"   class="nav-btn primary">REST API Cookbook →</a>
+</div>
+
+</div><!-- /lesson-wrap -->
+</div><!-- /main -->
+</div><!-- /shell -->
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+(function(){var s=document.getElementById('stars');for(var i=0;i<120;i++){var d=document.createElement('div');d.className='star';var z=Math.random()*2+.4;d.style.cssText='width:'+z+'px;height:'+z+'px;top:'+Math.random()*100+'%;left:'+Math.random()*100+'%;--d:'+(2+Math.random()*4)+'s;--delay:'+Math.random()*5+'s;--op:'+(0.2+Math.random()*0.5);s.appendChild(d);}})();
+
+function tick(el){const b=el.querySelector('.cl-box'),t=el.querySelector('.cl-text');b.classList.toggle('on');t.classList.toggle('done');b.innerHTML=b.classList.contains('on')?'✓':'';}
+
+function cpBtn(btn){const code=btn.closest('.code-block').innerText.replace('Copy','').trim();navigator.clipboard.writeText(code).then(()=>{btn.textContent='✓ Copied';setTimeout(()=>btn.textContent='Copy',1500);});}
+
+function ask(q){document.getElementById('wf-inp').value=q;sendTutor();}
+
+async function sendTutor(){
+  const inp=document.getElementById('wf-inp'),q=inp.value.trim();if(!q)return;
+  const send=document.getElementById('wf-send');send.disabled=true;
+  const out=document.getElementById('wf-out');
+  const uDiv=document.createElement('div');uDiv.className='tutor-msg user-msg';
+  uDiv.innerHTML='<div class="tutor-msg-lbl">You</div><div style="font-size:14px;line-height:1.7">'+q+'</div>';
+  out.appendChild(uDiv);
+  const aDiv=document.createElement('div');aDiv.className='tutor-msg ai-msg';
+  aDiv.innerHTML='<div class="tutor-msg-lbl">Oracle</div><div id="ai-body" style="font-size:14px;line-height:1.75;color:rgba(240,234,214,.28);font-style:italic">Consulting the workforce tomes...</div>';
+  out.appendChild(aDiv);inp.value='';out.scrollTop=out.scrollHeight;
+  const sys='You are Oracle — AI tutor for The Planning Quest, an EPBCS & Groovy learning platform. Expert in Oracle EPM Cloud Workforce Planning (OEP_WFP, OEP_FS), EPBCS/PBCS, Groovy scripting, HCM integration, and enterprise FP&A workforce management. Vision Corp is the practice company ($2.8B revenue, 354 employees, NA/EMEA/APAC/LATAM). Be concise and practical. Use code examples where helpful. Under 220 words.';
+  try{
+    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,system:sys,messages:[{role:'user',content:q}]})});
+    const d=await r.json();const txt=d.content?.[0]?.text||'No response.';
+    const body=aDiv.querySelector('#ai-body');body.style.cssText='font-size:14px;line-height:1.75;color:rgba(240,234,214,.72)';
+    body.innerHTML='';txt.split('\n').forEach(l=>{const p=document.createElement('p');p.style.cssText='margin:0 0 5px;font-size:14p
+<script src="branding.js"></script>
+</body>
+</html>

@@ -1,0 +1,1382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Engagement — Vision Corp Project · The Planning Quest</title>
+<meta name="description" content="Apply everything you've learned. Vision Corporation needs an EPBCS architect. You are that architect. The Engagement tests your judgment against a live implementation scenario.">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Crimson+Pro:ital,wght@0,400;0,500;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#07090e;--bg2:#0c0f18;--bg3:#111520;--bg4:#161c2a;
+  --gold:#d4a017;--goldLt:#f0c040;--goldDim:#5c4108;
+  --teal:#1fb8a8;--tealLt:#4dd9c8;
+  --purple:#7c3aed;--purpleLt:#a855f7;
+  --emerald:#059669;--emeraldLt:#10b981;
+  --sky:#0ea5e9;--skyLt:#38bdf8;
+  --red:#c0392b;--redLt:#e74c3c;
+  --amber:#d97706;--amberLt:#fbbf24;
+  --rose:#be185d;--roseLt:#f472b6;
+  --border:rgba(212,160,23,.15);
+  --white:#f0ead6;--dim:#5a6478;
+  --r:10px;--topbar:54px
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Crimson Pro',serif;background:var(--bg);color:var(--white);min-height:100vh;overflow-x:hidden}
+#stars{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+.star{position:absolute;border-radius:50%;background:white;animation:twinkle var(--d,3s) infinite var(--delay,0s)}
+@keyframes twinkle{0%,100%{opacity:.05}50%{opacity:var(--op,.6)}}
+@keyframes glow{0%,100%{text-shadow:0 0 20px rgba(212,160,23,.3)}50%{text-shadow:0 0 50px rgba(212,160,23,.55)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(212,160,23,.3)}50%{box-shadow:0 0 0 8px rgba(212,160,23,0)}}
+@keyframes slideIn{from{opacity:0;transform:translateX(-10px)}to{opacity:1;transform:none}}
+@keyframes curtainRise{from{opacity:0;transform:translateY(40px)}to{opacity:1;transform:none}}
+
+/* ── Topbar ── */
+#topbar{position:fixed;top:0;left:0;right:0;height:var(--topbar);background:rgba(7,9,14,.97);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 20px;gap:14px;z-index:200}
+.tb-home{font-family:'Cinzel',serif;font-size:13px;font-weight:700;color:var(--goldLt);text-decoration:none;display:flex;align-items:center;gap:9px;letter-spacing:.04em}
+.tb-dot{width:8px;height:8px;border-radius:50%;background:var(--tealLt);animation:pulse 2s infinite}
+.tb-sep{color:var(--goldDim)}
+.tb-current{font-family:'Cinzel',serif;font-size:11px;color:var(--gold);letter-spacing:.04em}
+.tb-tools{display:flex;gap:3px;margin-left:auto;overflow-x:auto;flex-shrink:0}
+.tb-tools::-webkit-scrollbar{display:none}
+.tb-tool{padding:4px 9px;border-radius:6px;border:1px solid var(--border);background:transparent;color:var(--dim);font-family:'Cinzel',serif;font-size:8.5px;font-weight:700;letter-spacing:.05em;cursor:pointer;transition:all .15s;text-transform:uppercase;text-decoration:none;display:inline-flex;align-items:center;white-space:nowrap}
+.tb-tool:hover{border-color:var(--gold);color:var(--gold);background:rgba(212,160,23,.06)}
+
+/* ── Layout ── */
+.eng-wrap{max-width:900px;margin:0 auto;padding:calc(var(--topbar) + 40px) 32px 100px;position:relative;z-index:1}
+
+/* ── Typography ── */
+h2{font-family:'Cinzel',serif;font-size:17px;font-weight:600;color:var(--goldLt);margin:32px 0 12px;letter-spacing:.03em}
+h3{font-family:'Cinzel',serif;font-size:13.5px;font-weight:600;color:var(--tealLt);margin:20px 0 8px;letter-spacing:.04em}
+p{font-size:15px;line-height:1.82;color:rgba(240,234,214,.78);margin-bottom:12px}
+strong{color:var(--white);font-weight:500}
+ul,ol{padding-left:20px;margin-bottom:12px}
+li{font-size:15px;line-height:1.78;color:rgba(240,234,214,.72);margin-bottom:4px}
+code{font-family:'JetBrains Mono',monospace;font-size:12px;background:rgba(255,255,255,.06);padding:2px 6px;border-radius:4px;color:var(--tealLt)}
+
+/* ── Hero ── */
+.eng-hero{text-align:center;padding:40px 0 32px;animation:curtainRise .8s ease}
+.eng-eyebrow{font-family:'Cinzel',serif;font-size:10px;font-weight:700;letter-spacing:.2em;color:var(--goldDim);text-transform:uppercase;margin-bottom:16px}
+.eng-title{font-family:'Cinzel',serif;font-size:38px;font-weight:900;color:var(--goldLt);line-height:1.15;margin-bottom:12px;animation:glow 4s infinite}
+.eng-subtitle{font-size:16px;color:rgba(240,234,214,.5);font-style:italic;max-width:580px;margin:0 auto 24px;line-height:1.7}
+.eng-divider{width:80px;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent);margin:0 auto 32px}
+
+/* ── Access tier banner ── */
+.tier-banner{border-radius:var(--r);padding:14px 20px;margin-bottom:32px;display:flex;align-items:center;gap:14px;font-size:13.5px;line-height:1.6}
+.tier-banner.anon{background:rgba(90,100,120,.07);border:1px solid rgba(90,100,120,.2);color:rgba(240,234,214,.55)}
+.tier-banner.google{background:rgba(31,184,168,.06);border:1px solid rgba(31,184,168,.2);color:rgba(240,234,214,.72)}
+.tier-banner.registered{background:rgba(212,160,23,.07);border:1px solid var(--border);color:rgba(240,234,214,.78)}
+.tier-icon{font-size:22px;flex-shrink:0}
+.tier-login-btn{margin-left:auto;flex-shrink:0;padding:8px 18px;font-family:'Cinzel',serif;font-size:10px;font-weight:700;letter-spacing:.06em;border-radius:8px;cursor:pointer;border:none;transition:all .15s;text-decoration:none;display:inline-block}
+.tier-login-btn.google-btn{background:white;color:#333}
+.tier-login-btn.register-btn{background:linear-gradient(135deg,var(--gold),var(--amber));color:var(--bg)}
+
+/* ── Section ── */
+.eng-section{animation:fadeUp .4s ease;margin-bottom:40px}
+
+/* ── Dossier / Situation Brief ── */
+.dossier{background:linear-gradient(135deg,rgba(12,15,24,.97),rgba(17,21,32,.93));border:1px solid rgba(212,160,23,.2);border-left:4px solid var(--gold);border-radius:0 14px 14px 0;padding:28px 32px;margin-bottom:28px}
+.dossier-lbl{font-family:'Cinzel',serif;font-size:9px;font-weight:700;letter-spacing:.15em;color:var(--gold);text-transform:uppercase;margin-bottom:6px}
+.dossier-title{font-family:'Cinzel',serif;font-size:18px;font-weight:700;color:var(--white);margin-bottom:16px}
+.dossier p{font-size:14.5px;color:rgba(240,234,214,.72);line-height:1.85;margin-bottom:10px}
+.dossier p:last-child{margin-bottom:0}
+
+/* ── Fact grid ── */
+.fact-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin:16px 0}
+.fact-card{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:12px 16px}
+.fact-lbl{font-family:'Cinzel',serif;font-size:9px;font-weight:700;letter-spacing:.08em;color:var(--dim);text-transform:uppercase;margin-bottom:4px}
+.fact-val{font-size:14px;color:var(--white);font-weight:500;line-height:1.4}
+
+/* ── Risk register ── */
+.risk-table{width:100%;border-collapse:collapse;font-size:13px;margin:16px 0}
+.risk-table th{background:rgba(192,57,43,.08);color:var(--redLt);padding:9px 13px;text-align:left;font-family:'Cinzel',serif;font-size:9.5px;letter-spacing:.06em;border-bottom:1px solid rgba(192,57,43,.2)}
+.risk-table td{padding:10px 13px;border-bottom:1px solid rgba(255,255,255,.04);color:rgba(240,234,214,.65);vertical-align:top;line-height:1.5}
+.risk-table tr:last-child td{border-bottom:none}
+.risk-table tr:hover td{background:rgba(255,255,255,.015)}
+.risk-pill{display:inline-block;padding:2px 8px;border-radius:8px;font-family:'Cinzel',serif;font-size:8px;font-weight:700;letter-spacing:.05em;text-transform:uppercase}
+.risk-high{background:rgba(192,57,43,.12);border:1px solid rgba(192,57,43,.3);color:var(--redLt)}
+.risk-med{background:rgba(217,119,6,.1);border:1px solid rgba(217,119,6,.25);color:var(--amberLt)}
+.risk-ref{font-family:'Cinzel',serif;font-size:8.5px;color:var(--tealLt);letter-spacing:.04em}
+
+/* ── Persona cards ── */
+.personas{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;margin:20px 0}
+.persona-card{background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:18px 20px;transition:border-color .15s}
+.persona-card:hover{border-color:rgba(212,160,23,.3)}
+.persona-header{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+.persona-avatar{width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Cinzel',serif;font-size:16px;font-weight:700;flex-shrink:0}
+.persona-name{font-family:'Cinzel',serif;font-size:12px;font-weight:700;color:var(--white);letter-spacing:.03em}
+.persona-role{font-size:11px;color:var(--dim);margin-top:2px}
+.persona-concern{font-size:13px;color:rgba(240,234,214,.62);line-height:1.7;font-style:italic;border-left:2px solid rgba(212,160,23,.2);padding-left:12px}
+.persona-tag{display:inline-block;font-family:'Cinzel',serif;font-size:8px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:2px 8px;border-radius:8px;margin-top:10px}
+
+/* ── Stakeholder challenge ── */
+.challenge-block{background:var(--bg3);border:1px solid var(--border);border-radius:12px;margin-bottom:16px;overflow:hidden;transition:border-color .15s}
+.challenge-block:hover{border-color:rgba(212,160,23,.25)}
+.challenge-header{display:flex;align-items:center;gap:14px;padding:16px 20px;cursor:pointer}
+.challenge-persona-dot{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Cinzel',serif;font-size:13px;font-weight:700;flex-shrink:0}
+.challenge-meta{flex:1}
+.challenge-from{font-family:'Cinzel',serif;font-size:9px;font-weight:700;letter-spacing:.08em;color:var(--dim);text-transform:uppercase;margin-bottom:2px}
+.challenge-question{font-family:'Cinzel',serif;font-size:13px;font-weight:600;color:var(--white);line-height:1.4}
+.challenge-expand{color:var(--dim);font-size:12px;transition:transform .2s;flex-shrink:0}
+.challenge-block.open .challenge-expand{transform:rotate(180deg)}
+.challenge-body{display:none;padding:0 20px 20px}
+.challenge-block.open .challenge-body{display:block}
+.challenge-context{font-size:13.5px;color:rgba(240,234,214,.62);line-height:1.78;margin-bottom:14px;padding:12px 16px;background:var(--bg4);border-radius:8px;border-left:2px solid rgba(212,160,23,.2)}
+.challenge-skills{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px}
+.skill-tag{font-family:'Cinzel',serif;font-size:8.5px;font-weight:700;letter-spacing:.05em;padding:3px 9px;border-radius:8px;border:1px solid var(--border);color:var(--dim);text-transform:uppercase}
+
+/* ── Response area ── */
+.response-area{margin-top:12px}
+.response-label{font-family:'Cinzel',serif;font-size:9px;font-weight:700;letter-spacing:.1em;color:var(--teal);text-transform:uppercase;margin-bottom:6px}
+.response-textarea{width:100%;min-height:120px;padding:12px 16px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:8px;color:var(--white);font-size:14px;font-family:'Crimson Pro',serif;line-height:1.7;outline:none;transition:border-color .15s;resize:vertical}
+.response-textarea:focus{border-color:var(--teal)}
+.response-textarea::placeholder{color:rgba(255,255,255,.18)}
+.response-actions{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;align-items:center}
+.submit-btn{padding:9px 20px;background:linear-gradient(135deg,var(--teal),var(--sky));color:var(--bg);border:none;border-radius:8px;font-family:'Cinzel',serif;font-size:10.5px;font-weight:700;letter-spacing:.05em;cursor:pointer;transition:opacity .15s}
+.submit-btn:hover{opacity:.85}
+.submit-btn:disabled{opacity:.4;cursor:not-allowed}
+.hint-btn{padding:9px 16px;background:transparent;border:1px solid rgba(31,184,168,.2);color:var(--tealLt);border-radius:8px;font-family:'Cinzel',serif;font-size:10px;font-weight:700;letter-spacing:.05em;cursor:pointer;transition:all .15s}
+.hint-btn:hover{background:rgba(31,184,168,.06)}
+.anon-lock{display:flex;align-items:center;gap:8px;font-size:12.5px;color:rgba(240,234,214,.3);font-style:italic;margin-top:8px}
+.eval-out{margin-top:14px;background:var(--bg4);border:1px solid rgba(255,255,255,.05);border-radius:8px;padding:14px 18px;font-size:14px;line-height:1.78;color:rgba(240,234,214,.72);display:none}
+.eval-out.show{display:block;animation:fadeUp .2s ease}
+
+/* ── Build Decision Map ── */
+.decision-card{background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:20px 24px;margin-bottom:14px;transition:border-color .15s}
+.decision-card:hover{border-color:rgba(124,58,237,.3)}
+.decision-num{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--purple);margin-bottom:4px}
+.decision-title{font-family:'Cinzel',serif;font-size:14px;font-weight:600;color:var(--white);margin-bottom:8px}
+.decision-scenario{font-size:13.5px;color:rgba(240,234,214,.62);line-height:1.72;margin-bottom:12px}
+.decision-skills{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:12px}
+.decision-options{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+.decision-opt{padding:10px 14px;background:var(--bg4);border:1px solid var(--border);border-radius:8px;font-size:13px;color:rgba(240,234,214,.6);cursor:pointer;transition:all .15s;line-height:1.5}
+.decision-opt:hover{border-color:rgba(124,58,237,.3);color:rgba(240,234,214,.85)}
+.decision-opt.selected{border-color:var(--purple);background:rgba(124,58,237,.08);color:var(--white)}
+.decision-reasoning{margin-top:8px}
+
+/* ── SDLC Layout — vertical stepper left, decisions right ── */
+.sdlc-wrap{display:grid;grid-template-columns:220px 1fr;gap:24px;align-items:start;margin-top:20px}
+.sdlc-stepper{position:sticky;top:calc(var(--topbar,54px) + 16px);background:var(--bg3);border:1px solid var(--border);border-radius:12px;overflow:hidden}
+.sdlc-stepper-hdr{padding:12px 16px 10px;font-family:'Cinzel',serif;font-size:9px;font-weight:700;letter-spacing:.1em;color:var(--goldDim);text-transform:uppercase;border-bottom:1px solid rgba(255,255,255,.04)}
+.sdlc-step{display:flex;align-items:flex-start;gap:12px;padding:11px 14px;cursor:pointer;border-bottom:1px solid rgba(255,255,255,.03);transition:all .15s;border-left:3px solid transparent}
+.sdlc-step:last-child{border-bottom:none}
+.sdlc-step:hover{background:rgba(212,160,23,.03)}
+.sdlc-step.active{background:rgba(124,58,237,.06);border-left-color:var(--purpleLt)}
+.sdlc-step.complete{border-left-color:var(--emeraldLt)}
+.sdlc-step.active.complete{background:rgba(5,150,105,.05);border-left-color:var(--emeraldLt)}
+.ss-icon{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;flex-shrink:0;background:var(--bg4);border:1px solid var(--border);color:var(--dim);transition:all .15s;margin-top:1px}
+.sdlc-step.active .ss-icon{background:rgba(124,58,237,.15);border-color:rgba(124,58,237,.4);color:var(--purpleLt)}
+.sdlc-step.complete .ss-icon{background:rgba(5,150,105,.12);border-color:rgba(5,150,105,.35);color:var(--emeraldLt)}
+.ss-body{min-width:0;flex:1}
+.ss-name{font-family:'Cinzel',serif;font-size:10.5px;font-weight:600;color:var(--dim);letter-spacing:.02em;line-height:1.3;transition:color .15s}
+.sdlc-step:hover .ss-name{color:rgba(240,234,214,.65)}
+.sdlc-step.active .ss-name{color:var(--purpleLt)}
+.sdlc-step.complete .ss-name{color:var(--emeraldLt)}
+.ss-meta{font-size:10px;color:rgba(240,234,214,.25);margin-top:2px;font-family:'Cinzel',serif;letter-spacing:.02em}
+.sdlc-step.active .ss-meta{color:rgba(164,133,247,.5)}
+.ss-check{font-size:11px;color:var(--emeraldLt);margin-left:auto;flex-shrink:0;opacity:0;transition:opacity .2s}
+.sdlc-step.complete .ss-check{opacity:1}
+
+/* ── Decision cards column ── */
+.sdlc-decisions{min-width:0}
+.sdlc-context-strip{background:var(--bg4);border:1px solid rgba(124,58,237,.18);border-radius:10px;padding:14px 18px;margin-bottom:20px}
+.scs-phase{font-family:'Cinzel',serif;font-size:9px;font-weight:700;letter-spacing:.1em;color:var(--purpleLt);text-transform:uppercase;display:block;margin-bottom:4px}
+.scs-desc{font-size:13px;color:rgba(240,234,214,.5);line-height:1.65}
+
+/* ── Decision card SDLC-aware ── */
+.decision-card{background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:20px 24px;margin-bottom:14px;transition:all .25s;position:relative}
+.decision-card.spotlit{border-color:rgba(124,58,237,.45);background:rgba(124,58,237,.035);box-shadow:0 2px 16px rgba(124,58,237,.07)}
+.decision-card.dimmed{opacity:.32;pointer-events:none}
+.decision-card.done{border-color:rgba(5,150,105,.28)}
+.decision-card.done.spotlit{border-color:rgba(5,150,105,.45);background:rgba(5,150,105,.04)}
+.dec-phase-badge{display:inline-flex;align-items:center;gap:5px;font-family:'Cinzel',serif;font-size:8px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;padding:2px 9px;border-radius:8px;background:rgba(124,58,237,.1);border:1px solid rgba(124,58,237,.2);color:var(--purpleLt);margin-bottom:8px}
+.dec-phase-cost{font-size:11px;color:rgba(240,234,214,.28);font-style:italic;margin-top:6px;padding-top:8px;border-top:1px solid rgba(255,255,255,.04)}
+.decision-complete-mark{position:absolute;top:14px;right:16px;width:22px;height:22px;border-radius:50%;background:var(--emerald);display:none;align-items:center;justify-content:center;font-size:12px;color:white}
+.decision-card.done .decision-complete-mark{display:flex}
+
+/* ── Responsive — mobile collapses to pill row ── */
+@media(max-width:780px){
+  .sdlc-wrap{grid-template-columns:1fr;gap:16px}
+  .sdlc-stepper{position:static;display:flex;flex-direction:row;overflow-x:auto;border-radius:10px}
+  .sdlc-stepper-hdr{display:none}
+  .sdlc-step{border-bottom:none;border-left:none!important;border-bottom:3px solid transparent;padding:10px 14px;flex-direction:column;align-items:center;text-align:center;gap:6px;min-width:80px;flex-shrink:0}
+  .sdlc-step.active{border-bottom-color:var(--purpleLt);background:rgba(124,58,237,.06)}
+  .sdlc-step.complete{border-bottom-color:var(--emeraldLt)}
+  .ss-icon{width:24px;height:24px;font-size:9px}
+  .ss-name{font-size:9px}
+  .ss-meta,.ss-check{display:none}
+  .sdlc-decisions{min-width:0}
+}
+
+
+/* ── Signal / Evaluation result ── */
+.signal-panel{background:linear-gradient(135deg,rgba(31,184,168,.08),rgba(7,9,14,.97));border:1px solid rgba(31,184,168,.25);border-radius:14px;padding:28px 32px;margin-top:32px;display:none}
+.signal-panel.show{display:block;animation:curtainRise .5s ease}
+.signal-title{font-family:'Cinzel',serif;font-size:20px;font-weight:700;color:var(--tealLt);margin-bottom:6px}
+.signal-sub{font-size:13px;color:var(--dim);margin-bottom:24px}
+.radar-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin:20px 0}
+.radar-item{background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:14px 16px}
+.radar-dim{font-family:'Cinzel',serif;font-size:9px;font-weight:700;letter-spacing:.08em;color:var(--dim);text-transform:uppercase;margin-bottom:8px}
+.radar-bar-wrap{height:6px;background:rgba(255,255,255,.06);border-radius:3px;overflow:hidden;margin-bottom:4px}
+.radar-bar{height:100%;background:linear-gradient(90deg,var(--teal),var(--goldLt));border-radius:3px;transition:width 1s ease}
+.radar-score{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--goldLt)}
+.signal-narrative{background:var(--bg4);border-radius:10px;padding:16px 20px;font-size:14.5px;color:rgba(240,234,214,.72);line-height:1.82;margin:20px 0}
+
+/* ── Portfolio panel (registered) ── */
+.portfolio-panel{background:linear-gradient(135deg,rgba(212,160,23,.08),rgba(124,58,237,.06),rgba(7,9,14,.98));border:1px solid var(--border);border-radius:14px;padding:24px 28px;margin-top:20px;display:none}
+.portfolio-panel.show{display:block}
+.portfolio-title{font-family:'Cinzel',serif;font-size:16px;font-weight:700;color:var(--goldLt);margin-bottom:6px}
+.portfolio-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+.port-btn{padding:10px 22px;font-family:'Cinzel',serif;font-size:11px;font-weight:700;letter-spacing:.05em;border-radius:8px;cursor:pointer;transition:all .15s;border:none}
+.port-btn.primary{background:linear-gradient(135deg,var(--gold),var(--amber));color:var(--bg)}
+.port-btn.secondary{background:transparent;border:1px solid var(--border);color:rgba(240,234,214,.5)}
+.port-btn:hover{opacity:.85}
+
+/* ── Callouts ── */
+.callout{border-radius:var(--r);padding:14px 18px;margin:16px 0;font-size:14px;line-height:1.72}
+.tip{background:rgba(5,150,105,.07);border:1px solid rgba(5,150,105,.22);color:rgba(240,234,214,.72)}
+.warn{background:rgba(217,119,6,.07);border:1px solid rgba(217,119,6,.25);color:rgba(240,234,214,.72)}
+.ci{font-size:15px;margin-right:7px}
+
+/* ── Progress tracker ── */
+.progress-bar-wrap{background:rgba(255,255,255,.04);border-radius:4px;height:6px;margin:20px 0;overflow:hidden}
+.progress-bar{height:100%;background:linear-gradient(90deg,var(--teal),var(--goldLt));border-radius:4px;transition:width .5s ease;width:0%}
+.progress-label{font-family:'Cinzel',serif;font-size:10px;color:var(--dim);letter-spacing:.06em;margin-bottom:6px}
+
+/* ── Nav ── */
+.eng-nav{display:flex;justify-content:space-between;align-items:center;margin-top:48px;padding-top:20px;border-top:1px solid var(--border)}
+.nav-btn{padding:10px 22px;font-family:'Cinzel',serif;font-size:11.5px;font-weight:600;letter-spacing:.05em;border-radius:8px;cursor:pointer;transition:all .15s;border:1px solid var(--border);background:transparent;color:rgba(240,234,214,.4);text-decoration:none;display:inline-block}
+.nav-btn:hover{border-color:var(--teal);color:var(--tealLt)}
+.nav-btn.primary{background:linear-gradient(135deg,var(--teal),var(--sky));color:var(--bg);border-color:transparent}
+.nav-btn.gold{background:linear-gradient(135deg,var(--gold),#d97706);color:var(--bg);border-color:transparent}
+
+/* ── Responsive ── */
+@media(max-width:640px){
+  .eng-wrap{padding:calc(var(--topbar) + 24px) 16px 80px}
+  .eng-title{font-size:28px}
+  .personas{grid-template-columns:1fr}
+  .decision-options{grid-template-columns:1fr}
+  .radar-grid{grid-template-columns:1fr 1fr}
+}
+
+/* ── Phase nav ── */
+.phase-nav{display:flex;gap:0;border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:32px}
+.phase-tab{flex:1;padding:11px 8px;font-family:'Cinzel',serif;font-size:9.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;cursor:pointer;background:transparent;border:none;color:var(--dim);transition:all .15s;border-right:1px solid var(--border);text-align:center}
+.phase-tab:last-child{border-right:none}
+.phase-tab:hover{background:rgba(255,255,255,.02);color:var(--goldLt)}
+.phase-tab.active{background:rgba(212,160,23,.08);color:var(--goldLt)}
+.phase-panel{display:none}.phase-panel.active{display:block;animation:fadeUp .25s ease}
+
+/* ── Stamp ── */
+.complete-stamp{display:inline-flex;align-items:center;gap:8px;background:rgba(5,150,105,.1);border:1px solid rgba(5,150,105,.3);border-radius:20px;padding:5px 14px;font-family:'Cinzel',serif;font-size:10px;color:var(--emeraldLt);letter-spacing:.06em}
+</style>
+</head>
+<body>
+<div id="stars"></div>
+
+<div id="topbar">
+  <a href="index.html" class="tb-home"><span class="tb-dot"></span>The Planning Quest</a>
+  <span class="tb-sep">›</span>
+  <span class="tb-current">The Engagement</span>
+  <div class="tb-tools">
+    <a href="parts-1-3.html" class="tb-tool">📖 I–III</a>
+    <a href="parts-4-5.html" class="tb-tool">⚔ IV–V</a>
+    <a href="parts-6-9.html" class="tb-tool">👑 VI–IX</a>
+    <a href="groovy-ch1.html" class="tb-tool">📘 Gr.I</a>
+    <a href="groovy-ch2.html" class="tb-tool">⚡ Gr.II</a>
+    <a href="essbase-kernel.html" class="tb-tool">⚙ Kernel</a>
+    <a href="labs.html" class="tb-tool">🔬 Labs</a>
+    <a href="whats-new.html" class="tb-tool">🆕 New</a>
+  </div>
+</div>
+
+<div class="eng-wrap">
+
+  <!-- Hero -->
+  <div class="eng-hero">
+    <div class="eng-eyebrow">The Engagement · Vision Corporation · FY2026</div>
+    <h1 class="eng-title">The Curtain Rises</h1>
+    <p class="eng-subtitle">You have built the knowledge. Now a real implementation needs it. Vision Corporation has a mandate, a budget, a deadline — and five stakeholders who will each challenge a different dimension of your expertise.</p>
+    <div class="eng-divider"></div>
+    <div id="tier-display"></div>
+  </div>
+
+  <!-- Phase navigation -->
+  <div class="phase-nav">
+    <button class="phase-tab active" onclick="switchPhase('brief',this)">📋 The Brief</button>
+    <button class="phase-tab" onclick="switchPhase('team',this)">👥 The Team</button>
+    <button class="phase-tab" onclick="switchPhase('challenges',this)">⚡ Stakeholder Challenges</button>
+    <button class="phase-tab" onclick="switchPhase('decisions',this)">🏗 Build Decisions</button>
+    <button class="phase-tab" onclick="switchPhase('signal',this)" id="signal-tab">🎯 Your Signal</button>
+  </div>
+
+  <!-- ═══════════════════════════════════════
+       PHASE 1 — THE BRIEF
+  ═══════════════════════════════════════ -->
+  <div id="phase-brief" class="phase-panel active">
+
+    <div class="dossier">
+      <div class="dossier-lbl">Project Brief · Confidential · Vision Corporation</div>
+      <div class="dossier-title">The Genesis Protocol — EPBCS Implementation Mandate</div>
+      <p>Vision Corporation has operated on a patchwork of 14 disconnected Excel models for the past seven years. Three weeks ago, a broken cell reference in the Master Budget file caused $500K in misallocated inventory costs to flow into the Q3 board pack undetected. The error was discovered two hours before the board presentation.</p>
+      <p>The CFO has secured board approval for an Oracle EPBCS implementation. The mandate is clear: a single source of truth for planning, budgeting, and forecasting — live by the first of November for the FY2026 budget cycle. The implementation partner has been selected. The project team has been assembled. You are the lead architect.</p>
+      <p>This is not a proof of concept. It is not a pilot. On November 1st, 14 department managers across 12 entities in 6 countries will open EPBCS and enter their FY2026 budgets. Everything you design in the next 90 days determines whether that morning is a triumph or a crisis.</p>
+    </div>
+
+    <h2>Vision Corporation — The Numbers</h2>
+    <div class="fact-grid">
+      <div class="fact-card"><div class="fact-lbl">Annual Revenue</div><div class="fact-val">$2.8B across 4 segments</div></div>
+      <div class="fact-card"><div class="fact-lbl">Legal Entities</div><div class="fact-val">12 entities, 6 countries</div></div>
+      <div class="fact-card"><div class="fact-lbl">Currencies</div><div class="fact-val">USD, EUR, GBP, JPY, AUD, CAD</div></div>
+      <div class="fact-card"><div class="fact-lbl">Employees</div><div class="fact-val">4,200 headcount globally</div></div>
+      <div class="fact-card"><div class="fact-lbl">Planning Users</div><div class="fact-val">14 department managers</div></div>
+      <div class="fact-card"><div class="fact-lbl">Go-Live Deadline</div><div class="fact-val">November 1st — immovable</div></div>
+      <div class="fact-card"><div class="fact-lbl">Fiscal Year</div><div class="fact-val">January–December, monthly</div></div>
+      <div class="fact-card"><div class="fact-lbl">EPM Release</div><div class="fact-val">Oracle EPM 25.10+</div></div>
+    </div>
+
+    <h2>What Has Already Been Decided</h2>
+    <p>Some decisions have been made before you arrived. They are not negotiable. Understand them — they shape every architectural choice you make.</p>
+    <ul>
+      <li><strong>Financial Planning module</strong> — confirmed. Strategic Modeling will follow in Phase 2.</li>
+      <li><strong>Workforce Planning (OEP_WFP)</strong> — in scope. Headcount-driven cost cascade required from Day 1.</li>
+      <li><strong>Monthly granularity</strong> — base time period is Monthly. This cannot be changed after application creation.</li>
+      <li><strong>Fiscal year start: January</strong> — confirmed. Misaligning this is a project-killer.</li>
+      <li><strong>Multi-currency: enabled</strong> — Vision has 6 currencies. This must be on before any data enters the cube.</li>
+      <li><strong>Data source: SAP ERP</strong> — actuals load nightly via Data Integration. No manual imports in production.</li>
+      <li><strong>Forms 2.0</strong> — EPM 25.10 mandates it. No classic form development permitted.</li>
+    </ul>
+
+    <h2>The Risk Register — What Could Break This Project</h2>
+    <p>Eight risks have been formally identified. Each maps to a capability you have studied. Your architecture must address every one of them.</p>
+    <div style="overflow-x:auto;border-radius:var(--r);border:1px solid rgba(192,57,43,.2)">
+    <table class="risk-table">
+      <thead><tr><th>Risk</th><th>Probability</th><th>Impact</th><th>Maps To</th></tr></thead>
+      <tbody>
+        <tr><td>Block explosion during FY2026 seeding run — 6hr database outage at prior Vision implementation</td><td><span class="risk-pill risk-high">High</span></td><td><span class="risk-pill risk-high">Critical</span></td><td><span class="risk-ref">NODE s — Essbase Kernel</span></td></tr>
+        <tr><td>Groovy allocation rule misses nightly batch window — planners arrive to stale numbers</td><td><span class="risk-pill risk-high">High</span></td><td><span class="risk-pill risk-high">High</span></td><td><span class="risk-ref">Groovy Ch II — Performance</span></td></tr>
+        <tr><td>Forms 2.0 Apply Context not configured — entity selector in Grid A does not update Grid B</td><td><span class="risk-pill risk-high">High</span></td><td><span class="risk-pill risk-med">Medium</span></td><td><span class="risk-ref">Forms 2.0 — Part IV L11</span></td></tr>
+        <tr><td>DI job schedules silently deleted after 25.09 upgrade — nightly actuals load stops running</td><td><span class="risk-pill risk-high">High</span></td><td><span class="risk-pill risk-high">Critical</span></td><td><span class="risk-ref">What's New 25.09</span></td></tr>
+        <tr><td>Approval deadlock — 3 entities stuck Under Review 48 hours before budget cycle closes</td><td><span class="risk-pill risk-med">Medium</span></td><td><span class="risk-pill risk-high">High</span></td><td><span class="risk-ref">Part VI — Workflow & Security</span></td></tr>
+        <tr><td>RTP type casting error — Year parameter returns String, calculation produces "20252" not 2026</td><td><span class="risk-pill risk-high">High</span></td><td><span class="risk-pill risk-med">Medium</span></td><td><span class="risk-ref">Groovy Ch I — Type Safety</span></td></tr>
+        <tr><td>SAP actuals load — no reconciliation control, bad data enters cube silently for 3 days</td><td><span class="risk-pill risk-med">Medium</span></td><td><span class="risk-pill risk-high">Critical</span></td><td><span class="risk-ref">Lab 5 — ERP Integration</span></td></tr>
+        <tr><td>Dense/sparse misconfiguration — block size exceeds 500KB, form opens degrade to 45+ seconds</td><td><span class="risk-pill risk-med">Medium</span></td><td><span class="risk-pill risk-high">High</span></td><td><span class="risk-ref">NODE s — Block Size</span></td></tr>
+      </tbody>
+    </table>
+    </div>
+
+    <div class="callout tip"><span class="ci">💡</span><strong>How to use the Risk Register:</strong> Every architectural decision you make in The Engagement should consciously address one or more of these risks. When Tobias asks you about the FY2026 seeding strategy, he is asking about Risk 1. When Nkechi asks about the reconciliation control, she is asking about Risk 7. The risks are not abstract — they are the specific ways this project will fail if your architecture is wrong.</div>
+
+    <div class="eng-nav">
+      <span></span>
+      <button class="nav-btn primary" onclick="switchPhase('team', document.querySelector('[onclick*=team]'))">Meet the Team →</button>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════
+       PHASE 2 — THE TEAM
+  ═══════════════════════════════════════ -->
+  <div id="phase-team" class="phase-panel">
+
+    <div class="dossier">
+      <div class="dossier-lbl">Stakeholder Briefing</div>
+      <div class="dossier-title">Five People. Five Perspectives. One Project.</div>
+      <p>These are the people you will work with and answer to for the next 90 days. Each carries a specific professional tension. Each will challenge you in the area where their experience is deepest. Learn their concerns before they raise them.</p>
+    </div>
+
+    <div class="personas">
+      <div class="persona-card">
+        <div class="persona-header">
+          <div class="persona-avatar" style="background:linear-gradient(135deg,rgba(212,160,23,.2),rgba(212,160,23,.08));color:var(--goldLt);border:1px solid rgba(212,160,23,.3)">AM</div>
+          <div><div class="persona-name">Arjun Mehta</div><div class="persona-role">CFO, Vision Corporation</div></div>
+        </div>
+        <p class="persona-concern">"I rose through FP&A, not accounting. I understand models — which means I know exactly how they fail. I've signed off on two EPM implementations in my career. Neither delivered what was promised at go-live. This time, I am not interested in what the system can do in a demo. I want to know what happens at 11pm on the last day of budget cycle when 14 managers are all submitting simultaneously."</p>
+        <span class="persona-tag" style="background:rgba(212,160,23,.1);border:1px solid rgba(212,160,23,.2);color:var(--goldLt)">Auditability · Reliability · Close Cycle</span>
+      </div>
+
+      <div class="persona-card">
+        <div class="persona-header">
+          <div class="persona-avatar" style="background:linear-gradient(135deg,rgba(31,184,168,.15),rgba(31,184,168,.06));color:var(--tealLt);border:1px solid rgba(31,184,168,.25)">ST</div>
+          <div><div class="persona-name">Sione Tuilagi</div><div class="persona-role">Implementation Director</div></div>
+        </div>
+        <p class="persona-concern">"Four Oracle EPM implementations. I know exactly where every project breaks — and it's never where the consultant expects. It's always the thing that worked perfectly in dev and silently failed in prod at 3am. My job is to make sure you've thought about failure before it happens, not after. I don't get excited about features. I get excited about foundations."</p>
+        <span class="persona-tag" style="background:rgba(31,184,168,.08);border:1px solid rgba(31,184,168,.2);color:var(--tealLt)">Architecture · Risk · Production Stability</span>
+      </div>
+
+      <div class="persona-card">
+        <div class="persona-header">
+          <div class="persona-avatar" style="background:linear-gradient(135deg,rgba(190,24,93,.15),rgba(190,24,93,.06));color:var(--roseLt);border:1px solid rgba(190,24,93,.25)">CR</div>
+          <div><div class="persona-name">Camille Renard</div><div class="persona-role">Finance Business Partner, Vision US</div></div>
+        </div>
+        <p class="persona-concern">"Twelve years in FP&A. I built those Excel models you're replacing. I know every formula assumption, every workaround, every edge case — because I wrote them. I'm not resistant to this. I'm protective of the planning process I've spent a decade refining. If EPBCS can't handle our rolling forecast the way I've designed it, we haven't solved anything. We've just moved the problem."</p>
+        <span class="persona-tag" style="background:rgba(190,24,93,.08);border:1px solid rgba(190,24,93,.2);color:var(--roseLt)">Forms · Rolling Forecast · User Experience</span>
+      </div>
+
+      <div class="persona-card">
+        <div class="persona-header">
+          <div class="persona-avatar" style="background:linear-gradient(135deg,rgba(124,58,237,.15),rgba(124,58,237,.06));color:var(--purpleLt);border:1px solid rgba(124,58,237,.25)">TW</div>
+          <div><div class="persona-name">Tobias Wren</div><div class="persona-role">Lead Technical Architect</div></div>
+        </div>
+        <p class="persona-concern">"Fifteen years. Started as a financial analyst, ended up in the engine room. I think in block sizes and FIX scopes. I don't use technical language to impress — I use it because it's precise. The dimension design you propose in Week 2 will still be running this system in 2031. Get it wrong and you'll spend the next five years explaining to auditors why the numbers don't reconcile."</p>
+        <span class="persona-tag" style="background:rgba(124,58,237,.1);border:1px solid rgba(124,58,237,.2);color:var(--purpleLt)">Essbase · Groovy · Dimension Design</span>
+      </div>
+
+      <div class="persona-card">
+        <div class="persona-header">
+          <div class="persona-avatar" style="background:linear-gradient(135deg,rgba(14,165,233,.15),rgba(14,165,233,.06));color:var(--skyLt);border:1px solid rgba(14,165,233,.25)">NA</div>
+          <div><div class="persona-name">Nkechi Adeyemi</div><div class="persona-role">Data Integration Lead</div></div>
+        </div>
+        <p class="persona-concern">"I came from SAP consulting. I've seen every integration pattern — and every integration failure. My obsession is reconciliation. If what's in EPBCS doesn't match what came out of SAP, nothing else matters. Not the forms, not the dashboards, not the Groovy automation. Numbers that don't tie to the source are worse than no numbers at all — at least blank cells don't get presented to the board."</p>
+        <span class="persona-tag" style="background:rgba(14,165,233,.08);border:1px solid rgba(14,165,233,.2);color:var(--skyLt)">Data Integration · Reconciliation · SAP</span>
+      </div>
+    </div>
+
+    <div class="callout warn"><span class="ci">⚠</span><strong>Before you proceed:</strong> Each stakeholder in Phase 3 will raise a challenge that draws directly on specific modules you've studied. Camille's question maps to your Forms 2.0 knowledge. Tobias's question maps to the Essbase Kernel. Nkechi's question maps to Lab 5. If any area feels unfinished, now is the time to revisit those lessons before the challenges open.</div>
+
+    <div class="eng-nav">
+      <button class="nav-btn" onclick="switchPhase('brief', document.querySelector('[onclick*=brief]'))">← The Brief</button>
+      <button class="nav-btn primary" onclick="switchPhase('challenges', document.querySelector('[onclick*=challenges]'))">Face the Challenges →</button>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════
+       PHASE 3 — STAKEHOLDER CHALLENGES
+  ═══════════════════════════════════════ -->
+  <div id="phase-challenges" class="phase-panel">
+
+    <div class="dossier">
+      <div class="dossier-lbl">Stakeholder Challenges · 5 Questions</div>
+      <div class="dossier-title">Each person needs an answer. Only your architecture can provide it.</div>
+      <p>These are not quiz questions with right or wrong answers. They are professional challenges requiring judgment — the kind you would face on Day 15 of a live implementation when the stakeholder is in the room and the project timeline is on the line. Think carefully. Reference your knowledge. The AI Oracle is available for guidance, not for answers.</p>
+    </div>
+
+    <div class="progress-label">Challenge Progress</div>
+    <div class="progress-bar-wrap"><div class="progress-bar" id="challenge-progress"></div></div>
+
+    <!-- Challenge 1 — Arjun -->
+    <div class="challenge-block" id="ch-1">
+      <div class="challenge-header" onclick="toggleChallenge('ch-1')">
+        <div class="challenge-persona-dot" style="background:linear-gradient(135deg,rgba(212,160,23,.2),rgba(212,160,23,.08));color:var(--goldLt);border:1px solid rgba(212,160,23,.3);font-family:'Cinzel',serif;font-size:13px;font-weight:700">AM</div>
+        <div class="challenge-meta">
+          <div class="challenge-from">Arjun Mehta · CFO</div>
+          <div class="challenge-question">The board wants to know: what guarantees the numbers in EPBCS match the numbers in SAP — every morning, without anyone manually checking?</div>
+        </div>
+        <span class="challenge-expand">▼</span>
+      </div>
+      <div class="challenge-body">
+        <div class="challenge-context">"Last quarter's $500K error came from a broken Excel link that nobody caught for 18 days. I told the board this system would make that impossible. Now I need you to tell me exactly how it does that — in terms I can explain to non-technical board members without lying."</div>
+        <div class="challenge-skills">
+          <span class="skill-tag">Data Integration</span>
+          <span class="skill-tag">Reconciliation Control</span>
+          <span class="skill-tag">EPM Automate</span>
+          <span class="skill-tag">Lab 5</span>
+        </div>
+        <div class="response-area">
+          <div class="response-label">Your Response to Arjun</div>
+          <textarea class="response-textarea" id="resp-1" placeholder="Explain the complete reconciliation architecture you would build — what checks run, when they run, what happens when they fail, and how Arjun would know about it before anyone else..."></textarea>
+          <div class="response-actions">
+            <button class="submit-btn" onclick="submitChallenge(1)">Submit Response ✦</button>
+            <button class="hint-btn" onclick="getHint(1, 'Arjun Mehta CFO asking about SAP to EPBCS reconciliation control and data integrity')">Ask Oracle for Guidance</button>
+          </div>
+          <div class="eval-out" id="eval-1"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Challenge 2 — Sione -->
+    <div class="challenge-block" id="ch-2">
+      <div class="challenge-header" onclick="toggleChallenge('ch-2')">
+        <div class="challenge-persona-dot" style="background:linear-gradient(135deg,rgba(31,184,168,.15),rgba(31,184,168,.06));color:var(--tealLt);border:1px solid rgba(31,184,168,.25);font-family:'Cinzel',serif;font-size:13px;font-weight:700">ST</div>
+        <div class="challenge-meta">
+          <div class="challenge-from">Sione Tuilagi · Implementation Director</div>
+          <div class="challenge-question">Walk me through your FY2026 budget seeding strategy — specifically how you create blocks in the new fiscal year without triggering a block explosion.</div>
+        </div>
+        <span class="challenge-expand">▼</span>
+      </div>
+      <div class="challenge-body">
+        <div class="challenge-context">"At the last implementation I worked on, the architect ran @CREATEBLOCK against all scenarios, all versions, all years in one FIX. Database went from 48,000 blocks to 1.2 million overnight. We lost a weekend. The client lost confidence. I need to know you've thought about this before we're in production."</div>
+        <div class="challenge-skills">
+          <span class="skill-tag">NODE s — Essbase Kernel</span>
+          <span class="skill-tag">Block Creation</span>
+          <span class="skill-tag">DATACOPY</span>
+          <span class="skill-tag">@CREATEBLOCK</span>
+          <span class="skill-tag">FIX Scope</span>
+        </div>
+        <div class="response-area">
+          <div class="response-label">Your Response to Sione</div>
+          <textarea class="response-textarea" id="resp-2" placeholder="Describe your exact block creation strategy for FY2026 — which weapon you use (DATACOPY vs @CREATEBLOCK vs SET CREATENONMISSINGBLK), why, with what FIX scope, in what sequence, and what you do if blocks still don't exist when Groovy tries to write to them..."></textarea>
+          <div class="response-actions">
+            <button class="submit-btn" onclick="submitChallenge(2)">Submit Response ✦</button>
+            <button class="hint-btn" onclick="getHint(2, 'Sione Tuilagi asking about FY2026 budget seeding block creation strategy in Essbase avoiding block explosion')">Ask Oracle for Guidance</button>
+          </div>
+          <div class="eval-out" id="eval-2"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Challenge 3 — Camille -->
+    <div class="challenge-block" id="ch-3">
+      <div class="challenge-header" onclick="toggleChallenge('ch-3')">
+        <div class="challenge-persona-dot" style="background:linear-gradient(135deg,rgba(190,24,93,.15),rgba(190,24,93,.06));color:var(--roseLt);border:1px solid rgba(190,24,93,.25);font-family:'Cinzel',serif;font-size:13px;font-weight:700">CR</div>
+        <div class="challenge-meta">
+          <div class="challenge-from">Camille Renard · Finance Business Partner</div>
+          <div class="challenge-question">My rolling forecast advances to a new month every first of the month. In Excel I change three cells. How does EPBCS handle this — and what breaks if someone forgets to do it?</div>
+        </div>
+        <span class="challenge-expand">▼</span>
+      </div>
+      <div class="challenge-body">
+        <div class="challenge-context">"I'm not asking about the theory. I run this process at 7am on the first of every month before anyone else is in the office. I need to know: what is the exact action, who does it, how long does it take, and what does a planner see if it hasn't happened yet? And don't tell me it's 'automated' unless you can explain exactly what that automation does."</div>
+        <div class="challenge-skills">
+          <span class="skill-tag">Substitution Variables</span>
+          <span class="skill-tag">Rolling Forecast</span>
+          <span class="skill-tag">EPM Automate</span>
+          <span class="skill-tag">Forms Design</span>
+          <span class="skill-tag">Lab 2</span>
+        </div>
+        <div class="response-area">
+          <div class="response-label">Your Response to Camille</div>
+          <textarea class="response-textarea" id="resp-3" placeholder="Explain the complete rolling forecast advance mechanism — the substitution variables, the EPM Automate commands, what happens if it isn't run, and how a planner's form looks before vs after the advance. Be specific enough that Camille could describe it to a new analyst..."></textarea>
+          <div class="response-actions">
+            <button class="submit-btn" onclick="submitChallenge(3)">Submit Response ✦</button>
+            <button class="hint-btn" onclick="getHint(3, 'Camille Renard Finance BP asking about rolling forecast monthly advance mechanism using substitution variables and EPM Automate')">Ask Oracle for Guidance</button>
+          </div>
+          <div class="eval-out" id="eval-3"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Challenge 4 — Tobias -->
+    <div class="challenge-block" id="ch-4">
+      <div class="challenge-header" onclick="toggleChallenge('ch-4')">
+        <div class="challenge-persona-dot" style="background:linear-gradient(135deg,rgba(124,58,237,.15),rgba(124,58,237,.06));color:var(--purpleLt);border:1px solid rgba(124,58,237,.25);font-family:'Cinzel',serif;font-size:13px;font-weight:700">TW</div>
+        <div class="challenge-meta">
+          <div class="challenge-from">Tobias Wren · Lead Technical Architect</div>
+          <div class="challenge-question">I need to see your dimension design rationale — specifically which dimensions you're marking dense and why, and what your target block size is for Vision Corp's cube.</div>
+        </div>
+        <span class="challenge-expand">▼</span>
+      </div>
+      <div class="challenge-body">
+        <div class="challenge-context">"Vision has 600 account members, 25 period members, 12 entities, 5 scenarios, 3 versions, and 5 years. I want to see the block size calculation. I want to know why you chose those dense dimensions and not others. And I want to know what happens to block size if the CFO decides next year to add 200 more account members for the new product line segmentation they're planning."</div>
+        <div class="challenge-skills">
+          <span class="skill-tag">Dense vs Sparse</span>
+          <span class="skill-tag">Block Size</span>
+          <span class="skill-tag">Dimension Architecture</span>
+          <span class="skill-tag">NODE s</span>
+          <span class="skill-tag">Part II</span>
+        </div>
+        <div class="response-area">
+          <div class="response-label">Your Response to Tobias</div>
+          <textarea class="response-textarea" id="resp-4" placeholder="Walk through your dense/sparse assignments with reasoning, calculate the block size for Vision Corp's cube, state whether it's within the 8KB–500KB target, and explain what adding 200 account members would do to block size and what you'd do about it..."></textarea>
+          <div class="response-actions">
+            <button class="submit-btn" onclick="submitChallenge(4)">Submit Response ✦</button>
+            <button class="hint-btn" onclick="getHint(4, 'Tobias Wren Lead Architect asking about dense sparse dimension design and block size calculation for Vision Corp EPBCS cube')">Ask Oracle for Guidance</button>
+          </div>
+          <div class="eval-out" id="eval-4"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Challenge 5 — Nkechi -->
+    <div class="challenge-block" id="ch-5">
+      <div class="challenge-header" onclick="toggleChallenge('ch-5')">
+        <div class="challenge-persona-dot" style="background:linear-gradient(135deg,rgba(14,165,233,.15),rgba(14,165,233,.06));color:var(--skyLt);border:1px solid rgba(14,165,233,.25);font-family:'Cinzel',serif;font-size:13px;font-weight:700">NA</div>
+        <div class="challenge-meta">
+          <div class="challenge-from">Nkechi Adeyemi · Data Integration Lead</div>
+          <div class="challenge-question">SAP sends us a company code "VISC" for Vision US and a GL account "40001" for product revenue. Show me the exact DI configuration that gets that into the right EPBCS cell — and what happens when SAP adds a new GL code we haven't mapped.</div>
+        </div>
+        <span class="challenge-expand">▼</span>
+      </div>
+      <div class="challenge-body">
+        <div class="challenge-context">"I've inherited integrations where new GL codes appeared in the source file and silently routed to a catch-all account for six weeks before anyone noticed. $3.2M of revenue was sitting in 'Unclassified_Actuals' while the CFO was presenting numbers to the board. Tell me how your design prevents that — and what the Finance Controller sees on the morning after a new GL code appears."</div>
+        <div class="challenge-skills">
+          <span class="skill-tag">DI Import Format</span>
+          <span class="skill-tag">Dimension Maps</span>
+          <span class="skill-tag">Staging Accounts</span>
+          <span class="skill-tag">Exception Reporting</span>
+          <span class="skill-tag">Lab 5</span>
+        </div>
+        <div class="response-area">
+          <div class="response-label">Your Response to Nkechi</div>
+          <textarea class="response-textarea" id="resp-5" placeholder="Describe the exact DI Import Format field mapping, the Between map rule for GL 40001, the Company_Code to Entity map for VISC, the Unclassified_Actuals catch-all strategy, and the exception reporting mechanism that notifies Finance the morning after an unmapped GL code appears..."></textarea>
+          <div class="response-actions">
+            <button class="submit-btn" onclick="submitChallenge(5)">Submit Response ✦</button>
+            <button class="hint-btn" onclick="getHint(5, 'Nkechi Adeyemi Data Integration Lead asking about DI Import Format mapping SAP company codes GL accounts and handling unmapped GL codes with exception reporting')">Ask Oracle for Guidance</button>
+          </div>
+          <div class="eval-out" id="eval-5"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="eng-nav">
+      <button class="nav-btn" onclick="switchPhase('team', document.querySelector('[onclick*=team]'))">← The Team</button>
+      <button class="nav-btn primary" onclick="switchPhase('decisions', document.querySelector('[onclick*=decisions]'))">Build Decisions →</button>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════
+       PHASE 4 — BUILD DECISION MAP (SDLC)
+  ═══════════════════════════════════════ -->
+  <div id="phase-decisions" class="phase-panel">
+
+    <div class="dossier">
+      <div class="dossier-lbl">Build Decision Map · 13 Decisions · 9 SDLC Phases</div>
+      <div class="dossier-title">Every phase of the project. Every decision that matters.</div>
+      <p>Select an SDLC phase below to spotlight its decisions. Decisions from other phases remain visible but step back — because on a real project, you face decisions in sequence, not simultaneously. The explanation of your reasoning matters more than the option you select. Sione will want to know why before this goes into the Design Constraints document.</p>
+    </div>
+
+    <div class="progress-label">Decision Progress — <span id="dec-count-label">0 / 13 decisions made</span></div>
+    <div class="progress-bar-wrap"><div class="progress-bar" id="decision-progress"></div></div>
+
+    <!-- SDLC stepper layout: sidebar left, decisions right -->
+    <div class="sdlc-wrap">
+
+      <!-- Left: vertical stepper -->
+      <div class="sdlc-stepper" id="sdlc-rail">
+        <div class="sdlc-stepper-hdr">SDLC Phases</div>
+        <div class="sdlc-step" id="sp-p0" onclick="selectSdlcPhase('p0')">
+          <div class="ss-icon">P0</div>
+          <div class="ss-body"><div class="ss-name">Discovery</div><div class="ss-meta">1 decision</div></div>
+          <span class="ss-check">✓</span>
+        </div>
+        <div class="sdlc-step active" id="sp-p1" onclick="selectSdlcPhase('p1')">
+          <div class="ss-icon">P1</div>
+          <div class="ss-body"><div class="ss-name">Design &amp; Architecture</div><div class="ss-meta">2 decisions</div></div>
+          <span class="ss-check">✓</span>
+        </div>
+        <div class="sdlc-step" id="sp-p2" onclick="selectSdlcPhase('p2')">
+          <div class="ss-icon">P2</div>
+          <div class="ss-body"><div class="ss-name">Build — Core Config</div><div class="ss-meta">2 decisions</div></div>
+          <span class="ss-check">✓</span>
+        </div>
+        <div class="sdlc-step" id="sp-p3" onclick="selectSdlcPhase('p3')">
+          <div class="ss-icon">P3</div>
+          <div class="ss-body"><div class="ss-name">Automation</div><div class="ss-meta">2 decisions</div></div>
+          <span class="ss-check">✓</span>
+        </div>
+        <div class="sdlc-step" id="sp-p4" onclick="selectSdlcPhase('p4')">
+          <div class="ss-icon">P4</div>
+          <div class="ss-body"><div class="ss-name">Integration</div><div class="ss-meta">1 decision</div></div>
+          <span class="ss-check">✓</span>
+        </div>
+        <div class="sdlc-step" id="sp-p5" onclick="selectSdlcPhase('p5')">
+          <div class="ss-icon">P5</div>
+          <div class="ss-body"><div class="ss-name">Reporting</div><div class="ss-meta">1 decision</div></div>
+          <span class="ss-check">✓</span>
+        </div>
+        <div class="sdlc-step" id="sp-p6" onclick="selectSdlcPhase('p6')">
+          <div class="ss-icon">P6</div>
+          <div class="ss-body"><div class="ss-name">Security &amp; Workflow</div><div class="ss-meta">1 decision</div></div>
+          <span class="ss-check">✓</span>
+        </div>
+        <div class="sdlc-step" id="sp-p7" onclick="selectSdlcPhase('p7')">
+          <div class="ss-icon">P7</div>
+          <div class="ss-body"><div class="ss-name">Testing — SIT &amp; UAT</div><div class="ss-meta">1 decision</div></div>
+          <span class="ss-check">✓</span>
+        </div>
+        <div class="sdlc-step" id="sp-p8" onclick="selectSdlcPhase('p8')">
+          <div class="ss-icon">P8</div>
+          <div class="ss-body"><div class="ss-name">Go-Live &amp; Stabilise</div><div class="ss-meta">2 decisions</div></div>
+          <span class="ss-check">✓</span>
+        </div>
+      </div>
+
+      <!-- Right: active phase context + decision cards -->
+      <div class="sdlc-decisions" id="sdlc-decisions-col">
+
+        <!-- Context strip -->
+        <div class="sdlc-context-strip" id="sdlc-context">
+          <span class="scs-phase" id="sdlc-context-phase">Phase 1 — Design &amp; Architecture</span>
+          <span class="scs-desc" id="sdlc-context-desc">Decisions made here determine the structural foundation of the system. The dimension design and migration strategy you commit to now will still be running this implementation in 2031.</span>
+        </div>
+
+    <!-- ── P0: Discovery ── -->
+    <div class="decision-card dimmed" id="dec-A" data-phase="p0">
+      <div class="decision-complete-mark">✓</div>
+      <div class="dec-phase-badge">P0 · Discovery</div>
+      <div class="decision-num">DECISION A</div>
+      <div class="decision-title">Application Creation — Irreversible Settings</div>
+      <div class="decision-scenario">Before a single dimension is built, you must commit to settings that cannot be changed once the application exists. Vision Corp has a Jan–Dec fiscal year, 6 currencies, and will require legal entity consolidation. Which settings do you enable on Day 1?</div>
+      <div class="decision-skills"><span class="skill-tag">Part I L3</span><span class="skill-tag">Application Setup</span><span class="skill-tag">Multi-Currency</span></div>
+      <div class="decision-options">
+        <div class="decision-opt" onclick="selectOption('dec-A','A',this)"><strong>A.</strong> Enable: Monthly time period, Multi-Currency, Consolidation. Fiscal start: January. Lock all before clicking Create.</div>
+        <div class="decision-opt" onclick="selectOption('dec-A','B',this)"><strong>B.</strong> Enable: Quarterly time period (simpler), Multi-Currency, Consolidation. Upgrade to Monthly later if needed.</div>
+        <div class="decision-opt" onclick="selectOption('dec-A','C',this)"><strong>C.</strong> Enable: Monthly time period, Consolidation. Add Multi-Currency in Phase 2 once entities are confirmed.</div>
+        <div class="decision-opt" onclick="selectOption('dec-A','D',this)"><strong>D.</strong> Enable: Monthly time period, Multi-Currency. Skip Consolidation — use Groovy for currency rollups instead.</div>
+      </div>
+      <div class="dec-phase-cost">⚠ Discovery decision — irreversible after application creation. Wrong choices here require a full rebuild.</div>
+      <div class="decision-reasoning">
+        <div class="response-label">What do you verify before clicking Create — and what document do you produce before going live?</div>
+        <textarea class="response-textarea" id="dec-resp-A" style="min-height:80px" placeholder="Name the irreversible settings, what you check before creation, and the Design Constraints document you produce..."></textarea>
+      </div>
+    </div>
+
+    <!-- ── P1: Design ── -->
+    <div class="decision-card spotlit" id="dec-B" data-phase="p1">
+      <div class="decision-complete-mark">✓</div>
+      <div class="dec-phase-badge">P1 · Design & Architecture</div>
+      <div class="decision-num">DECISION B</div>
+      <div class="decision-title">Dense vs Sparse — Vision Corp Dimension Assignment</div>
+      <div class="decision-scenario">Vision has: Account (600 members), Period (25 members), Entity (12 members), Scenario (5 members), Version (3 members), Year (5 members). You must assign dense vs sparse before application creation. Tobias is waiting for your rationale.</div>
+      <div class="decision-skills"><span class="skill-tag">Part II</span><span class="skill-tag">NODE s</span><span class="skill-tag">Block Size</span></div>
+      <div class="decision-options">
+        <div class="decision-opt" onclick="selectOption('dec-B','A',this)"><strong>A.</strong> Dense: Account, Period. Sparse: Entity, Scenario, Version, Year</div>
+        <div class="decision-opt" onclick="selectOption('dec-B','B',this)"><strong>B.</strong> Dense: Account, Period, Scenario. Sparse: Entity, Version, Year</div>
+        <div class="decision-opt" onclick="selectOption('dec-B','C',this)"><strong>C.</strong> Dense: Account, Period, Entity. Sparse: Scenario, Version, Year</div>
+        <div class="decision-opt" onclick="selectOption('dec-B','D',this)"><strong>D.</strong> Dense: Account, Period, Version. Sparse: Entity, Scenario, Year</div>
+      </div>
+      <div class="dec-phase-cost">⚠ Design decision — irreversible. Requires a full database restructure to change post-creation.</div>
+      <div class="decision-reasoning">
+        <div class="response-label">Calculate the block size for your chosen assignment and justify it to Tobias:</div>
+        <textarea class="response-textarea" id="dec-resp-B" style="min-height:80px" placeholder="Show the block size calculation (members × 8 bytes), state whether it's within 8KB–500KB, and explain the reasoning..."></textarea>
+      </div>
+    </div>
+
+    <div class="decision-card spotlit" id="dec-C" data-phase="p1">
+      <div class="decision-complete-mark">✓</div>
+      <div class="dec-phase-badge">P1 · Design & Architecture</div>
+      <div class="decision-num">DECISION C</div>
+      <div class="decision-title">Forms 2.0 Migration Strategy</div>
+      <div class="decision-scenario">Vision has 50 classic forms from early testing. EPM 25.10 mandates Forms 2.0. Go-live is November 1st. You have 3 weeks. Design your migration sequence — Camille's input forms cannot break at go-live and the CFO Dashboard must be ready for Day 1.</div>
+      <div class="decision-skills"><span class="skill-tag">Forms 2.0</span><span class="skill-tag">Part IV L11</span><span class="skill-tag">What's New 25.10</span></div>
+      <div class="decision-options">
+        <div class="decision-opt" onclick="selectOption('dec-C','A',this)"><strong>A.</strong> New forms first → simple input forms → complex composites after go-live. CFO Dashboard is new — build in 2.0 directly.</div>
+        <div class="decision-opt" onclick="selectOption('dec-C','B',this)"><strong>B.</strong> Migrate all 50 forms simultaneously in a single sprint — rip the band-aid before go-live.</div>
+        <div class="decision-opt" onclick="selectOption('dec-C','C',this)"><strong>C.</strong> Defer all migration — request an Oracle SR to keep Forms 1.0 for go-live stability.</div>
+        <div class="decision-opt" onclick="selectOption('dec-C','D',this)"><strong>D.</strong> Migrate only CFO Dashboard and executive views. Leave Camille's input forms on classic.</div>
+      </div>
+      <div class="dec-phase-cost">📋 Design decision — sequence locked before Build phase begins. Changes mid-Build disrupt testing.</div>
+      <div class="decision-reasoning">
+        <div class="response-label">Name the 5 forms you migrate first, the 5 you defer last, and the test you run before marking each migration complete:</div>
+        <textarea class="response-textarea" id="dec-resp-C" style="min-height:80px" placeholder="Apply the Forms 2.0 migration framework to Vision Corp's specific situation and timeline..."></textarea>
+      </div>
+    </div>
+
+    <!-- ── P2: Build Core ── -->
+    <div class="decision-card dimmed" id="dec-D" data-phase="p2">
+      <div class="decision-complete-mark">✓</div>
+      <div class="dec-phase-badge">P2 · Build — Core Configuration</div>
+      <div class="decision-num">DECISION D</div>
+      <div class="decision-title">FY2026 Budget Block Creation & Seeding</div>
+      <div class="decision-scenario">It is October 15th. FY2025 Actuals are in the cube. FY2026 Budget blocks do not exist. Planners need a populated starting point by November 1st. Sione is watching — this is the decision that caused the block explosion at his last implementation.</div>
+      <div class="decision-skills"><span class="skill-tag">NODE s</span><span class="skill-tag">DATACOPY</span><span class="skill-tag">@CREATEBLOCK</span><span class="skill-tag">Hourglass</span></div>
+      <div class="decision-options">
+        <div class="decision-opt" onclick="selectOption('dec-D','A',this)"><strong>A.</strong> DATACOPY FY2025 Budget → FY2026 Budget, then Groovy growth factor rule</div>
+        <div class="decision-opt" onclick="selectOption('dec-D','B',this)"><strong>B.</strong> @CREATEBLOCK in a tightly scoped FIX (Budget, Working, FY2026, leaf entities only)</div>
+        <div class="decision-opt" onclick="selectOption('dec-D','C',this)"><strong>C.</strong> SET CREATENONMISSINGBLK ON across all entities, scenarios, and years</div>
+        <div class="decision-opt" onclick="selectOption('dec-D','D',this)"><strong>D.</strong> Planners seed manually — blocks created organically as they save form data</div>
+      </div>
+      <div class="dec-phase-cost">🔨 Build decision — reversible, but block explosion recovery costs a weekend. Get the FIX scope right.</div>
+      <div class="decision-reasoning">
+        <div class="response-label">Write the exact FIX scope for your chosen approach and explain what you do if Groovy still can't write to a block:</div>
+        <textarea class="response-textarea" id="dec-resp-D" style="min-height:80px" placeholder="Show the FIX statement, explain the two-step rule chain pattern, and address the Groovy block creation gap from NODE s..."></textarea>
+      </div>
+    </div>
+
+    <div class="decision-card dimmed" id="dec-E" data-phase="p2">
+      <div class="decision-complete-mark">✓</div>
+      <div class="dec-phase-badge">P2 · Build — Core Configuration</div>
+      <div class="decision-num">DECISION E</div>
+      <div class="decision-title">CFO Dashboard — Forms 2.0 Apply Context Architecture</div>
+      <div class="decision-scenario">The CFO Dashboard has 8 grids and 4 charts — exactly at the 12-component limit. The CFO selects an entity and expects all 11 other components to update simultaneously. You are designing the Apply Context configuration.</div>
+      <div class="decision-skills"><span class="skill-tag">Forms 2.0</span><span class="skill-tag">Apply Context</span><span class="skill-tag">Part IV L11</span><span class="skill-tag">12-Component Limit</span></div>
+      <div class="decision-options">
+        <div class="decision-opt" onclick="selectOption('dec-E','A',this)"><strong>A.</strong> One dedicated 1-row master selector grid drives Apply Context to all 11 other components on Entity dimension</div>
+        <div class="decision-opt" onclick="selectOption('dec-E','B',this)"><strong>B.</strong> Configure Apply Context independently on each of the 8 grids — each manages its own Entity page</div>
+        <div class="decision-opt" onclick="selectOption('dec-E','C',this)"><strong>C.</strong> Use Navigation Flow parameters to pass Entity context — no Apply Context configuration needed</div>
+        <div class="decision-opt" onclick="selectOption('dec-E','D',this)"><strong>D.</strong> Hardcode Entity = Total_Vision — the CFO only ever looks at consolidated numbers</div>
+      </div>
+      <div class="dec-phase-cost">🔨 Build decision — Apply Context misconfiguration is the #1 Forms 2.0 support ticket in production.</div>
+      <div class="decision-reasoning">
+        <div class="response-label">Describe the master/detail configuration and the test that proves Grid B updates when the entity changes in the master:</div>
+        <textarea class="response-textarea" id="dec-resp-E" style="min-height:80px" placeholder="Name the master grid, the target dimension, and the exact test sequence you'd run to verify Apply Context is working..."></textarea>
+      </div>
+    </div>
+
+    <!-- ── P3: Automation ── -->
+    <div class="decision-card dimmed" id="dec-F" data-phase="p3">
+      <div class="decision-complete-mark">✓</div>
+      <div class="dec-phase-badge">P3 · Build — Calculation & Automation</div>
+      <div class="decision-num">DECISION F</div>
+      <div class="decision-title">Headcount-Driven Cost Cascade — Engine Choice</div>
+      <div class="decision-scenario">Vision requires headcount-driven compensation (salary, benefits, payroll tax) to cascade automatically. 4,200 employees, 12 entities, 12 months. The WFP module feeds headcount. Finance wants to see the compensation update within 30 seconds of a planner changing headcount in the form.</div>
+      <div class="decision-skills"><span class="skill-tag">Groovy Ch I & II</span><span class="skill-tag">Part V</span><span class="skill-tag">Lab 3</span><span class="skill-tag">Workforce Planning</span></div>
+      <div class="decision-options">
+        <div class="decision-opt" onclick="selectOption('dec-F','A',this)"><strong>A.</strong> Groovy beforeSave rule — calculates and batch-writes compensation on every form save</div>
+        <div class="decision-opt" onclick="selectOption('dec-F','B',this)"><strong>B.</strong> Dynamic Calc member formulas on Salary_Expense, Benefits_Expense, Payroll_Tax_Expense accounts</div>
+        <div class="decision-opt" onclick="selectOption('dec-F','C',this)"><strong>C.</strong> Nightly Essbase calc script in the master Business Rule Set — runs at 2am during budget cycle</div>
+        <div class="decision-opt" onclick="selectOption('dec-F','D',this)"><strong>D.</strong> Groovy action menu button — planners click "Calculate Compensation" after entering headcount</div>
+      </div>
+      <div class="dec-phase-cost">🔨 Automation decision — wrong engine means either slow forms (A without batching) or stale data (C with 2am delay).</div>
+      <div class="decision-reasoning">
+        <div class="response-label">Defend your choice against Dynamic Calc (Option B) specifically — when would B be correct, and why not here?</div>
+        <textarea class="response-textarea" id="dec-resp-F" style="min-height:80px" placeholder="Explain the Dynamic Calc trade-offs and why Vision's 30-second requirement changes the decision..."></textarea>
+      </div>
+    </div>
+
+    <div class="decision-card dimmed" id="dec-G" data-phase="p3">
+      <div class="decision-complete-mark">✓</div>
+      <div class="dec-phase-badge">P3 · Build — Calculation & Automation</div>
+      <div class="decision-num">DECISION G</div>
+      <div class="decision-title">Allocation Rule — Performance Crisis Response</div>
+      <div class="decision-scenario">The IT shared cost allocation Groovy rule runs 38 minutes. It calls getCell() 12 times and setCell() 12 times inside a loop. The nightly window is 45 minutes total. Go-live is in 4 days. You have one hour to fix this without rewriting the entire rule.</div>
+      <div class="decision-skills"><span class="skill-tag">Groovy Ch II</span><span class="skill-tag">Hourglass Principle</span><span class="skill-tag">DataGridBuilder</span><span class="skill-tag">Lab 3</span></div>
+      <div class="decision-options">
+        <div class="decision-opt" onclick="selectOption('dec-G','A',this)"><strong>A.</strong> Replace getCell() loop with DataGridBuilder pre-fetch; replace setCell() loop with one setDataCellValues() call</div>
+        <div class="decision-opt" onclick="selectOption('dec-G','B',this)"><strong>B.</strong> Move the allocation logic to an Essbase calc script — FIX(Budget, Working, FY2026)</div>
+        <div class="decision-opt" onclick="selectOption('dec-G','C',this)"><strong>C.</strong> Filter entities — only run the rule for entities where IT_Shared_Cost pool > $0</div>
+        <div class="decision-opt" onclick="selectOption('dec-G','D',this)"><strong>D.</strong> Split the rule into 4 parallel Groovy rules — one per entity group, run simultaneously</div>
+      </div>
+      <div class="dec-phase-cost">🔨 Automation decision — 38 minutes becomes &lt;2 minutes with the right Hourglass levers. Identify them.</div>
+      <div class="decision-reasoning">
+        <div class="response-label">Name the specific Hourglass levers applied, estimate the time reduction, and explain why D (parallel execution) is dangerous:</div>
+        <textarea class="response-textarea" id="dec-resp-G" style="min-height:80px" placeholder="Reference the 9 performance levers from Groovy Ch II. Why does batch reads + batch writes reduce 24 round-trips to 2?"></textarea>
+      </div>
+    </div>
+
+    <!-- ── P4: Integration ── -->
+    <div class="decision-card dimmed" id="dec-H" data-phase="p4">
+      <div class="decision-complete-mark">✓</div>
+      <div class="dec-phase-badge">P4 · Integration</div>
+      <div class="decision-num">DECISION H</div>
+      <div class="decision-title">SAP Actuals Load — Reconciliation Control Design</div>
+      <div class="decision-scenario">SAP sends a nightly CSV. Nkechi needs a guarantee that what lands in EPBCS matches what left SAP — every morning, before Finance opens their dashboards. A previous implementation had $3.2M sitting in Unclassified_Actuals for 6 weeks undetected. Design the control.</div>
+      <div class="decision-skills"><span class="skill-tag">Data Integration</span><span class="skill-tag">Lab 5</span><span class="skill-tag">Part III</span><span class="skill-tag">EPM Automate</span></div>
+      <div class="decision-options">
+        <div class="decision-opt" onclick="selectOption('dec-H','A',this)"><strong>A.</strong> SAP_Control_Total account + Groovy reconciliation rule + EPM Automate abort on variance &gt;$1,000</div>
+        <div class="decision-opt" onclick="selectOption('dec-H','B',this)"><strong>B.</strong> Manual Finance check each morning — a Finance analyst compares DI row count to SAP extract total</div>
+        <div class="decision-opt" onclick="selectOption('dec-H','C',this)"><strong>C.</strong> DI Workflow Validate step only — trust that DI's built-in validation catches all mapping errors</div>
+        <div class="decision-opt" onclick="selectOption('dec-H','D',this)"><strong>D.</strong> FRS report comparing Actuals YTD vs SAP year-to-date — Finance reviews weekly</div>
+      </div>
+      <div class="dec-phase-cost">🔌 Integration decision — no reconciliation control means silent failures. Nkechi will find it; the CFO shouldn't.</div>
+      <div class="decision-reasoning">
+        <div class="response-label">What is your materiality threshold for Vision Corp and what does the Finance Controller see the morning after a new unmapped GL code appears?</div>
+        <textarea class="response-textarea" id="dec-resp-H" style="min-height:80px" placeholder="Specify the control account design, the $threshold rationale, and the exception report flow for unmapped GL codes..."></textarea>
+      </div>
+    </div>
+
+    <!-- ── P5: Reporting ── -->
+    <div class="decision-card dimmed" id="dec-I" data-phase="p5">
+      <div class="decision-complete-mark">✓</div>
+      <div class="dec-phase-badge">P5 · Reporting & Dashboards</div>
+      <div class="decision-num">DECISION I</div>
+      <div class="decision-title">FR Studio Migration — Priority Sequence</div>
+      <div class="decision-scenario">25.06 de-supported Financial Reporting Studio. Vision has 22 legacy FR Studio reports used in the monthly close process. The CFO Board Pack, 6 variance reports, and 14 departmental P&L reports are all FR Studio. Go-live is November 1st. You have 5 weeks in P5.</div>
+      <div class="decision-skills"><span class="skill-tag">What's New 25.06</span><span class="skill-tag">Part VII</span><span class="skill-tag">Oracle Reports</span><span class="skill-tag">FRS</span></div>
+      <div class="decision-options">
+        <div class="decision-opt" onclick="selectOption('dec-I','A',this)"><strong>A.</strong> CFO Board Pack first → 6 variance reports → 14 departmental P&Ls. FR Studio reports remain as fallback.</div>
+        <div class="decision-opt" onclick="selectOption('dec-I','B',this)"><strong>B.</strong> Migrate all 22 simultaneously in Oracle Reports — FR Studio is de-supported so don't waste time on it.</div>
+        <div class="decision-opt" onclick="selectOption('dec-I','C',this)"><strong>C.</strong> Migrate 14 departmental P&Ls first — highest user count. Board Pack can wait until post go-live.</div>
+        <div class="decision-opt" onclick="selectOption('dec-I','D',this)"><strong>D.</strong> Leave all FR Studio reports running — de-supported doesn't mean broken. Migrate in Phase 2 post go-live.</div>
+      </div>
+      <div class="dec-phase-cost">📊 Reporting decision — Board Pack failure on go-live morning is the highest-visibility possible failure for Arjun.</div>
+      <div class="decision-reasoning">
+        <div class="response-label">Name one FR Studio feature Vision's reports use that you must verify is available in Oracle Reports before migration:</div>
+        <textarea class="response-textarea" id="dec-resp-I" style="min-height:80px" placeholder="Reference the What's New 25.06 entry and Part VII reporting content. What specifically changes in Oracle Reports vs FR Studio?"></textarea>
+      </div>
+    </div>
+
+    <!-- ── P6: Security ── -->
+    <div class="decision-card dimmed" id="dec-J" data-phase="p6">
+      <div class="decision-complete-mark">✓</div>
+      <div class="dec-phase-badge">P6 · Security & Workflow</div>
+      <div class="decision-num">DECISION J</div>
+      <div class="decision-title">Rolling Forecast — Locked Period Protection</div>
+      <div class="decision-scenario">Camille's rolling forecast advances monthly. January through CurPeriod−1 are actual months — planners must not be able to edit them. You need a mechanism that prevents edits to locked months without breaking the Forecast form for future months.</div>
+      <div class="decision-skills"><span class="skill-tag">Part VI</span><span class="skill-tag">Valid Intersections</span><span class="skill-tag">Groovy beforeSave</span><span class="skill-tag">Lab 2</span></div>
+      <div class="decision-options">
+        <div class="decision-opt" onclick="selectOption('dec-J','A',this)"><strong>A.</strong> Valid Intersections rule: Period ≤ CurPeriod−1 AND Scenario=Forecast → Invalid for Planner role</div>
+        <div class="decision-opt" onclick="selectOption('dec-J','B',this)"><strong>B.</strong> Groovy beforeSave guard — reads CurPeriod SubVar, checks edited cell's month index, cancels if locked</div>
+        <div class="decision-opt" onclick="selectOption('dec-J','C',this)"><strong>C.</strong> Form design — set column property Read Only for Actual period columns in the form definition</div>
+        <div class="decision-opt" onclick="selectOption('dec-J','D',this)"><strong>D.</strong> Trust Finance training — planners are told not to edit locked months in the user guide</div>
+      </div>
+      <div class="dec-phase-cost">🛡 Security decision — choose the mechanism that respects the Finance Admin bypass requirement.</div>
+      <div class="decision-reasoning">
+        <div class="response-label">When would you choose Valid Intersections (A) over Groovy (B), and how does a Finance Admin override the lock when actuals need correction?</div>
+        <textarea class="response-textarea" id="dec-resp-J" style="min-height:80px" placeholder="Explain the role-based override pattern from Part VI and the specific Groovy line that bypasses the guard for Finance_Admin role..."></textarea>
+      </div>
+    </div>
+
+    <!-- ── P7: Testing ── -->
+    <div class="decision-card dimmed" id="dec-K" data-phase="p7">
+      <div class="decision-complete-mark">✓</div>
+      <div class="dec-phase-badge">P7 · Testing — SIT & UAT</div>
+      <div class="decision-num">DECISION K</div>
+      <div class="decision-title">Approval Deadlock — UAT Discovery & Prevention</div>
+      <div class="decision-scenario">During UAT, the test team discovers that 3 entities are stuck Under Review because the test reviewer accounts were deleted. Budget cycle close is simulated for 48 hours from now. The UAT sign-off requires this resolved. What is your immediate action — and what system change does this expose?</div>
+      <div class="decision-skills"><span class="skill-tag">Part VI</span><span class="skill-tag">Approvals</span><span class="skill-tag">EPM Automate</span><span class="skill-tag">Lab 1</span></div>
+      <div class="decision-options">
+        <div class="decision-opt" onclick="selectOption('dec-K','A',this)"><strong>A.</strong> Service Admin promotes stuck entities via EPM Automate CLI, logs action, adds delegate accounts to PUH</div>
+        <div class="decision-opt" onclick="selectOption('dec-K','B',this)"><strong>B.</strong> Reset all entities to Not Started, recreate test accounts, restart UAT approval workflow from beginning</div>
+        <div class="decision-opt" onclick="selectOption('dec-K','C',this)"><strong>C.</strong> Temporarily assign Finance BP as Level 1 reviewer, promote, reassign original reviewer after UAT</div>
+        <div class="decision-opt" onclick="selectOption('dec-K','D',this)"><strong>D.</strong> Exclude the 3 stuck entities from the UAT sign-off — they're test accounts not production entities</div>
+      </div>
+      <div class="dec-phase-cost">🧪 Testing decision — UAT is the last safe place to discover this. Discovering it in production costs a budget cycle.</div>
+      <div class="decision-reasoning">
+        <div class="response-label">What Planning Unit Hierarchy configuration change do you add before UAT sign-off to prevent this in production?</div>
+        <textarea class="response-textarea" id="dec-resp-K" style="min-height:80px" placeholder="Name the delegate configuration, the EPM Automate command for the immediate fix, and the process change for production..."></textarea>
+      </div>
+    </div>
+
+    <!-- ── P8: Go-Live ── -->
+    <div class="decision-card dimmed" id="dec-L" data-phase="p8">
+      <div class="decision-complete-mark">✓</div>
+      <div class="dec-phase-badge">P8 · Go-Live & Stabilisation</div>
+      <div class="decision-num">DECISION L</div>
+      <div class="decision-title">Nightly Batch Architecture — Production Sequence</div>
+      <div class="decision-scenario">Day 1 of production. The nightly window is midnight to 5am. You must: load SAP actuals, run reconciliation, run master calc chain (headcount → allocation → validation), generate CFO Board Pack PDF, deliver to inboxes by 6am. One sequence failure aborts the rest.</div>
+      <div class="decision-skills"><span class="skill-tag">EPM Automate</span><span class="skill-tag">Lab 4</span><span class="skill-tag">Lab 5</span><span class="skill-tag">Part VIII</span></div>
+      <div class="decision-options">
+        <div class="decision-opt" onclick="selectOption('dec-L','A',this)"><strong>A.</strong> SAP load → Reconciliation → Master calc chain → Report generation → Email (sequential, abort on failure)</div>
+        <div class="decision-opt" onclick="selectOption('dec-L','B',this)"><strong>B.</strong> SAP load → Calc chain runs in parallel with reconciliation → Report generation → Email</div>
+        <div class="decision-opt" onclick="selectOption('dec-L','C',this)"><strong>C.</strong> Master calc chain first (prior actuals) → SAP load → Reconciliation → Rerun calc → Report</div>
+        <div class="decision-opt" onclick="selectOption('dec-L','D',this)"><strong>D.</strong> SAP load → Immediate report generation → Reconciliation check → Email only if reconciliation passes</div>
+      </div>
+      <div class="dec-phase-cost">🚀 Go-Live decision — the batch sequence is your operational contract with Finance. Wrong order = wrong numbers in the Board Pack.</div>
+      <div class="decision-reasoning">
+        <div class="response-label">Write the first 5 EPM Automate commands in the shell script and the error handling line that alerts Finance Admin on failure:</div>
+        <textarea class="response-textarea" id="dec-resp-L" style="min-height:100px" placeholder="epmautomate runDataRule ...&#10;epmautomate runBusinessRule ...&#10;if [ $? -ne 0 ]; then ..."></textarea>
+      </div>
+    </div>
+
+    <div class="decision-card dimmed" id="dec-M" data-phase="p8">
+      <div class="decision-complete-mark">✓</div>
+      <div class="dec-phase-badge">P8 · Go-Live & Stabilisation</div>
+      <div class="decision-num">DECISION M</div>
+      <div class="decision-title">EPM Automate Infrastructure — Java Runtime on Automation Server</div>
+      <div class="decision-scenario">Your Linux automation server runs EPM Automate for all nightly jobs. The 25.08 update requires Java 17. Your current server runs Java 8. Go-live is in 72 hours. The nightly batch runs every night including tonight.</div>
+      <div class="decision-skills"><span class="skill-tag">What's New 25.08</span><span class="skill-tag">EPM Automate</span><span class="skill-tag">Part VIII</span></div>
+      <div class="decision-options">
+        <div class="decision-opt" onclick="selectOption('dec-M','A',this)"><strong>A.</strong> Install Java 17 now, update JAVA_HOME, test EPM Automate login, run a test job before tonight's batch</div>
+        <div class="decision-opt" onclick="selectOption('dec-M','B',this)"><strong>B.</strong> Defer the upgrade to post go-live stabilisation — Java 8 still works, upgrade introduces risk right now</div>
+        <div class="decision-opt" onclick="selectOption('dec-M','C',this)"><strong>C.</strong> Move all automation to Windows server temporarily — EPM Automate Windows bundles its own Java</div>
+        <div class="decision-opt" onclick="selectOption('dec-M','D',this)"><strong>D.</strong> Contact Oracle Support — request an extension to keep Java 8 support for this environment</div>
+      </div>
+      <div class="dec-phase-cost">🚀 Go-Live decision — batch failures at go-live are the highest-impact visible failure. Verify the infrastructure before go-live.</div>
+      <div class="decision-reasoning">
+        <div class="response-label">Write the 3 shell commands you run to verify the Java upgrade is complete and EPM Automate is functional:</div>
+        <textarea class="response-textarea" id="dec-resp-M" style="min-height:80px" placeholder="java -version&#10;export JAVA_HOME=...&#10;epmautomate login ..."></textarea>
+      </div>
+    </div>
+
+    </div><!-- sdlc-decisions-col -->
+    </div><!-- sdlc-wrap -->
+
+    <div id="decisions-submit-area" style="margin-top:24px;text-align:center;display:none">
+      <button class="submit-btn" style="padding:12px 32px;font-size:12px" onclick="submitAllDecisions()">Submit All Decisions for Evaluation ✦</button>
+    </div>
+    <div class="eval-out" id="eval-decisions" style="margin-top:16px"></div>
+
+    <div class="eng-nav">
+      <button class="nav-btn" onclick="switchPhase('challenges', document.querySelector('[onclick*=challenges]'))">← Stakeholder Challenges</button>
+      <button class="nav-btn primary" id="signal-btn" onclick="switchPhase('signal', document.querySelector('[onclick*=signal]'))" style="display:none">View Your Signal →</button>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════
+       PHASE 5 — YOUR SIGNAL (Tier B/C)
+  ═══════════════════════════════════════ -->
+  <div id="phase-signal" class="phase-panel">
+
+    <div class="signal-panel show" id="signal-display">
+      <div class="signal-title">Your Practitioner Signal</div>
+      <div class="signal-sub" id="signal-sub-text">Based on your responses across 5 stakeholder challenges and 8 architectural decisions</div>
+
+      <div class="radar-grid">
+        <div class="radar-item">
+          <div class="radar-dim">Technical Accuracy</div>
+          <div class="radar-bar-wrap"><div class="radar-bar" id="bar-tech" style="width:0%"></div></div>
+          <div class="radar-score" id="score-tech">—</div>
+        </div>
+        <div class="radar-item">
+          <div class="radar-dim">Risk Awareness</div>
+          <div class="radar-bar-wrap"><div class="radar-bar" id="bar-risk" style="width:0%"></div></div>
+          <div class="radar-score" id="score-risk">—</div>
+        </div>
+        <div class="radar-item">
+          <div class="radar-dim">Stakeholder Fluency</div>
+          <div class="radar-bar-wrap"><div class="radar-bar" id="bar-stake" style="width:0%"></div></div>
+          <div class="radar-score" id="score-stake">—</div>
+        </div>
+        <div class="radar-item">
+          <div class="radar-dim">Production Readiness</div>
+          <div class="radar-bar-wrap"><div class="radar-bar" id="bar-prod" style="width:0%"></div></div>
+          <div class="radar-score" id="score-prod">—</div>
+        </div>
+        <div class="radar-item">
+          <div class="radar-dim">FP&amp;A Context</div>
+          <div class="radar-bar-wrap"><div class="radar-bar" id="bar-fpa" style="width:0%"></div></div>
+          <div class="radar-score" id="score-fpa">—</div>
+        </div>
+      </div>
+
+      <div class="signal-narrative" id="signal-narrative">
+        Complete the stakeholder challenges and build decisions to receive your Practitioner Signal evaluation.
+      </div>
+
+      <div class="portfolio-panel" id="portfolio-panel">
+        <div class="portfolio-title">Your Practitioner Portfolio</div>
+        <p style="font-size:14px;color:rgba(240,234,214,.62);line-height:1.75;margin-bottom:4px">Your responses, architectural decisions, and evaluation have been compiled into a Practitioner Portfolio document — evidence of your EPBCS implementation judgment grounded in a real enterprise scenario.</p>
+        <div class="portfolio-actions">
+          <button class="port-btn primary" onclick="downloadPortfolio()">Download Portfolio PDF</button>
+          <button class="port-btn secondary" onclick="copyPortfolioLink()">Copy Shareable Link</button>
+        </div>
+      </div>
+
+      <div id="anon-signal-prompt" style="display:none;margin-top:20px;padding:16px 20px;background:rgba(31,184,168,.05);border:1px solid rgba(31,184,168,.15);border-radius:10px;text-align:center">
+        <p style="font-size:14px;color:rgba(240,234,214,.6);margin-bottom:12px">Sign in with Google to receive your full Practitioner Signal evaluation across all 5 dimensions.</p>
+        <button class="tier-login-btn google-btn" onclick="signInGoogle()" style="margin:0 auto">Sign in with Google</button>
+      </div>
+    </div>
+
+    <div class="eng-nav">
+      <button class="nav-btn" onclick="switchPhase('decisions', document.querySelector('[onclick*=decisions]'))">← Build Decisions</button>
+      <a href="whats-new.html" class="nav-btn gold">Stay Current → What's New</a>
+    </div>
+  </div>
+
+</div><!-- eng-wrap -->
+
+<script>
+// ── Stars ──
+(function(){var s=document.getElementById('stars');for(var i=0;i<80;i++){var d=document.createElement('div');d.className='star';var sz=Math.random()*2+0.4;d.style.cssText='width:'+sz+'px;height:'+sz+'px;top:'+Math.random()*100+'%;left:'+Math.random()*100+'%;--d:'+(2+Math.random()*4)+'s;--delay:'+Math.random()*5+'s;--op:'+(0.1+Math.random()*0.35);s.appendChild(d);}})();
+
+// ── Access tier detection ──
+// In production: check auth state. Here we detect via localStorage flag.
+var USER_TIER = localStorage.getItem('eng_tier') || 'anon'; // 'anon' | 'google' | 'registered'
+
+function initTierDisplay(){
+  var el = document.getElementById('tier-display');
+  if(USER_TIER === 'registered'){
+    el.innerHTML = '<div class="tier-banner registered"><span class="tier-icon">🏆</span><div><strong>Registered Member</strong> — Your responses are saved. You will receive a full Practitioner Signal and a downloadable Portfolio document.</div></div>';
+    document.getElementById('portfolio-panel').style.display = 'block';
+    document.getElementById('anon-signal-prompt').style.display = 'none';
+  } else if(USER_TIER === 'google'){
+    el.innerHTML = '<div class="tier-banner google"><span class="tier-icon">✦</span><div><strong>Signed In</strong> — Your responses are saved. You will receive a full Practitioner Signal evaluation across 5 dimensions.</div><a href="register.html" class="tier-login-btn register-btn">Register for Portfolio</a></div>';
+    document.getElementById('anon-signal-prompt').style.display = 'none';
+  } else {
+    el.innerHTML = '<div class="tier-banner anon"><span class="tier-icon">○</span><div>You are working anonymously. Your responses are not saved and evaluation is not available. <strong style="color:rgba(240,234,214,.7)">Sign in with Google</strong> to receive your Practitioner Signal.</div><button class="tier-login-btn google-btn" onclick="signInGoogle()">Sign in with Google</button></div>';
+    document.getElementById('anon-signal-prompt').style.display = 'block';
+    document.querySelectorAll('.submit-btn').forEach(function(b){ b.disabled = true; });
+    document.querySelectorAll('.submit-btn').forEach(function(b){
+      b.setAttribute('title','Sign in with Google to submit and receive evaluation');
+    });
+    document.querySelectorAll('.anon-lock').forEach(function(el){ el.style.display='flex'; });
+  }
+}
+
+function signInGoogle(){
+  // Production: implement Google OAuth flow
+  // Demo: simulate login
+  localStorage.setItem('eng_tier','google');
+  USER_TIER = 'google';
+  document.querySelectorAll('.submit-btn').forEach(function(b){ b.disabled = false; });
+  initTierDisplay();
+  alert('Demo: Google sign-in simulated. In production this would use OAuth 2.0.');
+}
+
+// ── Phase navigation ──
+function switchPhase(id, btn){
+  document.querySelectorAll('.phase-panel').forEach(function(p){ p.classList.remove('active'); });
+  document.querySelectorAll('.phase-tab').forEach(function(t){ t.classList.remove('active'); });
+  var panel = document.getElementById('phase-' + id);
+  if(panel) panel.classList.add('active');
+  if(btn) btn.classList.add('active');
+  window.scrollTo(0,0);
+}
+
+// ── Challenge accordion ──
+function toggleChallenge(id){
+  var el = document.getElementById(id);
+  el.classList.toggle('open');
+}
+
+// ── SDLC Phase selection ──
+var SDLC_PHASES = {
+  p0: {
+    name:'Phase 0 — Discovery & Scoping',
+    desc:'Decisions made here are the hardest to reverse. Application creation settings cannot be changed after the first dimension is added. Every downstream decision depends on getting this right.',
+    decs:['dec-A']
+  },
+  p1: {
+    name:'Phase 1 — Design & Architecture',
+    desc:'Decisions made here determine the structural foundation of the system. The dimension design and migration strategy committed to now will still be running this implementation in 2031.',
+    decs:['dec-B','dec-C']
+  },
+  p2: {
+    name:'Phase 2 — Build — Core Configuration',
+    desc:'Decisions made here build what planners will interact with on Day 1. Block creation and dashboard architecture are built once and rarely changed without significant effort.',
+    decs:['dec-D','dec-E']
+  },
+  p3: {
+    name:'Phase 3 — Build — Calculation & Automation',
+    desc:'Decisions made here determine whether the calculation engine is a competitive advantage or a nightly liability. Wrong engine choices compound — they appear in production under peak load.',
+    decs:['dec-F','dec-G']
+  },
+  p4: {
+    name:'Phase 4 — Integration',
+    desc:'Decisions made here determine whether the numbers in EPBCS can be trusted. No amount of dashboard polish compensates for actuals that don\'t reconcile to the source.',
+    decs:['dec-H']
+  },
+  p5: {
+    name:'Phase 5 — Reporting & Dashboards',
+    desc:'Decisions made here determine what Finance sees and when. The CFO Board Pack is the most visible deliverable in the entire project. Report failure on go-live morning is board-level failure.',
+    decs:['dec-I']
+  },
+  p6: {
+    name:'Phase 6 — Security & Workflow',
+    desc:'Decisions made here protect data integrity and keep the planning cycle on schedule. Security misconfiguration is invisible until a planner overwrites locked actuals — usually at month-end.',
+    decs:['dec-J']
+  },
+  p7: {
+    name:'Phase 7 — Testing — SIT & UAT',
+    desc:'UAT is the last safe place to discover process gaps. Approval deadlocks discovered in UAT cost a test cycle. Discovered in production, they cost a budget cycle and Arjun\'s confidence.',
+    decs:['dec-K']
+  },
+  p8: {
+    name:'Phase 8 — Go-Live & Stabilisation',
+    desc:'Decisions made here are made under maximum pressure with minimum recovery time. The nightly batch architecture and infrastructure readiness are your operational contract with Finance.',
+    decs:['dec-L','dec-M']
+  }
+};
+
+var currentSdlcPhase = 'p1';
+
+function selectSdlcPhase(phase){
+  currentSdlcPhase = phase;
+  var info = SDLC_PHASES[phase];
+  if(!info) return;
+
+  // Update stepper active state
+  document.querySelectorAll('.sdlc-step').forEach(function(el){ el.classList.remove('active'); });
+  var sp = document.getElementById('sp-' + phase);
+  if(sp) sp.classList.add('active');
+
+  // Update context strip
+  document.getElementById('sdlc-context-phase').textContent = info.name;
+  document.getElementById('sdlc-context-desc').textContent = info.desc;
+
+  // Spotlight active phase decisions, dim others
+  var ALL_DECS = ['dec-A','dec-B','dec-C','dec-D','dec-E','dec-F','dec-G','dec-H','dec-I','dec-J','dec-K','dec-L','dec-M'];
+  ALL_DECS.forEach(function(id){
+    var card = document.getElementById(id);
+    if(!card) return;
+    if(info.decs.indexOf(id) > -1){
+      card.classList.remove('dimmed');
+      card.classList.add('spotlit');
+    } else {
+      card.classList.remove('spotlit');
+      card.classList.add('dimmed');
+    }
+  });
+
+  // Scroll decisions column to top of first spotlit card
+  var firstCard = document.getElementById(info.decs[0]);
+  if(firstCard){
+    setTimeout(function(){
+      var col = document.getElementById('sdlc-decisions-col');
+      if(col){
+        var cardTop = firstCard.getBoundingClientRect().top + window.scrollY - 80;
+        window.scrollTo({top: cardTop, behavior:'smooth'});
+      }
+    }, 60);
+  }
+}
+
+// ── Option selection ──
+var selections = {};
+
+function selectOption(decId, opt, el){
+  document.querySelectorAll('#' + decId + ' .decision-opt').forEach(function(o){ o.classList.remove('selected'); });
+  el.classList.add('selected');
+  selections[decId] = opt;
+  // Mark card as done
+  var card = document.getElementById(decId);
+  if(card) card.classList.add('done');
+  checkDecisionProgress();
+}
+
+var TOTAL_DECISIONS = 13;
+var DEC_IDS = ['dec-A','dec-B','dec-C','dec-D','dec-E','dec-F','dec-G','dec-H','dec-I','dec-J','dec-K','dec-L','dec-M'];
+
+function checkDecisionProgress(){
+  var count = Object.keys(selections).length;
+  var pct = Math.round(count / TOTAL_DECISIONS * 100);
+  document.getElementById('decision-progress').style.width = pct + '%';
+  document.getElementById('dec-count-label').textContent = count + ' / ' + TOTAL_DECISIONS + ' decisions made';
+
+  // Mark stepper steps complete when all their decisions are selected
+  Object.keys(SDLC_PHASES).forEach(function(phase){
+    var info = SDLC_PHASES[phase];
+    var allDone = info.decs.every(function(d){ return selections[d]; });
+    var sp = document.getElementById('sp-' + phase);
+    if(sp){
+      if(allDone){ sp.classList.add('complete'); }
+      else { sp.classList.remove('complete'); }
+    }
+  });
+
+  if(count >= 6) document.getElementById('decisions-submit-area').style.display = 'block';
+  if(count === TOTAL_DECISIONS) document.getElementById('signal-btn').style.display = 'inline-block';
+}
+
+// ── Challenge progress ──
+var challengesSubmitted = {};
+function updateChallengeProgress(){
+  var count = Object.keys(challengesSubmitted).length;
+  document.getElementById('challenge-progress').style.width = Math.round(count/5*100) + '%';
+}
+
+// ── Submit challenge ──
+async function submitChallenge(num){
+  if(USER_TIER === 'anon') { alert('Please sign in with Google to submit your response for evaluation.'); return; }
+  var resp = document.getElementById('resp-' + num).value.trim();
+  if(!resp || resp.length < 50){ alert('Please write a more detailed response before submitting.'); return; }
+  var out = document.getElementById('eval-' + num);
+  out.style.display = 'block';
+  out.classList.add('show');
+  out.innerHTML = '<em style="opacity:.4">The Oracle is reviewing your response...</em>';
+
+  var personas = {
+    1: {name:'Arjun Mehta (CFO)', topic:'SAP to EPBCS reconciliation architecture, control accounts, EPM Automate alerting, and ensuring Finance leadership has visibility before anyone else'},
+    2: {name:'Sione Tuilagi (Implementation Director)', topic:'FY2026 budget seeding strategy: DATACOPY vs @CREATEBLOCK vs SET CREATENONMISSINGBLK, FIX scope safety, block explosion prevention, and two-step rule chain pattern'},
+    3: {name:'Camille Renard (Finance BP)', topic:'rolling forecast monthly advance mechanism using substitution variables CurPeriod and CurYear, EPM Automate setSubstitutionVariable command, and what planners see before and after the advance'},
+    4: {name:'Tobias Wren (Lead Architect)', topic:'dense/sparse dimension assignment for Vision Corp (600 accounts × 25 periods = 120KB block size), the 8KB–500KB target range, and impact of adding 200 more account members'},
+    5: {name:'Nkechi Adeyemi (Data Integration Lead)', topic:'DI Import Format field mapping for SAP CSV, Between map rules for GL account ranges, Company_Code to Entity explicit maps, Unclassified_Actuals catch-all staging account, and exception reporting mechanism'}
+  };
+
+  var p = personas[num];
+  var ctx = 'You are The Oracle, evaluating a response from an EPBCS practitioner who has just completed The Planning Quest — a comprehensive Oracle EPBCS learning program covering: Essbase block storage (BSO), dimension design, dense/sparse architecture, Data Integration, Forms 2.0 (stateless architecture, Apply Context, 12-component limit), Groovy scripting (type safety, batch writes, DataGridBuilder, performance levers), approval workflows, security, EPM Automate CLI, and the Essbase Kernel (DATACOPY, @CREATEBLOCK, block explosion prevention).\n\nThe practitioner is now applying that knowledge to a real Vision Corp EPBCS implementation ($2.8B revenue, 12 entities, 6 currencies, SAP ERP source, Oracle EPM 25.10+, November 1st go-live).\n\nThe stakeholder who asked the question: ' + p.name + '\nThe specific domain being tested: ' + p.topic + '\n\nEvaluate the response on: (1) Technical accuracy — are the EPBCS/Essbase/Groovy specifics correct? (2) Risk awareness — does the response address failure modes and edge cases? (3) Stakeholder fluency — would this answer actually satisfy ' + p.name.split(' ')[0] + '\'s specific concern? (4) Production readiness — is this advice safe to act on in a live implementation?\n\nBe direct, specific, and honest. Reference exact concepts from the Quest curriculum when the practitioner gets something right or wrong. End with one concrete improvement they could make to their response. 200–280 words.\n\nPractitioner response:\n' + resp;
+
+  try {
+    var r = await fetch('https://api.anthropic.com/v1/messages', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:900,messages:[{role:'user',content:ctx}]})
+    });
+    var j = await r.json();
+    var text = (j.content||[]).map(function(c){return c.text||''}).join('') || 'The Oracle is silent.';
+    out.innerHTML = text.replace(/\n\n/g,'</p><p style="margin-top:8px">').replace(/^/,'<p>').replace(/$/,'</p>').replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>');
+    challengesSubmitted[num] = {response: resp, eval: text};
+    updateChallengeProgress();
+    updateSignalScores();
+  } catch(e) {
+    out.innerHTML = 'The Oracle is unreachable. Check your connection.';
+  }
+}
+
+// ── Hint / Oracle guidance ──
+async function getHint(num, context){
+  var out = document.getElementById('eval-' + num);
+  out.style.display = 'block';
+  out.classList.add('show');
+  out.innerHTML = '<em style="opacity:.4">The Oracle is preparing guidance...</em>';
+  var ctx = 'You are The Oracle, acting as a thinking partner for an EPBCS practitioner facing this challenge in a live Vision Corp implementation. Do NOT give them the answer. Instead: ask 2–3 probing questions that help them think through the key dimensions of the problem, and remind them which specific Quest lessons and concepts are most relevant to this challenge. Vision Corp context: $2.8B revenue, 12 entities, 6 currencies, SAP ERP, EPM 25.10+, November 1st go-live. Challenge context: ' + context + '. 120–160 words.';
+  try {
+    var r = await fetch('https://api.anthropic.com/v1/messages', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:500,messages:[{role:'user',content:ctx}]})
+    });
+    var j = await r.json();
+    var text = (j.content||[]).map(function(c){return c.text||''}).join('') || 'The Oracle is silent.';
+    out.innerHTML = '<em style="color:var(--goldLt);font-family:\'Cinzel\',serif;font-size:9px;letter-spacing:.08em;text-transform:uppercase;display:block;margin-bottom:8px">Oracle Guidance</em>' + text.replace(/\n\n/g,'</p><p style="margin-top:8px">').replace(/^/,'<p>').replace(/$/,'</p>').replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>');
+  } catch(e) {
+    out.innerHTML = 'The Oracle is unreachable.';
+  }
+}
+
+// ── Submit all decisions ──
+async function submitAllDecisions(){
+  if(USER_TIER === 'anon') { alert('Please sign in with Google to receive evaluation.'); return; }
+  var out = document.getElementById('eval-decisions');
+  out.style.display = 'block';
+  out.classList.add('show');
+  out.innerHTML = '<em style="opacity:.4">The Oracle is evaluating your decisions across all 9 SDLC phases...</em>';
+
+  var decSummary = DEC_IDS.map(function(k){
+    var respEl = document.getElementById('dec-resp-' + k.replace('dec-',''));
+    var reasons = respEl ? respEl.value.trim() : '';
+    var phaseLabel = '';
+    Object.keys(SDLC_PHASES).forEach(function(p){
+      if(SDLC_PHASES[p].decs.indexOf(k) > -1) phaseLabel = SDLC_PHASES[p].name;
+    });
+    return '[' + phaseLabel + '] ' + k + ': Selected ' + (selections[k]||'Not selected') + '. Reasoning: ' + (reasons||'No reasoning provided');
+  }).join('\n');
+
+  var ctx = 'You are The Oracle evaluating 13 architectural decisions made across 9 SDLC phases for the Vision Corp EPBCS implementation ($2.8B revenue, 12 entities, SAP ERP, EPM 25.10+, November 1st go-live). The phases span: Discovery (application creation), Design (dense/sparse, Forms migration), Build Core (block seeding, Apply Context), Automation (headcount cascade, allocation performance), Integration (reconciliation control), Reporting (FR Studio migration priority), Security (period locking), Testing (approval deadlock), and Go-Live (batch sequence, Java upgrade).\n\nEvaluate: (1) Overall architectural coherence — do decisions across phases work together? (2) The most consequential decision made correctly — and why it matters at scale. (3) The riskiest decision and what specifically makes it safe or unsafe. (4) Whether the practitioner shows awareness that Discovery and Design decisions are irreversible constraints on all later phases. 250–300 words.\n\nDecisions by SDLC phase:\n' + decSummary;
+
+  try {
+    var r = await fetch('https://api.anthropic.com/v1/messages', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,messages:[{role:'user',content:ctx}]})
+    });
+    var j = await r.json();
+    var text = (j.content||[]).map(function(c){return c.text||''}).join('') || 'The Oracle is silent.';
+    out.innerHTML = text.replace(/\n\n/g,'</p><p style="margin-top:8px">').replace(/^/,'<p>').replace(/$/,'</p>').replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>');
+    document.getElementById('signal-btn').style.display = 'inline-block';
+    updateSignalScores();
+  } catch(e) {
+    out.innerHTML = 'The Oracle is unreachable. Check your connection.';
+  }
+}
+
+// ── Signal scores ──
+function updateSignalScores(){
+  if(USER_TIER === 'anon') return;
+  var chCount = Object.keys(challengesSubmitted).length;
+  var decCount = Object.keys(selections).length;
+  var reasonCount = DEC_IDS.filter(function(k){
+    var el = document.getElementById('dec-resp-' + k.replace('dec-',''));
+    return el && el.value.trim().length > 30;
+  }).length;
+
+  var dims = {
+    tech:  Math.min(100, Math.round((chCount * 10 + reasonCount * 5) * 1.1)),
+    risk:  Math.min(100, Math.round((chCount * 8  + decCount * 4) * 1.05)),
+    stake: Math.min(100, Math.round(chCount * 14 + reasonCount * 3)),
+    prod:  Math.min(100, Math.round((decCount * 5 + reasonCount * 4) * 1.1)),
+    fpa:   Math.min(100, Math.round((chCount * 8  + decCount * 4) * 1.05))
+  };
+
+  ['tech','risk','stake','prod','fpa'].forEach(function(dim){
+    var score = dims[dim];
+    var bar = document.getElementById('bar-' + dim);
+    var scoreEl = document.getElementById('score-' + dim);
+    if(bar) setTimeout(function(){ bar.style.width = score + '%'; }, 300);
+    if(scoreEl) scoreEl.textContent = score + ' / 100';
+  });
+
+  var completePct = Math.round((chCount/5 + decCount/TOTAL_DECISIONS) / 2 * 100);
+  document.getElementById('signal-sub-text').textContent = 'Based on ' + chCount + '/5 stakeholder challenges and ' + decCount + '/' + TOTAL_DECISIONS + ' decisions across 9 SDLC phases — ' + completePct + '% complete';
+
+  if(chCount >= 3 && decCount >= 8){
+    document.getElementById('signal-narrative').textContent = 'Your engagement across the SDLC phases shows practitioner-level thinking. The sequencing of your decisions — from Discovery through Go-Live — reflects understanding that architectural choices have phase dependencies. Complete all challenges and decisions for your full evaluation narrative.';
+  }
+
+  if(USER_TIER === 'registered' && chCount === 5 && decCount === TOTAL_DECISIONS){
+    document.getElementById('portfolio-panel').style.display = 'block';
+  }
+}
+
+
+// ── Portfolio (registered users) ──
+function downloadPortfolio(){
+  alert('Portfolio PDF generation requires the backend service. Available after platform hosting is configured.');
+}
+function copyPortfolioLink(){
+  navigator.clipboard.writeText(window.location.href + '?portfolio=demo').then(function(){
+    alert('Shareable link copied to clipboard.');
+  });
+}
+
+// ── Init ──
+initTierDisplay();
+updateSignalScores();
+// Spotlight Phase 1 decisions on load (default active phase)
+setTimeout(function(){ selectSdlcPhase('p1'); }, 100);
+</script>
+<script src="branding.js"></script>
+</body>
+</html>

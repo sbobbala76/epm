@@ -1,0 +1,1046 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Groovy EPM Cloud API — The Planning Quest</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Crimson+Pro:ital,wght@0,400;0,500;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ══════════════════════════════════════════════
+   THE PLANNING QUEST — Shared Stylesheet
+   All pages import this file
+══════════════════════════════════════════════ */
+:root{
+  --bg:#07090e;--bg2:#0c0f18;--bg3:#111520;--bg4:#161c2a;
+  --gold:#d4a017;--goldLt:#f0c040;--goldDim:#5c4108;
+  --teal:#1fb8a8;--tealLt:#4dd9c8;
+  --purple:#7c3aed;--purpleLt:#a855f7;
+  --emerald:#059669;--emeraldLt:#10b981;
+  --sky:#0ea5e9;--skyLt:#38bdf8;
+  --red:#c0392b;--redLt:#e74c3c;
+  --amber:#d97706;--amberLt:#fbbf24;
+  --rose:#be185d;--roseLt:#f472b6;
+  --border:rgba(212,160,23,.15);
+  --white:#f0ead6;--dim:#5a6478;
+  --r:10px;--sidebar:268px;--topbar:54px
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Crimson Pro',serif;background:var(--bg);color:var(--white);min-height:100vh;overflow-x:hidden}
+
+/* ── Stars ── */
+#stars{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+.star{position:absolute;border-radius:50%;background:white;animation:twinkle var(--d,3s) infinite var(--delay,0s)}
+@keyframes twinkle{0%,100%{opacity:.05}50%{opacity:var(--op,.6)}}
+@keyframes glow{0%,100%{text-shadow:0 0 20px rgba(212,160,23,.3)}50%{text-shadow:0 0 50px rgba(212,160,23,.55)}}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(212,160,23,.3)}50%{box-shadow:0 0 0 8px rgba(212,160,23,0)}}
+@keyframes slideIn{from{opacity:0;transform:translateX(-10px)}to{opacity:1;transform:none}}
+
+/* ── Topbar ── */
+#topbar{position:fixed;top:0;left:0;right:0;height:var(--topbar);background:rgba(7,9,14,.97);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 20px;gap:14px;z-index:200}
+.tb-home{font-family:'Cinzel',serif;font-size:13px;font-weight:700;color:var(--goldLt);text-decoration:none;display:flex;align-items:center;gap:9px;letter-spacing:.04em}
+.tb-dot{width:8px;height:8px;border-radius:50%;background:var(--tealLt);animation:pulse 2s infinite}
+.tb-sep{color:var(--goldDim,#5c4108)}
+.tb-current{font-family:'Cinzel',serif;font-size:11px;color:var(--teal);letter-spacing:.04em;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tb-prog-wrap{flex:1;height:3px;background:rgba(255,255,255,.05);border-radius:2px;overflow:hidden;margin:0 16px}
+.tb-prog{height:100%;background:linear-gradient(90deg,var(--teal),var(--goldLt));border-radius:2px;transition:width .5s ease}
+.tb-xp{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--goldLt);white-space:nowrap}
+
+
+/* ── Layout ── */
+#shell{display:flex;padding-top:var(--topbar);min-height:100vh}
+
+/* ── Sidebar ── */
+#sb{width:var(--sidebar);background:var(--bg2);border-right:1px solid var(--border);position:fixed;top:var(--topbar);bottom:0;overflow-y:auto;z-index:100}
+#sb::-webkit-scrollbar{width:3px}
+#sb::-webkit-scrollbar-thumb{background:var(--goldDim);border-radius:2px}
+.sb-hdr{padding:10px 16px 6px;font-family:'Cinzel',serif;font-size:9px;font-weight:700;color:var(--goldDim);letter-spacing:.1em;text-transform:uppercase;border-bottom:1px solid rgba(255,255,255,.04)}
+.sb-part{display:flex;align-items:center;gap:8px;padding:9px 14px;cursor:pointer;border-bottom:1px solid rgba(255,255,255,.03);transition:all .12s;text-decoration:none}
+.sb-part:hover,.sb-part.active{background:rgba(212,160,23,.05)}
+.sb-part-icon{font-size:14px;flex-shrink:0}
+.sb-part-info{flex:1;min-width:0}
+.sb-part-num{font-family:'Cinzel',serif;font-size:8.5px;font-weight:700;color:var(--goldDim);letter-spacing:.08em;text-transform:uppercase}
+.sb-part-name{font-family:'Cinzel',serif;font-size:10.5px;color:var(--dim);font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:color .12s}
+.sb-part:hover .sb-part-name,.sb-part.active .sb-part-name{color:var(--goldLt)}
+.sb-part-xp{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--goldDim);white-space:nowrap}
+.sb-lesson{padding:7px 14px 7px 36px;font-size:12px;color:rgba(240,234,214,.35);cursor:pointer;border-left:2px solid transparent;display:flex;align-items:center;gap:8px;transition:all .12s;line-height:1.3;text-decoration:none}
+.sb-lesson:hover{color:rgba(240,234,214,.65);background:rgba(255,255,255,.015)}
+.sb-lesson.active{color:var(--goldLt);border-left-color:var(--goldLt);background:rgba(212,160,23,.06);font-weight:500}
+.sb-lesson.done .sl-dot{background:var(--emeraldLt)}
+.sl-dot{width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,.1);flex-shrink:0;transition:background .2s}
+.sb-tool-link{padding:8px 14px;display:flex;align-items:center;gap:9px;font-size:11.5px;color:var(--dim);cursor:pointer;transition:all .12s;border-left:2px solid transparent;text-decoration:none}
+.sb-tool-link:hover,.sb-tool-link.active{color:var(--tealLt);background:rgba(31,184,168,.04);border-left-color:var(--tealLt)}
+
+/* ── Main Content ── */
+#main{margin-left:var(--sidebar);flex:1;min-width:0;position:relative;z-index:1}
+#main::-webkit-scrollbar{width:4px}
+#main::-webkit-scrollbar-thumb{background:var(--goldDim);border-radius:2px}
+.lesson-wrap{max-width:820px;padding:36px 44px 100px;margin:0 auto;animation:fadeUp .3s ease}
+
+/* ── Typography ── */
+.page-title{font-family:'Cinzel',serif;font-size:28px;font-weight:700;line-height:1.2;margin-bottom:6px}
+.page-sub{font-size:13px;color:rgba(240,234,214,.4);margin-bottom:28px;font-style:italic;padding-bottom:18px;border-bottom:1px solid var(--border)}
+h2{font-family:'Cinzel',serif;font-size:17px;font-weight:600;color:var(--goldLt);margin:28px 0 12px;letter-spacing:.03em}
+h3{font-family:'Cinzel',serif;font-size:13.5px;font-weight:600;color:var(--tealLt);margin:18px 0 8px;letter-spacing:.04em}
+p{font-size:15px;line-height:1.82;color:rgba(240,234,214,.78);margin-bottom:12px}
+strong{color:var(--white);font-weight:500}
+ul,ol{padding-left:20px;margin-bottom:12px}
+li{font-size:15px;line-height:1.78;color:rgba(240,234,214,.72);margin-bottom:4px}
+code{font-family:'JetBrains Mono',monospace;font-size:12px;background:rgba(255,255,255,.06);padding:2px 6px;border-radius:4px;color:var(--tealLt)}
+
+/* ── Narration ── */
+.narration{background:linear-gradient(135deg,rgba(12,15,24,.95),rgba(17,21,32,.9));border:1px solid var(--border);border-left:3px solid var(--gold);border-radius:0 var(--r) var(--r) 0;padding:20px 24px;margin:20px 0;position:relative}
+.nar-lbl{font-family:'Cinzel',serif;font-size:9px;font-weight:700;letter-spacing:.1em;color:var(--gold);margin-bottom:8px;text-transform:uppercase}
+.narration p{font-style:italic;color:rgba(240,234,214,.68);margin:0;font-size:14px;line-height:1.88}
+
+/* ── Checklist ── */
+.checklist{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:20px 24px;margin:20px 0}
+.cl-title{font-family:'Cinzel',serif;font-size:10.5px;font-weight:700;color:var(--teal);letter-spacing:.08em;text-transform:uppercase;margin-bottom:14px}
+.cl-item{display:flex;align-items:flex-start;gap:12px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.04);cursor:pointer;user-select:none}
+.cl-item:last-child{border-bottom:none}
+.cl-box{width:18px;height:18px;border-radius:4px;border:1.5px solid rgba(212,160,23,.25);flex-shrink:0;margin-top:2px;display:flex;align-items:center;justify-content:center;font-size:11px;transition:all .15s}
+.cl-box.on{background:var(--emerald);border-color:var(--emerald);color:white}
+.cl-text{font-size:13.5px;color:rgba(240,234,214,.6);line-height:1.6;transition:all .12s}
+.cl-text.done{text-decoration:line-through;opacity:.35}
+
+/* ── Tables ── */
+.tbl-wrap{overflow-x:auto;margin:16px 0;border-radius:var(--r);border:1px solid var(--border)}
+.dtbl{width:100%;border-collapse:collapse;font-size:13px}
+.dtbl th{background:rgba(212,160,23,.06);color:var(--gold);padding:10px 13px;text-align:left;font-family:'Cinzel',serif;font-size:10.5px;letter-spacing:.04em;border-bottom:1px solid var(--border)}
+.dtbl td{padding:10px 13px;border-bottom:1px solid rgba(255,255,255,.04);color:rgba(240,234,214,.65);vertical-align:top;line-height:1.55}
+.dtbl tr:last-child td{border-bottom:none}
+.dtbl tr:hover td{background:rgba(255,255,255,.015)}
+
+/* ── Callouts ── */
+.callout{border-radius:var(--r);padding:14px 18px;margin:16px 0;font-size:14px;line-height:1.72}
+.tip{background:rgba(5,150,105,.07);border:1px solid rgba(5,150,105,.22);color:rgba(240,234,214,.72)}
+.warn{background:rgba(217,119,6,.07);border:1px solid rgba(217,119,6,.25);color:rgba(240,234,214,.72)}
+.danger{background:rgba(192,57,43,.07);border:1px solid rgba(192,57,43,.25);color:rgba(240,234,214,.72)}
+.lore{background:rgba(14,165,233,.05);border:1px solid rgba(14,165,233,.18);color:rgba(240,234,214,.68)}
+.fpa{background:rgba(124,58,237,.07);border:1px solid rgba(124,58,237,.22);color:rgba(240,234,214,.72)}
+.ci{font-size:15px;margin-right:7px}
+
+/* ── Code blocks ── */
+.code-wrap{margin:16px 0}
+.code-lbl{font-family:'Cinzel',serif;font-size:9px;font-weight:700;letter-spacing:.08em;color:var(--dim);margin-bottom:6px;text-transform:uppercase}
+.code-block{background:#090d14;border:1px solid rgba(255,255,255,.07);border-radius:8px;padding:18px 20px;font-family:'JetBrains Mono',monospace;font-size:11.5px;line-height:1.75;color:#a8d8ea;overflow-x:auto;white-space:pre}
+.ck{color:#ff7b72}.cs{color:#a5d6ff}.cf{color:#d2a8ff}.cc{color:#6a737d}.cn{color:#79c0ff}.cm{color:#ffa657}
+
+/* ── XP Badge ── */
+.xp-badge{display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,rgba(212,160,23,.1),rgba(212,160,23,.04));border:1px solid var(--border);border-radius:20px;padding:5px 14px;font-family:'Cinzel',serif;font-size:11px;color:var(--goldLt);margin-bottom:20px}
+
+/* ── Battle card ── */
+.battle-card{background:linear-gradient(135deg,rgba(124,58,237,.08),rgba(11,14,22,.95));border:1px solid rgba(124,58,237,.3);border-radius:var(--r);padding:22px 26px;margin:20px 0}
+.battle-lbl{font-family:'Cinzel',serif;font-size:9.5px;font-weight:700;letter-spacing:.1em;color:var(--purpleLt);margin-bottom:8px;text-transform:uppercase}
+.battle-title{font-family:'Cinzel',serif;font-size:14px;color:var(--white);margin-bottom:10px;font-weight:600}
+
+/* ── Flow row ── */
+.flow-row{display:flex;align-items:center;flex-wrap:wrap;gap:6px;margin:16px 0}
+.flow-box{padding:8px 14px;background:var(--bg3);border:1px solid var(--border);border-radius:6px;font-size:12px;font-weight:500;font-family:'Cinzel',serif;letter-spacing:.02em}
+.flow-arr{color:var(--dim);font-size:14px}
+
+/* ── Stage flow ── */
+.stage-flow{display:flex;align-items:stretch;flex-wrap:wrap;gap:0;margin:16px 0;overflow:hidden;border-radius:var(--r);border:1px solid var(--border)}
+.stage-box{flex:1;min-width:80px;padding:14px 8px;text-align:center;background:var(--bg3);border-right:1px solid var(--border)}
+.stage-box:last-child{border-right:none}
+.stage-icon{font-size:18px;display:block;margin-bottom:6px}
+.stage-name{font-family:'Cinzel',serif;font-size:9px;font-weight:600;color:var(--dim);letter-spacing:.04em}
+.stage-sub{font-size:10px;color:rgba(240,234,214,.3);margin-top:3px}
+
+/* ── AI Tutor ── */
+.tutor-box{background:linear-gradient(135deg,rgba(8,10,16,.98),rgba(17,21,32,.95));border:1px solid rgba(31,184,168,.18);border-radius:var(--r);padding:22px 26px;margin:28px 0}
+.tutor-hdr{display:flex;align-items:center;gap:12px;margin-bottom:8px}
+.tutor-av{width:38px;height:38px;background:linear-gradient(135deg,var(--purple),var(--teal));border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;box-shadow:0 0 20px rgba(31,184,168,.2)}
+.tutor-nm{font-family:'Cinzel',serif;font-size:13px;font-weight:700;color:var(--tealLt)}
+.tutor-rl{font-size:11px;color:var(--dim)}
+.tutor-desc{font-size:12.5px;color:rgba(240,234,214,.32);margin-bottom:12px}
+.chips{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:12px}
+.chip{font-size:11px;padding:5px 13px;border:1px solid rgba(31,184,168,.18);border-radius:14px;background:transparent;color:rgba(240,234,214,.42);cursor:pointer;transition:all .12s;font-family:'Crimson Pro',serif}
+.chip:hover{border-color:var(--tealLt);color:var(--tealLt);background:rgba(31,184,168,.07)}
+.tutor-row{display:flex;gap:8px}
+.tutor-input{flex:1;padding:9px 14px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:8px;color:var(--white);font-size:13px;font-family:'Crimson Pro',serif;outline:none;transition:border-color .15s}
+.tutor-input:focus{border-color:var(--teal)}
+.tutor-input::placeholder{color:rgba(255,255,255,.18)}
+.tutor-send{padding:9px 18px;background:linear-gradient(135deg,var(--teal),var(--sky));color:var(--bg);border:none;border-radius:8px;font-family:'Cinzel',serif;font-size:10.5px;font-weight:700;letter-spacing:.05em;cursor:pointer;transition:opacity .12s}
+.tutor-send:hover{opacity:.85}
+.tutor-out{margin-top:14px;font-size:14px;line-height:1.78;color:rgba(240,234,214,.68);min-height:0}
+.tutor-out.loading{color:rgba(240,234,214,.28);font-style:italic}
+.tutor-msg{background:var(--bg4);border-radius:8px;padding:12px 16px;margin-bottom:8px}
+.tutor-msg.user-msg{background:rgba(212,160,23,.06);border:1px solid rgba(212,160,23,.1)}
+.tutor-msg.ai-msg{border:1px solid rgba(255,255,255,.05)}
+.tutor-msg-lbl{font-family:'Cinzel',serif;font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:5px;opacity:.45}
+
+/* ── Nav buttons ── */
+.nav-btns{display:flex;justify-content:space-between;margin-top:48px;padding-top:20px;border-top:1px solid var(--border)}
+.nav-btn{padding:10px 22px;font-family:'Cinzel',serif;font-size:11.5px;font-weight:600;letter-spacing:.05em;border-radius:8px;cursor:pointer;transition:all .15s;border:1px solid var(--border);background:transparent;color:rgba(240,234,214,.4);text-decoration:none;display:inline-block}
+.nav-btn:hover{border-color:var(--teal);color:var(--tealLt)}
+.nav-btn.primary{background:linear-gradient(135deg,var(--teal),var(--sky));color:var(--bg);border-color:transparent}
+.nav-btn.primary:hover{opacity:.88;transform:translateY(-1px)}
+.nav-btn.gold{background:linear-gradient(135deg,var(--gold),#d97706);color:var(--bg);border-color:transparent}
+
+/* ── FP&A challenge box ── */
+.fpa-challenge{background:linear-gradient(135deg,rgba(190,24,93,.06),rgba(12,15,24,.97));border:1px solid rgba(190,24,93,.22);border-radius:var(--r);padding:22px 26px;margin:20px 0}
+.fpa-badge{font-family:'Cinzel',serif;font-size:9px;font-weight:700;letter-spacing:.1em;color:var(--roseLt);text-transform:uppercase;margin-bottom:8px}
+.fpa-title{font-family:'Cinzel',serif;font-size:14px;color:var(--white);font-weight:600;margin-bottom:10px}
+.fpa-challenge p{font-size:14px;color:rgba(240,234,214,.68);line-height:1.78;margin-bottom:8px}
+
+/* ── Boss card ── */
+.boss-card{background:linear-gradient(135deg,rgba(212,160,23,.12),rgba(124,58,237,.08),rgba(12,15,24,.97));border:1px solid rgba(212,160,23,.3);border-radius:14px;padding:28px 32px;margin:20px 0;text-align:center}
+.boss-title{font-family:'Cinzel',serif;font-size:22px;font-weight:900;color:var(--goldLt);margin-bottom:8px;animation:glow 3s infinite}
+
+/* ── KPI cards ── */
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin:16px 0}
+.kpi-card{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:16px;position:relative}
+.kpi-lbl{font-size:10px;color:var(--dim);margin-bottom:4px;font-family:'Cinzel',serif;letter-spacing:.04em;text-transform:uppercase}
+.kpi-val{font-family:'Cinzel',serif;font-size:22px;font-weight:700;color:var(--goldLt)}
+.kpi-sub{font-size:11px;color:var(--dim);margin-top:3px}
+.kpi-trend{position:absolute;top:12px;right:12px;font-size:14px}
+
+/* ── Responsive ── */
+@media(max-width:860px){#sb{display:none}#main{margin-left:0}.lesson-wrap{padding:24px 20px 80px}}
+@media(max-width:520px){.lesson-wrap{padding:20px 16px 80px}}
+
+/* ── Topbar tools — scrollable on mobile, current page highlight ── */
+.tb-tools{display:flex;gap:3px;margin-left:6px;overflow-x:auto;flex-shrink:0}
+.tb-tools::-webkit-scrollbar{display:none}
+.tb-tool{padding:4px 8px;border-radius:6px;border:1px solid var(--border);background:transparent;color:var(--dim);font-family:'Cinzel',serif;font-size:8.5px;font-weight:700;letter-spacing:.05em;cursor:pointer;transition:all .15s;text-transform:uppercase;text-decoration:none;display:inline-flex;align-items:center;white-space:nowrap}
+.tb-tool:hover,.tb-tool.active{border-color:var(--gold);color:var(--gold);background:rgba(212,160,23,.06)}
+/* ── Sidebar global nav divider ── */
+.sb-hdr.full-nav-hdr{margin-top:10px;border-top:1px solid rgba(255,255,255,.06);padding-top:10px;color:var(--teal);letter-spacing:.08em}
+
+</style>
+<style>
+.lesson{display:none}.lesson.active{display:block}
+.ch-badge{display:inline-flex;align-items:center;gap:9px;padding:5px 16px;border-radius:20px;font-family:'Cinzel',serif;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:18px;border:1px solid rgba(14,165,233,.35);background:rgba(14,165,233,.08);color:var(--skyLt)}
+/* Scenario build progress */
+.build-progress{display:flex;gap:0;margin:18px 0;border:1px solid var(--border);border-radius:10px;overflow:hidden}
+.bp-step{flex:1;padding:10px 8px;text-align:center;border-right:1px solid var(--border);cursor:default}
+.bp-step:last-child{border-right:none}
+.bp-step.active{background:rgba(14,165,233,.08);border-bottom:2px solid var(--skyLt)}
+.bp-step.done{background:rgba(5,150,105,.06)}
+.bp-step-n{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;color:var(--dim)}
+.bp-step.active .bp-step-n{color:var(--skyLt)}
+.bp-step.done .bp-step-n{color:var(--emeraldLt)}
+.bp-step-l{font-family:'Cinzel',serif;font-size:9px;color:var(--dim);margin-top:3px;letter-spacing:.03em}
+/* API method table */
+.api-row{display:flex;align-items:flex-start;gap:0;border-bottom:1px solid rgba(255,255,255,.04);padding:10px 0}
+.api-row:last-child{border-bottom:none}
+.api-sig{flex:2;font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--tealLt);padding-right:14px}
+.api-ret{flex:0.8;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--purpleLt)}
+.api-note{flex:3;font-size:13px;color:rgba(240,234,214,.6);line-height:1.55}
+.api-hdr{font-family:'Cinzel',serif;font-size:10px;font-weight:700;color:var(--dim);letter-spacing:.08em;text-transform:uppercase;margin:16px 0 8px;padding-bottom:6px;border-bottom:1px solid var(--border)}
+/* Progressive code reveal */
+.scenario-build{background:linear-gradient(135deg,rgba(14,165,233,.06),rgba(7,9,14,.98));border:1px solid rgba(14,165,233,.2);border-radius:12px;padding:22px 26px;margin:18px 0}
+.sb-step-badge{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--skyLt);background:rgba(14,165,233,.1);border:1px solid rgba(14,165,233,.2);border-radius:6px;padding:2px 10px;margin-bottom:8px}
+.sb-title{font-family:'Cinzel',serif;font-size:14px;font-weight:700;color:var(--white);margin-bottom:10px}
+/* Interview box */
+.interview-box{background:linear-gradient(135deg,rgba(190,24,93,.07),rgba(12,15,24,.97));border:1px solid rgba(190,24,93,.25);border-radius:var(--r);padding:18px 22px;margin:18px 0}
+.ib-lbl{font-family:'Cinzel',serif;font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--roseLt);margin-bottom:8px}
+.ib-q{font-size:14px;color:rgba(240,234,214,.8);font-weight:500;margin-bottom:6px;font-family:'Cinzel',serif}
+.ib-hint{font-size:12.5px;color:rgba(240,234,214,.45);font-style:italic}
+/* Performance rank */
+.perf-row{display:grid;grid-template-columns:60px 80px 1fr 1.6fr;gap:0;border-bottom:1px solid rgba(255,255,255,.04);padding:9px 0;align-items:start}
+.perf-row:first-child{font-family:'Cinzel',serif;font-size:9.5px;font-weight:700;color:var(--dim);letter-spacing:.06em;text-transform:uppercase;border-bottom:1px solid var(--border)}
+.perf-rank{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--goldLt)}
+.perf-imp{font-family:'Cinzel',serif;font-size:9px;font-weight:700;letter-spacing:.06em;padding:2px 7px;border-radius:8px;text-transform:uppercase}
+.imp-crit{background:rgba(192,57,43,.1);border:1px solid rgba(192,57,43,.3);color:var(--redLt)}
+.imp-high{background:rgba(217,119,6,.08);border:1px solid rgba(217,119,6,.25);color:var(--amberLt)}
+.imp-med{background:rgba(14,165,233,.07);border:1px solid rgba(14,165,233,.2);color:var(--skyLt)}
+.imp-low{color:var(--dim);border:1px solid var(--border);padding:2px 7px;border-radius:8px}
+.perf-what{font-size:12.5px;color:rgba(240,234,214,.7);padding-right:10px}
+.perf-why{font-size:12px;color:rgba(240,234,214,.45);line-height:1.55}
+/* Compare grid */
+.compare-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:16px 0}
+.compare-box{background:var(--bg4);border-radius:8px;padding:16px}
+.compare-box .cb-lbl{font-family:'Cinzel',serif;font-size:9px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid var(--border)}
+.compare-box.good .cb-lbl{color:var(--emeraldLt)}
+.compare-box.bad .cb-lbl{color:var(--redLt)}
+/* Final complete rule */
+.final-rule{background:linear-gradient(135deg,rgba(212,160,23,.1),rgba(124,58,237,.06),rgba(7,9,14,.98));border:2px solid rgba(212,160,23,.3);border-radius:14px;padding:26px 30px;margin:20px 0}
+.fr-crown{font-family:'Cinzel',serif;font-size:13px;font-weight:900;color:var(--goldLt);margin-bottom:6px;display:flex;align-items:center;gap:8px}
+@media(max-width:680px){.compare-grid{grid-template-columns:1fr}.perf-row{grid-template-columns:40px 70px 1fr}}
+</style>
+</head>
+<body>
+<div id="stars"></div>
+<div id="topbar">
+  <a href="index.html" class="tb-home"><span class="tb-dot"></span>The Planning Quest</a>
+  <span class="tb-sep">›</span>
+  <span class="tb-current" id="tb-current">Groovy · Chapter II</span>
+  <div class="tb-prog-wrap"><div class="tb-prog" id="tb-prog" style="width:0%"></div></div>
+  <span class="tb-xp" id="tb-xp">0 / 1,100 XP</span>
+  <div class="tb-tools">
+    <a href="parts-1-3.html" class="tb-tool">📖 I–III</a>
+    <a href="parts-4-5.html" class="tb-tool">⚔ IV–V</a>
+    <a href="parts-6-9.html" class="tb-tool">👑 VI–IX</a>
+    <a href="groovy-ch1.html" class="tb-tool">📘 Gr.I</a>
+    <a href="groovy-ch2.html" class="tb-tool">⚡ Gr.II</a>
+    <a href="quiz.html" class="tb-tool">Quiz</a>
+    <a href="flashcards.html" class="tb-tool">Cards</a>
+    <a href="labs.html" class="tb-tool">Labs</a>
+  </div>
+</div>
+
+<div id="shell">
+<div id="sb">
+  <div class="sb-hdr">Groovy Mastery Series</div>
+  <a href="index.html" class="sb-part"><span class="sb-part-icon">🏠</span><div class="sb-part-info"><div class="sb-part-name">Quest Map</div></div></a>
+  <a href="groovy-ch1.html" class="sb-part"><span class="sb-part-icon">📘</span><div class="sb-part-info"><div class="sb-part-num">Chapter I</div><div class="sb-part-name">Groovy Basics</div></div></a>
+
+  <div class="sb-hdr">Chapter II — EPM Cloud API</div>
+  <a class="sb-part active" onclick="show('g2-1')"><span class="sb-part-icon">⚡</span><div class="sb-part-info"><div class="sb-part-num">Chapter II</div><div class="sb-part-name">EPM Cloud API</div></div></a>
+  <a class="sb-lesson active" id="sbl-g2-1" onclick="show('g2-1')"><span class="sl-dot"></span>Cell API & operation.grid</a>
+  <a class="sb-lesson" id="sbl-g2-2" onclick="show('g2-2')"><span class="sl-dot"></span>DataGridBuilder — Full API</a>
+  <a class="sb-lesson" id="sbl-g2-3" onclick="show('g2-3')"><span class="sl-dot"></span>Member & Metadata API</a>
+  <a class="sb-lesson" id="sbl-g2-4" onclick="show('g2-4')"><span class="sl-dot"></span>RTPs — Multi-Select & Chains</a>
+  <a class="sb-lesson" id="sbl-g2-5" onclick="show('g2-5')"><span class="sl-dot"></span>Performance — The 9 Levers</a>
+  <a class="sb-lesson" id="sbl-g2-6" onclick="show('g2-6')"><span class="sl-dot"></span>Cross-Cube & REST API</a>
+  <a class="sb-lesson" id="sbl-g2-7" onclick="show('g2-7')"><span class="sl-dot"></span>👑 Peak: Production Rule Suite</a>
+
+  <div class="sb-hdr">Practice</div>
+  <a href="quiz.html" class="sb-tool-link">📝 Quiz</a>
+  <a href="flashcards.html" class="sb-tool-link">🃏 Flashcards</a>
+  <a href="labs.html" class="sb-tool-link">🔬 Enterprise Labs</a>
+  <a href="parts-4-5.html#p5" class="sb-tool-link">⚔ Battle Saga</a>
+
+  <div class="sb-hdr" style="margin-top:8px;border-top:1px solid rgba(255,255,255,.06);padding-top:10px">Full Quest Navigation</div>
+<div class="sb-hdr">The Quest</div>
+  <a href="index.html" class="sb-part"><span class="sb-part-icon">🏠</span><div class="sb-part-info"><div class="sb-part-name">Quest Map</div></div></a>
+  <div class="sb-hdr">Core Lessons</div>
+  <a href="parts-1-3.html" class="sb-tool-link">📖 Parts I–III (Fundamentals)</a>
+  <a href="parts-4-5.html" class="sb-tool-link">⚔ Parts IV–V (Forms + Groovy)</a>
+  <a href="parts-6-9.html" class="sb-tool-link">👑 Parts VI–IX (Workflow + Boss)</a>
+  <div class="sb-hdr">Groovy Mastery</div>
+  <a href="groovy-ch1.html" class="sb-tool-link">📘 Groovy Chapter I (Basics)</a>
+  <a href="groovy-ch2.html" class="sb-tool-link">⚡ Groovy Chapter II (EPM API)</a>
+  <div class="sb-hdr">Practice &amp; Labs</div>
+  <a href="quiz.html" class="sb-tool-link">📝 Practice Quiz</a>
+  <a href="flashcards.html" class="sb-tool-link">🃏 Flashcards</a>
+  <a href="labs.html" class="sb-tool-link">🔬 Enterprise Labs</a>
+</div>
+
+<div id="main"><div class="lesson-wrap">
+
+<!-- ══════════════════════════════════════════
+     G2-1 Cell API & operation.grid
+══════════════════════════════════════════ -->
+<div id="g2-1" class="lesson active">
+<div class="ch-badge">⚡ Chapter II · Lesson 1 · 125 XP</div>
+<h1 class="page-title" style="color:var(--skyLt)">📋 Cell API & operation.grid</h1>
+<p class="page-sub">Chapter II · EPM Cloud API · Lesson 1 of 7</p>
+<div class="narration"><div class="nar-lbl">The Grid Awakens</div><p>Every Groovy form script is handed one object at runtime: <code>operation.grid</code>. It is the in-memory snapshot of the form's cell data — your read/write interface to everything the planner entered. Understanding every property on a Cell object and every way to navigate the grid is the foundation of professional EPM scripting.</p></div>
+
+<h2>operation.grid — Complete API</h2>
+<div class="api-hdr">Grid Navigation Methods</div>
+<div class="api-row"><div class="api-sig">.getCellAt(row, col)</div><div class="api-ret">Cell | null</div><div class="api-note">Zero-based row/col. Fastest lookup when position is known statically.</div></div>
+<div class="api-row"><div class="api-sig">.getCellByIntersection(List)</div><div class="api-ret">Cell | null</div><div class="api-note">Member names in <strong>POV → row → col</strong> dimension order. Returns null for invalid/suppressed intersections.</div></div>
+<div class="api-row"><div class="api-sig">.dataCellIterator()</div><div class="api-ret">Iterator&lt;Cell&gt;</div><div class="api-note">Iterates all writable cells. Skips headers/labels. EPM 21.05+. O(n) — preferred over nested getCellAt loops.</div></div>
+<div class="api-row"><div class="api-sig">.getRowCount()</div><div class="api-ret">int</div><div class="api-note">Total data rows. Drive dynamic getCellAt loops safely.</div></div>
+<div class="api-row"><div class="api-sig">.getColCount()</div><div class="api-ret">int</div><div class="api-note">Total data columns.</div></div>
+
+<h2>Cell Object — Every Property</h2>
+<div class="tbl-wrap"><table class="dtbl"><thead><tr><th>Property</th><th>R/W</th><th>Type</th><th>Key Behaviour</th></tr></thead><tbody>
+<tr><td><code>cell.data</code></td><td>R/W</td><td>Number|String|null</td><td>The new user-entered value. Write here to transform before commit. null = #Missing — never assign 0 when you mean missing.</td></tr>
+<tr><td><code>cell.edited</code></td><td>R</td><td>Boolean</td><td>True ONLY if user explicitly changed this cell in the current save. Without this guard, ALL cells refire your logic on every save.</td></tr>
+<tr><td><code>cell.readOnly</code></td><td>R</td><td>Boolean</td><td>Writing .data on a readOnly cell <strong>silently fails</strong> — no error, no exception. Always guard.</td></tr>
+<tr><td><code>cell.priorValue</code></td><td>R</td><td>Number|null</td><td>Last committed Essbase value. null if previously #Missing. Use for delta = (cell.data ?: 0) − (cell.priorValue ?: 0).</td></tr>
+<tr><td><code>cell.noData</code></td><td>R</td><td>Boolean</td><td>True if current value is #Missing. Never assume null == 0 — missing and zero are semantically different.</td></tr>
+<tr><td><code>cell.essbaseType</code></td><td>R</td><td>String</td><td>Values: 'NUMERIC', 'TEXT', 'SMART_LIST'. Guard text cells before any math — ClassCastException on .data as Number.</td></tr>
+<tr><td><code>cell.memberNames</code></td><td>R</td><td>List&lt;String&gt;</td><td>Full intersection in POV→row→col dimension order. Use to dynamically build getCellByIntersection POVs.</td></tr>
+<tr><td><code>cell.row / cell.col</code></td><td>R</td><td>int</td><td>Zero-based position. Navigate to adjacent cells: grid.getCellAt(cell.row + 1, cell.col).</td></tr>
+</tbody></table></div>
+
+<h2>Production Audit Trail — cell.priorValue Pattern</h2>
+<div class="code-wrap"><div class="code-lbl">Q8 Hard — Audit trail implementation</div>
+<div class="code-block"><span class="cc">// Production audit trail — Vision Corporation budget change log</span>
+<span class="ck">def</span> user = operation.getUserName()
+<span class="ck">def</span> ts   = <span class="ck">new</span> Date().format(<span class="cs">"yyyy-MM-dd HH:mm:ss"</span>)
+
+operation.grid.<span class="cf">dataCellIterator</span>().each { cell ->
+    <span class="cc">// Guard chain — correct order</span>
+    <span class="ck">if</span> (cell == <span class="ck">null</span> || cell.readOnly || cell.noData || !cell.edited) <span class="ck">return</span>
+    <span class="ck">if</span> (cell.essbaseType != <span class="cs">"NUMERIC"</span>) <span class="ck">return</span>     <span class="cc">// skip text/smart-list cells</span>
+
+    <span class="ck">def</span> newVal   = (cell.data       ?: 0G) <span class="ck">as</span> BigDecimal
+    <span class="ck">def</span> oldVal   = (cell.priorValue ?: 0G) <span class="ck">as</span> BigDecimal
+    <span class="ck">def</span> delta    = newVal - oldVal
+    <span class="ck">if</span> (delta == 0) <span class="ck">return</span>                             <span class="cc">// no real change — skip phantom audit</span>
+
+    <span class="cc">// Write prior value to Audit_Prior scenario (same cube)</span>
+    <span class="ck">def</span> auditPov = cell.memberNames.toList()
+    auditPov[auditPov.indexOf(<span class="cf">cell.memberNames.find</span> { it == <span class="cs">"Budget"</span> || it == <span class="cs">"Forecast"</span> })] = <span class="cs">"Audit_Prior"</span>
+    <span class="ck">def</span> auditCell = operation.grid.<span class="cf">getCellByIntersection</span>(auditPov)
+    <span class="ck">if</span> (auditCell && !auditCell.readOnly) auditCell.data = oldVal
+
+    println <span class="cs">"AUDIT|${ts}|${user}|${cell.memberNames.join('|')}|old=${oldVal}|new=${newVal}|delta=${delta}"</span>
+}</div></div>
+
+<div class="callout warn"><span class="ci">⚠</span><strong>getCellByIntersection null diagnoses:</strong> (1) Wrong dimension order — use cell.memberNames to get the correct order. (2) Member outside form range — only loaded cells can be found. (3) Suppressed #Missing row — suppression removes cells from the grid entirely. (4) Alias vs member name — API resolves member names only, never aliases.</div>
+
+<div class="interview-box">
+<div class="ib-lbl">🎯 Interview Q5 [Easy] + Q7 [Medium] + Q8 [Hard]</div>
+<div class="ib-q">cell.data vs cell.priorValue / getCellByIntersection returned null / Design a production audit trail</div>
+<div class="ib-hint">Q5: data = new value (R/W), priorValue = last committed (R, can be null). Q7: 4 causes — dim order, member range, suppressed row, alias name. Q8: atomicity (same-save write), dataCellIterator, store priorValue (not new), getUserName for identity, guard audit cell for null.</div>
+</div>
+
+<div class="checklist"><div class="cl-title">⚡ Chapter II · Lesson 1 Tasks</div>
+<div class="cl-item" onclick="tick(this)"><div class="cl-box"></div><div class="cl-text">List all 8 Cell properties with types and their key gotchas</div></div>
+<div class="cl-item" onclick="tick(this)"><div class="cl-box"></div><div class="cl-text">Diagnose: getCellByIntersection returns null even though cell exists — 4 root causes</div></div>
+<div class="cl-item" onclick="tick(this)"><div class="cl-box"></div><div class="cl-text">Implement audit trail: dataCellIterator → delta check → write priorValue to Audit_Prior</div></div>
+<div class="cl-item" onclick="tick(this)"><div class="cl-box"></div><div class="cl-text">Explain why writing to a readOnly cell silently fails and how to guard</div></div>
+</div>
+<div class="tutor-box"><div class="tutor-hdr"><div class="tutor-av">🔭</div><div><div class="tutor-nm">The Oracle</div><div class="tutor-rl">Cell API Expert</div></div></div>
+<div class="chips" id="chips-g2-1"></div>
+<div class="tutor-row"><input class="tutor-input" id="q-g2-1" placeholder="Ask about cell.data, priorValue, dataCellIterator..." onkeydown="if(event.key==='Enter')ask('g2-1','EPM Groovy cell API operation.grid')"><button class="tutor-send" onclick="ask('g2-1','cell API')">Consult Oracle ✦</button></div>
+<div class="tutor-out" id="out-g2-1"></div></div>
+<div class="nav-btns"><a href="groovy-ch1.html" class="nav-btn">← Chapter I</a><button class="nav-btn primary" onclick="show('g2-2')">Next: DataGridBuilder →</button></div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     G2-2 DataGridBuilder
+══════════════════════════════════════════ -->
+<div id="g2-2" class="lesson">
+<div class="ch-badge">⚡ Chapter II · Lesson 2 · 175 XP</div>
+<h1 class="page-title" style="color:var(--skyLt)">🏗 DataGridBuilder — Full API</h1>
+<p class="page-sub">Chapter II · EPM Cloud API · Lesson 2 of 7</p>
+<div class="narration"><div class="nar-lbl">The Single Retrieve</div><p>DataGridBuilder is the most important API for production-scale Groovy scripting in EPM Cloud. It is the difference between a rule that takes 2 seconds and one that times out at 30 minutes. One <code>.build()</code> call retrieves everything. One <code>.save()</code> commits everything. Everything in between is pure Groovy in memory.</p></div>
+
+<h2>DataGridBuilder — Complete Method Reference</h2>
+<div class="api-hdr">Builder Methods (fluent — each returns DataGridBuilder)</div>
+<div class="api-row"><div class="api-sig">DataGridBuilder.create(operation)</div><div class="api-ret">DataGridBuilder</div><div class="api-note">Factory method. Always pass <code>operation</code> — binds to current Essbase connection.</div></div>
+<div class="api-row"><div class="api-sig">.pov(Map&lt;String,String&gt;)</div><div class="api-ret">DataGridBuilder</div><div class="api-note">Fix sparse dimensions to one member. Each fixed dim reduces block search space. Add all non-varying dims.</div></div>
+<div class="api-row"><div class="api-sig">.rows(Map&lt;String,List&lt;String&gt;&gt;)</div><div class="api-ret">DataGridBuilder</div><div class="api-note">Sparse dimensions to iterate as rows. One row per unique member combination.</div></div>
+<div class="api-row"><div class="api-sig">.columns(Map&lt;String,List&lt;String&gt;&gt;)</div><div class="api-ret">DataGridBuilder</div><div class="api-note"><strong>Dense dimensions here</strong>. They're free — already loaded with the block at no extra I/O.</div></div>
+<div class="api-row"><div class="api-sig">.build()</div><div class="api-ret">DataGrid</div><div class="api-note">Executes ONE Essbase MDP retrieve. Never call inside a loop. Returns in-memory snapshot.</div></div>
+<div class="api-hdr">Grid Iteration & Mutation</div>
+<div class="api-row"><div class="api-sig">grid.eachRow(closure)</div><div class="api-ret">void</div><div class="api-note">Iterate every row. Row object has <code>.getCellAt(memberName)</code> and <code>.getCellByIntersection(list)</code>.</div></div>
+<div class="api-row"><div class="api-sig">row.getCellAt(memberName)</div><div class="api-ret">Cell</div><div class="api-note">Get cell by its column member name. Faster than getCellByIntersection for column lookups.</div></div>
+<div class="api-row"><div class="api-sig">grid.save()</div><div class="api-ret">void</div><div class="api-note">Commits ALL in-memory mutations in ONE atomic write. Call AFTER all cell.data assignments. Never inside eachRow.</div></div>
+
+<h2>Dense vs Sparse Placement — The Why</h2>
+<div class="compare-grid">
+<div class="compare-box bad"><div class="cb-lbl">❌ Dense dim in .rows() — multiple block reads per entity</div>
+<div class="code-block" style="font-size:11px;padding:10px">DataGridBuilder.create(operation)
+  .rows([
+    Entity: entities,
+    Account: accounts  <span class="cc">// ← WRONG: Account is dense</span>
+  ]).build()
+<span class="cc">// Forces partial block retrieval per Account member</span></div></div>
+<div class="compare-box good"><div class="cb-lbl">✅ Dense dim in .columns() — reads from same block, free</div>
+<div class="code-block" style="font-size:11px;padding:10px">DataGridBuilder.create(operation)
+  .rows([Entity: entities])
+  .columns([Account: accounts])  <span class="cc">// ← correct</span>
+  .build()
+<span class="cc">// One block per Entity — all Accounts free</span></div></div>
+</div>
+
+<h2>Vision Scenario — Step 2: DataGridBuilder Integration</h2>
+<div class="build-progress">
+<div class="bp-step done"><div class="bp-step-n">✓ S1</div><div class="bp-step-l">Null-safe read</div></div>
+<div class="bp-step active"><div class="bp-step-n">S2</div><div class="bp-step-l">Grid builder</div></div>
+<div class="bp-step"><div class="bp-step-n">S3</div><div class="bp-step-l">Seasonality</div></div>
+<div class="bp-step"><div class="bp-step-n">S4</div><div class="bp-step-l">Allocations</div></div>
+<div class="bp-step"><div class="bp-step-n">S5</div><div class="bp-step-l">Peak rule</div></div>
+</div>
+<div class="scenario-build">
+<div class="sb-step-badge">STEP 2 of 5 — DataGridBuilder</div>
+<div class="sb-title">Vision Corporation — Revenue Spread with DataGridBuilder</div>
+<div class="code-block"><span class="cc">// STEP 2: Replace individual getCell() calls with DataGridBuilder
+// Reads ALL entities × ALL months in ONE Essbase call</span>
+
+<span class="ck">def</span> scenario = operation.parameter(<span class="cs">"Scenario"</span>) ?: <span class="cs">"Budget"</span>
+<span class="ck">def</span> year     = operation.parameter(<span class="cs">"Year"</span>) ?: <span class="cs">"FY2025"</span>
+
+<span class="ck">def</span> months = [<span class="cs">"Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"</span>]
+<span class="ck">def</span> essbase = operation.getEssbaseConnection()
+<span class="ck">def</span> entities = essbase.<span class="cf">getMember</span>(<span class="cs">"Entity"</span>, <span class="cs">"Total_Operating_Entities"</span>).<span class="cf">getLevelZeroMembers</span>()
+
+<span class="cc">// ONE retrieve — current year Budget and prior year Actual in same grid</span>
+<span class="ck">def</span> grid = DataGridBuilder.create(operation)
+    .pov([Version: <span class="cs">"Working"</span>])
+    .rows([Entity: entities.collect{it.name}, Scenario: [scenario, <span class="cs">"Actual"</span>]])
+    .columns([Account: [<span class="cs">"Total_Revenue"</span>], Period: months + [<span class="cs">"Full_Year"</span>]])
+    .build()
+
+println <span class="cs">"Grid built: ${grid.rowCount} rows × ${grid.colCount} cols"</span>
+
+<span class="cc">// Phase 2: compute in memory — zero Essbase calls</span>
+<span class="ck">def</span> writes = []
+grid.eachRow { row ->
+    <span class="ck">def</span> rowScenario = row.getCellAt(<span class="cs">"Scenario"</span>)?.memberNames?.find { it == scenario || it == <span class="cs">"Actual"</span> }
+    <span class="cc">// ... spread logic added in Step 3</span>
+}
+<span class="cc">// grid.save() — one atomic commit in Step 3</span></div>
+</div>
+
+<div class="interview-box">
+<div class="ib-lbl">🎯 Interview Q13 [Easy] + Q14 [Medium] — DataGridBuilder</div>
+<div class="ib-q">What is DataGridBuilder and why use it instead of getCellByIntersection in a loop? / Why should dense dimensions be in .columns()?</div>
+<div class="ib-hint">Q13: N getCellByIntersection calls = N block retrievals. DataGridBuilder.build() = 1 MDP call regardless of entity count. Q14: Dense dims are free in .columns() — already loaded with the block. In .rows() they force partial block retrieval per member = wasted I/O.</div>
+</div>
+
+<div class="checklist"><div class="cl-title">🏗 Chapter II · Lesson 2 Tasks</div>
+<div class="cl-item" onclick="tick(this)"><div class="cl-box"></div><div class="cl-text">Write a DataGridBuilder for Vision: entities in rows, accounts+months in columns</div></div>
+<div class="cl-item" onclick="tick(this)"><div class="cl-box"></div><div class="cl-text">Explain why Account must be in .columns() and not .rows()</div></div>
+<div class="cl-item" onclick="tick(this)"><div class="cl-box"></div><div class="cl-text">Use grid.eachRow{} and row.getCellAt("Revenue") to iterate the result</div></div>
+<div class="cl-item" onclick="tick(this)"><div class="cl-box"></div><div class="cl-text">Implement Step 2 — DataGridBuilder replacing getCell() loop for Vision spread</div></div>
+</div>
+<div class="tutor-box"><div class="tutor-hdr"><div class="tutor-av">🔭</div><div><div class="tutor-nm">The Oracle</div><div class="tutor-rl">DataGridBuilder Expert</div></div></div>
+<div class="chips" id="chips-g2-2"></div>
+<div class="tutor-row"><input class="tutor-input" id="q-g2-2" placeholder="Ask about DataGridBuilder, pov/rows/columns, build..." onkeydown="if(event.key==='Enter')ask('g2-2','EPM DataGridBuilder API')"><button class="tutor-send" onclick="ask('g2-2','DataGridBuilder')">Consult Oracle ✦</button></div>
+<div class="tutor-out" id="out-g2-2"></div></div>
+<div class="nav-btns"><button class="nav-btn" onclick="show('g2-1')">← Previous</button><button class="nav-btn primary" onclick="show('g2-3')">Next: Member & Metadata API →</button></div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     G2-3 Member & Metadata API
+══════════════════════════════════════════ -->
+<div id="g2-3" class="lesson">
+<div class="ch-badge">⚡ Chapter II · Lesson 3 · 150 XP</div>
+<h1 class="page-title" style="color:var(--skyLt)">🗂 Member & Metadata API</h1>
+<p class="page-sub">Chapter II · EPM Cloud API · Lesson 3 of 7</p>
+<div class="narration"><div class="nar-lbl">The Dimension Whisperer</div><p>Production Groovy rules never hardcode member lists. When Vision Corporation adds a new entity or account, rules that hardcode names silently exclude it. Dynamic metadata queries via the Member API make rules self-maintaining — a new entity tagged with the right UDA is automatically included in every allocation and validation on the next run.</p></div>
+
+<h2>Member API — Complete Reference</h2>
+<div class="code-wrap"><div class="code-lbl">All Member API patterns</div>
+<div class="code-block"><span class="ck">def</span> conn = operation.getEssbaseConnection()   <span class="cc">// or getEssbaseDimension("Account")</span>
+
+<span class="cc">// ── Fetch and inspect a member ──────────────────────────────────</span>
+<span class="ck">def</span> mbr = conn.<span class="cf">getMember</span>(<span class="cs">"NetIncome"</span>)
+println mbr.name           <span class="cc">// "NetIncome"</span>
+println mbr.alias          <span class="cc">// "Net Income" — may be null</span>
+println mbr.consolidation  <span class="cc">// "+", "-", "~", "^"</span>
+println mbr.dataStorage    <span class="cc">// "Store", "Dynamic Calc", "Never Share", etc.</span>
+
+<span class="cc">// ── Test member properties ───────────────────────────────────────</span>
+<span class="ck">if</span> (mbr.<span class="cf">isDynCalc</span>()) { <span class="cc">/* skip — no stored value */ </span> }
+<span class="ck">if</span> (mbr.<span class="cf">isShared</span>())  { <span class="cc">/* handle shared member */  </span> }
+
+<span class="cc">// ── Hierarchy traversal ─────────────────────────────────────────</span>
+<span class="ck">def</span> leaves   = conn.<span class="cf">getMember</span>(<span class="cs">"Total_Vision"</span>).<span class="cf">getLevelZeroMembers</span>()
+<span class="ck">def</span> children = conn.<span class="cf">getMember</span>(<span class="cs">"Total_Revenue"</span>).<span class="cf">getChildren</span>()
+<span class="ck">def</span> ancestors = conn.<span class="cf">getMember</span>(<span class="cs">"Vision_US"</span>).<span class="cf">getAncestors</span>()   <span class="cc">// parent → root</span>
+
+<span class="cc">// ── UDA filtering — the driver-based budgeting pattern ──────────</span>
+<span class="ck">def</span> headcountAccounts = conn.<span class="cf">getMembersByUDA</span>(<span class="cs">"Account"</span>, <span class="cs">"HEADCOUNT_DRIVER"</span>)
+<span class="ck">def</span> allocTargets      = conn.<span class="cf">getMembersByUDA</span>(<span class="cs">"Entity"</span>, <span class="cs">"ALLOCATION_TARGET"</span>)
+
+<span class="cc">// ── Alias → member name resolution ──────────────────────────────</span>
+<span class="ck">def</span> memberName = conn.<span class="cf">getMemberFromAlias</span>(<span class="cs">"Account"</span>, <span class="cs">"Net Income"</span>, <span class="cs">"Default"</span>)?.name
+
+<span class="cc">// ── Level and generation ─────────────────────────────────────────</span>
+println mbr.<span class="cf">getLevel</span>()       <span class="cc">// 0 = leaf, 1 = parent of leaves</span>
+println mbr.<span class="cf">getGeneration</span>()  <span class="cc">// 1 = root, 2 = first level below root</span></div></div>
+
+<h2>Vision Scenario — Step 3: Seasonality with Dynamic Members</h2>
+<div class="build-progress">
+<div class="bp-step done"><div class="bp-step-n">✓ S1</div><div class="bp-step-l">Null-safe</div></div>
+<div class="bp-step done"><div class="bp-step-n">✓ S2</div><div class="bp-step-l">Grid builder</div></div>
+<div class="bp-step active"><div class="bp-step-n">S3</div><div class="bp-step-l">Seasonality</div></div>
+<div class="bp-step"><div class="bp-step-n">S4</div><div class="bp-step-l">Allocations</div></div>
+<div class="bp-step"><div class="bp-step-n">S5</div><div class="bp-step-l">Peak rule</div></div>
+</div>
+<div class="scenario-build">
+<div class="sb-step-badge">STEP 3 of 5 — Seasonality with Dynamic Members</div>
+<div class="sb-title">Revenue Spread — Seasonality weights from prior year, dynamic entities via UDA</div>
+<div class="code-block"><span class="cc">// STEP 3: Add seasonality + UDA-based entity selection</span>
+<span class="ck">def</span> conn    = operation.getEssbaseConnection()
+<span class="ck">def</span> months  = [<span class="cs">"Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"</span>]
+
+<span class="cc">// Dynamic: entities tagged SPREAD_TARGET — no hardcoded lists</span>
+<span class="ck">def</span> entities = conn.<span class="cf">getMembersByUDA</span>(<span class="cs">"Entity"</span>, <span class="cs">"SPREAD_TARGET"</span>).collect{it.name}
+assert !entities.isEmpty() : <span class="cs">"No entities tagged SPREAD_TARGET — check UDA configuration"</span>
+
+<span class="cc">// ONE build: current Budget and prior year Actual</span>
+<span class="ck">def</span> grid = DataGridBuilder.create(operation)
+    .pov([Version: <span class="cs">"Working"</span>, Account: <span class="cs">"Total_Revenue"</span>])
+    .rows([Entity: entities])
+    .columns([Period: months + [<span class="cs">"Full_Year"</span>], Scenario: [<span class="cs">"Budget"</span>, <span class="cs">"Actual"</span>]])
+    .build()
+
+<span class="ck">def</span> writes = []
+
+grid.eachRow { row ->
+    <span class="ck">def</span> entity     = row.<span class="cf">getCellAt</span>(<span class="cs">"Full_Year"</span>)?.memberNames?.find{it <span class="ck">in</span> entities}
+    <span class="ck">def</span> annualBudg = (row.<span class="cf">getCellAt</span>(<span class="cs">"Full_Year Budget"</span>)?.data ?: 0G) <span class="ck">as</span> BigDecimal
+    <span class="ck">if</span> (annualBudg == 0) <span class="ck">return</span>
+
+    <span class="ck">def</span> pyTotal = (row.<span class="cf">getCellAt</span>(<span class="cs">"Full_Year Actual"</span>)?.data ?: 0G) <span class="ck">as</span> BigDecimal
+    <span class="ck">def</span> fallback = pyTotal == 0  <span class="cc">// new entity — equal spread</span>
+
+    months.eachWithIndex { m, i ->
+        <span class="ck">def</span> pyMth   = fallback ? (annualBudg / 12) : ((row.<span class="cf">getCellAt</span>(<span class="cs">"${m} Actual"</span>)?.data ?: 0G) <span class="ck">as</span> BigDecimal)
+        <span class="ck">def</span> weight  = fallback ? (1G/12G) : (pyTotal > 0 ? pyMth/pyTotal : 1G/12G)
+        <span class="ck">def</span> spread  = (annualBudg * weight).setScale(0, BigDecimal.ROUND_HALF_UP)
+        writes &lt;&lt; [entity, <span class="cs">"Total_Revenue"</span>, m, <span class="cs">"FY2025"</span>, <span class="cs">"Budget"</span>, <span class="cs">"Working"</span>, spread]
+    }
+    <span class="cc">// Rounding reconciliation — assign diff to December</span>
+    <span class="ck">def</span> sumMths = writes.takeLast(12).sum{it[6]}
+    writes[-1][6] += (annualBudg - sumMths)
+}
+
+operation.grid.<span class="cf">setDataCellValues</span>(writes)   <span class="cc">// ONE batch write for all entities × 12 months</span>
+println <span class="cs">"Vision Spread Step 3: ${entities.size()} entities, ${writes.size()} cells written"</span></div>
+</div>
+
+<div class="checklist"><div class="cl-title">🗂 Chapter II · Lesson 3 Tasks</div>
+<div class="cl-item" onclick="tick(this)"><div class="cl-box"></div><div class="cl-text">Use getMembersByUDA to get SPREAD_TARGET entities dynamically</div></div>
+<div class="cl-item" onclick="tick(this)"><div class="cl-box"></div><div class="cl-text">Traverse getAncestors() to log full hierarchy path for an entity</div></div>
+<div class="cl-item" onclick="tick(this)"><div class="cl-box"></div><div class="cl-text">Implement seasonality fallback for new entities with no prior year data</div></div>
+<div class="cl-item" onclick="tick(this)"><div class="cl-box"></div><div class="cl-text">Add the rounding reconciliation to ensure months sum exactly to annual</div></div>
+</div>
+<div class="tutor-box"><div class="tutor-hdr"><div class="tutor-av">🔭</div><div><div class="tutor-nm">The Oracle</div><div class="tutor-rl">Metadata & UDA Expert</div></div></div>
+<div class="chips" id="chips-g2-3"></div>
+<div class="tutor-row"><input class="tutor-input" id="q-g2-3" placeholder="Ask about getMember, UDAs, hierarchy traversal..." onkeydown="if(event.key==='Enter')ask('g2-3','EPM Groovy member metadata API UDA')"><button class="tutor-send" onclick="ask('g2-3','member API')">Consult Oracle ✦</button></div>
+<div class="tutor-out" id="out-g2-3"></div></div>
+<div class="nav-btns"><button class="nav-btn" onclick="show('g2-2')">← Previous</button><button class="nav-btn primary" onclick="show('g2-4')">Next: RTPs Multi-Select →</button></div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     G2-4 RTPs — Multi-Select & executeRule
+══════════════════════════════════════════ -->
+<div id="g2-4" class="lesson">
+<div class="ch-badge">⚡ Chapter II · Lesson 4 · 125 XP</div>
+<h1 class="page-title" style="color:var(--skyLt)">🎛 RTPs — Multi-Select, Chains & Control Flow</h1>
+<p class="page-sub">Chapter II · EPM Cloud API · Lesson 4 of 7</p>
+<div class="narration"><div class="nar-lbl">The Runtime Orchestrator</div><p>Runtime Prompts are the user's input into a Groovy rule at execution time. Multi-select RTPs arrive as a comma-delimited string with edge cases that bite every developer eventually: trailing commas, blank tokens, null for skipped optional prompts. And chaining rules with executeRule() carries a case-sensitivity trap that has caused many a failed budget cycle overnight batch.</p></div>
+
+<h2>Multi-Select RTP — Complete Safe Parse</h2>
+<div class="code-wrap"><div class="code-lbl">Q10 Medium — Multi-select entity RTP parsing</div>
+<div class="code-block"><span class="cc">// EPM delivers multi-select as: "Vision_US,Vision_EU,Vision_APAC"</span>
+<span class="cc">// Edge cases: null (skipped), trailing comma "Vision_US,", duplicates</span>
+
+<span class="ck">def</span> raw = operation.parameter(<span class="cs">"Entity"</span>) ?: <span class="cs">""</span>   <span class="cc">// ?: "" guards null before tokenize</span>
+
+<span class="ck">def</span> entities = raw
+    .tokenize(<span class="cs">","</span>)        <span class="cc">// split on comma</span>
+    *.trim()               <span class="cc">// remove whitespace from each</span>
+    .findAll { it }        <span class="cc">// drop empty tokens (trailing comma produces "")</span>
+    .unique()              <span class="cc">// deduplicate</span>
+
+<span class="cc">// Apply fallback if nothing came through</span>
+<span class="ck">if</span> (entities.isEmpty()) {
+    entities = conn.<span class="cf">getMember</span>(<span class="cs">"Entity"</span>, <span class="cs">"Total_Operating_Entities"</span>)
+        .<span class="cf">getLevelZeroMembers</span>().collect{it.name}
+    println <span class="cs">"INFO: No entities in RTP — defaulting to all operating entities (${entities.size()})"</span>
+}
+
+<span class="cc">// Validate after parsing — don't trust user input</span>
+<span class="ck">def</span> validEntities = conn.<span class="cf">getMember</span>(<span class="cs">"Entity"</span>,<span class="cs">"Total_Vision"</span>)
+    .<span class="cf">getLevelZeroMembers</span>().collect{it.name}.toSet()
+<span class="ck">def</span> invalid = entities.findAll { !(it <span class="ck">in</span> validEntities) }
+assert invalid.isEmpty() : <span class="cs">"Invalid entities in RTP: ${invalid.join(', ')}"</span></div></div>
+
+<h2>executeRule — Chaining Rules</h2>
+<div class="code-wrap"><div class="code-lbl">Q12 Hard — executeRule with RTP forwarding</div>
+<div class="code-block"><span class="cc">// operation.executeRule() is SYNCHRONOUS — blocks until downstream completes</span>
+<span class="cc">// Key: map keys must EXACTLY match the downstream rule's RTP names (case-sensitive)</span>
+
+<span class="ck">try</span> {
+    <span class="cc">// Forward RTPs — key must match EXACTLY as defined in Calculation Manager</span>
+    operation.<span class="cf">executeRule</span>(<span class="cs">"Vision_Aggregate_All"</span>, [
+        <span class="cs">"Scenario"</span>: scenario,           <span class="cc">// capital S — must match CM RTP name</span>
+        <span class="cs">"Year"</span>    : <span class="cs">"FY${year}"</span>,          <span class="cc">// capital Y — String value always</span>
+        <span class="cs">"Period"</span>  : period               <span class="cc">// 'period' != 'Period' → RTP not found</span>
+    ])
+    println <span class="cs">"Aggregation complete for ${scenario}/FY${year}"</span>
+} <span class="ck">catch</span> (Exception e) {
+    println <span class="cs">"ERROR: Downstream rule failed — ${e.message}"</span>
+    <span class="cc">// Decision: cancel primary save OR log and continue?</span>
+    operation.cancelled = <span class="ck">true</span>
+    operation.cancellationMessage = <span class="cs">"Aggregation failed: ${e.message}"</span>
+    <span class="ck">return</span>
+}
+
+<span class="cc">// ⚠ Recursive loop danger: Rule A calls Rule B which calls Rule A</span>
+<span class="cc">// EPM does NOT detect this — will exhaust thread stack</span></div></div>
+
+<h2>operation.cancelled — The Correct Pattern</h2>
+<div class="code-wrap"><div class="code-lbl">Q3 Medium — cancellationMessage must always be set</div>
+<div class="code-block"><span class="cc">// WRONG: cancelled without message — blank dialog or cryptic JVM error</span>
+operation.cancelled = <span class="ck">true</span>
+<span class="cc">// User sees nothing useful</span>
+
+<span class="cc">// CORRECT: always set both, always return immediately after</span>
+operation.cancelled = <span class="ck">true</span>
+operation.cancellationMessage = <span class="cs">"Gross margin ${gm.setScale(1)}% is below the 10% minimum for ${entity}. "</span> +
+    <span class="cs">"Increase revenue or reduce COGS before submitting."</span>
+<span class="ck">return</span>   <span class="cc">// ALWAYS return immediately — no code should run after cancel</span></div></div>
+
+<div class="interview-box">
+<div class="ib-lbl">🎯 Interview Q3 [Med] + Q10 [Med] + Q12 [Hard] — RTPs & Control</div>
+<div class="ib-q">What happens without cancellationMessage? / Multi-select RTP parse / executeRule mistakes?</div>
+<div class="ib-hint">Q3: blank or cryptic dialog — include entity+value+fix guidance in message. Q10: full chain — tokenize + trim + findAll + unique + null guard + fallback + validate. Q12: case-sensitive keys, String values, synchronous (can throw), recursive loop danger.</div>
+</div>
+
+<div class="checklist"><div class="cl-title">🎛 Chapter II · Lesson 4 Tasks</div>
+<div class="cl-item" onclick="tick(this)"><div class="cl-box"></div><div class="cl-text">Write the 5-step multi-select RTP parse chain with null guard and fallback</div></div>
+<div class="cl-item" onclick="tick(this)"><div class="cl-box"></div><div class="cl-text">Call executeRule() with correct case-sensitive RTP map and try-catch wrapper</div></div>
+<div class="cl-item" onclick="tick(this)"><div class="cl-box"></div><div class="cl-text">Write a cancellationMessage that includes entity, value, and what to fix</div></div>
+<div class="cl-item" onclick="tick(this)"><div class="cl-box"></div><div class="cl-text">Identify two ways to accidentally create an executeRule recursive loop</div></div>
+</div>
+<div class="tutor-box"><div class="tutor-hdr"><div class="tutor-av">🔭</div><div><div class="tutor-nm">The Oracle</div><div class="tutor-rl">RTP & Control Flow Expert</div></div></div>
+<div class="chips" id="chips-g2-4"></div>
+<div class="tutor-row"><input class="tutor-input" id="q-g2-4" placeholder="Ask about RTPs, multi-select, executeRule, cancellation..." onkeydown="if(event.key==='Enter')ask('g2-4','EPM Groovy RTPs multi-select executeRule')"><button class="tutor-send" onclick="ask('g2-4','RTPs')">Consult Oracle ✦</button></div>
+<div class="tutor-out" id="out-g2-4"></div></div>
+<div class="nav-btns"><button class="nav-btn" onclick="show('g2-3')">← Previous</button><button class="nav-btn primary" onclick="show('g2-5')">Next: Performance — 9 Levers →</button></div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     G2-5 Performance — The 9 Levers
+══════════════════════════════════════════ -->
+<div id="g2-5" class="lesson">
+<div class="ch-badge">⚡ Chapter II · Lesson 5 · 150 XP</div>
+<h1 class="page-title" style="color:var(--skyLt)">⚡ Performance — The 9 Levers</h1>
+<p class="page-sub">Chapter II · EPM Cloud API · Lesson 5 of 7</p>
+<div class="narration"><div class="nar-lbl">The Speed Alchemist</div><p>A Groovy rule that was 3 minutes in UAT is 45 minutes in production. The data volume is 10x. The analysis: 96 individual setCell() calls in a nested loop. Fix: one DataGridBuilder + one save = 2 seconds. The 9 performance levers are ranked by impact — check them in order before optimising anything.</p></div>
+
+<h2>The 9 Performance Levers — Ranked</h2>
+<div class="perf-row"><div class="perf-rank">#</div><div class="perf-imp">Impact</div><div class="perf-what">What to Do</div><div class="perf-why">Why It Matters</div></div>
+<div class="perf-row"><div class="perf-rank">#1</div><div class="perf-imp imp-crit">CRITICAL</div><div class="perf-what">Call .build() once, outside any loop</div><div class="perf-why">Eliminates N Essbase block retrievals. 100 entities = 0.2s vs 50s.</div></div>
+<div class="perf-row"><div class="perf-rank">#2</div><div class="perf-imp imp-crit">CRITICAL</div><div class="perf-what">Call grid.save() once, after all mutations</div><div class="perf-why">Single atomic write vs N lock+write+unlock cycles. Also: data integrity (partial write prevention).</div></div>
+<div class="perf-row"><div class="perf-rank">#3</div><div class="perf-imp imp-high">HIGH</div><div class="perf-what">Tight POV — fix every constant sparse dim</div><div class="perf-why">Each fixed dim halves+ the block search space. Loose POV = full sparse index scan.</div></div>
+<div class="perf-row"><div class="perf-rank">#4</div><div class="perf-imp imp-high">HIGH</div><div class="perf-what">Dense dims in .columns(), not .rows()</div><div class="perf-why">Dense dims in rows force partial block retrieval. In columns they're free.</div></div>
+<div class="perf-row"><div class="perf-rank">#5</div><div class="perf-imp imp-med">MEDIUM</div><div class="perf-what">Cache member objects before loops</div><div class="perf-why">getMember() = metadata round-trip. Cache once before .each, reuse N times.</div></div>
+<div class="perf-row"><div class="perf-rank">#6</div><div class="perf-imp imp-med">MEDIUM</div><div class="perf-what">Use dataCellIterator() over nested getCellAt loops</div><div class="perf-why">Iterator is O(n) over loaded cells. Nested getCellAt is O(rows×cols) with repeated index lookups.</div></div>
+<div class="perf-row"><div class="perf-rank">#7</div><div class="perf-imp imp-low">LOW</div><div class="perf-what">Avoid println inside tight loops</div><div class="perf-why">String alloc + I/O flush per iteration. Log counts, not per-cell detail.</div></div>
+<div class="perf-row"><div class="perf-rank">#8</div><div class="perf-imp imp-low">LOW</div><div class="perf-what">Filter in POV/rows spec, not in Groovy</div><div class="perf-why">Groovy-side filtering still retrieves the full slice from Essbase first.</div></div>
+<div class="perf-row"><div class="perf-rank">#9</div><div class="perf-imp" style="font-size:9px;color:var(--dim);border:1px solid var(--border);padding:2px 7px;border-radius:8px">CONSIDER</div><div class="perf-what">Hand off large dense calcs to Essbase calc scripts</div><div class="perf-why">Native Essbase engine is 10–100× faster for block-level aggregations vs JVM cell-by-cell.</div></div>
+
+<h2>Vision Scenario — Step 4: Allocation with all 9 Levers Applied</h2>
+<div class="build-progress">
+<div class="bp-step done"><div class="bp-step-n">✓ S1</div><div class="bp-step-l">Null-safe</div></div>
+<div class="bp-step done"><div class="bp-step-n">✓ S2</div><div class="bp-step-l">Grid builder</div></div>
+<div class="bp-step done"><div class="bp-step-n">✓ S3</div><div class="bp-step-l">Seasonality</div></div>
+<div class="bp-step active"><div class="bp-step-n">S4</div><div class="bp-step-l">Allocation</div></div>
+<div class="bp-step"><div class="bp-step-n">S5</div><div class="bp-step-l">Peak rule</div></div>
+</div>
+<div class="scenario-build">
+<div class="sb-step-badge">STEP 4 of 5 — IT Allocation with all 9 Levers</div>
+<div class="sb-title">Revenue-Proportional IT Shared Cost Allocation — Performance Correct</div>
+<div class="code-block"><span class="cc">// STEP 4: Two-pass IT allocation — all 9 performance levers applied</span>
+<span class="ck">def</span> conn     = operation.getEssbaseConnection()
+<span class="ck">def</span> t        = System.currentTimeMillis()
+<span class="ck">def</span> <span class="cf">lap</span>      = { lbl -> <span class="ck">def</span> n=System.currentTimeMillis(); println <span class="cs">"[PERF] ${lbl}: ${n-t}ms"</span>; t=n }
+
+<span class="cc">// Lever 5: cache member objects BEFORE any loop</span>
+<span class="ck">def</span> entities = conn.<span class="cf">getMembersByUDA</span>(<span class="cs">"Entity"</span>, <span class="cs">"ALLOCATION_TARGET"</span>).collect{it.name}
+
+<span class="cc">// Lever 1+3: ONE build call, tight POV (all constants fixed)</span>
+<span class="ck">def</span> grid = DataGridBuilder.create(operation)
+    .pov([Scenario: <span class="cs">"Budget"</span>, Version: <span class="cs">"Working"</span>, Year: <span class="cs">"FY2025"</span>])
+    .rows([Entity: entities + [<span class="cs">"Corporate"</span>]])              <span class="cc">// include pool entity</span>
+    .columns([Account: [<span class="cs">"Total_Revenue"</span>, <span class="cs">"IT_Shared_Cost"</span>, <span class="cs">"IT_Allocated"</span>], Period: [<span class="cs">"Full_Year"</span>]])
+    .build()
+lap(<span class="cs">"Retrieval"</span>)
+
+<span class="cc">// Pass 1: sum total revenue (lever 6: eachRow, not getCellAt in nested loop)</span>
+<span class="ck">def</span> totalRev = 0G
+<span class="ck">def</span> revMap   = [:]
+grid.eachRow { row ->
+    <span class="ck">def</span> entity = row.<span class="cf">getCellAt</span>(<span class="cs">"Total_Revenue"</span>)?.memberNames?.find{ it <span class="ck">in</span> entities }
+    <span class="ck">if</span> (!entity) <span class="ck">return</span>
+    <span class="ck">def</span> rev = (row.<span class="cf">getCellAt</span>(<span class="cs">"Total_Revenue"</span>)?.data ?: 0G) <span class="ck">as</span> BigDecimal
+    revMap[entity] = rev
+    totalRev += rev
+}
+assert totalRev > 0 : <span class="cs">"Guard: total revenue is zero — allocation aborted"</span>
+
+<span class="cc">// Fetch pool value</span>
+<span class="ck">def</span> pool = grid.eachRow { row ->  <span class="cc">// locate Corporate row</span>
+    row.<span class="cf">getCellAt</span>(<span class="cs">"IT_Shared_Cost"</span>)?.data ?: 0G
+}.first() ?: 0G <span class="ck">as</span> BigDecimal
+
+<span class="cc">// Lever 2: ALL writes staged into one list</span>
+<span class="ck">def</span> writes = []
+revMap.each { entity, rev ->
+    <span class="ck">def</span> share = (pool * (rev / totalRev)).setScale(0, BigDecimal.ROUND_HALF_UP)
+    writes &lt;&lt; [entity, <span class="cs">"IT_Allocated"</span>, <span class="cs">"Full_Year"</span>, <span class="cs">"FY2025"</span>, <span class="cs">"Budget"</span>, <span class="cs">"Working"</span>, share]
+}
+
+operation.grid.<span class="cf">setDataCellValues</span>(writes)   <span class="cc">// Lever 2: ONE batch write</span>
+lap(<span class="cs">"Commit"</span>)
+println <span class="cs">"IT allocated: pool=${pool} → ${entities.size()} entities, ${writes.size()} writes"</span></div>
+</div>
+
+<div class="checklist"><div class="cl-title">⚡ Chapter II · Lesson 5 Tasks</div>
+<div class="cl-item" onclick="tick(this)"><div class="cl-box"></div><div class="cl-text">Recite the 9 levers in ranked order from memory</div></div>
+<div class="cl-item" onclick="tick(this)"><div class="cl-box"></div><div class="cl-text">Implement Step 4 allocation with lap() profiling — measure Retrieval vs Commit</div></div>
+<div class="cl-item" onclick="tick(this)"><div class="cl-box"></div><div class="cl-text">Identify which levers apply if Computation phase is the bottleneck</div></div>
+<div class="cl-item" onclick="tick(this)"><div class="cl-box"></div><div class="cl-text">When should you invoke a native Essbase calc script instead of Groovy?</div></div>
+</div>
+<div class="tutor-box"><div class="tutor-hdr"><div class="tutor-av">🔭</div><div><div class="tutor-nm">The Oracle</div><div class="tutor-rl">Performance Expert</div></div></div>
+<div class="chips" id="chips-g2-5"></div>
+<div class="tutor-row"><input class="tutor-input" id="q-g2-5" placeholder="Ask about performance, profiling, native calc scripts..." onkeydown="if(event.key==='Enter')ask('g2-5','EPM Groovy performance optimisation')"><button class="tutor-send" onclick="ask('g2-5','performance')">Consult Oracle ✦</button></div>
+<div class="tutor-out" id="out-g2-5"></div></div>
+<div class="nav-btns"><button class="nav-btn" onclick="show('g2-4')">← Previous</button><button class="nav-btn primary" onclick="show('g2-6')">Next: Cross-Cube & REST →</button></div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     G2-6 Cross-Cube & REST
+══════════════════════════════════════════ -->
+<div id="g2-6" class="lesson">
+<div class="ch-badge">⚡ Chapter II · Lesson 6 · 150 XP</div>
+<h1 class="page-title" style="color:var(--skyLt)">🌐 Cross-Cube & REST API Patterns</h1>
+<p class="page-sub">Chapter II · EPM Cloud API · Lesson 6 of 7</p>
+<div class="narration"><div class="nar-lbl">The Bridge Builder</div><p>Vision Corporation's Planning cube calculates the budget. Its Reporting cube drives the CFO dashboard. When a planner saves a form in Planning, the Reporting cube must immediately reflect the change. Cross-cube writes via <code>getRestApiClient()</code> and external REST calls via HttpURLConnection are the integration bridges that make EPM Cloud talk to the world.</p></div>
+
+<h2>getRestApiClient() — Scope & Decision Tree</h2>
+<div class="tbl-wrap"><table class="dtbl"><thead><tr><th>Scenario</th><th>Use This</th><th>Why</th></tr></thead><tbody>
+<tr><td>Write to another cube in same EPM environment</td><td><code>getRestApiClient().postDataSlice()</code></td><td>Zero credential setup — session token injected automatically</td></tr>
+<tr><td>Read data from another cube</td><td><code>getRestApiClient().get()</code></td><td>Same session token applies</td></tr>
+<tr><td>Write to a different EPM environment</td><td>Manual HttpURLConnection + SubVar credentials</td><td>getRestApiClient() only targets current environment</td></tr>
+<tr><td>Call external API (Salesforce, SAP, etc.)</td><td>Manual HttpURLConnection + SubVar credentials</td><td>Not in EPM ecosystem — needs own auth</td></tr>
+<tr><td>Post-write aggregation needed</td><td>operation.executeRule() after write</td><td>Synchronous, guaranteed order</td></tr>
+</tbody></table></div>
+
+<div class="callout warn"><span class="ci">⚠</span><strong>postDataSlice() is ASYNC:</strong> It fires and returns immediately. If you call it then immediately read back written values, you will get stale data. Use executeRule() if you need to chain a calculation that reads the written values.</div>
+
+<div class="code-wrap"><div class="code-lbl">Q16 Hard — Cross-cube write with full error handling</div>
+<div class="code-block"><span class="cc">// Step 1: Validate primary cells FIRST — then cross-cube write
+// (If cross-cube write ran first and primary save cancelled → phantom data)</span>
+<span class="ck">if</span> (!primaryValidation()) {
+    operation.cancelled = <span class="ck">true</span>
+    operation.cancellationMessage = <span class="cs">"Validation failed — see details above"</span>
+    <span class="ck">return</span>
+}
+
+<span class="cc">// Step 2: Build cross-cube payload</span>
+<span class="cc">// Member list must follow TARGET cube's stored dimension order — NOT form order</span>
+<span class="ck">def</span> client  = operation.getRestApiClient()
+<span class="ck">def</span> payload = [
+    data: entities.collect { entity ->
+        [[<span class="cs">"Budget"</span>, <span class="cs">"Working"</span>, <span class="cs">"FY2025"</span>, <span class="cs">"Full_Year"</span>, entity, <span class="cs">"Total_Revenue"</span>],
+         getRevenue(entity)]
+    }
+]
+
+<span class="ck">try</span> {
+    client.<span class="cf">postDataSlice</span>(<span class="cs">"Vision_Reporting"</span>, payload)
+    println <span class="cs">"Cross-cube write queued for ${entities.size()} entities to Vision_Reporting"</span>
+} <span class="ck">catch</span> (Exception e) {
+    <span class="cc">// Business decision: log and continue, or cancel primary save?</span>
+    println <span class="cs">"ERROR: Cross-cube write failed: ${e.message}"</span>
+    <span class="cc">// Primary save still proceeds — Finance ops team investigates via job log</span>
+}
+
+<span class="cc">// For external REST (non-EPM API) — credentials from SubVars NEVER hardcoded</span>
+<span class="cc">// def token = operation.getSubstitutionVariable("EXT_API_TOKEN")</span>
+<span class="cc">// def conn = new URL("https://api.corp.com/data").openConnection()</span>
+<span class="cc">// conn.setRequestProperty("Authorization", "Bearer ${token}")</span></div></div>
+
+<div class="interview-box">
+<div class="ib-lbl">🎯 Interview Q15 [Medium] + Q16 [Hard] — REST API</div>
+<div class="ib-q">getRestApiClient() scope limitations / Cross-cube write with full error handling</div>
+<div class="ib-hint">Q15: same-environment only; postDataSlice is async; SubVars for credentials in external calls. Q16: ordering critical — validate primary FIRST; payload dimension order = target cube stored order (not form order); try-catch around write; async means don't read back immediately.</div>
+</div>
+
+<div class="checklist"><div class="cl-title">🌐 Chapter II · Lesson 6 Tasks</div>
+<div class="cl-item" onclick="tick(this)"><div class="cl-box"></div><div class="cl-text">Build a cross-cube write payload from Vision Planning → Vision_Reporting</div></div>
+<div class="cl-item" onclick="tick(this)"><div class="cl-box"></div><div class="cl-text">Explain why validate-primary-FIRST ordering matters for cross-cube writes</div></div>
+<div class="cl-item" onclick="tick(this)"><div class="cl-box"></div><div class="cl-text">Write an external REST call using HttpURLConnection with SubVar credential retrieval</div></div>
+<div class="cl-item" onclick="tick(this)"><div class="cl-box"></div><div class="cl-text">Explain postDataSlice() async behaviour and how to handle post-write reads</div></div>
+</div>
+<div class="tutor-box"><div class="tutor-hdr"><div class="tutor-av">🔭</div><div><div class="tutor-nm">The Oracle</div><div class="tutor-rl">REST & Integration Expert</div></div></div>
+<div class="chips" id="chips-g2-6"></div>
+<div class="tutor-row"><input class="tutor-input" id="q-g2-6" placeholder="Ask about REST API, cross-cube, postDataSlice..." onkeydown="if(event.key==='Enter')ask('g2-6','EPM Groovy REST cross-cube API')"><button class="tutor-send" onclick="ask('g2-6','REST API')">Consult Oracle ✦</button></div>
+<div class="tutor-out" id="out-g2-6"></div></div>
+<div class="nav-btns"><button class="nav-btn" onclick="show('g2-5')">← Previous</button><button class="nav-btn primary" onclick="show('g2-7')">👑 Peak: Production Suite →</button></div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     G2-7 PEAK — Production Rule Suite
+══════════════════════════════════════════ -->
+<div id="g2-7" class="lesson">
+<div class="ch-badge">⚡ Chapter II · Lesson 7 · 225 XP</div>
+<h1 class="page-title" style="color:var(--goldLt);animation:glow 3s infinite">👑 Peak: The Complete Vision Production Suite</h1>
+<p class="page-sub">Chapter II · EPM Cloud API · Lesson 7 of 7 · Mastery Complete!</p>
+<div class="narration"><div class="nar-lbl">The Summit</div><p>Every technique from both chapters — null safety, error wrapper, DataGridBuilder, UDA-based member selection, seasonality, allocation, cross-cube write, profiling — assembled into a single, production-grade Vision Corporation Groovy rule suite. This is what a senior EPM Groovy practitioner delivers.</p></div>
+
+<div class="build-progress">
+<div class="bp-step done"><div class="bp-step-n">✓ S1</div><div class="bp-step-l">Null-safe</div></div>
+<div class="bp-step done"><div class="bp-step-n">✓ S2</div><div class="bp-step-l">Grid builder</div></div>
+<div class="bp-step done"><div class="bp-step-n">✓ S3</div><div class="bp-step-l">Seasonality</div></div>
+<div class="bp-step done"><div class="bp-step-n">✓ S4</div><div class="bp-step-l">Allocation</div></div>
+<div class="bp-step active"><div class="bp-step-n">S5</div><div class="bp-step-l">Peak rule</div></div>
+</div>
+
+<div class="final-rule">
+<div class="fr-crown">👑 Vision Corporation — Master Budget Rule Suite (Production Grade)</div>
+<p style="font-size:13px;color:rgba(240,234,214,.5);margin-bottom:14px">All 24 Interview Toolkit patterns demonstrated. All 9 Performance Levers applied. Vision Corporation $2.8B, 8 operating entities, 6 currencies.</p>
+<div class="code-block"><span class="cc">// ═══════════════════════════════════════════════════════════════
+// VISION CORPORATION — Master Budget Rule Suite
+// Combines: Seasonal Spread + IT Allocation + Validation + Audit
+// Interview coverage: Q1-Q24 all patterns demonstrated
+// ═══════════════════════════════════════════════════════════════</span>
+<span class="ck">import</span> java.text.SimpleDateFormat
+
+<span class="cc">// ── Universal logger + profiler ─────────────────────────────────</span>
+<span class="ck">def</span> <span class="cf">log</span> = { l, m -> println <span class="cs">"[${new SimpleDateFormat('HH:mm:ss').format(new Date())}][${l.padRight(5)}] ${m}"</span> }
+<span class="ck">def</span> t0 = System.currentTimeMillis()
+<span class="ck">def</span> <span class="cf">lap</span> = { lbl -> <span class="ck">def</span> n=System.currentTimeMillis(); log(<span class="cs">"PERF"</span>,<span class="cs">"${lbl}: ${n-t0}ms"</span>); t0=n }
+<span class="ck">def</span> outcome = <span class="cs">"UNKNOWN"</span>
+
+<span class="ck">try</span> {
+    <span class="cc">// ── Layer 1: RTP validation ──────────────────────────────────</span>
+    <span class="ck">def</span> scenario = operation.parameter(<span class="cs">"Scenario"</span>) ?: <span class="cs">"Budget"</span>
+    <span class="ck">def</span> year     = operation.parameter(<span class="cs">"Year"</span>) ?: <span class="cs">"FY2025"</span>
+    assert scenario <span class="ck">in</span> [<span class="cs">"Budget"</span>,<span class="cs">"Forecast"</span>] : <span class="cs">"Invalid scenario: ${scenario}"</span>
+    log(<span class="cs">"INFO"</span>, <span class="cs">"START | user=${operation.getUserName()} | ${scenario} ${year}"</span>)
+
+    <span class="cc">// ── Metadata: dynamic member selection via UDAs ─────────────</span>
+    <span class="ck">def</span> conn        = operation.getEssbaseConnection()
+    <span class="ck">def</span> opEntities  = conn.<span class="cf">getMembersByUDA</span>(<span class="cs">"Entity"</span>, <span class="cs">"ALLOCATION_TARGET"</span>).collect{it.name}
+    <span class="ck">def</span> hcAccounts  = conn.<span class="cf">getMembersByUDA</span>(<span class="cs">"Account"</span>, <span class="cs">"HEADCOUNT_DRIVER"</span>).collect{it.name}
+    assert !opEntities.isEmpty() : <span class="cs">"No ALLOCATION_TARGET entities — check UDA config"</span>
+    log(<span class="cs">"INFO"</span>, <span class="cs">"Entities: ${opEntities.size()} | HC accounts: ${hcAccounts.size()}"</span>)
+
+    <span class="cc">// ── ONE DataGridBuilder call — all data in single Essbase retrieve ──</span>
+    <span class="ck">def</span> months = [<span class="cs">"Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"</span>]
+    <span class="ck">def</span> grid   = DataGridBuilder.create(operation)
+        .pov([Version: <span class="cs">"Working"</span>, Year: year])
+        .rows([Entity: opEntities + [<span class="cs">"Corporate"</span>], Scenario: [scenario, <span class="cs">"Actual"</span>]])
+        .columns([Account: [<span class="cs">"Total_Revenue"</span>,<span class="cs">"IT_Shared_Cost"</span>,<span class="cs">"IT_Allocated"</span>,<span class="cs">"Total_Headcount"</span>],
+                  Period:  months + [<span class="cs">"Full_Year"</span>]])
+        .build()
+    lap(<span class="cs">"Retrieval"</span>)
+
+    <span class="cc">// ── Computation: pre-fetch all values in memory ─────────────</span>
+    <span class="ck">def</span> revenueMap = [:]; <span class="ck">def</span> headcountMap = [:]; <span class="ck">def</span> pool = 0G
+    grid.eachRow { row ->
+        <span class="ck">def</span> entity = row.getCellAt(<span class="cs">"Total_Revenue"</span>)?.memberNames?.find{ it <span class="ck">in</span> opEntities }
+        <span class="ck">if</span> (entity) {
+            revenueMap[entity]   = (row.<span class="cf">getCellAt</span>(<span class="cs">"Full_Year"</span>)?.data ?: 0G) <span class="ck">as</span> BigDecimal
+            headcountMap[entity] = (row.<span class="cf">getCellAt</span>(<span class="cs">"Total_Headcount Full_Year"</span>)?.data ?: 0G) <span class="ck">as</span> BigDecimal
+        } <span class="ck">else</span> {
+            pool = (row.<span class="cf">getCellAt</span>(<span class="cs">"IT_Shared_Cost Full_Year"</span>)?.data ?: 0G) <span class="ck">as</span> BigDecimal
+        }
+    }
+    <span class="ck">def</span> totalRev = revenueMap.values().sum() ?: 0G
+    assert totalRev > 0 : <span class="cs">"Guard: total revenue zero — allocation aborted"</span>
+
+    <span class="cc">// ── Validation: collect ALL errors before throw ──────────────</span>
+    <span class="ck">def</span> errors = []
+    opEntities.each { e ->
+        <span class="ck">def</span> rev = revenueMap[e] ?: 0G
+        <span class="ck">def</span> hc  = headcountMap[e] ?: 0G
+        <span class="ck">if</span> (hc < 0) errors &lt;&lt; <span class="cs">"❌ ${e}: Headcount ${hc} is negative"</span>
+        <span class="ck">if</span> (rev > 0 && hc == 0) errors &lt;&lt; <span class="cs">"⚠ ${e}: Has revenue but zero headcount"</span>
+    }
+    <span class="ck">if</span> (!errors.isEmpty()) <span class="ck">throw new</span> AssertionError(errors.join(<span class="cs">"\n"</span>))
+
+    <span class="cc">// ── Write: ONE batch for all entities × all accounts ─────────</span>
+    <span class="ck">def</span> writes = []
+    opEntities.each { e ->
+        <span class="ck">def</span> rev   = revenueMap[e] ?: 0G
+        <span class="ck">def</span> share = totalRev > 0 ? (pool * (rev / totalRev)).setScale(0, BigDecimal.ROUND_HALF_UP) : 0G
+        writes &lt;&lt; [e, <span class="cs">"IT_Allocated"</span>, <span class="cs">"Full_Year"</span>, year, scenario, <span class="cs">"Working"</span>, share]
+    }
+    operation.grid.<span class="cf">setDataCellValues</span>(writes)
+    lap(<span class="cs">"Commit"</span>)
+
+    <span class="cc">// ── Cross-cube: mirror results to Reporting cube ─────────────</span>
+    <span class="ck">try</span> {
+        operation.<span class="cf">getRestApiClient</span>().<span class="cf">postDataSlice</span>(<span class="cs">"Vision_Reporting"</span>, [data: writes.collect{
+            [[it[4], it[5], it[2], it[3], it[0], it[1]], it[6]]
+        }])
+        log(<span class="cs">"INFO"</span>, <span class="cs">"Cross-cube write queued: Vision_Reporting"</span>)
+    } <span class="ck">catch</span> (Exception ex) {
+        log(<span class="cs">"ERROR"</span>, <span class="cs">"Cross-cube write failed (primary save continues): ${ex.message}"</span>)
+    }
+
+    log(<span class="cs">"INFO"</span>, <span class="cs">"COMPLETE: ${writes.size()} cells | pool=${pool} | entities=${opEntities.size()}"</span>)
+    outcome = <span class="cs">"SUCCESS"</span>
+
+} <span class="ck">catch</span> (AssertionError ae) {
+    outcome = <span class="cs">"VALIDATION_CANCEL"</span>
+    operation.cancelled = <span class="ck">true</span>
+    operation.cancellationMessage = ae.message
+    log(<span class="cs">"WARN"</span>, <span class="cs">"Validation: ${ae.message}"</span>)
+} <span class="ck">catch</span> (Exception e) {
+    outcome = <span class="cs">"SYSTEM_ERROR"</span>
+    log(<span class="cs">"ERROR"</span>, e.message)
+    e.stackTrace.take(5).each{ log(<span class="cs">"ERROR"</span>, <span class="cs">"  ${it}"</span>) }
+    <span class="ck">throw</span> e
+} <span class="ck">finally</span> {
+    log(<span class="cs">"INFO"</span>, <span class="cs">"=== OUTCOME: ${outcome} ==="</span>)
+}</div></div>
+
+<h2>Interview Toolkit — Complete Coverage Map</h2>
+<div class="tbl-wrap"><table class="dtbl"><thead><tr><th>Q#</th><th>Topic</th><th>Where Demonstrated</th></tr></thead><tbody>
+<tr><td>Q1, Q2, Q3</td><td>Architecture & hooks</td><td>Ch I Lesson 1 + cancellationMessage in skeleton</td></tr>
+<tr><td>Q4</td><td>Timeout strategies</td><td>DataGridBuilder + lap() profiler (Performance Lever #1)</td></tr>
+<tr><td>Q5, Q6</td><td>cell.data, cell.edited</td><td>Ch II Lesson 1 guard chain + audit trail</td></tr>
+<tr><td>Q7, Q8</td><td>getCellByIntersection null / audit trail</td><td>Ch II Lesson 1</td></tr>
+<tr><td>Q9, Q10, Q11, Q12</td><td>RTPs — cast, multi-select, closure return, executeRule</td><td>Ch I Lessons 2–3 + Ch II Lesson 4</td></tr>
+<tr><td>Q13, Q14</td><td>DataGridBuilder / dense columns</td><td>Ch II Lesson 2 + Steps 2–5</td></tr>
+<tr><td>Q15, Q16</td><td>getRestApiClient / cross-cube</td><td>Ch II Lesson 6 + Step 5</td></tr>
+<tr><td>Q17, Q18, Q19, Q20</td><td>Performance — single change, member cache, calc script, profiling</td><td>Ch II Lesson 5 + lap() in Step 4–5</td></tr>
+<tr><td>Q21, Q22, Q23, Q24</td><td>Logging, AssertionError, partial write, error wrapper</td><td>Ch I Lesson 5–6 + Step 5 try-catch-finally</td></tr>
+</tbody></table></div>
+
+<div class="checklist"><div class="cl-title">👑 Chapter II · Completion — Groovy Mastery</div>
+<div class="cl-item" onclick="tick(this)"><div class="cl-box"></div><div class="cl-text">Write the complete production suite from memory (skeleton + DataGridBuilder + error wrapper)</div></div>
+<div class="cl-item" onclick="tick(this)"><div class="cl-box"></div><div class="cl-text">Explain how all 9 performance levers are demonstrated in the peak rule</div></div>
+<div class="cl-item" onclick="tick(this)"><div class="cl-box"></div><div class="cl-text">Map all 24 Interview Toolkit questions to specific code patterns in both chapters</div></div>
+<div class="cl-item" onclick="tick(this)"><div class="cl-box"></div><div class="cl-text">Adapt the suite for Vision's HR allocation pool (by headcount instead of revenue)</div></div>
+</div>
+<div class="tutor-box"><div class="tutor-hdr"><div class="tutor-av" style="background:linear-gradient(135deg,var(--gold),var(--purple))">👑</div><div><div class="tutor-nm" style="color:var(--goldLt)">The Oracle — Groovy Examiner</div><div class="tutor-rl">Validate your production-grade Groovy mastery</div></div></div>
+<div class="chips" id="chips-g2-7"></div>
+<div class="tutor-row"><input class="tutor-input" id="q-g2-7" placeholder="Submit your production rule for review, or ask any Chapter I–II question..." onkeydown="if(event.key==='Enter')ask('g2-7','Groovy mastery review')"><button class="tutor-send" style="background:linear-gradient(135deg,var(--gold),var(--purple))" onclick="ask('g2-7','Groovy mastery')">Submit to Oracle 👑</button></div>
+<div class="tutor-out" id="out-g2-7"></div></div>
+<div class="nav-btns"><button class="nav-btn" onclick="show('g2-6')">← Previous</button><a href="index.html" class="nav-btn gold">🏆 Quest Map</a></div>
+</div>
+
+</div></div></div>
+
+<script>
+(function(){var s=document.getElementById('stars');for(var i=0;i<100;i++){var d=document.createElement('div');d.className='star';var sz=Math.random()*2+0.4;d.style.cssText='width:'+sz+'px;height:'+sz+'px;top:'+Math.random()*100+'%;left:'+Math.random()*100+'%;--d:'+(2+Math.random()*4)+'s;--delay:'+Math.random()*5+'s;--op:'+(0.2+Math.random()*0.5);s.appendChild(d);}})();
+
+var LESSON_XP={'g2-1':125,'g2-2':175,'g2-3':150,'g2-4':125,'g2-5':150,'g2-6':150,'g2-7':225};
+var done={},totalXP=0,PART_MAX=1100;
+function show(id){
+  document.querySelectorAll('.lesson').forEach(function(el){el.classList.remove('active')});
+  document.querySelectorAll('.sb-lesson').forEach(function(el){el.classList.remove('active')});
+  var el=document.getElementById(id);if(el)el.classList.add('active');
+  var sbl=document.getElementById('sbl-'+id);if(sbl)sbl.classList.add('active');
+  window.scrollTo(0,0);document.getElementById('main').scrollTop=0;
+  if(!done[id]&&LESSON_XP[id]){done[id]=true;totalXP+=LESSON_XP[id];document.getElementById('tb-xp').textContent=totalXP+' / 1,100 XP';document.getElementById('tb-prog').style.width=Math.min(Math.round(totalXP/PART_MAX*100),100)+'%';if(sbl)sbl.classList.add('done');}
+}
+function tick(el){var b=el.querySelector('.cl-box'),t=el.querySelector('.cl-text');b.classList.toggle('on');b.textContent=b.classList.contains('on')?'✓':'';t.classList.toggle('done');}
+
+var CHIPS={
+  'g2-1':['List all 8 Cell properties','Diagnose getCellByIntersection null','Design production audit trail','cell.edited vs cell.priorValue'],
+  'g2-2':['DataGridBuilder vs getCellByIntersection loop','Why dense dims in columns?','Explain .build() one-call rule','When to call grid.save()?'],
+  'g2-3':['getMembersByUDA pattern','Dynamic vs hardcoded entity lists','Member caching — when does it matter?','getLevel() vs getGeneration()'],
+  'g2-4':['Multi-select RTP edge cases','executeRule case-sensitivity trap','cancellationMessage best practices','Closure return vs script return'],
+  'g2-5':['Rank the 9 levers by impact','Profile Retrieval vs Commit phase','When to use Essbase calc script?','Q17: single most impactful change'],
+  'g2-6':['postDataSlice async behaviour','Cross-cube write dimension order','External REST with SubVar credentials','Ordering: validate primary first'],
+  'g2-7':['Review my production rule design','Map all 24 Qs to code patterns','Adapt suite for HR allocation pool','What would a Strong Hire answer for Q20?']
+};
+Object.keys(CHIPS).forEach(function(id){
+  var c=document.getElementById('chips-'+id);if(!c)return;
+  CHIPS[id].forEach(function(text){var btn=document.createElement('button');btn.className='chip';btn.textContent=text;btn.onclick=function(){document.getElementById('q-'+id).value=text;ask(id,text);};c.appendChild(btn);});
+});
+
+async function ask(lessonId,context){
+  var inp=document.getElementById('q-'+lessonId),out=document.getElementById('out-'+lessonId);
+  if(!inp||!out)return;
+  var q=inp.value.trim()||context||'Tell me about this topic';inp.value='';
+  out.innerHTML='<div class="tutor-msg ai-msg"><div class="tutor-msg-lbl">Oracle</div><em style="opacity:.4">Consulting the ancient scrolls...</em></div>';
+  var isPeak=lessonId==='g2-7';
+  var ctx=isPeak?
+    'You are The Oracle, senior EPM Cloud Groovy trainer and interview evaluator. The student is submitting for Groovy mastery review. Evaluate against the EPM Groovy Interview Toolkit (Q1-Q24) and the Expanded Cheat Sheet. Be rigorous, specific, and educational. Reference exact question numbers. Vision Corporation context ($2.8B, 12 entities, 6 currencies).\n\nSubmission: '+q :
+    'You are The Oracle, senior EPM Cloud Groovy trainer. Chapter II: EPM Cloud API. Topic: "'+context+'". Cross-reference both the EPM Groovy Expanded Cheat Sheet (10 sections) and the Interview Toolkit (Q1-Q24). Cite specific questions and cheat sheet sections. Production precision. Vision Corporation examples. 220-280 words.\n\nQuestion: '+q;
+  try{
+    var r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:isPeak?1200:900,messages:[{role:'user',content:ctx}]})});
+    var j=await r.json();
+    var text=(j.content||[]).map(function(c){return c.text||''}).join('')||'The Oracle is silent.';
+    out.innerHTML='<div class="tutor-msg ai-msg"><div class="tutor-msg-lbl">Oracle</div>'+text.replace(/\n\n/g,'</p><p style="margin-top:8px">').replace(/^/,'<p>').replace(/$/,'</p>').replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>')+'</div>';
+  }catch(e){out.innerHTML='<div class="tutor-msg ai-msg"><div class="tutor-msg-lbl">Oracle</div>The Oracle is unreachable.</div>';}
+}
+</script>
+<script src="branding.js"></script>
+</body>
+</html>

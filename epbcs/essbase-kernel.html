@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NODE s — The Essbase Kernel · The Planning Quest</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Crimson+Pro:ital,wght@0,400;0,500;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ══════════════════════════════════════════════
+   THE PLANNING QUEST — Shared Stylesheet
+══════════════════════════════════════════════ */
+:root{
+  --bg:#07090e;--bg2:#0c0f18;--bg3:#111520;--bg4:#161c2a;
+  --gold:#d4a017;--goldLt:#f0c040;--goldDim:#5c4108;
+  --teal:#1fb8a8;--tealLt:#4dd9c8;
+  --purple:#7c3aed;--purpleLt:#a855f7;
+  --emerald:#059669;--emeraldLt:#10b981;
+  --sky:#0ea5e9;--skyLt:#38bdf8;
+  --red:#c0392b;--redLt:#e74c3c;
+  --amber:#d97706;--amberLt:#fbbf24;
+  --rose:#be185d;--roseLt:#f472b6;
+  --border:rgba(212,160,23,.15);
+  --white:#f0ead6;--dim:#5a6478;
+  --r:10px;--sidebar:268px;--topbar:54px
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Crimson Pro',serif;background:var(--bg);color:var(--white);min-height:100vh;overflow-x:hidden}
+
+/* ── Stars ── */
+#stars{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+.star{position:absolute;border-radius:50%;background:white;animation:twinkle var(--d,3s) infinite var(--delay,0s)}
+@keyframes twinkle{0%,100%{opacity:.05}50%{opacity:var(--op,.6)}}
+@keyframes glow{0%,100%{text-shadow:0 0 20px rgba(212,160,23,.3)}50%{text-shadow:0 0 50px rgba(212,160,23,.55)}}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(212,160,23,.3)}50%{box-shadow:0 0 0 8px rgba(212,160,23,0)}}
+@keyframes slideIn{from{opacity:0;transform:translateX(-10px)}to{opacity:1;transform:none}}
+
+/* ── Topbar ── */
+#topbar{position:fixed;top:0;left:0;right:0;height:var(--topbar);background:rgba(7,9,14,.97);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 20px;gap:14px;z-index:200}
+.tb-home{font-family:'Cinzel',serif;font-size:13px;font-weight:700;color:var(--goldLt);text-decoration:none;display:flex;align-items:center;gap:9px;letter-spacing:.04em}
+.tb-dot{width:8px;height:8px;border-radius:50%;background:var(--tealLt);animation:pulse 2s infinite}
+.tb-sep{color:var(--goldDim,#5c4108)}
+.tb-current{font-family:'Cinzel',serif;font-size:11px;color:var(--teal);letter-spacing:.04em;max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tb-prog-wrap{flex:1;height:3px;background:rgba(255,255,255,.05);border-radius:2px;overflow:hidden;margin:0 16px}
+.tb-prog{height:100%;background:linear-gradient(90deg,var(--teal),var(--goldLt));border-radius:2px;transition:width .5s ease}
+.tb-xp{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--goldLt);white-space:nowrap}
+.tb-tools{display:flex;gap:3px;margin-left:6px;overflow-x:auto;flex-shrink:0}
+.tb-tools::-webkit-scrollbar{display:none}
+.tb-tool{padding:4px 8px;border-radius:6px;border:1px solid var(--border);background:transparent;color:var(--dim);font-family:'Cinzel',serif;font-size:8.5px;font-weight:700;letter-spacing:.05em;cursor:pointer;transition:all .15s;text-transform:uppercase;text-decoration:none;display:inline-flex;align-items:center;white-space:nowrap}
+.tb-tool:hover,.tb-tool.active{border-color:var(--gold);color:var(--gold);background:rgba(212,160,23,.06)}
+
+/* ── Layout ── */
+#shell{display:flex;padding-top:var(--topbar);min-height:100vh}
+
+/* ── Sidebar ── */
+#sb{width:var(--sidebar);background:var(--bg2);border-right:1px solid var(--border);position:fixed;top:var(--topbar);bottom:0;overflow-y:auto;z-index:100}
+#sb::-webkit-scrollbar{width:3px}
+#sb::-webkit-scrollbar-thumb{background:var(--goldDim);border-radius:2px}
+.sb-hdr{padding:10px 16px 6px;font-family:'Cinzel',serif;font-size:9px;font-weight:700;color:var(--goldDim);letter-spacing:.1em;text-transform:uppercase;border-bottom:1px solid rgba(255,255,255,.04)}
+.sb-part{display:flex;align-items:center;gap:8px;padding:9px 14px;cursor:pointer;border-bottom:1px solid rgba(255,255,255,.03);transition:all .12s;text-decoration:none}
+.sb-part:hover,.sb-part.active{background:rgba(212,160,23,.05)}
+.sb-part-icon{font-size:14px;flex-shrink:0}
+.sb-part-info{flex:1;min-width:0}
+.sb-part-num{font-family:'Cinzel',serif;font-size:8.5px;font-weight:700;color:var(--goldDim);letter-spacing:.08em;text-transform:uppercase}
+.sb-part-name{font-family:'Cinzel',serif;font-size:10.5px;color:var(--dim);font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:color .12s}
+.sb-part:hover .sb-part-name,.sb-part.active .sb-part-name{color:var(--goldLt)}
+.sb-lesson{padding:7px 14px 7px 36px;font-size:12px;color:rgba(240,234,214,.35);cursor:pointer;border-left:2px solid transparent;display:flex;align-items:center;gap:8px;transition:all .12s;line-height:1.3;text-decoration:none}
+.sb-lesson:hover{color:rgba(240,234,214,.65);background:rgba(255,255,255,.015)}
+.sb-lesson.active{color:var(--goldLt);border-left-color:var(--goldLt);background:rgba(212,160,23,.06);font-weight:500}
+.sb-lesson.done .sl-dot{background:var(--emeraldLt)}
+.sl-dot{width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,.1);flex-shrink:0;transition:background .2s}
+.sb-tool-link{padding:8px 14px;display:flex;align-items:center;gap:9px;font-size:11.5px;color:var(--dim);cursor:pointer;transition:all .12s;border-left:2px solid transparent;text-decoration:none}
+.sb-tool-link:hover,.sb-tool-link.active{color:var(--tealLt);background:rgba(31,184,168,.04);border-left-color:var(--tealLt)}
+
+/* ── Main Content ── */
+#main{margin-left:var(--sidebar);flex:1;min-width:0;position:relative;z-index:1}
+.lesson-wrap{max-width:820px;padding:36px 44px 100px;margin:0 auto;animation:fadeUp .3s ease}
+
+/* ── Typography ── */
+.page-title{font-family:'Cinzel',serif;font-size:28px;font-weight:700;line-height:1.2;margin-bottom:6px}
+.page-sub{font-size:13px;color:rgba(240,234,214,.4);margin-bottom:28px;font-style:italic;padding-bottom:18px;border-bottom:1px solid var(--border)}
+h2{font-family:'Cinzel',serif;font-size:17px;font-weight:600;color:var(--goldLt);margin:28px 0 12px;letter-spacing:.03em}
+h3{font-family:'Cinzel',serif;font-size:13.5px;font-weight:600;color:var(--tealLt);margin:18px 0 8px;letter-spacing:.04em}
+p{font-size:15px;line-height:1.82;color:rgba(240,234,214,.78);margin-bottom:12px}
+strong{color:var(--white);font-weight:500}
+ul,ol{padding-left:20px;margin-bottom:12px}
+li{font-size:15px;line-height:1.78;color:rgba(240,234,214,.72);margin-bottom:4px}
+code{font-family:'JetBrains Mono',monospace;font-size:12px;background:rgba(255,255,255,.06);padding:2px 6px;border-radius:4px;color:var(--tealLt)}
+
+/* ── Narration ── */
+.narration{background:linear-gradient(135deg,rgba(12,15,24,.95),rgba(17,21,32,.9));border:1px solid var(--border);border-left:3px solid var(--gold);border-radius:0 var(--r) var(--r) 0;padding:20px 24px;margin:20px 0;position:relative}
+.nar-lbl{font-family:'Cinzel',serif;font-size:9px;font-weight:700;letter-spacing:.1em;color:var(--gold);margin-bottom:8px;text-transform:uppercase}
+.narration p{font-style:italic;color:rgba(240,234,214,.68);margin:0;font-size:14px;line-height:1.88}
+
+/* ── Checklist ── */
+.checklist{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:20px 24px;margin:20px 0}
+.cl-title{font-family:'Cinzel',serif;font-size:10.5px;font-weight:700;color:var(--teal);letter-spacing:.08em;text-transform:uppercase;margin-bottom:14px}
+.cl-item{display:flex;align-items:flex-start;gap:12px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.04);cursor:pointer;user-select:none}
+.cl-item:last-child{border-bottom:none}
+.cl-box{width:18px;height:18px;border-radius:4px;border:1.5px solid rgba(212,160,23,.25);flex-shrink:0;margin-top:2px;display:flex;align-items:center;justify-content:center;font-size:11px;transition:all .15s}
+.cl-box.on{background:var(--emerald);border-color:var(--emerald);color:white}
+.cl-text{font-size:13.5px;color:rgba(240,234,214,.6);line-height:1.6;transition:all .12s}
+.cl-text.done{text-decoration:line-through;opacity:.35}
+
+/* ── Tables ── */
+.tbl-wrap{overflow-x:auto;margin:16px 0;border-radius:var(--r);border:1px solid var(--border)}
+.dtbl{width:100%;border-collapse:collapse;font-size:13px}
+.dtbl th{background:rgba(212,160,23,.06);color:var(--gold);padding:10px 13px;text-align:left;font-family:'Cinzel',serif;font-size:10.5px;letter-spacing:.04em;border-bottom:1px solid var(--border)}
+.dtbl td{padding:10px 13px;border-bottom:1px solid rgba(255,255,255,.04);color:rgba(240,234,214,.65);vertical-align:top;line-height:1.55}
+.dtbl tr:last-child td{border-bottom:none}
+.dtbl tr:hover td{background:rgba(255,255,255,.015)}
+
+/* ── Callouts ── */
+.callout{border-radius:var(--r);padding:14px 18px;margin:16px 0;font-size:14px;line-height:1.72}
+.tip{background:rgba(5,150,105,.07);border:1px solid rgba(5,150,105,.22);color:rgba(240,234,214,.72)}
+.warn{background:rgba(217,119,6,.07);border:1px solid rgba(217,119,6,.25);color:rgba(240,234,214,.72)}
+.danger{background:rgba(192,57,43,.07);border:1px solid rgba(192,57,43,.25);color:rgba(240,234,214,.72)}
+.lore{background:rgba(14,165,233,.05);border:1px solid rgba(14,165,233,.18);color:rgba(240,234,214,.68)}
+.fpa{background:rgba(124,58,237,.07);border:1px solid rgba(124,58,237,.22);color:rgba(240,234,214,.72)}
+.architect{background:rgba(212,160,23,.06);border:1px solid rgba(212,160,23,.22);color:rgba(240,234,214,.78)}
+.ci{font-size:15px;margin-right:7px}
+
+/* ── Code blocks ── */
+.code-wrap{margin:16px 0}
+.code-lbl{font-family:'Cinzel',serif;font-size:9px;font-weight:700;letter-spacing:.08em;color:var(--dim);margin-bottom:6px;text-transform:uppercase}
+.code-block{background:#090d14;border:1px solid rgba(255,255,255,.07);border-radius:8px;padding:18px 20px;font-family:'JetBrains Mono',monospace;font-size:11.5px;line-height:1.75;color:#a8d8ea;overflow-x:auto;white-space:pre}
+.ck{color:#ff7b72}.cs{color:#a5d6ff}.cf{color:#d2a8ff}.cc{color:#6a737d}.cn{color:#79c0ff}.cm{color:#ffa657}
+
+/* ── XP Badge ── */
+.xp-badge{display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,rgba(212,160,23,.1),rgba(212,160,23,.04));border:1px solid var(--border);border-radius:20px;padding:5px 14px;font-family:'Cinzel',serif;font-size:11px;color:var(--goldLt);margin-bottom:20px}
+
+/* ── Special Node badge ── */
+.node-s-badge{display:inline-flex;align-items:center;gap:10px;background:linear-gradient(135deg,rgba(124,58,237,.14),rgba(212,160,23,.06));border:1px solid rgba(124,58,237,.35);border-radius:20px;padding:6px 18px;font-family:'Cinzel',serif;font-size:11px;color:var(--purpleLt);margin-bottom:20px;letter-spacing:.04em}
+
+/* ── Battle card ── */
+.battle-card{background:linear-gradient(135deg,rgba(124,58,237,.08),rgba(11,14,22,.95));border:1px solid rgba(124,58,237,.3);border-radius:var(--r);padding:22px 26px;margin:20px 0}
+.battle-lbl{font-family:'Cinzel',serif;font-size:9.5px;font-weight:700;letter-spacing:.1em;color:var(--purpleLt);margin-bottom:8px;text-transform:uppercase}
+.battle-title{font-family:'Cinzel',serif;font-size:14px;color:var(--white);margin-bottom:10px;font-weight:600}
+
+/* ── Kernel card — special NODE s style ── */
+.kernel-card{background:linear-gradient(135deg,rgba(212,160,23,.08),rgba(124,58,237,.06),rgba(7,9,14,.98));border:1px solid rgba(212,160,23,.28);border-radius:14px;padding:26px 30px;margin:20px 0}
+.kernel-lbl{font-family:'Cinzel',serif;font-size:9.5px;font-weight:700;letter-spacing:.12em;color:var(--goldLt);margin-bottom:8px;text-transform:uppercase}
+.kernel-title{font-family:'Cinzel',serif;font-size:16px;color:var(--white);margin-bottom:10px;font-weight:700;animation:glow 4s infinite}
+
+/* ── Hourglass flow ── */
+.hourglass-wrap{margin:20px 0;display:flex;flex-direction:column;align-items:center;gap:0}
+.hg-tier{width:100%;max-width:520px;text-align:center;padding:12px 20px;border:1px solid var(--border);background:var(--bg3);position:relative}
+.hg-tier:first-child{border-radius:var(--r) var(--r) 0 0;background:rgba(212,160,23,.07);border-color:rgba(212,160,23,.2)}
+.hg-tier:last-child{border-radius:0 0 var(--r) var(--r);background:rgba(31,184,168,.06);border-color:rgba(31,184,168,.2)}
+.hg-tier-label{font-family:'Cinzel',serif;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--dim);margin-bottom:3px}
+.hg-tier-val{font-family:'Cinzel',serif;font-size:13px;font-weight:600;color:var(--white)}
+.hg-tier-sub{font-size:12px;color:rgba(240,234,214,.38);margin-top:2px}
+.hg-arrow{color:var(--dim);font-size:18px;line-height:1;padding:4px 0}
+
+/* ── Block anatomy diagram ── */
+.block-diagram{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:16px 0}
+.block-cell{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:14px;text-align:center}
+.block-cell.dense{border-color:rgba(212,160,23,.3);background:rgba(212,160,23,.05)}
+.block-cell.sparse{border-color:rgba(31,184,168,.2);background:rgba(31,184,168,.04)}
+.bc-label{font-family:'Cinzel',serif;font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px}
+.bc-label.d{color:var(--goldLt)}
+.bc-label.s{color:var(--tealLt)}
+.bc-members{font-size:12px;color:rgba(240,234,214,.55);line-height:1.7}
+
+/* ── Compare grid ── */
+.compare-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:16px 0}
+.compare-box{border-radius:8px;padding:14px 16px}
+.compare-box.bad{background:rgba(192,57,43,.06);border:1px solid rgba(192,57,43,.2)}
+.compare-box.good{background:rgba(5,150,105,.06);border:1px solid rgba(5,150,105,.2)}
+.cb-lbl{font-family:'Cinzel',serif;font-size:9px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;margin-bottom:8px;color:var(--dim)}
+
+/* ── Flow row ── */
+.flow-row{display:flex;align-items:center;flex-wrap:wrap;gap:6px;margin:16px 0}
+.flow-box{padding:8px 14px;background:var(--bg3);border:1px solid var(--border);border-radius:6px;font-size:12px;font-weight:500;font-family:'Cinzel',serif;letter-spacing:.02em}
+.flow-arr{color:var(--dim);font-size:14px}
+
+/* ── Architect Thought box ── */
+.arch-thought{background:linear-gradient(135deg,rgba(212,160,23,.07),rgba(7,9,14,.95));border:1px solid rgba(212,160,23,.2);border-left:3px solid var(--goldLt);border-radius:0 var(--r) var(--r) 0;padding:16px 20px;margin:18px 0}
+.arch-lbl{font-family:'Cinzel',serif;font-size:9px;font-weight:700;letter-spacing:.1em;color:var(--goldLt);margin-bottom:6px;text-transform:uppercase}
+.arch-thought p{font-style:italic;color:rgba(240,234,214,.7);margin:0;font-size:14px;line-height:1.85}
+
+/* ── Interview box ── */
+.interview-box{background:linear-gradient(135deg,rgba(14,165,233,.05),rgba(7,9,14,.96));border:1px solid rgba(14,165,233,.2);border-radius:var(--r);padding:18px 22px;margin:18px 0}
+.ib-lbl{font-family:'Cinzel',serif;font-size:9.5px;font-weight:700;letter-spacing:.1em;color:var(--skyLt);margin-bottom:6px;text-transform:uppercase}
+.ib-q{font-size:14px;color:rgba(240,234,214,.8);margin-bottom:8px;font-weight:500}
+.ib-hint{font-size:12.5px;color:rgba(240,234,214,.38);font-style:italic;line-height:1.6}
+
+/* ── Tutor box ── */
+.tutor-box{background:linear-gradient(135deg,rgba(8,10,16,.98),rgba(17,21,32,.95));border:1px solid rgba(31,184,168,.18);border-radius:var(--r);padding:22px 26px;margin:28px 0}
+.tutor-hdr{display:flex;align-items:center;gap:12px;margin-bottom:8px}
+.tutor-av{width:38px;height:38px;background:linear-gradient(135deg,var(--purple),var(--teal));border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;box-shadow:0 0 20px rgba(31,184,168,.2)}
+.tutor-nm{font-family:'Cinzel',serif;font-size:13px;font-weight:700;color:var(--tealLt)}
+.tutor-rl{font-size:11px;color:var(--dim)}
+.tutor-desc{font-size:12.5px;color:rgba(240,234,214,.32);margin-bottom:12px}
+.chips{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:12px}
+.chip{font-size:11px;padding:5px 13px;border:1px solid rgba(31,184,168,.18);border-radius:14px;background:transparent;color:rgba(240,234,214,.42);cursor:pointer;transition:all .12s;font-family:'Crimson Pro',serif}
+.chip:hover{border-color:var(--tealLt);color:var(--tealLt);background:rgba(31,184,168,.07)}
+.tutor-row{display:flex;gap:8px}
+.tutor-input{flex:1;padding:9px 14px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:8px;color:var(--white);font-size:13px;font-family:'Crimson Pro',serif;outline:none;transition:border-color .15s}
+.tutor-input:focus{border-color:var(--teal)}
+.tutor-input::placeholder{color:rgba(255,255,255,.18)}
+.tutor-send{padding:9px 18px;background:linear-gradient(135deg,var(--teal),var(--sky));color:var(--bg);border:none;border-radius:8px;font-family:'Cinzel',serif;font-size:10.5px;font-weight:700;letter-spacing:.05em;cursor:pointer;transition:opacity .12s}
+.tutor-send:hover{opacity:.85}
+.tutor-out{margin-top:14px;font-size:14px;line-height:1.78;color:rgba(240,234,214,.68);min-height:0}
+.tutor-msg{background:var(--bg4);border-radius:8px;padding:12px 16px;margin-bottom:8px}
+.tutor-msg.ai-msg{border:1px solid rgba(255,255,255,.05)}
+.tutor-msg-lbl{font-family:'Cinzel',serif;font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:5px;opacity:.45}
+
+/* ── Nav buttons ── */
+.nav-btns{display:flex;justify-content:space-between;margin-top:48px;padding-top:20px;border-top:1px solid var(--border)}
+.nav-btn{padding:10px 22px;font-family:'Cinzel',serif;font-size:11.5px;font-weight:600;letter-spacing:.05em;border-radius:8px;cursor:pointer;transition:all .15s;border:1px solid var(--border);background:transparent;color:rgba(240,234,214,.4);text-decoration:none;display:inline-block}
+.nav-btn:hover{border-color:var(--teal);color:var(--tealLt)}
+.nav-btn.primary{background:linear-gradient(135deg,var(--teal),var(--sky));color:var(--bg);border-color:transparent}
+.nav-btn.primary:hover{opacity:.88;transform:translateY(-1px)}
+.nav-btn.gold{background:linear-gradient(135deg,var(--gold),#d97706);color:var(--bg);border-color:transparent}
+
+/* ── Lesson visibility ── */
+.lesson{display:none}.lesson.active{display:block}
+
+/* ── Responsive ── */
+@media(max-width:860px){#sb{display:none}#main{margin-left:0}.lesson-wrap{padding:24px 20px 80px}}
+@media(max-width:520px){.lesson-wrap{padding:20px 16px 80px}.compare-grid{grid-template-columns:1fr}.block-diagram{grid-template-columns:1fr}}
+.sb-hdr.full-nav-hdr{margin-top:10px;border-top:1px solid rgba(255,255,255,.06);padding-top:10px;color:var(--teal);letter-spacing:.08em}
+</style>
+</head>
+<body>
+<div id="stars"></div>
+
+<div id="topbar">
+  <a href="index.html" class="tb-home"><span class="tb-dot"></span>The Planning Quest</a>
+  <span class="tb-sep">›</span>
+  <span class="tb-current" id="tb-current">NODE s — Essbase Kernel</span>
+  <div class="tb-prog-wrap"><div class="tb-prog" id="tb-prog" style="width:0%"></div></div>
+  <span class="tb-xp" id="tb-xp">0 / 850 XP</span>
+  <div class="tb-tools">
+    <a href="parts-1-3.html" class="tb-tool">📖 I–III</a>
+    <a href="parts-4-5.html" class="tb-tool">⚔ IV–V</a>
+    <a href="parts-6-9.html" class="tb-tool">👑 VI–IX</a>
+    <a href="groovy-ch1.html" class="tb-tool">📘 Gr.I</a>
+    <a href="groovy-ch2.html" class="tb-tool">⚡ Gr.II</a>
+    <a href="quiz.html" class="tb-tool">Quiz</a>
+    <a href="flashcards.html" class="tb-tool">Cards</a>
+    <a href="labs.html" class="tb-tool">Labs</a>
+  </div>
+</div>
+
+<div id="shell">
+<div id="sb">
+  <div class="sb-hdr">NODE s — Essbase Kernel</div>
+  <a href="index.html" class="sb-part"><span class="sb-part-icon">🏠</span><div class="sb-part-info"><div class="sb-part-name">Quest Map</div></div></a>
+
+  <div class="sb-hdr">Special Node · 850 XP</div>
+  <a class="sb-part active" onclick="show('ns-1')"><span class="sb-part-icon">⚙</span><div class="sb-part-info"><div class="sb-part-num">NODE s</div><div class="sb-part-name">Essbase Kernel</div></div></a>
+  <a class="sb-lesson active" id="sbl-ns-1" onclick="show('ns-1')"><span class="sl-dot"></span>How Blocks Work</a>
+  <a class="sb-lesson" id="sbl-ns-2" onclick="show('ns-2')"><span class="sl-dot"></span>The Empty Space Problem</a>
+  <a class="sb-lesson" id="sbl-ns-3" onclick="show('ns-3')"><span class="sl-dot"></span>Block Creation Strategies</a>
+  <a class="sb-lesson" id="sbl-ns-4" onclick="show('ns-4')"><span class="sl-dot"></span>The Hourglass Principle</a>
+
+  <div class="sb-hdr" style="margin-top:8px">Continue</div>
+  <a href="parts-4-5.html" class="sb-tool-link">⚔ Parts IV–V →</a>
+  <a href="groovy-ch1.html" class="sb-tool-link">📘 Groovy Chapter I →</a>
+
+  <div class="sb-hdr">Practice</div>
+  <a href="quiz.html" class="sb-tool-link">📝 Practice Quiz</a>
+  <a href="flashcards.html" class="sb-tool-link">🃏 Flashcards</a>
+  <a href="labs.html" class="sb-tool-link">🔬 Enterprise Labs</a>
+
+  <div class="sb-hdr full-nav-hdr">Full Quest Navigation</div>
+  <div class="sb-hdr">The Quest</div>
+  <a href="index.html" class="sb-part"><span class="sb-part-icon">🏠</span><div class="sb-part-info"><div class="sb-part-name">Quest Map</div></div></a>
+  <div class="sb-hdr">Core Lessons</div>
+  <a href="parts-1-3.html" class="sb-tool-link">📖 Parts I–III (Fundamentals)</a>
+  <a href="parts-4-5.html" class="sb-tool-link">⚔ Parts IV–V (Forms + Groovy)</a>
+  <a href="parts-6-9.html" class="sb-tool-link">👑 Parts VI–IX (Workflow + Boss)</a>
+  <div class="sb-hdr">Kernel &amp; Mastery</div>
+  <a href="essbase-kernel.html" class="sb-tool-link active">⚙ NODE s: Essbase Kernel</a>
+  <a href="groovy-ch1.html" class="sb-tool-link">📘 Groovy Chapter I (Basics)</a>
+  <a href="groovy-ch2.html" class="sb-tool-link">⚡ Groovy Chapter II (EPM API)</a>
+  <div class="sb-hdr">Practice &amp; Labs</div>
+  <a href="quiz.html" class="sb-tool-link">📝 Practice Quiz</a>
+  <a href="flashcards.html" class="sb-tool-link">🃏 Flashcards</a>
+  <a href="labs.html" class="sb-tool-link">🔬 Enterprise Labs</a>
+</div>
+
+<div id="main">
+<div class="lesson-wrap">
+
+
+<!-- ══════════════════════════════════════════
+     LESSON NS-1 — How Blocks Work
+══════════════════════════════════════════ -->
+<div id="ns-1" class="lesson active">
+<div class="node-s-badge">⚙ NODE s — Special Node · 175 XP · EPB-MOD-s-L1</div>
+<h1 class="page-title" style="color:var(--goldLt)">⚙ The Essbase Block — Your Atomic Unit</h1>
+<p class="page-sub">NODE s · Deep Block Logic · Lesson 1 of 4</p>
+
+<div class="narration">
+  <div class="nar-lbl">The Kernel Speaks</div>
+  <p>Beneath every form, every calculation, every Groovy rule — there is a block. Essbase does not store spreadsheets. It does not store rows. It stores blocks: fixed-width slices of dense dimension combinations. Master the block and you will understand why some calculations take 45 minutes while others take 45 seconds. This is the engine room. Everything else is the dashboard.</p>
+</div>
+
+<h2>What Is a Block?</h2>
+<p>An Essbase <strong>block</strong> is the fundamental unit of storage in BSO (Block Storage Option) databases. Think of it as a multi-dimensional array: a fully materialized slice of every dense dimension combination for one sparse dimension intersection.</p>
+<p>The simplest mental model: if your dense dimensions are <strong>Account</strong> and <strong>Period</strong>, then one block holds all Account × Period combinations for a single Entity/Scenario/Year combination. That entity-scenario-year coordinate is the block's <strong>address</strong>.</p>
+
+<div class="block-diagram">
+  <div class="block-cell dense">
+    <div class="bc-label d">Dense Dimensions</div>
+    <div class="bc-members">Account (600 members)<br>Period (25 members)<br><br>All combinations exist<br>inside every block<br>15,000 cells per block</div>
+  </div>
+  <div class="block-cell sparse">
+    <div class="bc-label s">Sparse Dimensions</div>
+    <div class="bc-members">Entity (12 members)<br>Scenario (5 members)<br>Year (5 members)<br><br>Each combination<br><em>may or may not</em><br>have a block</div>
+  </div>
+</div>
+
+<div class="callout lore"><span class="ci">📐</span><strong>The Coordinate Model:</strong> A data intersection in Essbase is an N-dimensional coordinate — (Entity, Scenario, Year, Account, Period). The block is the physical container that holds all Account × Period values for a given (Entity, Scenario, Year) address. Two different cells at the same Entity/Scenario/Year live in the same block.</div>
+
+<h2>Block Size: The 8KB–500KB Target</h2>
+<p>Every block in your database is <strong>the same fixed size</strong>, determined by the number of dense dimension level-zero members. Essbase allocates this size whether the cells are populated or empty.</p>
+
+<div class="tbl-wrap"><table class="dtbl"><thead><tr><th>Parameter</th><th>Formula / Target</th><th>Vision Corp Example</th></tr></thead><tbody>
+<tr><td>Block size</td><td>Dense level-0 members × 8 bytes</td><td>600 accounts × 25 periods × 8 = <strong>120KB</strong></td></tr>
+<tr><td>Target range</td><td>8KB – 500KB</td><td>120KB ✅ well within range</td></tr>
+<tr><td>Too small (&lt;8KB)</td><td>Too many tiny blocks — index overhead dominates</td><td>Signs: slow range scans, high block count</td></tr>
+<tr><td>Too large (&gt;500KB)</td><td>Cache thrashing, memory pressure on retrieval</td><td>Signs: slow form opens, high I/O waits</td></tr>
+<tr><td>Optimal sweet spot</td><td>50KB – 200KB</td><td>120KB is ideal for Vision's cube</td></tr>
+</tbody></table></div>
+
+<div class="arch-thought">
+  <div class="arch-lbl">Architect Thought</div>
+  <p>"Block size is determined on Day 1 and rarely changed. Over-counting your dense members by adding granular sub-accounts directly to the outline — instead of using attribute dimensions or Smart Lists — inflates every block by that member count × 8 bytes. A 50-member mistake costs 400 bytes per block × 5 million blocks = 2GB of wasted cache space. Count before you add."</p>
+</div>
+
+<h3>Dense vs Sparse — The Defining Decision</h3>
+<p>The dense/sparse assignment of every dimension is the most consequential architectural decision in your EPBCS build. The rule is simple to state and difficult to get right in practice:</p>
+<ul>
+  <li><strong>Dense:</strong> Dimensions where most combinations contain data. Both Account and Period are almost always dense — if Vision US exists in Budget FY2025, virtually every Account and Period combination in that block has a value.</li>
+  <li><strong>Sparse:</strong> Dimensions where most combinations are empty. Entity × Scenario × Year — most companies don't have data for every entity in every scenario in every year. Sparse means Essbase only allocates a block when data actually exists at that address.</li>
+</ul>
+
+<div class="callout warn"><span class="ci">⚠</span><strong>The Dense Mistake:</strong> Marking a naturally sparse dimension as dense bloats every block. If you mark Scenario (5 members) as dense, every block now includes 5 scenario slices even when only 1 has data. Block size jumps 5×. For Vision Corp — 120KB becomes 600KB, pushing past the safe ceiling and degrading all reads.</div>
+
+<div class="checklist"><div class="cl-title">⚙ NODE s · Lesson 1 Tasks</div>
+<div class="cl-item" onclick="tick(this)"><div class="cl-box"></div><div class="cl-text">Define a block in your own words: what is it, what does it store, and what determines its address?</div></div>
+<div class="cl-item" onclick="tick(this)"><div class="cl-box"></div><div class="cl-text">Calculate Vision Corp's block size: 600 accounts × 25 period members × 8 bytes</div></div>
+<div class="cl-item" onclick="tick(this)"><div class="cl-box"></div><div class="cl-text">Explain why Account and Period are almost always dense</div></div>
+<div class="cl-item" onclick="tick(this)"><div class="cl-box"></div><div class="cl-text">Explain why Entity, Scenario, and Year are almost always sparse</div></div>
+</div>
+
+<div class="tutor-box">
+  <div class="tutor-hdr"><div class="tutor-av">⚙</div><div><div class="tutor-nm">The Kernel</div><div class="tutor-rl">Essbase Block Logic Expert</div></div></div>
+  <div class="chips" id="chips-ns-1"></div>
+  <div class="tutor-row"><input class="tutor-input" id="q-ns-1" placeholder="Ask about blocks, dense/sparse, block size..." onkeydown="if(event.key==='Enter')ask('ns-1','Essbase block storage model')"><button class="tutor-send" onclick="ask('ns-1','Essbase block storage model')">Consult Kernel ⚙</button></div>
+  <div class="tutor-out" id="out-ns-1"></div>
+</div>
+<div class="nav-btns">
+  <a href="parts-1-3.html" class="nav-btn">← Parts I–III</a>
+  <button class="nav-btn primary" onclick="show('ns-2')">Next: The Empty Space Problem →</button>
+</div>
+</div>
+
+
+<!-- ══════════════════════════════════════════
+     LESSON NS-2 — The Empty Space Problem
+══════════════════════════════════════════ -->
+<div id="ns-2" class="lesson">
+<div class="node-s-badge">⚙ NODE s — Special Node · 200 XP · EPB-MOD-s-L2</div>
+<h1 class="page-title" style="color:var(--goldLt)">🕳 The Empty Space Problem</h1>
+<p class="page-sub">NODE s · Deep Block Logic · Lesson 2 of 4</p>
+
+<div class="narration">
+  <div class="nar-lbl">The Kernel Speaks</div>
+  <p>Your Groovy rule runs. It reads. It calculates. It writes nothing. The planner clicks Save. The form reloads empty. You check the calculation — the logic is correct. The members exist. The security is right. So why are the cells blank? Because the blocks don't exist. And Essbase does not calculate on what doesn't exist.</p>
+</div>
+
+<h2>Why Essbase Only Calculates on Existing Blocks</h2>
+<p>This is the single most misunderstood fact about Essbase among practitioners who came from relational databases or spreadsheets. In SQL, a query over an empty table returns empty rows — it still <em>executes</em>. In Essbase, a calculation over a non-existent block simply <strong>skips</strong> that address entirely. No error. No warning. Just silence.</p>
+
+<div class="kernel-card">
+  <div class="kernel-lbl">⚙ The Kernel Law</div>
+  <div class="kernel-title">Essbase does not calculate on what doesn't exist.</div>
+  <p style="font-size:14px;color:rgba(240,234,214,.68);margin:0;line-height:1.8">A block is created when data is physically written to a sparse intersection. Until that write occurs, the intersection has no block. Any FIX statement, any Groovy <code>getCell()</code> call, any member formula targeting that intersection will silently return <code>#MISSING</code> — and writes to it will be dropped.</p>
+</div>
+
+<h3>When Does a Block Get Created?</h3>
+<p>Blocks are created in exactly three ways:</p>
+<ol>
+  <li><strong>Data load:</strong> When you import data via Data Integration or a data file, blocks are created at every sparse intersection that receives a value.</li>
+  <li><strong>Manual input:</strong> When a planner types a value into a form and saves — a block is created at that intersection if one doesn't exist.</li>
+  <li><strong>Explicit block creation in a calc script or Groovy:</strong> Using <code>@CREATEBLOCK</code>, <code>DATACOPY</code>, or the <code>FIX ... ENDFIX</code> with <code>SET CREATENONMISSINGBLK ON</code>.</li>
+</ol>
+
+<div class="callout danger"><span class="ci">🚨</span><strong>The Classic Budget Cycle Failure:</strong> A new fiscal year starts — FY2026. No actuals have been loaded yet. An administrator builds a seeding rule to copy FY2025 Budget into FY2026 Budget as a starting point. The rule runs, reports success, and the FY2026 forms are completely empty. Why? The FY2026 blocks don't exist yet. The copy had nowhere to write.</div>
+
+<h2>Diagnosing the Empty Space Problem</h2>
+<p>Before writing a single block-creation strategy, you must diagnose which type of empty space you're dealing with:</p>
+
+<div class="tbl-wrap"><table class="dtbl"><thead><tr><th>Symptom</th><th>Root Cause</th><th>Fix Strategy</th></tr></thead><tbody>
+<tr><td>New year: forms completely empty after seeding rule</td><td>Target year blocks never created — no prior data write</td><td><code>DATACOPY</code> from source year first, then overwrite</td></tr>
+<tr><td>Groovy writes appear to succeed but cells show #MISSING</td><td>Block doesn't exist at the target sparse intersection</td><td><code>@CREATEBLOCK</code> before the write loop</td></tr>
+<tr><td>Allocation rule misses certain entities</td><td>Those entities have no Budget block for the period</td><td>Check block existence before allocating; create if missing</td></tr>
+<tr><td>Calc script runs in 1 minute one day, 45 minutes the next</td><td>Block count exploded — prior run created unwanted empty blocks</td><td>Review <code>SET CREATENONMISSINGBLK</code> and any stray <code>@CREATEBLOCK</code> calls</td></tr>
+<tr><td>Formula returns correct value for some entities, #MISSING for others</td><td>Member formula on a Dynamic Calc targeting non-existent blocks</td><td>Member formulas don't create blocks — add data or use a stored calc</td></tr>
+</tbody></table></div>
+
+<h3>Beginner Path — Understanding #MISSING</h3>
+<p>If you are new to Essbase, the concept of <code>#MISSING</code> is important to internalize. It means one of three things:</p>
+<ul>
+  <li>The block at this sparse address does not exist at all</li>
+  <li>The block exists but this specific cell within it has never been written to</li>
+  <li>The cell was explicitly cleared (written as <code>#MISSING</code>)</li>
+</ul>
+<p>From a Groovy perspective, <code>getCell()</code> returns <code>null</code> when the intersection is <code>#MISSING</code>. This is why the Elvis operator pattern <code>getCell(...) ?: 0</code> is so universal in EPM Groovy — it converts null to zero so arithmetic doesn't throw a NullPointerException.</p>
+
+<div class="callout tip"><span class="ci">💡</span><strong>Beginner Anchor:</strong> When a form shows empty cells after a calculation, your first diagnostic question is always: "Does a block exist at this sparse address?" Before checking your logic, check whether any data has ever been written to the target intersection. The safest test — manually type a value of <code>0</code> into one cell and save. Then re-run your rule. If it now works, you had an empty space problem.</div>
+
+<h3>Architect Path — Block Existence as a First-Class Concern</h3>
+<p>Senior practitioners treat block existence as a <em>pre-condition check</em>, not an afterthought. Before writing any calculation that targets a new year, new entity, or new scenario, the architect asks: "Do blocks exist at every target address? If not, what is my creation strategy?"</p>
+
+<div class="interview-box">
+  <div class="ib-lbl">🎯 Interview Q — Architect Level</div>
+  <div class="ib-q">A client's year-end seeding rule runs without errors but the new fiscal year is empty. Walk me through your diagnosis.</div>
+  <div class="ib-hint">Strong answer: (1) Check block existence with Administration → Statistics — if FY2026 block count is 0, blocks were never created. (2) Identify the creation gap — DATACOPY vs @CREATEBLOCK vs manual seed. (3) Distinguish: did the rule run against a FIX that had no members to process? Strong hire adds: check the job log for "0 blocks processed" vs an error.</div>
+</div>
+
+<div class="checklist"><div class="cl-title">⚙ NODE s · Lesson 2 Tasks</div>
+<div class="cl-item" onclick="tick(this)"><div class="cl-box"></div><div class="cl-text">Explain in plain English why a seeding rule can "succeed" but leave the target year empty</div></div>
+<div class="cl-item" onclick="tick(this)"><div class="cl-box"></div><div class="cl-text">List three ways a block gets created in Essbase</div></div>
+<div class="cl-item" onclick="tick(this)"><div class="cl-box"></div><div class="cl-text">Diagnose: a Groovy rule writes to 12 entities but getCell() returns null for 3 — what is the most likely cause?</div></div>
+<div class="cl-item" onclick="tick(this)"><div class="cl-box"></div><div class="cl-text">Describe the "type a 0 and save" diagnostic test and explain why it reveals the empty space problem</div></div>
+</div>
+
+<div class="tutor-box">
+  <div class="tutor-hdr"><div class="tutor-av">⚙</div><div><div class="tutor-nm">The Kernel</div><div class="tutor-rl">Block Existence Specialist</div></div></div>
+  <div class="chips" id="chips-ns-2"></div>
+  <div class="tutor-row"><input class="tutor-input" id="q-ns-2" placeholder="Ask about missing blocks, #MISSING, empty space..." onkeydown="if(event.key==='Enter')ask('ns-2','Essbase empty block problem')"><button class="tutor-send" onclick="ask('ns-2','Essbase empty space problem')">Consult Kernel ⚙</button></div>
+  <div class="tutor-out" id="out-ns-2"></div>
+</div>
+<div class="nav-btns">
+  <button class="nav-btn" onclick="show('ns-1')">← How Blocks Work</button>
+  <button class="nav-btn primary" onclick="show('ns-3')">Next: Block Creation Strategies →</button>
+</div>
+</div>
+
+
+<!-- ══════════════════════════════════════════
+     LESSON NS-3 — Block Creation Strategies
+══════════════════════════════════════════ -->
+<div id="ns-3" class="lesson">
+<div class="node-s-badge">⚙ NODE s — Special Node · 275 XP · EPB-MOD-s-L3</div>
+<h1 class="page-title" style="color:var(--goldLt)">🔨 Block Creation Strategies</h1>
+<p class="page-sub">NODE s · Deep Block Logic · Lesson 3 of 4</p>
+
+<div class="narration">
+  <div class="nar-lbl">The Kernel Speaks</div>
+  <p>You know the problem. Now learn the arsenal. Three weapons exist to conjure blocks from the void: DATACOPY, @CREATEBLOCK, and Block Calculation Mode. Each has a different cost, a different scope, and a different failure mode. Using the wrong one in a production environment is the kind of mistake that earns a 3am phone call.</p>
+</div>
+
+<h2>The Three Block Creation Weapons</h2>
+
+<div class="flow-row">
+  <div class="flow-box" style="border-color:rgba(212,160,23,.3);color:var(--goldLt)">DATACOPY</div>
+  <div class="flow-arr">vs</div>
+  <div class="flow-box" style="border-color:rgba(31,184,168,.3);color:var(--tealLt)">@CREATEBLOCK</div>
+  <div class="flow-arr">vs</div>
+  <div class="flow-box" style="border-color:rgba(124,58,237,.3);color:var(--purpleLt)">Block Calc Mode</div>
+</div>
+
+<h3>Weapon 1 — DATACOPY</h3>
+<p><code>DATACOPY</code> is a calc script command that copies all existing blocks from one sparse intersection to another. It creates the target blocks as an exact mirror of the source — same structure, same data. It is the correct tool for <strong>year-start seeding</strong>: you need FY2026 to have all the same blocks FY2025 has, pre-populated with last year's values as a starting point.</p>
+
+<div class="code-wrap"><div class="code-lbl">Calc Script — DATACOPY for Year-Start Seeding</div>
+<div class="code-block"><span class="cc">/* Vision Corp — FY2026 Budget Seed from FY2025 Budget
+   Copies all FY2025/Budget blocks to FY2026/Budget.
+   Run ONCE at the start of the FY2026 budget cycle.        */</span>
+
+<span class="ck">DATACOPY</span>
+  <span class="cn">FY2025</span> -&gt; <span class="cn">FY2026</span>
+  <span class="cn">Budget</span> -&gt; <span class="cn">Budget</span>;
+
+<span class="cc">/* What this does:
+   1. Iterates every existing FY2025/Budget sparse block
+   2. Creates a corresponding FY2026/Budget block
+   3. Copies all Account × Period values into it
+   Result: FY2026 Budget forms show FY2025 actuals-level data
+   as the planning starting point                            */</span></div></div>
+
+<div class="callout tip"><span class="ci">💡</span><strong>DATACOPY is not a Groovy command.</strong> It is a native Essbase calculation script command. Run it via a Business Rule (Calculation Manager) — not in a Groovy script. After DATACOPY completes, you can run Groovy rules to adjust the seeded values.</div>
+
+<div class="callout warn"><span class="ci">⚠</span><strong>DATACOPY copies #MISSING cells too.</strong> If your source has sparse blocks with many #MISSING values inside them, the target gets those same empty cells. This is usually fine — but if the source year had sparse data coverage, the target will mirror that sparsity. Always check source block count before DATACOPY.</div>
+
+<h3>Weapon 2 — @CREATEBLOCK</h3>
+<p><code>@CREATEBLOCK</code> is used <em>inside a FIX statement</em> to force block creation at specific sparse intersections without copying data. It creates empty blocks — all cells initialized to <code>#MISSING</code>. The primary use case is when you want to ensure a block exists before a subsequent calculation writes to it.</p>
+
+<div class="code-wrap"><div class="code-lbl">Calc Script — @CREATEBLOCK for Targeted Block Creation</div>
+<div class="code-block"><span class="cc">/* Create FY2026 Budget blocks for all entities
+   without copying prior year data.
+   Use when you want planners to start from scratch (zero-based budget). */</span>
+
+<span class="ck">FIX</span>(<span class="cn">FY2026</span>, <span class="cn">Budget</span>, <span class="cn">Working</span>)
+  <span class="ck">FIX</span>(@<span class="cf">RELATIVE</span>(<span class="cn">Total_Entity</span>, 0))  <span class="cc">/* all leaf entities */</span>
+    <span class="ck">@CREATEBLOCK</span>;                   <span class="cc">/* create empty block at each address */</span>
+  <span class="ck">ENDFIX</span>
+<span class="ck">ENDFIX</span>
+
+<span class="cc">/* After this runs:
+   - All Entity × FY2026 × Budget × Working blocks exist
+   - All cells are #MISSING (not zero)
+   - Subsequent Groovy rules CAN now write to these intersections */</span></div></div>
+
+<div class="callout danger"><span class="ci">🚨</span><strong>@CREATEBLOCK Performance Warning:</strong> <code>@CREATEBLOCK</code> creates a physical block for <em>every</em> sparse intersection in the FIX scope — including combinations that will never have data. If you run it against all 12 entities × all 5 scenarios × all 10 years with a 120KB block size, you've just allocated 72MB of database space for mostly-empty blocks. Always FIX to the exact target scope. Never run @CREATEBLOCK without a tightly scoped FIX.</div>
+
+<h3>Weapon 3 — Block Calculation Mode (SET CREATENONMISSINGBLK)</h3>
+<p>This is a calc script setting that tells Essbase to create a block automatically whenever a calculation <em>would</em> write to a non-existent block. It is the most powerful and the most dangerous of the three weapons.</p>
+
+<div class="code-wrap"><div class="code-lbl">Calc Script — Block Calculation Mode</div>
+<div class="code-block"><span class="cc">/* SET CREATENONMISSINGBLK ON
+   Makes Essbase create blocks dynamically during calculation.
+   Handle with extreme care — can trigger block explosion.   */</span>
+
+<span class="ck">SET CREATENONMISSINGBLK ON</span>;
+
+<span class="ck">FIX</span>(<span class="cn">Budget</span>, <span class="cn">Working</span>)
+  <span class="cc">/* Any formula that writes to a non-existent block
+     will now create that block automatically.
+     Essbase will NOT silently skip the write.               */</span>
+  <span class="cn">IT_Allocated</span> = <span class="cn">IT_Shared_Pool</span> * (<span class="cn">Revenue</span> / @<span class="cf">SUM</span>(<span class="cn">Total_Revenue</span>));
+<span class="ck">ENDFIX</span>
+
+<span class="ck">SET CREATENONMISSINGBLK OFF</span>;  <span class="cc">/* ALWAYS reset after the FIX */</span></div></div>
+
+<div class="callout danger"><span class="ci">🚨</span><strong>Block Explosion Risk:</strong> With <code>SET CREATENONMISSINGBLK ON</code>, a formula referencing a cross-dimensional member can trigger creation of blocks at every combination in its scope — including ones with no business meaning. A Vision Corp cube went from 48,000 blocks to 1.2 million overnight when a consultant forgot to reset this flag after a calculation. The database became unresponsive. Always set it back to OFF immediately after the relevant FIX.</div>
+
+<h2>Decision Table — Which Weapon to Use</h2>
+<div class="tbl-wrap"><table class="dtbl"><thead><tr><th>Situation</th><th>Correct Weapon</th><th>Why</th></tr></thead><tbody>
+<tr><td>Seed new fiscal year from prior year Budget</td><td><strong>DATACOPY</strong></td><td>Copies both blocks and data in one operation — fastest, cleanest</td></tr>
+<tr><td>Open a new scenario (zero-based budget)</td><td><strong>@CREATEBLOCK</strong> in a scoped FIX</td><td>Creates empty blocks without contaminating with prior data</td></tr>
+<tr><td>Allocation rule that must write to all entities in a new period</td><td><strong>@CREATEBLOCK</strong> before the allocation FIX</td><td>Guarantees target blocks exist; allocation writes succeed</td></tr>
+<tr><td>Rolling forecast — advance to next period, create new month's blocks</td><td><strong>DATACOPY</strong> (prior month → new month) or <strong>@CREATEBLOCK</strong></td><td>DATACOPY if seeding forward; @CREATEBLOCK if zero-filling new months</td></tr>
+<tr><td>Complex cross-dimensional calc where block scope is unpredictable</td><td><strong>SET CREATENONMISSINGBLK ON</strong> with strict FIX + immediate reset</td><td>Last resort only — highest risk, highest flexibility</td></tr>
+<tr><td>Groovy rule writes to a new sparse intersection</td><td>Run <strong>@CREATEBLOCK</strong> calc script first, then run Groovy</td><td>Groovy cannot create blocks natively — needs Essbase to create them first</td></tr>
+</tbody></table></div>
+
+<h3>Groovy and Block Creation — The Critical Gap</h3>
+<p>This is the most important architect-level fact in this entire node: <strong>Groovy scripts cannot create Essbase blocks.</strong> A Groovy <code>setCell()</code> call targeting a non-existent block will silently fail — no exception is thrown, no error is logged. The write is dropped.</p>
+
+<div class="compare-grid">
+<div class="compare-box bad">
+  <div class="cb-lbl">❌ Groovy Write to Non-Existent Block</div>
+  <div class="code-block" style="font-size:11px;padding:12px"><span class="cc">// FY2026/Budget blocks don't exist yet.</span>
+<span class="cc">// This write silently fails — no error.</span>
+<span class="ck">def</span> writes = []
+entities.each { e ->
+  writes &lt;&lt; [e.getName(), <span class="cs">"Revenue"</span>,
+    <span class="cs">"Full_Year"</span>, <span class="cs">"FY2026"</span>,
+    <span class="cs">"Budget"</span>, <span class="cs">"Working"</span>, 1000000]
+}
+operation.grid.<span class="cf">setDataCellValues</span>(writes)
+<span class="cc">// Forms still empty. No exception thrown.</span></div>
+</div>
+<div class="compare-box good">
+  <div class="cb-lbl">✅ Create Blocks First, Then Write</div>
+  <div class="code-block" style="font-size:11px;padding:12px"><span class="cc">// Step 1: Run @CREATEBLOCK calc script</span>
+<span class="cc">// (Business Rule: "Create_FY2026_Blocks")</span>
+<span class="cc">// FIX(FY2026,Budget,Working)</span>
+<span class="cc">//   @CREATEBLOCK; ENDFIX</span>
+
+<span class="cc">// Step 2: THEN run Groovy rule</span>
+<span class="ck">def</span> writes = []
+entities.each { e ->
+  writes &lt;&lt; [e.getName(), <span class="cs">"Revenue"</span>,
+    <span class="cs">"Full_Year"</span>, <span class="cs">"FY2026"</span>,
+    <span class="cs">"Budget"</span>, <span class="cs">"Working"</span>, 1000000]
+}
+operation.grid.<span class="cf">setDataCellValues</span>(writes)
+<span class="cc">// Writes succeed. Forms populate correctly.</span></div>
+</div>
+</div>
+
+<div class="arch-thought">
+  <div class="arch-lbl">Architect Thought</div>
+  <p>"The correct architecture for any multi-step calculation chain is: (1) a calc script that creates or validates block existence, (2) a Groovy rule that operates on those blocks. Never build a Groovy rule that assumes its target blocks exist without verifying. In a Rules Chain, sequence matters: the block creation script must run first."</p>
+</div>
+
+<div class="checklist"><div class="cl-title">⚙ NODE s · Lesson 3 Tasks</div>
+<div class="cl-item" onclick="tick(this)"><div class="cl-box"></div><div class="cl-text">Write a DATACOPY script to seed Vision Corp's FY2026 Budget from FY2025 Budget</div></div>
+<div class="cl-item" onclick="tick(this)"><div class="cl-box"></div><div class="cl-text">Write an @CREATEBLOCK FIX statement scoped to all leaf entities for FY2026/Budget/Working</div></div>
+<div class="cl-item" onclick="tick(this)"><div class="cl-box"></div><div class="cl-text">Explain the block explosion risk of SET CREATENONMISSINGBLK and how to prevent it</div></div>
+<div class="cl-item" onclick="tick(this)"><div class="cl-box"></div><div class="cl-text">Design a two-step rule chain: @CREATEBLOCK script → Groovy seeding rule for a new budget year</div></div>
+<div class="cl-item" onclick="tick(this)"><div class="cl-box"></div><div class="cl-text">Identify which weapon to use for a rolling forecast that advances Month 4 actuals into Month 5 forecast</div></div>
+</div>
+
+<div class="tutor-box">
+  <div class="tutor-hdr"><div class="tutor-av">⚙</div><div><div class="tutor-nm">The Kernel</div><div class="tutor-rl">Block Creation Strategist</div></div></div>
+  <div class="chips" id="chips-ns-3"></div>
+  <div class="tutor-row"><input class="tutor-input" id="q-ns-3" placeholder="Ask about DATACOPY, @CREATEBLOCK, block explosion..." onkeydown="if(event.key==='Enter')ask('ns-3','Essbase block creation DATACOPY CREATEBLOCK')"><button class="tutor-send" onclick="ask('ns-3','Essbase block creation strategies')">Consult Kernel ⚙</button></div>
+  <div class="tutor-out" id="out-ns-3"></div>
+</div>
+<div class="nav-btns">
+  <button class="nav-btn" onclick="show('ns-2')">← Empty Space Problem</button>
+  <button class="nav-btn primary" onclick="show('ns-4')">Next: The Hourglass Principle →</button>
+</div>
+</div>
+
+
+<!-- ══════════════════════════════════════════
+     LESSON NS-4 — The Hourglass Principle
+══════════════════════════════════════════ -->
+<div id="ns-4" class="lesson">
+<div class="node-s-badge">⚙ NODE s — Special Node · 200 XP · EPB-MOD-s-L4</div>
+<h1 class="page-title" style="color:var(--goldLt)">⏳ The Hourglass Principle</h1>
+<p class="page-sub">NODE s · Deep Block Logic · Lesson 4 of 4</p>
+
+<div class="narration">
+  <div class="nar-lbl">The Kernel Speaks</div>
+  <p>Every EPM architect eventually develops an instinct for performance. They glance at a dimension order, at a FIX statement, at a Groovy loop — and they feel where the waste is. That instinct has a name: the Hourglass. Dense dimensions narrow the block. Sparse dimensions control how many blocks exist. The shape of your data — wide and shallow, or tall and narrow — determines whether your database breathes or suffocates.</p>
+</div>
+
+<h2>The Hourglass Mental Model</h2>
+<p>Visualize your Essbase cube as an hourglass. The top chamber is the sparse landscape — the number of blocks that exist in your database. The neck is controlled by how selectively your FIX statements target blocks. The bottom chamber is the dense calculation — the work done inside each block.</p>
+<p>A well-tuned cube narrows the neck aggressively: FIX to only the blocks you need, calculate only what must be calculated, write back only what changed. A poorly tuned cube pours everything through at full width — calculating every block, touching every cell, writing results back even when nothing changed.</p>
+
+<div class="hourglass-wrap">
+  <div class="hg-tier">
+    <div class="hg-tier-label">Sparse Landscape</div>
+    <div class="hg-tier-val">Total Blocks in Database</div>
+    <div class="hg-tier-sub">Vision Corp: ~240,000 blocks (Entity × Scenario × Year × Version)</div>
+  </div>
+  <div class="hg-arrow">▼</div>
+  <div class="hg-tier" style="max-width:400px">
+    <div class="hg-tier-label">FIX Scope (the neck)</div>
+    <div class="hg-tier-val">Blocks Targeted by Your Calc</div>
+    <div class="hg-tier-sub">Good FIX: 12 entities × 1 scenario × 1 year = 12 blocks</div>
+  </div>
+  <div class="hg-arrow">▼</div>
+  <div class="hg-tier" style="max-width:300px">
+    <div class="hg-tier-label">Dense Calculation</div>
+    <div class="hg-tier-val">Work Done Per Block</div>
+    <div class="hg-tier-sub">600 accounts × 25 periods per block</div>
+  </div>
+</div>
+
+<h2>Dimension Ordering — Dense Before Sparse</h2>
+<p>The order in which dimensions appear in the Essbase outline determines calculation order. The universal rule: <strong>dense dimensions first, sparse dimensions last.</strong> Specifically, Account must be the first dimension, Period second — because these are the dimensions that define the block's internal structure and are most frequently referenced in member formulas.</p>
+
+<div class="tbl-wrap"><table class="dtbl"><thead><tr><th>Position</th><th>Dimension</th><th>Type</th><th>Why This Order</th></tr></thead><tbody>
+<tr><td>1</td><td>Account</td><td>Dense</td><td>Tagged as Accounts type — must be first. Defines the block rows.</td></tr>
+<tr><td>2</td><td>Period</td><td>Dense</td><td>Tagged as Time type — must be second. Defines the block columns. YTD/Q rollups calculated here.</td></tr>
+<tr><td>3</td><td>Year</td><td>Sparse</td><td>First sparse — creates the outer dimension of the sparse address space.</td></tr>
+<tr><td>4</td><td>Scenario</td><td>Sparse</td><td>Typically sparse — Budget, Forecast, Actual don't all have data simultaneously.</td></tr>
+<tr><td>5</td><td>Version</td><td>Sparse</td><td>Sparse — Working vs Final. Adds address granularity without inflating blocks.</td></tr>
+<tr><td>6+</td><td>Entity, custom dims</td><td>Sparse</td><td>Entity is the most discriminating sparse dimension — lowest level data is per-entity.</td></tr>
+</tbody></table></div>
+
+<div class="callout warn"><span class="ci">⚠</span><strong>Changing Dimension Order Post-Creation:</strong> Reordering dimensions in a live database requires a full restructure — all data is cleared and rebuilt from a backup. In EPBCS cloud, this is a maintenance window operation. Get dimension order right in the design phase. Moving Entity before Scenario after go-live is a 4-hour outage.</div>
+
+<h2>The FIX Statement — Your Hourglass Neck Control</h2>
+<p>Every FIX statement is a filter that narrows the hourglass neck. A tight FIX is fast. A loose FIX is slow. The architect's discipline is to never write a FIX broader than the business requirement demands.</p>
+
+<div class="compare-grid">
+<div class="compare-box bad">
+  <div class="cb-lbl">❌ Loose FIX — Calculates 240,000 blocks</div>
+  <div class="code-block" style="font-size:11px;padding:12px"><span class="ck">FIX</span>(<span class="cn">Budget</span>)
+  <span class="cc">/* No year, no version, no entity scope.
+     Touches EVERY Budget block across all
+     years, all versions, all entities.
+     Runtime: ~45 minutes on Vision Corp    */</span>
+  <span class="cn">Gross_Margin</span> = <span class="cn">Revenue</span> - <span class="cn">COGS</span>;
+<span class="ck">ENDFIX</span></div>
+</div>
+<div class="compare-box good">
+  <div class="cb-lbl">✅ Tight FIX — Calculates 12 blocks</div>
+  <div class="code-block" style="font-size:11px;padding:12px"><span class="ck">FIX</span>(<span class="cn">Budget</span>, <span class="cn">Working</span>, <span class="cn">FY2026</span>,
+    @<span class="cf">RELATIVE</span>(<span class="cn">Total_Entity</span>,0))
+  <span class="cc">/* Scoped to: 1 scenario × 1 version
+     × 1 year × 12 leaf entities.
+     12 blocks. Runtime: &lt;2 seconds.       */</span>
+  <span class="cn">Gross_Margin</span> = <span class="cn">Revenue</span> - <span class="cn">COGS</span>;
+<span class="ck">ENDFIX</span></div>
+</div>
+</div>
+
+<h3>The Hourglass Applied to Groovy</h3>
+<p>The same principle governs Groovy performance. A Groovy rule that reads 50 cells one-by-one inside a loop is a wide hourglass. A rule that batches all reads and all writes into single operations is a narrow one.</p>
+
+<div class="code-wrap"><div class="code-lbl">Groovy — Hourglass-Optimized Pattern</div>
+<div class="code-block"><span class="cc">// ❌ Wide Hourglass — 12 reads + 12 writes = 24 network round-trips</span>
+entities.each { e ->
+  <span class="ck">def</span> rev = <span class="cf">getCell</span>(e.getName(), <span class="cs">"Revenue"</span>, <span class="cs">"Full_Year"</span>, <span class="cs">"FY2026"</span>, <span class="cs">"Budget"</span>, <span class="cs">"Working"</span>)
+  <span class="cf">setCell</span>(rev * 1.05, e.getName(), <span class="cs">"Revenue_Target"</span>, <span class="cs">"Full_Year"</span>, <span class="cs">"FY2026"</span>, <span class="cs">"Budget"</span>, <span class="cs">"Working"</span>)
+}
+
+<span class="cc">// ✅ Narrow Hourglass — 1 grid read + 1 batch write = 2 operations total</span>
+
+<span class="cc">// Pre-fetch all revenue values with DataGridBuilder (1 call)</span>
+<span class="ck">def</span> builder = operation.grid.<span class="cf">newDataGridBuilder</span>()
+entities.each { e -> builder.dim(<span class="cs">"Entity"</span>, e.getName()) }
+builder.dim(<span class="cs">"Account"</span>, <span class="cs">"Revenue"</span>).dim(<span class="cs">"Period"</span>, <span class="cs">"Full_Year"</span>)
+      .dim(<span class="cs">"Year"</span>, <span class="cs">"FY2026"</span>).dim(<span class="cs">"Scenario"</span>, <span class="cs">"Budget"</span>).dim(<span class="cs">"Version"</span>, <span class="cs">"Working"</span>)
+<span class="ck">def</span> grid = builder.<span class="cf">build</span>()
+
+<span class="cc">// Stage all writes (in memory — no network calls)</span>
+<span class="ck">def</span> writes = []
+grid.dataCells.each { cell ->
+  <span class="ck">def</span> entity = cell.<span class="cf">getMemberName</span>(<span class="cs">"Entity"</span>)
+  <span class="ck">def</span> rev = cell.data ?: 0
+  writes &lt;&lt; [entity, <span class="cs">"Revenue_Target"</span>, <span class="cs">"Full_Year"</span>, <span class="cs">"FY2026"</span>, <span class="cs">"Budget"</span>, <span class="cs">"Working"</span>, rev * 1.05]
+}
+
+<span class="cc">// Execute one batch write (1 call)</span>
+operation.grid.<span class="cf">setDataCellValues</span>(writes)
+<span class="cf">println</span>(<span class="cs">"Updated ${writes.size()} revenue targets — 2 round-trips total"</span>)</div></div>
+
+<h2>The 9 Hourglass Levers — Ranked by Impact</h2>
+<div class="tbl-wrap"><table class="dtbl"><thead><tr><th>#</th><th>Lever</th><th>Impact</th><th>Vision Corp Application</th></tr></thead><tbody>
+<tr><td>1</td><td>FIX scope tightness</td><td>🔴 Highest</td><td>Always FIX to exact scenario/year/entity. Never omit Year in a FIX.</td></tr>
+<tr><td>2</td><td>Batch reads (DataGridBuilder)</td><td>🔴 Highest</td><td>Replace per-entity getCell() loops with one grid read</td></tr>
+<tr><td>3</td><td>Batch writes (setDataCellValues)</td><td>🔴 Highest</td><td>Stage all writes in a list, commit once</td></tr>
+<tr><td>4</td><td>Dynamic Calc vs Stored Calc</td><td>🟠 High</td><td>Gross Margin, YTD = Dynamic. Allocations, spreads = Stored.</td></tr>
+<tr><td>5</td><td>@RELATIVE vs @DESCENDANTS</td><td>🟠 High</td><td>@RELATIVE(Parent,0) is faster than @DESCENDANTS(Parent) for leaf-only ops</td></tr>
+<tr><td>6</td><td>Block count (sparse design)</td><td>🟠 High</td><td>Unnecessary Version members inflate sparse block count exponentially</td></tr>
+<tr><td>7</td><td>Calc script order (TWO PASS)</td><td>🟡 Medium</td><td>Avoid implicit recalculation — be explicit about calc order</td></tr>
+<tr><td>8</td><td>Avoid @XREF in loops</td><td>🟡 Medium</td><td>Cross-database references in loops = one DB hit per iteration</td></tr>
+<tr><td>9</td><td>Compression (LZO)</td><td>🟢 Lower</td><td>Block compression reduces I/O for large cubes. Enable in Application settings.</td></tr>
+</tbody></table></div>
+
+<div class="arch-thought">
+  <div class="arch-lbl">Architect Thought — The Hourglass Filter</div>
+  <p>"Before writing any calculation — calc script or Groovy — ask the Hourglass questions: How many blocks does this touch? Can I narrow the FIX? Can I reduce round-trips? Can I batch the writes? If the answer to all four is 'yes, but I'm not doing it yet' — you have work to do before this goes to production."</p>
+</div>
+
+<div class="interview-box">
+  <div class="ib-lbl">🎯 Interview Q — Senior Architect Level</div>
+  <div class="ib-q">A Groovy allocation rule runs in 45 minutes. I need it under 2 minutes. Walk me through your optimization approach.</div>
+  <div class="ib-hint">Strong answer hits levers in order: (1) Count getCell/setCell calls in the loop — replace with DataGridBuilder + setDataCellValues. (2) Check FIX scope on any upstream calc scripts — are they touching all years? (3) Check Dynamic Calc members — if the allocation basis is a Dynamic Calc account, every getCell() re-evaluates the formula. Materialize it. (4) Check block count — has a prior run created phantom blocks? Strong hire mentions the "45 minutes → 2 seconds" from the Hourglass principle and can quantify: "24 round-trips in a loop vs 2 batch operations."</div>
+</div>
+
+<div class="checklist"><div class="cl-title">⚙ NODE s · Lesson 4 Tasks</div>
+<div class="cl-item" onclick="tick(this)"><div class="cl-box"></div><div class="cl-text">Explain the Hourglass model in your own words: sparse landscape → FIX neck → dense calculation</div></div>
+<div class="cl-item" onclick="tick(this)"><div class="cl-box"></div><div class="cl-text">Rewrite a 12-entity loop using getCell/setCell into a DataGridBuilder + setDataCellValues pattern</div></div>
+<div class="cl-item" onclick="tick(this)"><div class="cl-box"></div><div class="cl-text">Add Year to a FIX statement that was missing it and calculate how many fewer blocks it processes</div></div>
+<div class="cl-item" onclick="tick(this)"><div class="cl-box"></div><div class="cl-text">Rank the top 3 Hourglass levers and explain why FIX scope is #1</div></div>
+<div class="cl-item" onclick="tick(this)"><div class="cl-box"></div><div class="cl-text">Design the complete optimization path for a 45-minute allocation rule — name each lever applied</div></div>
+</div>
+
+<div class="tutor-box">
+  <div class="tutor-hdr"><div class="tutor-av">⚙</div><div><div class="tutor-nm">The Kernel</div><div class="tutor-rl">Performance Architect</div></div></div>
+  <div class="chips" id="chips-ns-4"></div>
+  <div class="tutor-row"><input class="tutor-input" id="q-ns-4" placeholder="Ask about Hourglass, FIX scope, dimension ordering, performance..." onkeydown="if(event.key==='Enter')ask('ns-4','Essbase Hourglass performance optimization')"><button class="tutor-send" onclick="ask('ns-4','Essbase Hourglass Principle performance')">Consult Kernel ⚙</button></div>
+  <div class="tutor-out" id="out-ns-4"></div>
+</div>
+
+<div class="kernel-card" style="text-align:center;margin-top:32px">
+  <div class="kernel-lbl">⚙ NODE s Complete — 850 XP Earned</div>
+  <div class="kernel-title">The Kernel Is Yours</div>
+  <p style="font-size:14px;color:rgba(240,234,214,.65);line-height:1.85;margin-bottom:16px">You now understand what most EPBCS practitioners don't. Blocks, empty space, creation weapons, the Hourglass — this is the foundation beneath every calculation, every form, every Groovy rule. When others wonder why their system is slow, you will already know the answer.</p>
+  <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+    <a href="parts-4-5.html" class="nav-btn gold">⚔ Continue to Parts IV–V</a>
+    <a href="groovy-ch1.html" class="nav-btn primary">📘 Groovy Chapter I →</a>
+  </div>
+</div>
+
+<div class="nav-btns">
+  <button class="nav-btn" onclick="show('ns-3')">← Block Creation Strategies</button>
+  <a href="parts-4-5.html" class="nav-btn primary">⚔ Parts IV–V →</a>
+</div>
+</div>
+
+
+</div><!-- lesson-wrap -->
+</div><!-- main -->
+</div><!-- shell -->
+
+<script>
+// ── Stars ──
+(function(){var s=document.getElementById('stars');for(var i=0;i<100;i++){var d=document.createElement('div');d.className='star';var sz=Math.random()*2+0.4;d.style.cssText='width:'+sz+'px;height:'+sz+'px;top:'+Math.random()*100+'%;left:'+Math.random()*100+'%;--d:'+(2+Math.random()*4)+'s;--delay:'+Math.random()*5+'s;--op:'+(0.2+Math.random()*0.5);s.appendChild(d);}})();
+
+// ── Lesson switch ──
+var LESSON_XP={'ns-1':175,'ns-2':200,'ns-3':275,'ns-4':200};
+var done={}, totalXP=0, PART_MAX=850;
+function show(id){
+  document.querySelectorAll('.lesson').forEach(function(el){el.classList.remove('active')});
+  document.querySelectorAll('.sb-lesson').forEach(function(el){el.classList.remove('active')});
+  var el=document.getElementById(id);
+  if(el){el.classList.add('active');}
+  var sbl=document.getElementById('sbl-'+id);
+  if(sbl){sbl.classList.add('active');}
+  var labels={'ns-1':'How Blocks Work','ns-2':'Empty Space Problem','ns-3':'Block Creation Strategies','ns-4':'Hourglass Principle'};
+  document.getElementById('tb-current').textContent=labels[id]||id;
+  window.scrollTo(0,0);
+  if(document.getElementById('main'))document.getElementById('main').scrollTop=0;
+  if(!done[id]&&LESSON_XP[id]){done[id]=true;totalXP+=LESSON_XP[id];updateXP();sbl&&sbl.classList.add('done');}
+}
+function updateXP(){
+  document.getElementById('tb-xp').textContent=totalXP+' / 850 XP';
+  document.getElementById('tb-prog').style.width=Math.min(Math.round(totalXP/PART_MAX*100),100)+'%';
+}
+
+// ── Checklist ──
+function tick(el){var b=el.querySelector('.cl-box'),t=el.querySelector('.cl-text');b.classList.toggle('on');b.textContent=b.classList.contains('on')?'✓':'';t.classList.toggle('done');}
+
+// ── Tutor chips ──
+var CHIPS={
+  'ns-1':['What determines block size?','Why is Account always dense?','How many blocks does Vision Corp have?','Explain BSO vs ASO block model'],
+  'ns-2':['Why does Essbase skip non-existent blocks?','How do I check if a block exists?','What does #MISSING mean in Groovy?','Diagnose: seeding rule runs but year is empty'],
+  'ns-3':['When to use DATACOPY vs @CREATEBLOCK?','How do I prevent block explosion?','Can Groovy create blocks?','Write @CREATEBLOCK for FY2026 Budget'],
+  'ns-4':['What is the Hourglass Principle?','How do I tighten a FIX statement?','Explain DataGridBuilder performance gain','Why is Dynamic Calc sometimes slower than Stored?']
+};
+Object.keys(CHIPS).forEach(function(id){
+  var c=document.getElementById('chips-'+id);if(!c)return;
+  CHIPS[id].forEach(function(text){
+    var btn=document.createElement('button');btn.className='chip';btn.textContent=text;
+    btn.onclick=function(){document.getElementById('q-'+id).value=text;ask(id,text);};
+    c.appendChild(btn);
+  });
+});
+
+// ── AI Tutor ──
+async function ask(lessonId, context){
+  var inp=document.getElementById('q-'+lessonId);
+  var out=document.getElementById('out-'+lessonId);
+  if(!inp||!out)return;
+  var q=inp.value.trim()||context||'Tell me about this topic';
+  inp.value='';
+  out.innerHTML='<div class="tutor-msg ai-msg"><div class="tutor-msg-lbl">Kernel</div><em style="opacity:.4">Consulting the block storage engine...</em></div>';
+  var ctx='You are The Kernel, an expert Essbase and Oracle EPBCS tutor for "The Planning Quest" platform. NODE s covers deep Essbase block logic. Lesson context: "'+context+'". Answer with technical precision: cover BSO block model, dense/sparse architecture, @CREATEBLOCK, DATACOPY, SET CREATENONMISSINGBLK, Hourglass Principle, FIX scoping, and Groovy performance patterns. Use Vision Corporation ($2.8B revenue, 12 entities) as the example company throughout. Include both beginner-accessible explanations AND architect-grade depth. 250-320 words max.\n\nQuestion: '+q;
+  try{
+    var r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:900,messages:[{role:'user',content:ctx}]})});
+    var j=await r.json();
+    var text=(j.content||[]).map(function(c){return c.text||''}).join('')||'The Kernel is silent. Try again.';
+    out.innerHTML='<div class="tutor-msg ai-msg"><div class="tutor-msg-lbl">Kernel</div>'+text.replace(/\n\n/g,'</p><p style="margin-top:8px">').replace(/^/,'<p>').replace(/$/,'</p>').replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>')+'</div>';
+  }catch(e){out.innerHTML='<div class="tutor-msg ai-msg"><div class="tutor-msg-lbl">Kernel</div>The Kernel is unreachable. Check your connection.</div>';}
+}
+</script>
+<script src="branding.js"></script>
+</body>
+</html>

@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Groovy Lab — The Planning Quest</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Crimson+Pro:ital,wght@0,400;0,500;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#07090e;--bg2:#0c0f18;--bg3:#111520;--bg4:#161c2a;--gold:#d4a017;--goldLt:#f0c040;--goldDim:#5c4108;--teal:#1fb8a8;--tealLt:#4dd9c8;--purple:#7c3aed;--purpleLt:#a855f7;--emerald:#059669;--emeraldLt:#10b981;--sky:#0ea5e9;--skyLt:#38bdf8;--red:#c0392b;--redLt:#e74c3c;--amber:#d97706;--amberLt:#fbbf24;--rose:#be185d;--roseLt:#f472b6;--border:rgba(212,160,23,.15);--white:#f0ead6;--dim:#5a6478;--r:10px;--sidebar:268px;--topbar:54px}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Crimson Pro',serif;background:var(--bg);color:var(--white);min-height:100vh;overflow-x:hidden}
+#stars{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+.star{position:absolute;border-radius:50%;background:white;animation:twinkle var(--d,3s) infinite var(--delay,0s)}
+@keyframes twinkle{0%,100%{opacity:.05}50%{opacity:var(--op,.6)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(212,160,23,.3)}50%{box-shadow:0 0 0 8px rgba(212,160,23,0)}}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ── Topbar ── */
+#topbar{position:fixed;top:0;left:0;right:0;height:var(--topbar);background:rgba(7,9,14,.97);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 20px;gap:14px;z-index:200;overflow:hidden}
+.tb-home{font-family:'Cinzel',serif;font-size:13px;font-weight:700;color:var(--goldLt);text-decoration:none;display:flex;align-items:center;gap:9px;letter-spacing:.04em}
+.tb-dot{width:8px;height:8px;border-radius:50%;background:var(--tealLt);animation:pulse 2s infinite;flex-shrink:0}
+.tb-sep{color:var(--goldDim)}
+.tb-current{font-family:'Cinzel',serif;font-size:11px;color:var(--teal);letter-spacing:.04em}
+.tb-tools{display:flex;gap:4px;margin-left:auto;overflow-x:auto;flex-shrink:0}
+.tb-tools::-webkit-scrollbar{display:none}
+.tb-tool{padding:4px 9px;border-radius:6px;border:1px solid var(--border);background:transparent;color:var(--dim);font-family:'Cinzel',serif;font-size:8.5px;font-weight:700;letter-spacing:.05em;cursor:pointer;transition:all .15s;text-transform:uppercase;text-decoration:none;display:inline-flex;align-items:center;white-space:nowrap}
+.tb-tool:hover,.tb-tool.active{border-color:var(--gold);color:var(--gold);background:rgba(212,160,23,.06)}
+
+/* ── Shell ── */
+#shell{display:flex;padding-top:var(--topbar);min-height:100vh}
+#sb{width:var(--sidebar);background:var(--bg2);border-right:1px solid var(--border);position:fixed;top:var(--topbar);bottom:0;overflow-y:auto;z-index:100}
+#sb::-webkit-scrollbar{width:3px}
+#sb::-webkit-scrollbar-thumb{background:var(--goldDim);border-radius:2px}
+.sb-hdr{padding:10px 16px 6px;font-family:'Cinzel',serif;font-size:9px;font-weight:700;color:var(--goldDim);letter-spacing:.1em;text-transform:uppercase;border-bottom:1px solid rgba(255,255,255,.04)}
+.sb-hdr.nav-hdr{color:var(--teal);border-top:1px solid rgba(255,255,255,.05);margin-top:6px;padding-top:10px}
+.sb-part{display:flex;align-items:center;gap:8px;padding:9px 14px;cursor:pointer;border-bottom:1px solid rgba(255,255,255,.03);transition:all .12s;text-decoration:none}
+.sb-part:hover,.sb-part.active{background:rgba(212,160,23,.05)}
+.sb-part-icon{font-size:14px;flex-shrink:0}
+.sb-part-name{font-family:'Cinzel',serif;font-size:10.5px;color:var(--dim);font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:color .12s}
+.sb-part:hover .sb-part-name,.sb-part.active .sb-part-name{color:var(--goldLt)}
+.sb-tool-link{padding:8px 14px;display:flex;align-items:center;gap:9px;font-size:11.5px;color:var(--dim);cursor:pointer;transition:all .12s;border-left:2px solid transparent;text-decoration:none}
+.sb-tool-link:hover,.sb-tool-link.active{color:var(--tealLt);background:rgba(31,184,168,.04);border-left-color:var(--tealLt)}
+.sb-snip{padding:7px 14px 7px 30px;font-size:11px;color:rgba(240,234,214,.36);cursor:pointer;border-left:2px solid transparent;display:flex;align-items:center;gap:8px;transition:all .12s;line-height:1.35}
+.sb-snip:hover{color:var(--tealLt);background:rgba(31,184,168,.03);border-left-color:var(--teal)}
+.snip-dot{width:5px;height:5px;border-radius:50%;background:var(--purple);flex-shrink:0}
+
+/* ── Main IDE area ── */
+#main{margin-left:var(--sidebar);flex:1;min-width:0;display:flex;flex-direction:column;position:relative;z-index:1}
+
+/* ── Hero strip ── */
+.gl-hero{padding:22px 32px 14px;border-bottom:1px solid var(--border);animation:fadeUp .3s ease}
+.gl-badge{font-family:'Cinzel',serif;font-size:9px;font-weight:700;letter-spacing:.14em;color:var(--purpleLt);padding:3px 12px;border:1px solid rgba(124,58,237,.3);border-radius:20px;display:inline-block;margin-bottom:8px}
+.gl-title{font-family:'Cinzel',serif;font-size:24px;font-weight:900;color:var(--goldLt);margin-bottom:3px}
+.gl-sub{font-size:13px;color:var(--dim);font-style:italic;margin-bottom:8px}
+.kbd{display:inline-block;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:4px;padding:1px 6px;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--dim)}
+
+/* ── IDE layout ── */
+.gl-ide{display:flex;flex:1;height:calc(100vh - var(--topbar) - 96px);min-height:400px}
+
+/* ── Editor pane ── */
+.gl-ep{flex:1;display:flex;flex-direction:column;border-right:1px solid var(--border);min-width:0}
+.gl-tb{display:flex;align-items:center;gap:8px;padding:7px 14px;background:var(--bg3);border-bottom:1px solid var(--border);flex-wrap:wrap}
+.gl-tb-lbl{font-family:'Cinzel',serif;font-size:8.5px;font-weight:700;letter-spacing:.1em;color:var(--goldDim);text-transform:uppercase}
+.gl-sel{background:var(--bg4);border:1px solid var(--border);border-radius:6px;color:var(--white);font-family:'Crimson Pro',serif;font-size:12px;padding:4px 10px;outline:none;cursor:pointer}
+.gl-sel:focus{border-color:var(--teal)}
+.gl-sp{flex:1}
+.gl-btn{padding:5px 13px;font-family:'Cinzel',serif;font-size:8.5px;font-weight:700;letter-spacing:.06em;border-radius:6px;cursor:pointer;transition:all .15s;border:1px solid var(--border);background:transparent;color:var(--dim);text-transform:uppercase}
+.gl-btn:hover{border-color:var(--teal);color:var(--tealLt)}
+.gl-btn.run{background:linear-gradient(135deg,var(--emerald),#059669cc);color:#fff;border-color:transparent}
+.gl-btn.run:hover{opacity:.85;transform:translateY(-1px)}
+.gl-btn.run:disabled{opacity:.4;cursor:not-allowed;transform:none}
+.gl-btn.clr{border-color:rgba(192,57,43,.3);color:var(--redLt)}
+.gl-btn.cpy{border-color:rgba(31,184,168,.25);color:var(--tealLt)}
+.gl-ew{flex:1;overflow:hidden;background:#060a11}
+#gl-ed{width:100%;height:100%;background:transparent;border:none;outline:none;padding:16px 18px;font-family:'JetBrains Mono',monospace;font-size:12.5px;line-height:1.85;color:#a8d8ea;resize:none;tab-size:2;white-space:pre;overflow:auto;caret-color:var(--goldLt)}
+#gl-ed::selection{background:rgba(212,160,23,.18)}
+
+/* ── AI review panel ── */
+.gl-ai{border-top:1px solid var(--border)}
+.gl-ai-tb{padding:7px 14px;background:var(--bg3);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px}
+.gl-ai-lbl{font-family:'Cinzel',serif;font-size:8.5px;font-weight:700;letter-spacing:.1em;color:var(--teal);text-transform:uppercase;flex:1}
+.gl-ai-abtn{padding:4px 12px;font-family:'Cinzel',serif;font-size:8.5px;font-weight:700;letter-spacing:.05em;border-radius:6px;cursor:pointer;transition:all .15s;border:1px solid rgba(31,184,168,.25);background:transparent;color:var(--tealLt);text-transform:uppercase}
+.gl-ai-abtn:hover{background:rgba(31,184,168,.1)}
+.gl-ai-abtn:disabled{opacity:.4;cursor:not-allowed}
+.gl-chips{display:flex;gap:5px;padding:7px 14px;flex-wrap:wrap;border-bottom:1px solid var(--border);background:rgba(0,0,0,.18)}
+.chip{font-size:10.5px;padding:3px 10px;border:1px solid rgba(31,184,168,.14);border-radius:12px;background:transparent;color:rgba(240,234,214,.35);cursor:pointer;transition:all .12s}
+.chip:hover{border-color:var(--tealLt);color:var(--tealLt);background:rgba(31,184,168,.06)}
+.gl-ai-row{display:flex;gap:8px;padding:9px 14px}
+.gl-ai-inp{flex:1;padding:7px 12px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:8px;color:var(--white);font-family:'Crimson Pro',serif;font-size:13px;outline:none;transition:border-color .15s}
+.gl-ai-inp:focus{border-color:var(--teal)}
+.gl-ai-inp::placeholder{color:rgba(255,255,255,.15)}
+.gl-ai-send{padding:7px 16px;background:linear-gradient(135deg,var(--teal),var(--sky));color:var(--bg);border:none;border-radius:8px;font-family:'Cinzel',serif;font-size:9px;font-weight:700;letter-spacing:.05em;cursor:pointer;transition:opacity .12s}
+.gl-ai-send:hover{opacity:.85}
+.gl-ai-send:disabled{opacity:.4;cursor:not-allowed}
+.gl-ai-out{padding:11px 14px;font-size:13px;line-height:1.78;color:rgba(240,234,214,.68);max-height:160px;overflow-y:auto;border-top:1px solid rgba(255,255,255,.04)}
+.gl-ai-out::-webkit-scrollbar{width:3px}
+.gl-ai-out::-webkit-scrollbar-thumb{background:var(--goldDim)}
+
+/* ── Output pane ── */
+.gl-op{width:350px;flex-shrink:0;display:flex;flex-direction:column;background:var(--bg2)}
+.gl-out-tb{padding:7px 14px;background:var(--bg3);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px}
+.gl-out-lbl{font-family:'Cinzel',serif;font-size:8.5px;font-weight:700;letter-spacing:.1em;color:var(--dim);text-transform:uppercase;flex:1}
+.sdot{width:7px;height:7px;border-radius:50%;background:var(--dim);transition:background .3s;flex-shrink:0}
+.sdot.running{background:var(--amber);animation:pulse 1s infinite}
+.sdot.success{background:var(--emeraldLt)}
+.sdot.error{background:var(--redLt)}
+#gl-out{flex:1;padding:14px;font-family:'JetBrains Mono',monospace;font-size:11px;line-height:1.82;overflow-y:auto;white-space:pre-wrap;word-break:break-word}
+#gl-out::-webkit-scrollbar{width:3px}
+#gl-out::-webkit-scrollbar-thumb{background:var(--goldDim)}
+.o-info{color:rgba(240,234,214,.28)}
+.o-print{color:#a8d8ea}
+.o-success{color:var(--emeraldLt)}
+.o-error{color:var(--redLt)}
+.o-warn{color:var(--amberLt)}
+.o-sep{color:var(--goldDim)}
+.spinner{display:inline-block;width:11px;height:11px;border:2px solid rgba(255,255,255,.1);border-top-color:var(--teal);border-radius:50%;animation:spin .7s linear infinite;margin-right:7px;vertical-align:middle}
+.gl-metrics{display:flex;gap:14px;padding:5px 14px;background:rgba(0,0,0,.3);border-top:1px solid var(--border);font-family:'JetBrains Mono',monospace;font-size:9.5px;color:var(--dim)}
+.mval{color:var(--goldLt)}
+
+@media(max-width:900px){#sb{display:none}#main{margin-left:0}.gl-op{width:260px}}
+@media(max-width:640px){.gl-ide{flex-direction:column;height:auto}.gl-ep{min-height:300px}.gl-op{width:100%;height:240px}}
+</style>
+</head>
+<body>
+<div id="stars"></div>
+
+<!-- Topbar -->
+<div id="topbar">
+  <div class="tb-dot"></div>
+  <a href="index.html" class="tb-home">⚔ The Planning Quest</a>
+  <span class="tb-sep">›</span>
+  <span class="tb-current">Groovy Lab</span>
+  <div class="tb-tools">
+    <a href="parts-1-3.html"       class="tb-tool">Parts I–III</a>
+    <a href="parts-4-5.html"       class="tb-tool">Parts IV–V</a>
+    <a href="parts-6-9.html"       class="tb-tool">Parts VI–IX</a>
+    <a href="groovy-ch1.html"      class="tb-tool">Groovy I</a>
+    <a href="groovy-ch2.html"      class="tb-tool">Groovy II</a>
+    <a href="groovy-lab.html"      class="tb-tool active">💻 Lab</a>
+    <a href="parts-workforce.html" class="tb-tool">👥 Workforce</a>
+    <a href="rest-api.html"        class="tb-tool">🌐 REST API</a>
+    <a href="simulators.html"      class="tb-tool">Sims</a>
+    <a href="automate-ref.html"    class="tb-tool">CLI</a>
+    <a href="interview-prep.html"  class="tb-tool">Prep</a>
+  </div>
+</div>
+
+<div id="shell">
+
+<!-- Sidebar -->
+<div id="sb">
+  <div class="sb-hdr">Course</div>
+  <a href="parts-1-3.html"  class="sb-part"><span class="sb-part-icon">🏰</span><span class="sb-part-name">Parts I–III · Foundations</span></a>
+  <a href="parts-4-5.html"  class="sb-part"><span class="sb-part-icon">⚔</span><span class="sb-part-name">Parts IV–V · Groovy Battles</span></a>
+  <a href="parts-6-9.html"  class="sb-part"><span class="sb-part-icon">👑</span><span class="sb-part-name">Parts VI–IX · Mastery</span></a>
+  <a href="groovy-ch1.html" class="sb-part"><span class="sb-part-icon">📘</span><span class="sb-part-name">Groovy Deep-Dive I</span></a>
+  <a href="groovy-ch2.html" class="sb-part"><span class="sb-part-icon">⚡</span><span class="sb-part-name">Groovy Deep-Dive II</span></a>
+  <a href="parts-workforce.html" class="sb-part"><span class="sb-part-icon">👥</span><span class="sb-part-name">Workforce Planning</span></a>
+
+  <div class="sb-hdr nav-hdr">Tools</div>
+  <a href="quiz.html"            class="sb-tool-link">📝 Practice Quiz</a>
+  <a href="flashcards.html"      class="sb-tool-link">🃏 Flashcards</a>
+  <a href="labs.html"            class="sb-tool-link">🔬 Enterprise Labs</a>
+  <a href="simulators.html"      class="sb-tool-link">🧮 Simulators</a>
+  <a href="groovy-lab.html"      class="sb-tool-link active">💻 Groovy Lab</a>
+  <a href="automate-ref.html"    class="sb-tool-link">⚙ EPM Automate CLI</a>
+  <a href="rest-api.html"        class="sb-tool-link">🌐 REST API Cookbook</a>
+  <a href="interview-prep.html"  class="sb-tool-link">🎯 Interview Prep</a>
+  <a href="whats-new.html"       class="sb-tool-link">🆕 What's New</a>
+  <a href="search.html"          class="sb-tool-link">🔍 Search</a>
+
+  <div class="sb-hdr" style="margin-top:6px">Snippet Library</div>
+  <div class="sb-snip" onclick="load('basic')">        <span class="snip-dot"></span>Hello EPBCS World</div>
+  <div class="sb-snip" onclick="load('getCell')">      <span class="snip-dot"></span>getCell / setCell</div>
+  <div class="sb-snip" onclick="load('iterate')">      <span class="snip-dot"></span>Iterate Members</div>
+  <div class="sb-snip" onclick="load('allocation')">   <span class="snip-dot"></span>Revenue Allocation</div>
+  <div class="sb-snip" onclick="load('batchWrite')">   <span class="snip-dot"></span>Batch Write Pattern</div>
+  <div class="sb-snip" onclick="load('validate')">     <span class="snip-dot"></span>Input Validation Guard</div>
+  <div class="sb-snip" onclick="load('seasonal')">     <span class="snip-dot"></span>Seasonal Spread</div>
+  <div class="sb-snip" onclick="load('subvar')">       <span class="snip-dot"></span>SubVar Reader</div>
+  <div class="sb-snip" onclick="load('errorHandler')"> <span class="snip-dot"></span>Try/Catch Pattern</div>
+  <div class="sb-snip" onclick="load('workflow')">     <span class="snip-dot"></span>Workflow Status Gate</div>
+  <div class="sb-snip" onclick="load('perfOpt')">      <span class="snip-dot"></span>Performance Optimised</div>
+  <div class="sb-snip" onclick="load('drivers')">      <span class="snip-dot"></span>Driver-Based Calc</div>
+</div>
+
+<!-- Main -->
+<div id="main">
+  <div class="gl-hero">
+    <div class="gl-badge">🧪 Interactive Lab · Vision Corp · EPM 25.06+</div>
+    <div class="gl-title">Groovy Lab</div>
+    <div class="gl-sub">Browser-based EPBCS Groovy editor · 12 production snippets · AI code review · simulated Oracle runtime</div>
+    <div style="font-size:11.5px;color:var(--dim);margin-top:6px">
+      <span class="kbd">Ctrl+Enter</span> run &nbsp;·&nbsp;
+      <span class="kbd">Tab</span> indent &nbsp;·&nbsp;
+      <span class="kbd">Ctrl+K</span> clear &nbsp;·&nbsp;
+      <span class="kbd">Ctrl+/</span> toggle comment
+    </div>
+  </div>
+
+  <div class="gl-ide">
+
+    <!-- Editor -->
+    <div class="gl-ep">
+      <div class="gl-tb">
+        <span class="gl-tb-lbl">Snippet</span>
+        <select class="gl-sel" id="snip-sel" onchange="load(this.value)">
+          <option value="basic">Hello EPBCS World</option>
+          <option value="getCell">getCell / setCell</option>
+          <option value="iterate">Iterate Members</option>
+          <option value="allocation">Revenue Allocation</option>
+          <option value="batchWrite">Batch Write Pattern</option>
+          <option value="validate">Input Validation Guard</option>
+          <option value="seasonal">Seasonal Spread</option>
+          <option value="subvar">SubVar Reader</option>
+          <option value="errorHandler">Try/Catch Pattern</option>
+          <option value="workflow">Workflow Status Gate</option>
+          <option value="perfOpt">Performance Optimised</option>
+          <option value="drivers">Driver-Based Calc</option>
+        </select>
+        <div class="gl-sp"></div>
+        <button class="gl-btn cpy" onclick="copyCode()">⎘ Copy</button>
+        <button class="gl-btn clr" onclick="clearEd()">✕ Clear</button>
+        <button class="gl-btn run" id="runBtn" onclick="runCode()">▶ Run</button>
+      </div>
+      <div class="gl-ew">
+        <textarea id="gl-ed" spellcheck="false" autocomplete="off" placeholder="// Write Groovy or select a snippet · Ctrl+Enter to run"></textarea>
+      </div>
+      <!-- AI Panel -->
+      <div class="gl-ai">
+        <div class="gl-ai-tb">
+          <span class="gl-ai-lbl">🤖 Oracle · AI Code Review</span>
+          <button class="gl-ai-abtn" id="reviewBtn" onclick="reviewCode()">Analyse Code</button>
+        </div>
+        <div class="gl-chips">
+          <span class="chip" onclick="askQ('What performance issues does this Groovy script have?')">Performance?</span>
+          <span class="chip" onclick="askQ('Explain this EPBCS Groovy script line by line.')">Explain it</span>
+          <span class="chip" onclick="askQ('What would cause this to fail in live EPBCS production?')">Production risks?</span>
+          <span class="chip" onclick="askQ('Optimise the batch write pattern for minimum network round-trips.')">Optimise writes</span>
+          <span class="chip" onclick="askQ('Add robust try/catch error handling to this script.')">Add error handling</span>
+          <span class="chip" onclick="askQ('Is this BSO or ASO compatible? What needs to change for the other?')">BSO vs ASO</span>
+        </div>
+        <div class="gl-ai-row">
+          <input class="gl-ai-inp" id="aiInp" type="text" placeholder="Ask anything about your Groovy code...">
+          <button class="gl-ai-send" id="aiSend" onclick="sendAI()">Ask Oracle</button>
+        </div>
+        <div class="gl-ai-out" id="aiOut" style="display:none"></div>
+      </div>
+    </div>
+
+    <!-- Output -->
+    <div class="gl-op">
+      <div class="gl-out-tb">
+        <span class="gl-out-lbl">📟 Execution Output</span>
+        <div class="sdot" id="sdot"></div>
+        <button class="gl-btn" onclick="clearOut()" style="font-size:8px;padding:3px 8px">Clear</button>
+      </div>
+      <div id="gl-out"><span class="o-info">// Vision Corp EPBCS Simulator v3.0
+// EPM 25.06+ runtime environment
+//
+// Select a snippet · press ▶ Run
+// or Ctrl+Enter to execute.
+//
+// Cube operations are simulated
+// with Vision Corp data ($2.8B).
+</span></div>
+      <div class="gl-metrics" id="metrics" style="display:none">
+        <span>⏱ <span class="mval" id="mT">0ms</span></span>
+        <span>📝 <span class="mval" id="mL">0</span> lines</span>
+        <span>✓ <span class="mval" id="mO">0</span> ops</span>
+      </div>
+    </div>
+
+  </div><!-- /ide -->
+</div><!-- /main -->
+</div><!-- /shell -->
+
+<script>
+/* ── Stars ── */
+(function(){var s=document.getElementById('stars');for(var i=0;i<90;i++){var d=document.createElement('div');d.className='star';var z=Math.random()*2+.4;d.style.cssText='width:'+z+'px;height:'+z+'px;top:'+Math.random()*100+'%;left:'+Math.random()*100+'%;--d:'+(2+Math.random()*4)+'s;--delay:'+Math.random()*5+'s;--op:'+(0.2+Math.random()*0.5);s.appendChild(d);}})();
+
+/* ── Snippet library ── */
+const S={
+basic:`// ═══════════════════════════════════════════════════
+// Hello EPBCS World — Groovy Basics
+// Vision Corp · Budget Rule · EPM 25.06+
+// ═══════════════════════════════════════════════════
+
+def grid = operation.grid   // DataGridContext
+
+// Read a cell value
+def revenue = grid.getDataCell(
+    "Sales", "North_America", "Jan", "FY2025", "Budget", "Working"
+).data
+println "Revenue (NA Jan): " + revenue
+
+// Conditionally write back
+if (revenue != null && revenue > 0) {
+    def commission = revenue * 0.08
+    grid.getDataCell("Commission", "North_America", "Jan", "FY2025", "Budget", "Working").data = commission
+    println "Commission written: " + commission.round(2)
+} else {
+    println "WARN: No revenue — skipping commission calc"
+}
+println "Script complete."`,
+
+getCell:`// ═══════════════════════════════════════════════════
+// getCell & setCell Patterns
+// Vision Corp · EMEA Gross Margin
+// ═══════════════════════════════════════════════════
+
+def grid = operation.grid
+
+// Single cell read
+def rev = grid.getDataCell("Net_Revenue","EMEA","Q1","FY2025","Actual","Final").data ?: 0.0
+println "Actual Revenue EMEA Q1: " + rev
+
+// Multi-account read loop
+def accts = ["Net_Revenue","COGS","Gross_Profit"]
+def vals  = [:]
+accts.each { a -> vals[a] = grid.getDataCell(a,"EMEA","Q1","FY2025","Actual","Final").data ?: 0.0 }
+println "Multi-read: " + vals
+
+// Derive and write gross margin %
+def gmp = vals["Net_Revenue"] > 0 ? (vals["Gross_Profit"]/vals["Net_Revenue"])*100 : 0.0
+grid.getDataCell("Gross_Margin_Pct","EMEA","Q1","FY2025","Budget","Working").data = gmp.round(4)
+println "Gross Margin % written: " + gmp.round(2) + "%"`,
+
+iterate:`// ═══════════════════════════════════════════════════
+// Member Iteration Patterns
+// Vision Corp · All Entity Leaf Members
+// ═══════════════════════════════════════════════════
+
+def grid = operation.grid
+def all  = operation.application.getDimension("Entity").getMember("Total_Entity").getLevelZeroMembers()
+println "Found " + all.size() + " entity leaf members"
+
+def written=0, skipped=0
+all.each { entity ->
+    def rev = grid.getDataCell("Net_Revenue",entity.getName(),"Full_Year","FY2025","Budget","Working").data
+    if (!rev || rev==0) { skipped++; return }
+    def hc  = grid.getDataCell("Headcount",entity.getName(),"Full_Year","FY2025","Budget","Working").data ?: 1
+    grid.getDataCell("Rev_Per_Head",entity.getName(),"Full_Year","FY2025","Budget","Working").data = (rev/hc).round(2)
+    println "  " + entity.getName() + " Rev/Head: \$" + (rev/hc).round(0)
+    written++
+}
+println "\\n✓ " + written + " written · " + skipped + " skipped"`,
+
+allocation:`// ═══════════════════════════════════════════════════
+// Revenue-Proportional Overhead Allocation
+// Vision Corp · IT Shared Cost Pool $4.2M
+// Production pattern from the $2.8B implementation
+// ═══════════════════════════════════════════════════
+
+def entities = operation.application
+    .getDimension("Entity").getMember("Total_Operating_Entities").getLevelZeroMembers()
+
+// Pass 1: total revenue — guard against zero
+def totalRev = 0.0
+entities.each { e -> totalRev += operation.grid.getDataCell("Total_Revenue",e.getName(),"Full_Year","FY2025","Budget","Working").data ?: 0 }
+if (totalRev==0) { println "GUARD: Zero revenue — abort"; return }
+println "Total Revenue: \$" + String.format("%,.0f", totalRev)
+
+def pool = 4200000.0
+println "IT Cost Pool: \$" + String.format("%,.0f", pool)
+
+// Stage all writes — ONE network call
+def writes=[]
+entities.each { e ->
+    def rev=operation.grid.getDataCell("Total_Revenue",e.getName(),"Full_Year","FY2025","Budget","Working").data ?: 0
+    def share=pool*(rev/totalRev)
+    writes << [e.getName(),"IT_Allocated","Full_Year","FY2025","Budget","Working",share.round(2)]
+    println "  "+e.getName()+": \$"+String.format("%,.0f",share)+" ("+((rev/totalRev)*100).round(1)+"%)"
+}
+operation.grid.setDataCellValues(writes)
+println "\\n✓ Batch write — "+writes.size()+" cells · 1 network call"`,
+
+batchWrite:`// ═══════════════════════════════════════════════════
+// Batch Write Pattern — The Golden Rule
+// Vision Corp · Annual-to-Monthly Revenue Spread
+// ═══════════════════════════════════════════════════
+
+def MONTHS   = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]
+def ENTITIES = ["NA","EMEA","APAC","LATAM"]
+
+// ❌ ANTI-PATTERN (48 network calls — never do this):
+// MONTHS.each { m -> ENTITIES.each { e -> grid.getDataCell(...).data = val }}
+
+// ✓ CORRECT: collect all writes, flush once
+def writes=[]
+ENTITIES.each { entity ->
+    def annual=operation.grid.getDataCell("Revenue_Target",entity,"Full_Year","FY2025","Budget","Working").data ?: 0
+    def weights=[8,7,8,9,9,8,7,8,9,9,9,9]; def total=weights.sum()
+    MONTHS.eachWithIndex { m,i -> writes << [entity,"Monthly_Revenue",m,"FY2025","Budget","Working",(annual*weights[i]/total).round(2)] }
+}
+operation.grid.setDataCellValues(writes)
+println "✓ "+writes.size()+" cells · 1 network round-trip (was 48)"
+println "  Time saved: ~"+(48*180/1000).round(1)+" seconds per execution"`,
+
+validate:`// ═══════════════════════════════════════════════════
+// Input Validation Guard — Budget Submission Gate
+// Vision Corp · Hard stops + soft warnings
+// ═══════════════════════════════════════════════════
+
+def grid=operation.grid; def errors=[]; def warns=[]
+def getVal={ acct,ent -> grid.getDataCell(acct,ent,"Full_Year","FY2025","Budget","Working").data ?: 0.0 }
+
+["NA","EMEA","APAC","LATAM"].each { entity ->
+    def rev=getVal("Net_Revenue",entity); def cogs=getVal("COGS",entity); def hc=getVal("Headcount",entity)
+    if (rev<0)          errors << "["+entity+"] Revenue < 0: "+rev
+    if (cogs>rev*1.5)   errors << "["+entity+"] COGS > 150% of Revenue"
+    if (hc<=0)          errors << "["+entity+"] Headcount must be > 0"
+    def gm = rev>0 ? (rev-cogs)/rev : 0
+    if (gm<0.15 && rev>0) warns << "["+entity+"] Low gross margin: "+(gm*100).round(1)+"%"
+}
+if (errors) {
+    println "❌ FAILED ("+errors.size()+" error(s)):"; errors.each { println "   "+it }
+    throw new RuntimeException("Budget validation failed")
+}
+warns.each { println "⚠ "+it }
+println "✓ Validation passed — 4 entities checked"`,
+
+seasonal:`// ═══════════════════════════════════════════════════
+// Seasonal Spread — Annual to Monthly
+// Vision Corp · B2B Revenue (Q4-heavy)
+// Battle 1 pattern from Part V
+// ═══════════════════════════════════════════════════
+
+def MONTHS  = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]
+def WEIGHTS = [7.2,6.8,8.1,8.4,8.6,7.9,6.5,7.2,8.8,9.1,9.3,12.1]  // sums to 100
+def TOTAL   = WEIGHTS.sum()
+
+def entities=operation.application.getDimension("Entity").getMember("Total_Entity").getLevelZeroMembers()
+def writes=[]; def skipped=0
+
+entities.each { entity ->
+    def annual=operation.grid.getDataCell("Net_Revenue",entity.getName(),"Full_Year","FY2025","Budget","Working").data
+    if (!annual || annual==0) { skipped++; return }
+    MONTHS.eachWithIndex { month,i -> writes << [entity.getName(),"Net_Revenue",month,"FY2025","Budget","Working",(annual*WEIGHTS[i]/TOTAL).round(2)] }
+    println entity.getName()+": \$"+String.format("%,.0f",annual)+" → monthly spread applied"
+}
+operation.grid.setDataCellValues(writes)
+println "\\n✓ "+writes.size()+" writes · "+(entities.size()-skipped)+" entities · "+skipped+" skipped"`,
+
+subvar:`// ═══════════════════════════════════════════════════
+// Substitution Variable Reader
+// Vision Corp · Dynamic member references
+// ═══════════════════════════════════════════════════
+
+def app=operation.application
+def curYear   = app.getSubstitutionVariable("CurYear")?.value   ?: "FY2025"
+def prevYear  = app.getSubstitutionVariable("PrevYear")?.value  ?: "FY2024"
+def curPeriod = app.getSubstitutionVariable("CurPeriod")?.value ?: "Jan"
+def closedPer = app.getSubstitutionVariable("ClosedPeriod")?.value ?: "Dec"
+
+println "SubVars:"
+println "  CurYear    = "+curYear
+println "  PrevYear   = "+prevYear
+println "  CurPeriod  = "+curPeriod
+println "  ClosedPer  = "+closedPer
+
+def curRev  = operation.grid.getDataCell("Net_Revenue","Total_Entity",curPeriod, curYear, "Actual","Final").data ?: 0
+def prevRev = operation.grid.getDataCell("Net_Revenue","Total_Entity",closedPer,prevYear,"Actual","Final").data ?: 0
+def yoy = prevRev!=0 ? ((curRev-prevRev)/prevRev*100).round(1) : null
+println "\\n"+curYear+" "+curPeriod+": \$"+String.format("%,.0f",curRev)
+println prevYear+" "+closedPer+": \$"+String.format("%,.0f",prevRev)
+println "YoY: "+(yoy!=null ? yoy+"%" : "N/A")`,
+
+errorHandler:`// ═══════════════════════════════════════════════════
+// Try/Catch Error Handling — Production Pattern
+// Vision Corp · Partial success allowed
+// ═══════════════════════════════════════════════════
+
+def entities=["NA","EMEA","APAC","LATAM","Invalid_Entity"]
+def errors=[:]; def success=0
+
+entities.each { entity ->
+    try {
+        if (entity=="Invalid_Entity") throw new IllegalArgumentException("Member not found: "+entity)
+        def rev=operation.grid.getDataCell("Net_Revenue",entity,"Full_Year","FY2025","Budget","Working").data
+        if (rev==null) throw new RuntimeException("Null revenue for "+entity)
+        println "✓ "+entity+": \$"+String.format("%,.0f",rev)
+        success++
+    } catch (IllegalArgumentException iae) {
+        errors[entity]="MemberError: "+iae.message
+        println "⚠ "+entity+" — member not found (skipped)"
+    } catch (Exception e) {
+        errors[entity]=e.message
+        println "❌ "+entity+" — "+e.message
+    }
+}
+println "\\n"+success+" success · "+errors.size()+" error(s)"
+if (errors) errors.each { k,v -> println "  "+k+": "+v }
+if (success==0) throw new RuntimeException("All entities failed")`,
+
+workflow:`// ═══════════════════════════════════════════════════
+// Workflow Status Check & Approval Gate
+// Vision Corp · Budget FY2025
+// ═══════════════════════════════════════════════════
+
+def units=operation.application.getPlanningUnits("Budget","FY2025")
+def stats=[passed:0, pending:0, notStarted:0]
+
+println "Budget Workflow — FY2025"
+println "═".multiply(42)
+
+units.each { pu ->
+    def entity=pu.member.name; def status=pu.approvalStatus; def owner=pu.currentOwner?.name ?: "Unassigned"
+    switch(status) {
+        case "PassedFirstPass": case "SignedOff":
+            stats.passed++;  println "✅ "+entity.padRight(18)+" Approved  · "+owner; break
+        case "UnderReview": case "Promoted":
+            stats.pending++; println "🔄 "+entity.padRight(18)+" In Review · "+owner; break
+        case "NotStarted":
+            stats.notStarted++; println "⭕ "+entity.padRight(18)+" Not Started · "+owner; break
+    }
+}
+println "\\n"+stats.passed+" approved · "+stats.pending+" in review · "+stats.notStarted+" not started"
+if (stats.notStarted>0) throw new RuntimeException("GATE: "+stats.notStarted+" unit(s) not started")`,
+
+perfOpt:`// ═══════════════════════════════════════════════════
+// Performance-Optimised Script — All Best Practices
+// Vision Corp · Target: <500ms for 50 entities
+// ═══════════════════════════════════════════════════
+
+def t0=System.currentTimeMillis()
+def grid=operation.grid
+
+// 1. Cache dimension once — never inside a loop
+def entities=operation.application.getDimension("Entity").getMember("Total_Entity").getLevelZeroMembers()
+println "Entities: "+entities.size()
+
+// 2. Build name list once
+def names=entities*.getName()
+
+// 3. Single bulk read pass
+def revenues=[:]; names.each { n -> revenues[n]=grid.getDataCell("Net_Revenue",n,"Full_Year","FY2025","Budget","Working").data ?: 0.0 }
+
+// 4. All computation in-memory
+def totalRev=revenues.values().sum(); def writes=[]
+if (totalRev>0) {
+    names.each { n -> writes << [n,"Rev_Share_Pct","Full_Year","FY2025","Budget","Working",(revenues[n]/totalRev*100).round(4)] }
+    grid.setDataCellValues(writes)  // 5. One batch write
+}
+println "✓ "+writes.size()+" cells · "+(System.currentTimeMillis()-t0)+"ms"
+println "  Strategy: 1 bulk read loop + 1 batch write = 2 network calls total"`,
+
+drivers:`// ═══════════════════════════════════════════════════
+// Driver-Based Budget — Headcount → Salary Cost
+// Vision Corp · Annual Budget Build Lab
+// ═══════════════════════════════════════════════════
+
+def MONTHS=[["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]][0]
+def ESCALATOR=1.035; def BENEFITS_R=0.28; def BONUS_R=0.12
+def BONUS_MONTHS=["Oct","Nov","Dec"]
+
+def entities=operation.application.getDimension("Entity").getMember("Total_Entity").getLevelZeroMembers()
+def writes=[]; def processed=0
+
+entities.each { entity ->
+    def hc    =operation.grid.getDataCell("Headcount", entity.getName(),"Full_Year","FY2025","Budget","Working").data ?: 0
+    def avgSal=operation.grid.getDataCell("Avg_Salary",entity.getName(),"Full_Year","FY2024","Actual","Final").data   ?: 0
+    if (!hc||!avgSal) { println "SKIP: "+entity.getName(); return }
+    def esc=avgSal*ESCALATOR; def mon=esc/12
+    MONTHS.each { month ->
+        writes << [entity.getName(),"Salary_Cost",  month,"FY2025","Budget","Working",(mon*hc).round(2)]
+        writes << [entity.getName(),"Benefits_Cost",month,"FY2025","Budget","Working",(mon*hc*BENEFITS_R).round(2)]
+        if (month in BONUS_MONTHS) writes << [entity.getName(),"Bonus_Accrual",month,"FY2025","Budget","Working",(esc*hc*BONUS_R/3).round(2)]
+    }
+    println entity.getName()+": "+hc+" HC · \$"+String.format("%,.0f",esc)+" escalated sal"
+    processed++
+}
+operation.grid.setDataCellValues(writes)
+println "\\n✓ "+processed+" entities · "+writes.size()+" cell writes"`
+};
+
+/* ── Vision Corp sim data ── */
+const VC={rev:{NA:48200000,EMEA:31500000,APAC:22800000,LATAM:14600000},hc:{NA:142,EMEA:98,APAC:71,LATAM:43},cogs:{NA:28900000,EMEA:19600000,APAC:15200000,LATAM:10100000}};
+const ENTS=Object.keys(VC.rev);
+
+function load(key){
+  const ta=document.getElementById('gl-ed');
+  ta.value=S[key]||''; document.getElementById('snip-sel').value=key; clearOut();
+}
+
+window.addEventListener('DOMContentLoaded',()=>{
+  load('basic');
+  document.getElementById('gl-ed').addEventListener('keydown',e=>{
+    if((e.ctrlKey||e.metaKey)&&e.key==='Enter'){e.preventDefault();runCode();}
+    if((e.ctrlKey||e.metaKey)&&e.key==='k'){e.preventDefault();clearEd();}
+    if(e.key==='Tab'){e.preventDefault();const t=e.target,s=t.selectionStart;t.value=t.value.slice(0,s)+'  '+t.value.slice(t.selectionEnd);t.selectionStart=t.selectionEnd=s+2;}
+    if((e.ctrlKey||e.metaKey)&&e.key==='/'){
+      e.preventDefault();const t=e.target,s=t.selectionStart;
+      const ls=t.value.lastIndexOf('\n',s-1)+1, le=(t.value.indexOf('\n',s)+1||t.value.length+1)-1;
+      const ln=t.value.slice(ls,le);
+      t.value=t.value.slice(0,ls)+(ln.trimStart().startsWith('//')?ln.replace('//',''):'// '+ln)+t.value.slice(le);
+    }
+  });
+});
+
+function clearEd(){document.getElementById('gl-ed').value='';clearOut();}
+function copyCode(){
+  navigator.clipboard.writeText(document.getElementById('gl-ed').value).then(()=>{
+    const b=document.querySelector('.gl-btn.cpy');b.textContent='✓ Copied';setTimeout(()=>b.textContent='⎘ Copy',1500);
+  });
+}
+function clearOut(){
+  document.getElementById('gl-out').innerHTML='<span class="o-info">// Cleared. Press ▶ Run to execute.\n</span>';
+  document.getElementById('metrics').style.display='none'; setStat('');
+}
+function setStat(s){const d=document.getElementById('sdot');d.className='sdot'+(s?' '+s:'');}
+function addOut(txt,cls){const o=document.getElementById('gl-out'),sp=document.createElement('span');sp.className='o-'+cls;sp.textContent=txt+'\n';o.appendChild(sp);o.scrollTop=o.scrollHeight;}
+
+function runCode(){
+  const code=document.getElementById('gl-ed').value.trim();
+  if(!code){addOut('// No code to run.','info');return;}
+  const btn=document.getElementById('runBtn');btn.disabled=true;setStat('running');
+  document.getElementById('gl-out').innerHTML='';
+  addOut('// ─── Execution Start ──────────────────────','sep');
+  addOut('// Vision Corp EPBCS Simulator v3.0','info');
+  addOut('// '+new Date().toISOString(),'info'); addOut('','info');
+  const t0=performance.now();
+  setTimeout(()=>{
+    try{
+      simRun(document.getElementById('snip-sel').value);
+      const ms=Math.round(performance.now()-t0);
+      addOut('','info'); addOut('// ─── Complete ('+ms+'ms) ──────────────────','sep');
+      setStat('success'); showMet(ms,document.getElementById('gl-ed').value.split('\n').length);
+    }catch(err){
+      addOut('','info'); addOut('RuntimeException: '+err.message,'error');
+      addOut('// ─── Execution Failed ───────────────────','sep'); setStat('error');
+    }
+    btn.disabled=false;
+  },350+Math.random()*250);
+}
+
+function simRun(k){
+  if(k==='basic'){addOut('Revenue (NA Jan): '+(VC.rev.NA/12).toFixed(2),'print');addOut('Commission written: '+((VC.rev.NA/12)*0.08).toFixed(2),'print');addOut('Script complete.','success');}
+  else if(k==='getCell'){const r=VC.rev.EMEA,c=VC.cogs.EMEA,g=r-c;addOut('Actual Revenue EMEA Q1: '+(r/4).toFixed(2),'print');addOut('Multi-read: {Net_Revenue:'+(r/4).toFixed(0)+', COGS:'+(c/4).toFixed(0)+', Gross_Profit:'+(g/4).toFixed(0)+'}','print');addOut('Gross Margin % written: '+(g/r*100).toFixed(2)+'%','print');}
+  else if(k==='iterate'){addOut('Found '+ENTS.length+' entity leaf members','print');ENTS.forEach(e=>addOut('  '+e+' Rev/Head: $'+(VC.rev[e]/VC.hc[e]).toFixed(2),'print'));addOut('\n✓ 4 written · 0 skipped','success');}
+  else if(k==='allocation'){const tot=Object.values(VC.rev).reduce((a,b)=>a+b,0),pool=4200000;addOut('Total Revenue: $'+tot.toLocaleString(),'print');addOut('IT Cost Pool: $'+pool.toLocaleString(),'print');ENTS.forEach(e=>{const sh=pool*VC.rev[e]/tot;addOut('  '+e+': $'+sh.toFixed(0)+' ('+(VC.rev[e]/tot*100).toFixed(1)+'%)','print');});addOut('\n✓ Batch write — 4 cells · 1 network call','success');}
+  else if(k==='batchWrite'){addOut('✓ 48 cells · 1 network round-trip (was 48)','success');addOut('  Time saved: ~8.6 seconds per execution','print');}
+  else if(k==='validate'){addOut('⚠ [LATAM] Low gross margin: 30.8%','warn');addOut('✓ Validation passed — 4 entities checked','success');}
+  else if(k==='seasonal'){ENTS.forEach(e=>addOut(e+': $'+VC.rev[e].toLocaleString()+' → monthly spread applied','print'));addOut('\n✓ 48 writes · 4 entities · 0 skipped','success');}
+  else if(k==='subvar'){['SubVars:','  CurYear    = FY2025','  PrevYear   = FY2024','  CurPeriod  = Mar','  ClosedPer  = Dec','\nFY2025 Mar: $9,750,000','FY2024 Dec: $12,100,000','YoY: -19.4%'].forEach((l,i)=>addOut(l,i===6?'warn':'print'));}
+  else if(k==='errorHandler'){ENTS.forEach(e=>addOut('✓ '+e+': $'+VC.rev[e].toLocaleString(),'print'));addOut('⚠ Invalid_Entity — member not found (skipped)','warn');addOut('\n4 success · 1 error(s)','print');addOut('  Invalid_Entity: MemberError: Member not found: Invalid_Entity','error');}
+  else if(k==='workflow'){addOut('Budget Workflow — FY2025','print');addOut('═'.repeat(42),'sep');addOut('✅ NA                 Approved  · Sarah Chen','success');addOut('✅ EMEA               Approved  · Marco Rossi','success');addOut('🔄 APAC               In Review · Yuki Tanaka','warn');addOut('⭕ LATAM              Not Started · (Unassigned)','warn');addOut('\n2 approved · 1 in review · 1 not started','print');throw new Error('GATE: 1 unit(s) not started');}
+  else if(k==='perfOpt'){addOut('Entities: '+ENTS.length,'print');addOut('✓ '+ENTS.length+' cells · '+(12+Math.floor(Math.random()*9))+'ms','success');addOut('  2 network calls total (1 read loop + 1 batch write)','print');}
+  else if(k==='drivers'){ENTS.forEach(e=>{const esc=(VC.rev[e]/VC.hc[e])*0.35*1.035;addOut(e+': '+VC.hc[e]+' HC · $'+esc.toFixed(0)+' escalated sal','print');});const wc=ENTS.length*12*2+ENTS.length*3;addOut('\n✓ 4 entities · '+wc+' cell writes','success');}
+  else{addOut('✓ Script executed successfully','success');}
+}
+
+function showMet(ms,lines){document.getElementById('mT').textContent=ms+'ms';document.getElementById('mL').textContent=lines;document.getElementById('mO').textContent=Math.floor(lines*.4);document.getElementById('metrics').style.display='flex';}
+
+/* ── AI ── */
+async function reviewCode(){const code=document.getElementById('gl-ed').value.trim();if(!code){showAIOut('Please select or write a snippet first.');return;}await doAI('Review this EPBCS Groovy script concisely: (1) anti-patterns, (2) performance risks, (3) missing error handling, (4) production hardening tips. Up to 5 bullet points.',code);}
+function askQ(q){document.getElementById('aiInp').value=q;sendAI();}
+async function sendAI(){const inp=document.getElementById('aiInp'),q=inp.value.trim();if(!q)return;await doAI(q,document.getElementById('gl-ed').value.trim());inp.value='';}
+function showAIOut(msg){const o=document.getElementById('aiOut');o.style.display='block';o.innerHTML='<p style="color:rgba(240,234,214,.5);font-style:italic;font-size:13px">'+msg+'</p>';}
+
+async function doAI(question,code){
+  const send=document.getElementById('aiSend'),rev=document.getElementById('reviewBtn');
+  send.disabled=true;rev.disabled=true;
+  const out=document.getElementById('aiOut');out.style.display='block';
+  out.innerHTML='<span class="spinner"></span><span style="color:rgba(240,234,214,.3);font-style:italic;font-size:13px">Oracle is reviewing your code...</span>';
+  const sys='You are Oracle — AI tutor for The Planning Quest, an EPBCS & Groovy learning platform. Expert in Oracle EPM Cloud (EPBCS/PBCS), Groovy scripting, Essbase BSO/ASO, and enterprise FP&A. Vision Corp is the practice company ($2.8B, 4 regions: NA/EMEA/APAC/LATAM). Be concise and practical. Use ✓/⚠/❌ icons. Under 200 words unless explaining complex code.';
+  const msg=code?'Code in editor:\n```groovy\n'+code.slice(0,2000)+'\n```\n\nQuestion: '+question:question;
+  try{
+    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,system:sys,messages:[{role:'user',content:msg}]})});
+    const d=await r.json();const txt=d.content?.[0]?.text||'No response.';
+    out.innerHTML='';txt.split('\n').forEach(l=>{const p=document.createElement('p');p.style.cssText='margin:0 0 5px;font-size:13px;line-height:1.7;color:rgba(240,234,214,.72)';p.textContent=l;out.appendChild(p);});
+  }catch(e){out.innerHTML='<span style="color:var(--redLt);font-size:13px">Connection error. Please retry.</span>';}
+  send.disabled=false;rev.disabled=false;
+}
+</script>
+<script src="branding.js"></script>
+</body>
+</html>

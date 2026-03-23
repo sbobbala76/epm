@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flashcards — The Planning Quest</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Crimson+Pro:ital,wght@0,400;0,500;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ══════════════════════════════════════════════
+   THE PLANNING QUEST — Shared Stylesheet
+   All pages import this file
+══════════════════════════════════════════════ */
+:root{
+  --bg:#07090e;--bg2:#0c0f18;--bg3:#111520;--bg4:#161c2a;
+  --gold:#d4a017;--goldLt:#f0c040;--goldDim:#5c4108;
+  --teal:#1fb8a8;--tealLt:#4dd9c8;
+  --purple:#7c3aed;--purpleLt:#a855f7;
+  --emerald:#059669;--emeraldLt:#10b981;
+  --sky:#0ea5e9;--skyLt:#38bdf8;
+  --red:#c0392b;--redLt:#e74c3c;
+  --amber:#d97706;--amberLt:#fbbf24;
+  --rose:#be185d;--roseLt:#f472b6;
+  --border:rgba(212,160,23,.15);
+  --white:#f0ead6;--dim:#5a6478;
+  --r:10px;--sidebar:268px;--topbar:54px
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Crimson Pro',serif;background:var(--bg);color:var(--white);min-height:100vh;overflow-x:hidden}
+
+/* ── Stars ── */
+#stars{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+.star{position:absolute;border-radius:50%;background:white;animation:twinkle var(--d,3s) infinite var(--delay,0s)}
+@keyframes twinkle{0%,100%{opacity:.05}50%{opacity:var(--op,.6)}}
+@keyframes glow{0%,100%{text-shadow:0 0 20px rgba(212,160,23,.3)}50%{text-shadow:0 0 50px rgba(212,160,23,.55)}}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(212,160,23,.3)}50%{box-shadow:0 0 0 8px rgba(212,160,23,0)}}
+@keyframes slideIn{from{opacity:0;transform:translateX(-10px)}to{opacity:1;transform:none}}
+
+/* ── Topbar ── */
+#topbar{position:fixed;top:0;left:0;right:0;height:var(--topbar);background:rgba(7,9,14,.97);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 20px;gap:14px;z-index:200}
+.tb-home{font-family:'Cinzel',serif;font-size:13px;font-weight:700;color:var(--goldLt);text-decoration:none;display:flex;align-items:center;gap:9px;letter-spacing:.04em}
+.tb-dot{width:8px;height:8px;border-radius:50%;background:var(--tealLt);animation:pulse 2s infinite}
+.tb-sep{color:var(--goldDim,#5c4108)}
+.tb-current{font-family:'Cinzel',serif;font-size:11px;color:var(--teal);letter-spacing:.04em;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tb-prog-wrap{flex:1;height:3px;background:rgba(255,255,255,.05);border-radius:2px;overflow:hidden;margin:0 16px}
+.tb-prog{height:100%;background:linear-gradient(90deg,var(--teal),var(--goldLt));border-radius:2px;transition:width .5s ease}
+.tb-xp{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--goldLt);white-space:nowrap}
+
+
+/* ── Layout ── */
+#shell{display:flex;padding-top:var(--topbar);min-height:100vh}
+
+/* ── Sidebar ── */
+#sb{width:var(--sidebar);background:var(--bg2);border-right:1px solid var(--border);position:fixed;top:var(--topbar);bottom:0;overflow-y:auto;z-index:100}
+#sb::-webkit-scrollbar{width:3px}
+#sb::-webkit-scrollbar-thumb{background:var(--goldDim);border-radius:2px}
+.sb-hdr{padding:10px 16px 6px;font-family:'Cinzel',serif;font-size:9px;font-weight:700;color:var(--goldDim);letter-spacing:.1em;text-transform:uppercase;border-bottom:1px solid rgba(255,255,255,.04)}
+.sb-part{display:flex;align-items:center;gap:8px;padding:9px 14px;cursor:pointer;border-bottom:1px solid rgba(255,255,255,.03);transition:all .12s;text-decoration:none}
+.sb-part:hover,.sb-part.active{background:rgba(212,160,23,.05)}
+.sb-part-icon{font-size:14px;flex-shrink:0}
+.sb-part-info{flex:1;min-width:0}
+.sb-part-num{font-family:'Cinzel',serif;font-size:8.5px;font-weight:700;color:var(--goldDim);letter-spacing:.08em;text-transform:uppercase}
+.sb-part-name{font-family:'Cinzel',serif;font-size:10.5px;color:var(--dim);font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:color .12s}
+.sb-part:hover .sb-part-name,.sb-part.active .sb-part-name{color:var(--goldLt)}
+.sb-part-xp{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--goldDim);white-space:nowrap}
+.sb-lesson{padding:7px 14px 7px 36px;font-size:12px;color:rgba(240,234,214,.35);cursor:pointer;border-left:2px solid transparent;display:flex;align-items:center;gap:8px;transition:all .12s;line-height:1.3;text-decoration:none}
+.sb-lesson:hover{color:rgba(240,234,214,.65);background:rgba(255,255,255,.015)}
+.sb-lesson.active{color:var(--goldLt);border-left-color:var(--goldLt);background:rgba(212,160,23,.06);font-weight:500}
+.sb-lesson.done .sl-dot{background:var(--emeraldLt)}
+.sl-dot{width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,.1);flex-shrink:0;transition:background .2s}
+.sb-tool-link{padding:8px 14px;display:flex;align-items:center;gap:9px;font-size:11.5px;color:var(--dim);cursor:pointer;transition:all .12s;border-left:2px solid transparent;text-decoration:none}
+.sb-tool-link:hover,.sb-tool-link.active{color:var(--tealLt);background:rgba(31,184,168,.04);border-left-color:var(--tealLt)}
+
+/* ── Main Content ── */
+#main{margin-left:var(--sidebar);flex:1;min-width:0;position:relative;z-index:1}
+#main::-webkit-scrollbar{width:4px}
+#main::-webkit-scrollbar-thumb{background:var(--goldDim);border-radius:2px}
+.lesson-wrap{max-width:820px;padding:36px 44px 100px;margin:0 auto;animation:fadeUp .3s ease}
+
+/* ── Typography ── */
+.page-title{font-family:'Cinzel',serif;font-size:28px;font-weight:700;line-height:1.2;margin-bottom:6px}
+.page-sub{font-size:13px;color:rgba(240,234,214,.4);margin-bottom:28px;font-style:italic;padding-bottom:18px;border-bottom:1px solid var(--border)}
+h2{font-family:'Cinzel',serif;font-size:17px;font-weight:600;color:var(--goldLt);margin:28px 0 12px;letter-spacing:.03em}
+h3{font-family:'Cinzel',serif;font-size:13.5px;font-weight:600;color:var(--tealLt);margin:18px 0 8px;letter-spacing:.04em}
+p{font-size:15px;line-height:1.82;color:rgba(240,234,214,.78);margin-bottom:12px}
+strong{color:var(--white);font-weight:500}
+ul,ol{padding-left:20px;margin-bottom:12px}
+li{font-size:15px;line-height:1.78;color:rgba(240,234,214,.72);margin-bottom:4px}
+code{font-family:'JetBrains Mono',monospace;font-size:12px;background:rgba(255,255,255,.06);padding:2px 6px;border-radius:4px;color:var(--tealLt)}
+
+/* ── Narration ── */
+.narration{background:linear-gradient(135deg,rgba(12,15,24,.95),rgba(17,21,32,.9));border:1px solid var(--border);border-left:3px solid var(--gold);border-radius:0 var(--r) var(--r) 0;padding:20px 24px;margin:20px 0;position:relative}
+.nar-lbl{font-family:'Cinzel',serif;font-size:9px;font-weight:700;letter-spacing:.1em;color:var(--gold);margin-bottom:8px;text-transform:uppercase}
+.narration p{font-style:italic;color:rgba(240,234,214,.68);margin:0;font-size:14px;line-height:1.88}
+
+/* ── Checklist ── */
+.checklist{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:20px 24px;margin:20px 0}
+.cl-title{font-family:'Cinzel',serif;font-size:10.5px;font-weight:700;color:var(--teal);letter-spacing:.08em;text-transform:uppercase;margin-bottom:14px}
+.cl-item{display:flex;align-items:flex-start;gap:12px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.04);cursor:pointer;user-select:none}
+.cl-item:last-child{border-bottom:none}
+.cl-box{width:18px;height:18px;border-radius:4px;border:1.5px solid rgba(212,160,23,.25);flex-shrink:0;margin-top:2px;display:flex;align-items:center;justify-content:center;font-size:11px;transition:all .15s}
+.cl-box.on{background:var(--emerald);border-color:var(--emerald);color:white}
+.cl-text{font-size:13.5px;color:rgba(240,234,214,.6);line-height:1.6;transition:all .12s}
+.cl-text.done{text-decoration:line-through;opacity:.35}
+
+/* ── Tables ── */
+.tbl-wrap{overflow-x:auto;margin:16px 0;border-radius:var(--r);border:1px solid var(--border)}
+.dtbl{width:100%;border-collapse:collapse;font-size:13px}
+.dtbl th{background:rgba(212,160,23,.06);color:var(--gold);padding:10px 13px;text-align:left;font-family:'Cinzel',serif;font-size:10.5px;letter-spacing:.04em;border-bottom:1px solid var(--border)}
+.dtbl td{padding:10px 13px;border-bottom:1px solid rgba(255,255,255,.04);color:rgba(240,234,214,.65);vertical-align:top;line-height:1.55}
+.dtbl tr:last-child td{border-bottom:none}
+.dtbl tr:hover td{background:rgba(255,255,255,.015)}
+
+/* ── Callouts ── */
+.callout{border-radius:var(--r);padding:14px 18px;margin:16px 0;font-size:14px;line-height:1.72}
+.tip{background:rgba(5,150,105,.07);border:1px solid rgba(5,150,105,.22);color:rgba(240,234,214,.72)}
+.warn{background:rgba(217,119,6,.07);border:1px solid rgba(217,119,6,.25);color:rgba(240,234,214,.72)}
+.danger{background:rgba(192,57,43,.07);border:1px solid rgba(192,57,43,.25);color:rgba(240,234,214,.72)}
+.lore{background:rgba(14,165,233,.05);border:1px solid rgba(14,165,233,.18);color:rgba(240,234,214,.68)}
+.fpa{background:rgba(124,58,237,.07);border:1px solid rgba(124,58,237,.22);color:rgba(240,234,214,.72)}
+.ci{font-size:15px;margin-right:7px}
+
+/* ── Code blocks ── */
+.code-wrap{margin:16px 0}
+.code-lbl{font-family:'Cinzel',serif;font-size:9px;font-weight:700;letter-spacing:.08em;color:var(--dim);margin-bottom:6px;text-transform:uppercase}
+.code-block{background:#090d14;border:1px solid rgba(255,255,255,.07);border-radius:8px;padding:18px 20px;font-family:'JetBrains Mono',monospace;font-size:11.5px;line-height:1.75;color:#a8d8ea;overflow-x:auto;white-space:pre}
+.ck{color:#ff7b72}.cs{color:#a5d6ff}.cf{color:#d2a8ff}.cc{color:#6a737d}.cn{color:#79c0ff}.cm{color:#ffa657}
+
+/* ── XP Badge ── */
+.xp-badge{display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,rgba(212,160,23,.1),rgba(212,160,23,.04));border:1px solid var(--border);border-radius:20px;padding:5px 14px;font-family:'Cinzel',serif;font-size:11px;color:var(--goldLt);margin-bottom:20px}
+
+/* ── Battle card ── */
+.battle-card{background:linear-gradient(135deg,rgba(124,58,237,.08),rgba(11,14,22,.95));border:1px solid rgba(124,58,237,.3);border-radius:var(--r);padding:22px 26px;margin:20px 0}
+.battle-lbl{font-family:'Cinzel',serif;font-size:9.5px;font-weight:700;letter-spacing:.1em;color:var(--purpleLt);margin-bottom:8px;text-transform:uppercase}
+.battle-title{font-family:'Cinzel',serif;font-size:14px;color:var(--white);margin-bottom:10px;font-weight:600}
+
+/* ── Flow row ── */
+.flow-row{display:flex;align-items:center;flex-wrap:wrap;gap:6px;margin:16px 0}
+.flow-box{padding:8px 14px;background:var(--bg3);border:1px solid var(--border);border-radius:6px;font-size:12px;font-weight:500;font-family:'Cinzel',serif;letter-spacing:.02em}
+.flow-arr{color:var(--dim);font-size:14px}
+
+/* ── Stage flow ── */
+.stage-flow{display:flex;align-items:stretch;flex-wrap:wrap;gap:0;margin:16px 0;overflow:hidden;border-radius:var(--r);border:1px solid var(--border)}
+.stage-box{flex:1;min-width:80px;padding:14px 8px;text-align:center;background:var(--bg3);border-right:1px solid var(--border)}
+.stage-box:last-child{border-right:none}
+.stage-icon{font-size:18px;display:block;margin-bottom:6px}
+.stage-name{font-family:'Cinzel',serif;font-size:9px;font-weight:600;color:var(--dim);letter-spacing:.04em}
+.stage-sub{font-size:10px;color:rgba(240,234,214,.3);margin-top:3px}
+
+/* ── AI Tutor ── */
+.tutor-box{background:linear-gradient(135deg,rgba(8,10,16,.98),rgba(17,21,32,.95));border:1px solid rgba(31,184,168,.18);border-radius:var(--r);padding:22px 26px;margin:28px 0}
+.tutor-hdr{display:flex;align-items:center;gap:12px;margin-bottom:8px}
+.tutor-av{width:38px;height:38px;background:linear-gradient(135deg,var(--purple),var(--teal));border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;box-shadow:0 0 20px rgba(31,184,168,.2)}
+.tutor-nm{font-family:'Cinzel',serif;font-size:13px;font-weight:700;color:var(--tealLt)}
+.tutor-rl{font-size:11px;color:var(--dim)}
+.tutor-desc{font-size:12.5px;color:rgba(240,234,214,.32);margin-bottom:12px}
+.chips{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:12px}
+.chip{font-size:11px;padding:5px 13px;border:1px solid rgba(31,184,168,.18);border-radius:14px;background:transparent;color:rgba(240,234,214,.42);cursor:pointer;transition:all .12s;font-family:'Crimson Pro',serif}
+.chip:hover{border-color:var(--tealLt);color:var(--tealLt);background:rgba(31,184,168,.07)}
+.tutor-row{display:flex;gap:8px}
+.tutor-input{flex:1;padding:9px 14px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:8px;color:var(--white);font-size:13px;font-family:'Crimson Pro',serif;outline:none;transition:border-color .15s}
+.tutor-input:focus{border-color:var(--teal)}
+.tutor-input::placeholder{color:rgba(255,255,255,.18)}
+.tutor-send{padding:9px 18px;background:linear-gradient(135deg,var(--teal),var(--sky));color:var(--bg);border:none;border-radius:8px;font-family:'Cinzel',serif;font-size:10.5px;font-weight:700;letter-spacing:.05em;cursor:pointer;transition:opacity .12s}
+.tutor-send:hover{opacity:.85}
+.tutor-out{margin-top:14px;font-size:14px;line-height:1.78;color:rgba(240,234,214,.68);min-height:0}
+.tutor-out.loading{color:rgba(240,234,214,.28);font-style:italic}
+.tutor-msg{background:var(--bg4);border-radius:8px;padding:12px 16px;margin-bottom:8px}
+.tutor-msg.user-msg{background:rgba(212,160,23,.06);border:1px solid rgba(212,160,23,.1)}
+.tutor-msg.ai-msg{border:1px solid rgba(255,255,255,.05)}
+.tutor-msg-lbl{font-family:'Cinzel',serif;font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:5px;opacity:.45}
+
+/* ── Nav buttons ── */
+.nav-btns{display:flex;justify-content:space-between;margin-top:48px;padding-top:20px;border-top:1px solid var(--border)}
+.nav-btn{padding:10px 22px;font-family:'Cinzel',serif;font-size:11.5px;font-weight:600;letter-spacing:.05em;border-radius:8px;cursor:pointer;transition:all .15s;border:1px solid var(--border);background:transparent;color:rgba(240,234,214,.4);text-decoration:none;display:inline-block}
+.nav-btn:hover{border-color:var(--teal);color:var(--tealLt)}
+.nav-btn.primary{background:linear-gradient(135deg,var(--teal),var(--sky));color:var(--bg);border-color:transparent}
+.nav-btn.primary:hover{opacity:.88;transform:translateY(-1px)}
+.nav-btn.gold{background:linear-gradient(135deg,var(--gold),#d97706);color:var(--bg);border-color:transparent}
+
+/* ── FP&A challenge box ── */
+.fpa-challenge{background:linear-gradient(135deg,rgba(190,24,93,.06),rgba(12,15,24,.97));border:1px solid rgba(190,24,93,.22);border-radius:var(--r);padding:22px 26px;margin:20px 0}
+.fpa-badge{font-family:'Cinzel',serif;font-size:9px;font-weight:700;letter-spacing:.1em;color:var(--roseLt);text-transform:uppercase;margin-bottom:8px}
+.fpa-title{font-family:'Cinzel',serif;font-size:14px;color:var(--white);font-weight:600;margin-bottom:10px}
+.fpa-challenge p{font-size:14px;color:rgba(240,234,214,.68);line-height:1.78;margin-bottom:8px}
+
+/* ── Boss card ── */
+.boss-card{background:linear-gradient(135deg,rgba(212,160,23,.12),rgba(124,58,237,.08),rgba(12,15,24,.97));border:1px solid rgba(212,160,23,.3);border-radius:14px;padding:28px 32px;margin:20px 0;text-align:center}
+.boss-title{font-family:'Cinzel',serif;font-size:22px;font-weight:900;color:var(--goldLt);margin-bottom:8px;animation:glow 3s infinite}
+
+/* ── KPI cards ── */
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin:16px 0}
+.kpi-card{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:16px;position:relative}
+.kpi-lbl{font-size:10px;color:var(--dim);margin-bottom:4px;font-family:'Cinzel',serif;letter-spacing:.04em;text-transform:uppercase}
+.kpi-val{font-family:'Cinzel',serif;font-size:22px;font-weight:700;color:var(--goldLt)}
+.kpi-sub{font-size:11px;color:var(--dim);margin-top:3px}
+.kpi-trend{position:absolute;top:12px;right:12px;font-size:14px}
+
+/* ── Responsive ── */
+@media(max-width:860px){#sb{display:none}#main{margin-left:0}.lesson-wrap{padding:24px 20px 80px}}
+@media(max-width:520px){.lesson-wrap{padding:20px 16px 80px}}
+
+/* ── Topbar tools — scrollable on mobile, current page highlight ── */
+.tb-tools{display:flex;gap:3px;margin-left:6px;overflow-x:auto;flex-shrink:0}
+.tb-tools::-webkit-scrollbar{display:none}
+.tb-tool{padding:4px 8px;border-radius:6px;border:1px solid var(--border);background:transparent;color:var(--dim);font-family:'Cinzel',serif;font-size:8.5px;font-weight:700;letter-spacing:.05em;cursor:pointer;transition:all .15s;text-transform:uppercase;text-decoration:none;display:inline-flex;align-items:center;white-space:nowrap}
+.tb-tool:hover,.tb-tool.active{border-color:var(--gold);color:var(--gold);background:rgba(212,160,23,.06)}
+/* ── Sidebar global nav divider ── */
+.sb-hdr.full-nav-hdr{margin-top:10px;border-top:1px solid rgba(255,255,255,.06);padding-top:10px;color:var(--teal);letter-spacing:.08em}
+
+</style>
+<style>
+body{overflow-x:hidden}
+#topbar-fc{position:fixed;top:0;left:0;right:0;height:54px;background:rgba(7,9,14,.97);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 24px;gap:14px;z-index:200}
+.fc-wrap{max-width:800px;margin:0 auto;padding:80px 32px 80px;position:relative;z-index:1}
+.fc-hero{text-align:center;margin-bottom:36px}
+.fc-title{font-family:'Cinzel',serif;font-size:32px;font-weight:900;color:var(--goldLt);margin-bottom:8px;animation:glow 3s infinite}
+.fc-sub{font-size:15px;color:var(--dim);font-style:italic;margin-bottom:6px}
+
+/* Deck filter */
+.deck-bar{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-bottom:28px}
+.dpill{padding:7px 18px;border-radius:20px;border:1px solid var(--border);background:transparent;color:var(--dim);font-family:'Cinzel',serif;font-size:9.5px;font-weight:700;letter-spacing:.07em;cursor:pointer;transition:all .15s;text-transform:uppercase}
+.dpill:hover,.dpill.active{border-color:var(--teal);color:var(--tealLt);background:rgba(31,184,168,.07)}
+.dpill .dpill-cnt{font-family:'JetBrains Mono',monospace;font-size:9px;opacity:.6;margin-left:5px}
+
+/* Progress row */
+.fc-prog-row{display:flex;align-items:center;gap:12px;margin-bottom:28px}
+.fc-prog-bar{flex:1;height:6px;background:rgba(255,255,255,.06);border-radius:4px;overflow:hidden}
+.fc-prog-fill{height:100%;background:linear-gradient(90deg,var(--teal),var(--goldLt));border-radius:4px;transition:width .4s}
+.fc-prog-meta{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--dim);white-space:nowrap}
+.fc-knew-cnt{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--emeraldLt);white-space:nowrap}
+
+/* Card flip scene */
+.fc-scene{width:100%;height:300px;perspective:1200px;cursor:pointer;margin-bottom:24px;user-select:none}
+.fc-card{width:100%;height:100%;position:relative;transform-style:preserve-3d;transition:transform .55s cubic-bezier(.4,.2,.2,1)}
+.fc-card.flipped{transform:rotateY(180deg)}
+.fc-face{position:absolute;inset:0;border-radius:16px;padding:36px 42px;display:flex;flex-direction:column;justify-content:center;backface-visibility:hidden;-webkit-backface-visibility:hidden}
+.fc-front{background:linear-gradient(135deg,var(--bg3),var(--bg4));border:1px solid var(--border)}
+.fc-back{background:linear-gradient(135deg,rgba(31,184,168,.07),var(--bg4));border:1px solid rgba(31,184,168,.25);transform:rotateY(180deg)}
+.fc-side-lbl{font-family:'Cinzel',serif;font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;margin-bottom:14px;opacity:.4}
+.fc-front .fc-side-lbl{color:var(--gold)}
+.fc-back .fc-side-lbl{color:var(--tealLt)}
+.fc-q{font-family:'Cinzel',serif;font-size:20px;font-weight:600;color:var(--white);line-height:1.4;text-align:center}
+.fc-a{font-size:15px;color:rgba(240,234,214,.82);line-height:1.75;text-align:left}
+.fc-a code{font-family:'JetBrains Mono',monospace;font-size:12px;background:rgba(255,255,255,.06);padding:2px 7px;border-radius:4px;color:var(--tealLt)}
+.fc-hint{font-size:11.5px;color:rgba(31,184,168,.45);margin-top:14px;font-style:italic;text-align:center}
+.fc-cat-tag{font-family:'Cinzel',serif;font-size:9px;font-weight:700;letter-spacing:.1em;padding:3px 10px;border-radius:12px;background:rgba(212,160,23,.08);border:1px solid var(--border);color:var(--goldDim,#5c4108);text-transform:uppercase;position:absolute;top:16px;right:16px}
+.fc-cnt-tag{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--dim);position:absolute;top:18px;left:18px}
+
+/* Nav row */
+.fc-nav{display:flex;gap:12px;justify-content:center;align-items:center;margin-bottom:20px;flex-wrap:wrap}
+.fc-btn{padding:10px 22px;font-family:'Cinzel',serif;font-size:11px;font-weight:700;letter-spacing:.05em;border-radius:8px;cursor:pointer;transition:all .15s;border:1px solid var(--border);background:transparent;color:var(--dim)}
+.fc-btn:hover{border-color:var(--teal);color:var(--tealLt)}
+.fc-btn.knew{border-color:var(--emerald);color:var(--emeraldLt);background:rgba(5,150,105,.06)}
+.fc-btn.knew:hover{background:rgba(5,150,105,.12)}
+.fc-btn.nope{border-color:var(--red);color:var(--redLt);background:rgba(192,57,43,.04)}
+.fc-btn.nope:hover{background:rgba(192,57,43,.1)}
+.fc-btn.primary{background:linear-gradient(135deg,var(--teal),var(--sky));color:var(--bg);border-color:transparent}
+.fc-flip-hint{font-size:12px;color:var(--dim);text-align:center;margin-bottom:18px;font-style:italic}
+
+/* Done screen */
+.fc-done{background:linear-gradient(135deg,rgba(5,150,105,.08),rgba(212,160,23,.06));border:1px solid rgba(5,150,105,.25);border-radius:16px;padding:44px 40px;text-align:center;display:none;animation:fadeUp .3s ease}
+.fc-done-score{font-family:'Cinzel',serif;font-size:60px;font-weight:900;color:var(--emeraldLt);display:block;line-height:1}
+.fc-done-lbl{font-family:'Cinzel',serif;font-size:12px;color:var(--dim);letter-spacing:.1em;display:block;margin-top:4px}
+.fc-done-msg{font-size:15px;color:rgba(240,234,214,.65);margin:18px 0 28px;line-height:1.7}
+.fc-retry-btn{padding:13px 36px;background:linear-gradient(135deg,var(--teal),var(--sky));color:var(--bg);font-family:'Cinzel',serif;font-size:12px;font-weight:700;letter-spacing:.07em;border:none;border-radius:10px;cursor:pointer;margin-right:10px}
+
+/* Stats strip */
+.fc-stats{display:flex;gap:0;margin-bottom:24px;border:1px solid var(--border);border-radius:10px;overflow:hidden}
+.fc-stat{flex:1;padding:12px 8px;text-align:center;border-right:1px solid var(--border)}
+.fc-stat:last-child{border-right:none}
+.fc-stat-v{font-family:'Cinzel',serif;font-size:18px;font-weight:700}
+.fc-stat-l{font-size:9px;color:var(--dim);letter-spacing:.06em;text-transform:uppercase;margin-top:2px}
+@media(max-width:600px){.fc-wrap{padding:72px 14px 60px}.fc-scene{height:260px}.fc-q{font-size:16px}.fc-face{padding:24px 22px}}
+</style>
+<script src="progress.js"></script>
+</head>
+<body>
+<div id="stars"></div>
+<div id="topbar-fc">
+  <a href="index.html" style="font-family:'Cinzel',serif;font-size:13px;font-weight:700;color:var(--goldLt);text-decoration:none;display:flex;align-items:center;gap:9px"><span class="tb-dot"></span>The Planning Quest</a>
+  <span style="color:var(--goldDim,#5c4108)">›</span>
+  <span style="font-family:'Cinzel',serif;font-size:11px;color:var(--teal)">Flashcards</span>
+  <div style="flex:1;height:3px;background:rgba(255,255,255,.05);border-radius:2px;overflow:hidden;margin:0 16px"><div id="fc-prog" style="height:100%;background:linear-gradient(90deg,var(--teal),var(--goldLt));border-radius:2px;transition:width .4s;width:0%"></div></div>
+  <span id="fc-stat-live" style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--goldLt);white-space:nowrap">0 / 0 ✓</span>
+  <div style="display:flex;gap:4px;margin-left:6px">
+    <a <a href="parts-4-5.html" style="padding:4px 8px;border-radius:6px;border:1px solid var(--border);background:transparent;color:var(--dim);font-family:'Cinzel',serif;font-size:8.5px;font-weight:700;letter-spacing:.04em;text-decoration:none;white-space:nowrap">⚔ IV–V</a>
+    <a <a href="parts-6-9.html" style="padding:4px 8px;border-radius:6px;border:1px solid var(--border);background:transparent;color:var(--dim);font-family:'Cinzel',serif;font-size:8.5px;font-weight:700;letter-spacing:.04em;text-decoration:none;white-space:nowrap">👑 VI–IX</a>
+    <a href="parts-1-3.html" style="padding:4px 8px;border-radius:6px;border:1px solid var(--border);background:transparent;color:var(--dim);font-family:'Cinzel',serif;font-size:9px;font-weight:700;letter-spacing:.04em;text-decoration:none;text-transform:uppercase">📖 Parts</a>
+    <a href="groovy-ch1.html" style="padding:4px 8px;border-radius:6px;border:1px solid var(--border);background:transparent;color:var(--dim);font-family:'Cinzel',serif;font-size:9px;font-weight:700;letter-spacing:.04em;text-decoration:none;text-transform:uppercase">📘 Gr.I</a>
+    <a href="groovy-ch2.html" style="padding:4px 8px;border-radius:6px;border:1px solid var(--border);background:transparent;color:var(--dim);font-family:'Cinzel',serif;font-size:9px;font-weight:700;letter-spacing:.04em;text-decoration:none;text-transform:uppercase">⚡ Gr.II</a>
+    
+    <a href="quiz.html" style="padding:4px 8px;border-radius:6px;border:1px solid var(--border);background:transparent;color:var(--dim);font-family:'Cinzel',serif;font-size:9px;font-weight:700;letter-spacing:.04em;text-decoration:none;text-transform:uppercase">📝 Quiz</a>
+    <a href="flashcards.html" style="padding:4px 8px;border-radius:6px;border:1px solid var(--border);background:transparent;color:var(--dim);font-family:'Cinzel',serif;font-size:9px;font-weight:700;letter-spacing:.04em;text-decoration:none;text-transform:uppercase">🃏 Cards</a>
+    <a href="labs.html" style="padding:4px 8px;border-radius:6px;border:1px solid var(--border);background:transparent;color:var(--dim);font-family:'Cinzel',serif;font-size:9px;font-weight:700;letter-spacing:.04em;text-decoration:none;text-transform:uppercase">🔬 Labs
+    <a href="simulators.html" style="padding:4px 8px;border-radius:6px;border:1px solid rgba(124,58,237,.2);background:transparent;color:var(--purpleLt);font-family:'Cinzel',serif;font-size:8.5px;font-weight:700;letter-spacing:.04em;text-decoration:none;white-space:nowrap">⚙ Sims</a>
+    <a href="automate-ref.html" style="padding:4px 8px;border-radius:6px;border:1px solid var(--border);color:var(--dim);font-family:'Cinzel',serif;font-size:8.5px;font-weight:700;text-decoration:none;white-space:nowrap">⚙ CLI</a>
+    <a href="whats-new.html" style="padding:4px 8px;border-radius:6px;border:1px solid var(--border);background:transparent;color:var(--dim);font-family:'Cinzel',serif;font-size:8.5px;font-weight:700;text-decoration:none;white-space:nowrap">🆕 New</a>
+    <a href="interview-prep.html" style="padding:4px 8px;border-radius:6px;border:1px solid rgba(212,160,23,.2);background:transparent;color:var(--goldLt);font-family:'Cinzel',serif;font-size:8.5px;font-weight:700;letter-spacing:.04em;text-decoration:none;white-space:nowrap">🎯 Interview</a>
+    <a href="search.html" style="padding:4px 8px;border-radius:6px;border:1px solid rgba(31,184,168,.25);background:transparent;color:var(--tealLt);font-family:'Cinzel',serif;font-size:9px;font-weight:700;letter-spacing:.04em;text-decoration:none;text-transform:uppercase">🔍 Search</a></a>
+  </div>
+</div>
+
+<div class="fc-wrap">
+  <div class="fc-hero">
+    <h1 class="fc-title">🃏 Flashcards</h1>
+    <p class="fc-sub">120+ cards · EPBCS · Groovy · FP&A Terms · Essbase Architecture</p>
+  </div>
+
+  <div class="deck-bar" id="deck-bar"></div>
+
+  <div class="fc-stats" id="fc-stats">
+    <div class="fc-stat"><div class="fc-stat-v" id="stat-total" style="color:var(--goldLt)">0</div><div class="fc-stat-l">Total</div></div>
+    <div class="fc-stat"><div class="fc-stat-v" id="stat-knew" style="color:var(--emeraldLt)">0</div><div class="fc-stat-l">Knew It ✓</div></div>
+    <div class="fc-stat"><div class="fc-stat-v" id="stat-nope" style="color:var(--redLt)">0</div><div class="fc-stat-l">Review</div></div>
+    <div class="fc-stat"><div class="fc-stat-v" id="stat-left" style="color:var(--tealLt)">0</div><div class="fc-stat-l">Remaining</div></div>
+  </div>
+
+  <div id="fc-done" class="fc-done">
+    <span class="fc-done-score" id="done-score">0%</span>
+    <span class="fc-done-lbl">DECK COMPLETE</span>
+    <div class="fc-done-msg" id="done-msg"></div>
+    <button class="fc-retry-btn" onclick="initDeck()">🔄 Restart Deck</button>
+    <button class="fc-retry-btn" style="background:linear-gradient(135deg,var(--gold),#d97706)" onclick="reviewWeak()">📌 Review Missed Cards</button>
+  </div>
+
+  <div id="fc-body">
+    <p class="fc-flip-hint" id="flip-hint">Click the card to reveal the answer</p>
+    <div class="fc-scene" id="fc-scene" onclick="flipCard()">
+      <div class="fc-card" id="fc-card">
+        <div class="fc-face fc-front">
+          <span class="fc-cnt-tag" id="fc-cnt"></span>
+          <span class="fc-cat-tag" id="fc-cat-tag"></span>
+          <div class="fc-side-lbl">QUESTION</div>
+          <div class="fc-q" id="fc-q-text">Loading...</div>
+          <div class="fc-hint" id="fc-hint-text"></div>
+        </div>
+        <div class="fc-face fc-back">
+          <span class="fc-side-lbl">ANSWER</span>
+          <div class="fc-a" id="fc-a-text"></div>
+        </div>
+      </div>
+    </div>
+    <div class="fc-nav">
+      <button class="fc-btn" onclick="navCard(-1)">← Previous</button>
+      <button class="fc-btn nope" onclick="markCard(false)">✗ Still Learning</button>
+      <button class="fc-btn knew" onclick="markCard(true)">✓ Knew It!</button>
+      <button class="fc-btn" onclick="navCard(1)">Next →</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){var s=document.getElementById('stars');for(var i=0;i<80;i++){var d=document.createElement('div');d.className='star';var sz=Math.random()*2+0.4;d.style.cssText='width:'+sz+'px;height:'+sz+'px;top:'+Math.random()*100+'%;left:'+Math.random()*100+'%;--d:'+(2+Math.random()*4)+'s;--delay:'+Math.random()*5+'s;--op:'+(0.1+Math.random()*0.35);s.appendChild(d);}})();
+
+// ── All cards ──
+var CARDS = [
+  // FUNDAMENTALS (30 cards)
+  {deck:'fundamentals',q:'What is EPBCS?',a:'Enterprise Planning and Budgeting Cloud Service — Oracle\'s SaaS financial planning platform built on the Oracle Fusion EPM Planning engine, delivered via Oracle Cloud Infrastructure. Cloud-native successor to Oracle EPM Classic (on-premise).',hint:'Oracle Fusion EPM — cloud-native, EPM 25.06+'},
+  {deck:'fundamentals',q:'What is Essbase?',a:'Oracle\'s multi-dimensional analytical database engine. EPBCS stores and calculates data in Essbase cubes — blocks of data organised by dimensions (Account, Period, Entity, etc.).',hint:'The engine under EPBCS'},
+  {deck:'fundamentals',q:'BSO vs ASO — one key difference',a:'BSO (Block Storage Option): supports write-back for planning data entry. ASO (Aggregate Storage Option): read-only, blazing fast for large aggregations. All Financial Planning cubes use BSO.',hint:'B = write-Back'},
+  {deck:'fundamentals',q:'What are Dense dimensions?',a:'Dimensions where most cells contain data. Essbase allocates storage for every dense combination within a block. Account and Period are always dense — nearly every account has a value in every period.',hint:'Dense = data-rich axis'},
+  {deck:'fundamentals',q:'What are Sparse dimensions?',a:'Dimensions where most combinations are empty. Essbase only allocates blocks where data exists. Entity, Scenario, Version, Year are sparse — most entity+scenario combinations have no data.',hint:'Sparse = mostly empty'},
+  {deck:'fundamentals',q:'What is a Substitution Variable?',a:'An application-level global variable referenced in formulas, rules, and forms using & prefix. e.g. &CurPeriod = "Mar". Update once → propagates everywhere.',hint:'Global find-and-replace at runtime'},
+  {deck:'fundamentals',q:'What settings CANNOT be changed after application creation?',a:'(1) Base time period (Monthly/Quarterly), (2) Fiscal year start month, (3) Plan type names once data exists. Get these wrong → rebuild from scratch.',hint:'Irreversible decisions'},
+  {deck:'fundamentals',q:'What is the difference between Scenario and Version dimensions?',a:'Scenario = the planning purpose (Budget, Forecast, Actual). Version = the workflow stage within a scenario (Working, Draft, Approved, Final). Example: Budget/Working = current in-progress budget.',hint:'Scenario = what; Version = stage'},
+  {deck:'fundamentals',q:'What does CALC ALL do in Essbase?',a:'Runs all calculation scripts and aggregates all dimensions bottom-up. Recalculates every member formula, rolls up all hierarchies. Should be run after every data load.',hint:'The master calc command'},
+  {deck:'fundamentals',q:'What is Multi-Currency in EPBCS?',a:'Enables currency translation across entities. Each entity has a Local currency; EPBCS translates to Reporting currency using FX rates stored in the Exchange Rate Type cube (EPM 25.06+). Must be enabled at app creation.',hint:'Essential for global companies'},
+  {deck:'fundamentals',q:'Name the 5 EPBCS Financial Planning modules',a:'(1) Financial Planning (P&L, BS, CF), (2) Workforce Planning (headcount/compensation), (3) Capital Planning (CapEx), (4) Projects Planning, (5) Strategic Modeling (long-range plan).',hint:'Fin, Work, Cap, Proj, Strat'},
+  {deck:'fundamentals',q:'What is Valid Intersections?',a:'A rule set that restricts which dimension combination intersections are allowed for data entry. Most common use: block planners from writing to the Actual scenario (which is loaded via Data Integration pipeline).',hint:'Guard rails for data entry'},
+  {deck:'fundamentals',q:'What is a Planning Unit?',a:'An Entity + Scenario + Version + Year combination that forms one unit of the approval workflow. Each Planning Unit progresses through states: Not Started → First Pass → Under Review → Approved → Locked.',hint:'One workflow ticket'},
+  {deck:'fundamentals',q:'What is Data Integration in Oracle EPM Cloud?',a:'Oracle EPM Cloud built-in data pipeline tool (EPM 25.06+). Supersedes FDMEE (pre-25.03). Components: Connections (source config), Import Formats, Dimension Maps, Data Rules. Accessed via Tools \u2192 Data Integration.',hint:'Tools → Data Integration — EPM 25.06+'},
+  {deck:'fundamentals',q:'What is a Rolling Forecast?',a:'A forecast that always covers a fixed number of future months (e.g. 12 months) regardless of where you are in the fiscal year. In Nov, a 12-month rolling forecast already covers through Oct next year.',hint:'Always 12 months ahead'},
+  {deck:'fundamentals',q:'What is Narrative Reporting in Oracle EPM?',a:'A module that combines management narrative text with live EPBCS data references in the same document. When data changes, cited figures auto-update. Eliminates "stale numbers in the Board deck" problem.',hint:'Narrative + live data = no stale Board packs'},
+  {deck:'fundamentals',q:'Explain the FP&A "60% problem"',a:'Most FP&A teams spend 60% of their time collecting and reconciling data, 25% building reports, only 15% on actual analysis. EPBCS automates collection so analysts can invert this to 15% admin, 85% analysis.',hint:'60% time wasted → EPBCS fixes it'},
+  {deck:'fundamentals',q:'What is an Ad-Hoc Grid in EPBCS?',a:'A free-form analysis grid where users drag-drop dimensions to create custom views. Unlike forms (fixed layout), ad-hoc grids allow flexible pivoting. Essential for FP&A variance investigation.',hint:'Excel-like pivoting inside EPBCS'},
+  {deck:'fundamentals',q:'What is a Composite Form?',a:'A planning form containing multiple grids on a single page, with tabs or sections. Allows a complete budgeting screen: revenue input grid + headcount grid + summary totals — all in one form.',hint:'Multiple grids, one screen'},
+  {deck:'fundamentals',q:'What is an Infolet in EPBCS?',a:'A compact KPI tile displayed on dashboards or the home page. Shows a summary metric with trend indicator and can "flip" to reveal detail. Used for executive at-a-glance monitoring.',hint:'Animated KPI tile'},
+  {deck:'fundamentals',q:'Explain Replace vs Accumulate load modes in Data Integration',a:'Replace: clears existing data for the loaded period before loading new values. Accumulate: adds to existing values. Always use Replace for actuals — Accumulate doubles your data if run twice on closed periods.',hint:'Replace = clear then load; Accumulate = add to existing'},
+  {deck:'fundamentals',q:'What is EPM Automate?',a:'Oracle\'s command-line tool for automating EPBCS tasks. Can: upload files, run data rules, execute business rules, set substitution variables, run reports, take snapshots. Used for nightly batch processes.',hint:'The automation command-line tool'},
+  {deck:'fundamentals',q:'What is a Navigation Flow?',a:'A customisable role-based navigation structure that replaces the default EPM Home page navigation structure. Build one flow for Planners, one for Managers, one for Executives — each seeing only their relevant forms and reports.',hint:'GPS for planners'},
+  {deck:'fundamentals',q:'What does "Refresh Database" do in EPBCS?',a:'Pushes dimension metadata changes from the Planning repository to the underlying Essbase outline. Must be run after any dimension edits. Like "compile" for the metadata.',hint:'Metadata deploy command'},
+  {deck:'fundamentals',q:'What is a Smart Form in EPBCS?',a:'An advanced form type with custom HTML/JavaScript overlays on top of standard EPBCS data grids. Allows complex visual business logic: conditional row visibility, custom UI elements, interactive drivers.',hint:'HTML+JS overlay on a planning form'},
+  {deck:'fundamentals',q:'What is FRS in EPBCS?',a:'Financial Reporting Studio — Oracle\'s pixel-perfect report designer for EPBCS. Used to build formal P&L, Balance Sheet, Variance analysis reports for Board packs and audit purposes.',hint:'The Board-pack report designer'},
+  {deck:'fundamentals',q:'What is the difference between a Level 0 member and a parent member?',a:'Level 0 (leaf) members have no children — they are the lowest level in the hierarchy and store actual data. Parent members aggregate their children via consolidation operators (+, −, ×, ~).',hint:'Level 0 = the leaves of the tree'},
+  {deck:'fundamentals',q:'What is a Planning Unit Hierarchy (PUH)?',a:'The configuration that defines the approval reviewer chain for budget submissions. Specifies who reviews each entity+scenario combination and in what order (Regional Manager → Finance Director → CFO).',hint:'The org chart of approval reviewers'},
+  {deck:'fundamentals',q:'What is a Snapshot in EPBCS?',a:'A complete backup of application data and metadata. Can be restored if something goes wrong. Best practice: take a snapshot before any major metadata changes, before running critical business rules, and monthly.',hint:'Full application backup'},
+  {deck:'fundamentals',q:'What is an Attribute Dimension?',a:'A dimension that classifies base dimension members by a characteristic. E.g., Account members tagged with "Cost_Type" attribute (Fixed/Variable). Enables grouping and aggregation by attribute without changing the main hierarchy.',hint:'Classification tag that enables grouping'},
+
+  // GROOVY (30 cards)
+  {deck:'groovy',q:'What is getCell() in Groovy EPBCS?',a:'Reads a single cell value from the Essbase cube. Signature: <code>getCell(dim1Member, dim2Member, ... dimNMember)</code>. One network call per invocation — never use inside loops.',hint:'Read one cell = one network call'},
+  {deck:'groovy',q:'Why use setDataCellValues() instead of setCell()?',a:'<code>setDataCellValues(writes)</code> sends all values in a single batch network call. <code>setCell()</code> makes one round-trip per call. For 100 cells, batch = 1 call; loop setCell = 100 calls — up to 100x faster.',hint:'Batch write vs single write'},
+  {deck:'groovy',q:'How do you get all leaf-level Entity members in Groovy?',a:'<code>cube.getEssbaseCube().getMember("Entity", "Total_Vision").getLevelZeroMembers()</code> — returns a list of all Level 0 (leaf) members under Total_Vision.',hint:'getLevelZeroMembers()'},
+  {deck:'groovy',q:'How do you read the current Entity from the form\'s POV?',a:'<code>operation.grid.pov.find { it.dimensionName == "Entity" }.memberName</code> — finds the Entity dimension in the form\'s current Point of View and returns the member name.',hint:'operation.grid.pov.find{...}'},
+  {deck:'groovy',q:'What does RuleStoppedException do?',a:'Throws a user-visible error that halts the business rule and displays a message to the planner. Import: <code>com.hyperion.calcmgr.common.groovyrules.exceptions.RuleStoppedException</code>. Used for validations.',hint:'The Groovy validation throw'},
+  {deck:'groovy',q:'What is the Collect-All-Errors pattern?',a:'Build a List called <code>errors = []</code>, check all validation conditions adding messages to the list, then throw <code>RuleStoppedException</code> once at the end with all messages joined. User sees ALL problems at once.',hint:'Collect errors[] then throw once'},
+  {deck:'groovy',q:'What does getLevelZeroMembers() return?',a:'A list of all leaf-level (Level 0) members — members with no children — under a given parent. Used to iterate all planning entities, accounts, or periods dynamically without hardcoding.',hint:'All leaves under a parent'},
+  {deck:'groovy',q:'How do you stage batch writes for performance in Groovy?',a:'Build a list: <code>def writes = []</code>. Add arrays: <code>writes << ["Entity1","Account","Period","Year","Scenario","Version", value]</code>. Then: <code>operation.grid.setDataCellValues(writes)</code> — one call for all.',hint:'writes list → setDataCellValues once'},
+  {deck:'groovy',q:'What is the Pre-Fetch → Compute → Write pattern?',a:'(1) Read all data into Maps first (no write ops yet). (2) Compute values in pure Groovy memory. (3) Write all results with one batch setDataCellValues. Prevents reading stale/partially-written data.',hint:'Read first → Compute in memory → Write once'},
+  {deck:'groovy',q:'How do you measure Groovy rule execution time?',a:'<code>def start = System.currentTimeMillis()</code> at rule start. At end: <code>println("Done in ${System.currentTimeMillis() - start}ms")</code>. Check results in the EPBCS Job Console logs.',hint:'System.currentTimeMillis() diff'},
+  {deck:'groovy',q:'What is the main cause of "slow Groovy rules"?',a:'Calling setCell() or getCell() inside nested loops — each creates a network round-trip to Essbase. Fix: pre-fetch all reads into a Map, compute in memory, batch all writes in one setDataCellValues call.',hint:'N² network calls = slow'},
+  {deck:'groovy',q:'How do you get a runtime variable/parameter passed to a Groovy rule?',a:'<code>operation.getParameter("ParamName")</code> — retrieves a runtime prompt value the user entered when launching the rule, e.g., the year or entity to process.',hint:'operation.getParameter("name")'},
+  {deck:'groovy',q:'What is the getEssbaseCube() object used for?',a:'Provides access to Essbase metadata operations: getting dimension members, querying UDAs, getting level-zero members. Accessed via <code>cube.getEssbaseCube()</code>.',hint:'The Essbase metadata gateway'},
+  {deck:'groovy',q:'How do you find members with a specific UDA in Groovy?',a:'<code>essbase.getMembersByUDA("Account", "HEADCOUNT_DRIVER")</code> — returns all Account members that have the HEADCOUNT_DRIVER UDA. No hardcoded lists needed.',hint:'getMembersByUDA("Dim","UDA")'},
+  {deck:'groovy',q:'How do you get the current Scenario from the form POV?',a:'<code>operation.grid.pov.find { it.dimensionName == "Scenario" }.memberName</code>. Same pattern as Entity — swap dimension name. Works for any dimension in the POV.',hint:'Same pov.find pattern, change dimensionName'},
+  {deck:'groovy',q:'What is the two-pass allocation algorithm?',a:'Pass 1: iterate all entities, sum the denominator (e.g., total revenue). Pass 2: iterate entities again, compute share = (entity value / total) × pool, stage in writes list. One batch write at end.',hint:'Sum first, allocate second'},
+  {deck:'groovy',q:'What try-catch pattern should every production Groovy rule use?',a:'Wrap the main logic in <code>try { ... } catch (Exception e) { throw new RuleStoppedException("Rule failed: ${e.message}") }</code>. Prevents cryptic system errors reaching users.',hint:'try/catch → RuleStoppedException'},
+  {deck:'groovy',q:'What does println() do in a Groovy business rule?',a:'Writes debug output to the Job Console log. Use for: timing checkpoints, member counts, intermediate values. <code>println("Entity: ${entity}, Rev: ${rev}")</code>.',hint:'Job Console logging'},
+  {deck:'groovy',q:'How do you iterate all months in Groovy?',a:'<code>def months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]</code> then <code>months.each { month -> ... }</code>.',hint:'List of month strings, .each loop'},
+  {deck:'groovy',q:'What is the rounding reconciliation pattern for spreads?',a:'After distributing annual → 12 months, calculate <code>sumMonths = writes.sum { it[-1] }</code>. Assign remaining difference to December: <code>writes[11][-1] += (annual - sumMonths)</code>.',hint:'Annual minus sum of 12 months → add diff to Dec'},
+  {deck:'groovy',q:'How do you check if a cell value is null/missing in Groovy?',a:'Use the Elvis operator: <code>def rev = getCell(...) ?: 0</code> — returns 0 if null. Or use explicit null check: <code>if (!rev) { rev = 0 }</code>. Always guard against null before arithmetic.',hint:'?: 0 (Elvis operator)'},
+  {deck:'groovy',q:'What Groovy collection method returns a Map from a list?',a:'<code>.collectEntries { [key, value] }</code> — transforms a list into a Map. Example: <code>months.collectEntries { m -> [m, getCell(entity, acc, m, ...)] }</code>.',hint:'collectEntries { [k, v] }'},
+  {deck:'groovy',q:'What is the key limit for setDataCellValues batch writes?',a:'The batch can contain up to 50,000 cell write operations in one call. For very large rules (100+ entities × 50 accounts × 12 months = 60,000 cells), split into chunks.',hint:'50,000 cells per batch call'},
+  {deck:'groovy',q:'What is cube.getPlanningContext() used for?',a:'Provides access to Planning workflow metadata: approval status, planning unit states, user roles. Used in Groovy rules that need to check if a planning unit is Approved or Locked before allowing edits.',hint:'Workflow status access in Groovy'},
+  {deck:'groovy',q:'How do you abort a Groovy rule cleanly without an error?',a:'Use a bare <code>return</code> statement. Example: <code>if (totalRev == 0) { println("Guard: no revenue"); return }</code>. The rule exits silently without showing an error to the user.',hint:'return = silent clean exit'},
+  {deck:'groovy',q:'What is Groovy\'s .each{} vs .collect{} vs .find{}?',a:'.each{} iterates without returning anything. .collect{} transforms a list, returning a new list. .find{} returns the first element matching the condition. All come from Groovy\'s GDK extensions.',hint:'each=iterate, collect=transform, find=search'},
+  {deck:'groovy',q:'How do you concatenate strings in Groovy GStrings?',a:'Use double quotes with ${}: <code>"Entity: ${entity.getName()}, Value: ${rev}"</code>. Much cleaner than Java + concatenation. Use for println logging and error messages.',hint:'"${variable}" — GString interpolation'},
+  {deck:'groovy',q:'Why is reading-then-writing to the same cell dangerous in Groovy?',a:'If you read a value, then write to the same intersection later in the same rule, a second read of that cell returns the written value, not the original. Pre-fetching all reads into a Map before any writes prevents this.',hint:'Dirty read problem — pre-fetch solves it'},
+  {deck:'groovy',q:'What is the correct import for RuleStoppedException?',a:'<code>import com.hyperion.calcmgr.common.groovyrules.exceptions.RuleStoppedException</code>. Must be the first line of the Groovy rule. Without the import, the class will not be found.',hint:'Full class path for the import'},
+  {deck:'groovy',q:'How do you call a REST API from a Groovy EPBCS rule?',a:'Use Java\'s HttpURLConnection: <code>def url = new URL("https://api.example.com/data")</code>, open connection, set method and headers, read response. Groovy fully supports Java HTTP client libraries.',hint:'Java HttpURLConnection inside Groovy'},
+
+  // METADATA (25 cards)
+  {deck:'metadata',q:'What is the Accounts dimension type?',a:'A special dimension type that defines how members aggregate (+ addition, − subtraction). The Accounts dimension also controls time-balance (flow vs balance) and variance reporting (favourable vs unfavourable directions).',hint:'Controls + and − aggregation behaviour'},
+  {deck:'metadata',q:'What is Time Balance in EPBCS?',a:'A property on Account members controlling how they aggregate across time periods. Flow = sum (Revenue, Expenses). Balance = last value (Cash, Headcount). Average = mean across periods.',hint:'Flow=sum, Balance=last, Average=mean'},
+  {deck:'metadata',q:'What is an Alternate Hierarchy?',a:'A secondary hierarchy on a dimension, sharing leaf members with the primary hierarchy but organising them differently. Entity: Primary = legal entity structure; Alternate = management/geography view. Both roll to Total_Vision.',hint:'Same leaves, different rollup structure'},
+  {deck:'metadata',q:'What is a Smart List?',a:'A dropdown list that stores integer codes in Essbase but displays readable labels to users. Example: Approval_Status stores 1,2,3,4 but shows "Draft","Submitted","Approved","Rejected".',hint:'Integer stored, label displayed'},
+  {deck:'metadata',q:'What is a UDA (User Defined Attribute)?',a:'A Boolean flag assigned to dimension members. Members either have the UDA or don\'t. Used in Groovy/Calc scripts to filter members dynamically without hardcoding lists. Example: HEADCOUNT_DRIVER on expense accounts.',hint:'Boolean tag on a dimension member'},
+  {deck:'metadata',q:'What is the ~ (tilde) consolidation operator?',a:'Never Consolidate — the member exists in the dimension but does not roll up to its parent. Used for: ratio/percentage KPIs, memo accounts, placeholder members that should not sum up.',hint:'Never rolls up to parent'},
+  {deck:'metadata',q:'What does "Dynamic Calc" property do on a member?',a:'Member is calculated on-the-fly when retrieved, not stored in Essbase. Reduces storage but slightly slows retrieval. Use for: ratio accounts (Gross_Margin_Pct), derived calculations that only need to be seen not stored.',hint:'Calculated when read, not stored'},
+  {deck:'metadata',q:'What is a Shared Member?',a:'A member that appears in multiple places in the same dimension hierarchy (especially in alternate hierarchies). The data is stored once; both hierarchy locations point to the same storage location.',hint:'One storage location, multiple parents'},
+  {deck:'metadata',q:'What is the difference between Dense and Sparse from a storage perspective?',a:'Essbase creates a block for each unique combination of sparse dimension members (where data exists). Within each block, ALL dense dimension combinations get space allocated. Wrong dense/sparse choices create oversized blocks.',hint:'Block = sparse combo; within block = dense combos'},
+  {deck:'metadata',q:'What is an EPBCS "Plan Type"?',a:'A separate Essbase cube within one EPBCS application. Financial Planning apps have multiple plan types: OEP_FS (financial statements), OEP_REP (reporting), OEP_WFP (workforce). Each has its own outline and calc scripts.',hint:'One app, multiple Essbase cubes'},
+  {deck:'metadata',q:'How does Essbase handle Currency Translation?',a:'The Exchange Rate Type cube (EPM 25.06+) stores FX rates by Period, Year, and Currency. Rate types: Average, Ending, Historical. Used by currency translation rules. Legacy: HSP_Rates cube in older EPM versions.',hint:'Exchange Rate Type cube — EPM 25.06+'},
+  {deck:'metadata',q:'What is "Never Share" property on a member?',a:'Forces a member to always have its own unique data block, even if it appears in multiple hierarchies. Prevents Shared Member behaviour. Required for members that need independent data storage in each hierarchy context.',hint:'Forces independent storage'},
+  {deck:'metadata',q:'What is the difference between Member Formula and a Business Rule?',a:'Member Formula: embedded in the dimension outline, runs every time CALC ALL executes, cannot read/write across dimensions freely. Business Rule: standalone calc script or Groovy, runs on demand, more flexible.',hint:'Member Formula = always-on; Business Rule = on-demand'},
+  {deck:'metadata',q:'What naming convention best practice for EPBCS member names?',a:'Use underscores not spaces. Prefix parent aggregations with "Total_". Keep names under 40 chars. Example: Total_Revenue → Prod_Rev, Svc_Rev. Avoid special chars. Names are case-sensitive in Essbase formulas.',hint:'Underscores, Total_ prefix, short names'},
+  {deck:'metadata',q:'What is the @MEMBER function in Essbase calc?',a:'Cross-references a member from a different dimension in a formula. Example: <code>@MEMBER("Actual") - @MEMBER("Budget")</code> calculates Variance in an Account formula by referencing Scenario members.',hint:'Cross-dimension reference in calc syntax'},
+  {deck:'metadata',q:'What is the Entity dimension used for?',a:'Represents legal entities, cost centres, departments, or business units. Must be Sparse type. Drives the consolidation hierarchy for financial reporting, multi-currency translation, and workflow approvals.',hint:'The "who owns this data" dimension'},
+  {deck:'metadata',q:'What happens if you don\'t run Refresh Database after editing dimensions?',a:'The Planning metadata repository has the changes but the Essbase outline does not. Forms and rules referencing new/changed members will fail with "member not found" errors.',hint:'Essbase outline is stale without Refresh'},
+  {deck:'metadata',q:'What is a "driver-based" budget in EPBCS?',a:'A budget where most costs are calculated from input drivers rather than entered as fixed amounts. Example: Headcount × per-person rate → Salary. Revenue growth rate × prior year → next year revenue. Reduces manual entry, increases consistency.',hint:'Formula-driven rather than manually entered'},
+  {deck:'metadata',q:'What is the @IF function in Essbase member formulas?',a:'Conditional logic: <code>IF (condition) value; ELSE other_value; ENDIF</code>. Example: <code>IF ("Total_Revenue" != 0) "Gross_Profit" / "Total_Revenue" * 100; ELSE 0; ENDIF</code>. Essential for zero-division guards.',hint:'IF/ELSE/ENDIF in calc formula syntax'},
+  {deck:'metadata',q:'What is a Dimension Editor in EPBCS?',a:'The UI tool in EPBCS where administrators create and edit dimension members, set properties (consolidation, data storage, member formulas), assign UDAs and Smart Lists, and manage hierarchy structure.',hint:'The metadata management UI'},
+  {deck:'metadata',q:'What does "Two Pass" calculation setting do?',a:'Forces a member to be recalculated after the initial pass — needed for account formulas that reference other calculated members that may not yet be calculated in the first pass.',hint:'Calculated twice to resolve dependencies'},
+  {deck:'metadata',q:'What is an EPM Import File (flat file) format for data loading?',a:'A text file with columns for each dimension member and a value column. Headers match dimension names. Example row: "Vision_US,Product_Revenue,Jan,FY2025,Budget,Working,1200000". Loaded via Data Management or REST API.',hint:'Dimension columns + value column, one row per cell'},
+  {deck:'metadata',q:'What is the Consolidation dimension in EPBCS?',a:'A built-in dimension with members: Entity (local currency), Parent (before translation), Contribution (translated amount), Elimination (interco adjustments). Used for legal consolidation with eliminations.',hint:'Legal consolidation structure'},
+  {deck:'metadata',q:'What is an EPBCS "Custom" dimension?',a:'User-defined dimensions beyond the 7 standard ones. Common examples: Product, Customer, Region, Project. Typically sparse. Adds analytical granularity to planning data beyond entity/account.',hint:'User-defined extra analysis dimension'},
+  {deck:'metadata',q:'What is the maximum number of dimensions recommended in BSO?',a:'8-12 dimensions for BSO performance. Beyond that, block sizes grow exponentially. If you need more granularity, consider adding a custom dimension thoughtfully or splitting into separate plan types.',hint:'8-12 max for BSO performance'},
+
+  // FPA (20 cards)
+  {deck:'fpa',q:'What is MAPE in FP&A?',a:'Mean Absolute Percentage Error — standard forecast accuracy metric. Formula: (|Actual - Forecast| / |Actual|) × 100. A MAPE of 5% means forecasts were within 5% of actuals on average. Target for best-in-class: ≤5% at total company level.',hint:'Forecast accuracy standard metric'},
+  {deck:'fpa',q:'What is Zero-Based Budgeting (ZBB) in EPBCS?',a:'Each expense must be justified from zero each period — no prior-year carryforward. In EPBCS: create a ZBB_Budget Version under Budget scenario that starts with no seeded data. Planners build from drivers only.',hint:'Start from zero, justify everything'},
+  {deck:'fpa',q:'What is Driver-Based Planning?',a:'A planning model where financial outcomes derive from operational drivers: headcount → salary cost; units sold → revenue. Changes propagate automatically. Reduces manual entry errors and enables instant scenario modelling.',hint:'Operational drivers → financial outcomes'},
+  {deck:'fpa',q:'What is the "60/30/10 rule" for EPBCS implementations?',a:'60% of EPBCS value comes from data automation (loading/calcs), 30% from process (forms/workflow), 10% from reporting. Teams that focus only on reports and neglect automation never fully realise the investment.',hint:'Automation 60%, Process 30%, Reports 10%'},
+  {deck:'fpa',q:'What is a 3+9 Rolling Forecast?',a:'A rolling forecast where 3 months of actuals are locked and 9 months remain as open forecast. As each month closes, the 9-month forecast horizon rolls forward. Used by companies with quarterly forecast cycles.',hint:'3 actuals + 9 forecast = 12 months always'},
+  {deck:'fpa',q:'What is Shared Services Allocation?',a:'Distributing corporate overhead costs (IT, HR, Finance, Legal) to business units based on an allocation key (revenue, headcount, usage). In EPBCS: two-pass Groovy rule with pool account → target accounts.',hint:'Corporate costs → business units via driver'},
+  {deck:'fpa',q:'What is Intercompany Elimination in EPBCS?',a:'Removing transactions between related entities from consolidated financials. Entity A sells to Entity B → revenue in A, cost in B → at consolidated level both are removed. Requires INTERCOMPANY UDA and elimination rules.',hint:'Remove related-party transactions at consolidation'},
+  {deck:'fpa',q:'What is a "seed" in EPBCS budget cycle?',a:'Copying data from one version/scenario to another as a starting point for the new budget cycle. E.g., "Copy FY2025 Actuals to FY2026 Budget/Working". Planners then adjust from there rather than starting from zero.',hint:'Starting point for budget input'},
+  {deck:'fpa',q:'What is a PMPM cost model?',a:'Per-Member-Per-Month — used in subscription and services businesses to plan headcount-driven costs. Monthly cost = headcount × rate. EPBCS Workforce Planning module uses this model natively.',hint:'Headcount × per-person monthly rate'},
+  {deck:'fpa',q:'What is the difference between static and flexible budget?',a:'Static budget: fixed target set at year start, compared to actuals regardless of actual volume. Flexible budget: adjusts revenue/variable cost targets based on actual volume achieved. Flexible is more analytically rigorous for variance analysis.',hint:'Flexible adjusts for actual volume'},
+  {deck:'fpa',q:'What is an EBITDA bridge?',a:'A waterfall analysis showing drivers of EBITDA change period-over-period or vs budget: Volume, Price, Mix, Cost, FX. In EPBCS: built as a custom account hierarchy or as a separate reporting dimension.',hint:'Waterfall: Volume + Price + Mix + Cost + FX'},
+  {deck:'fpa',q:'What is FX impact analysis in EPBCS?',a:'Comparing results at constant currency (prior period FX rates) vs reported rates to isolate foreign exchange impact. In EPBCS: load actuals at both current and constant rates, create CER_Budget version.',hint:'Constant Currency vs reported = FX impact'},
+  {deck:'fpa',q:'What is a bottom-up vs top-down budget?',a:'Bottom-up: each department manager builds their own budget independently; Finance consolidates. Top-down: senior management sets targets; managers distribute within their allocation. Most enterprises use a hybrid.',hint:'Department-up vs HQ-down'},
+  {deck:'fpa',q:'What is Working Capital planning in EPBCS?',a:'Planning Balance Sheet items: Accounts Receivable (DSO × Revenue/365), Inventory (DIO × COGS/365), Accounts Payable (DPO × COGS/365). Drives Cash Flow from Operations forecasting.',hint:'DSO, DIO, DPO drivers → Cash Flow'},
+  {deck:'fpa',q:'What does FCFF stand for in FP&A?',a:'Free Cash Flow to Firm: EBITDA − Taxes − Capex − Change in Working Capital. The primary cash generation metric for enterprise valuation. EPBCS Strategic Modeling module models multi-year FCFF for LRP.',hint:'EBITDA minus Tax, Capex, WC changes'},
+  {deck:'fpa',q:'What is a "Close Package" in EPBCS?',a:'The set of reports, variance analyses, and narrative commentary produced at month-end and delivered to management. Typically: P&L by entity, FX analysis, headcount summary, KPI dashboard, commentary. Automated via EPM Automate.',hint:'The monthly management reporting package'},
+  {deck:'fpa',q:'What is Sensitivity Analysis in EPBCS context?',a:'Testing how financial outcomes change when key drivers are varied (e.g., ±5% revenue, ±$50 oil price). In EPBCS: model via separate Scenario or Version members with different driver inputs. Strategic Modeling supports formal sensitivity tables.',hint:'What-if: vary driver → see outcome'},
+  {deck:'fpa',q:'What is a "Best Estimate" forecast?',a:'The most likely financial outcome based on current information — distinct from the Budget (target) and Actual (fact). EPBCS: separate Forecast Scenario with Best_Estimate Version. Updated monthly.',hint:'Most likely outcome, distinct from target'},
+  {deck:'fpa',q:'What is Month-End Accrual planning in EPBCS?',a:'Estimating expenses incurred but not yet invoiced/posted to GL. Finance manually enters accruals via an EPBCS input form. When actuals arrive, variance between accrual and actual is analysed.',hint:'Estimated costs before invoice arrives'},
+  {deck:'fpa',q:'What is a "Headcount Bridge" report?',a:'A waterfall showing headcount change: Opening HC → New Hires → Attrition → Transfers → Internal Moves → Closing HC. Built in EPBCS as a custom member formula hierarchy or Groovy rule for Workforce Planning.',hint:'Waterfall: Opening + Hires − Attrition = Closing'},
+
+  // WORKFLOW (15 cards)
+  {deck:'workflow',q:'What are the 6 approval workflow states in EPBCS?',a:'Not Started → First Pass → Under Review → Pushed Back → Approved → Locked. Each transition is logged with user, timestamp, and optional annotation. Full audit trail for SOX compliance.',hint:'NS → FP → UR → PB → AP → LK'},
+  {deck:'workflow',q:'What happens to data when a Planning Unit is Locked?',a:'All data in that planning unit becomes read-only — even for administrators. An explicit administrative unlock action is required before any changes can be made. Prevents accidental post-approval changes.',hint:'Read-only until explicitly unlocked'},
+  {deck:'workflow',q:'What is the difference between Approved and Locked in workflow?',a:'Approved = manager signed off on the numbers (can still be "pushed back" to re-open). Locked = Finance has frozen the data entirely — requires explicit admin unlock action. Locked is the final terminal state.',hint:'Approved is reversible; Locked requires admin action'},
+  {deck:'workflow',q:'How do you enable data change auditing in EPBCS?',a:'Application → Settings → Enable Audit. Records every data change with: user, timestamp, old value, new value, IP address. Must be enabled before the first planning cycle — enabling later doesn\'t capture historical changes.',hint:'Application Settings → Enable Audit'},
+  {deck:'workflow',q:'What is a "Reviewer" in EPBCS approval workflow?',a:'A user role in the Planning Unit Hierarchy responsible for reviewing and advancing (or pushing back) a planning unit at a specific level. Configured in PUH Setup → Reviewer Assignments.',hint:'The person who advances the workflow stage'},
+  {deck:'workflow',q:'How does "Manage Approvals" help administrators?',a:'Provides a global view of all planning units and their current statuses. Allows admins to: reassign reviewers, force-advance stuck units, view who has and hasn\'t completed their review, and see the complete annotation history.',hint:'Admin dashboard for all approval statuses'},
+  {deck:'workflow',q:'What is an annotation in EPBCS workflow?',a:'A text comment attached to a planning unit state change. Reviewers leave annotations when pushing back ("Revenue assumptions too aggressive for APAC"). Full annotation history is retained for audit purposes.',hint:'Comment attached to a workflow state change'},
+  {deck:'workflow',q:'What is "Push Back" in the approval workflow?',a:'A reviewer action that returns a planning unit to the previous state with a mandatory annotation explaining the reason. The original submitter must address the feedback and resubmit.',hint:'Reviewer rejects and returns for revision'},
+  {deck:'workflow',q:'Can a Planner write to an Approved planning unit?',a:'No. Once Approved, the planning unit is read-only for planners. The reviewer must Push Back to reopen it. This is enforced by EPBCS access control and reinforced by Groovy rules checking approval status.',hint:'Approved = read-only for planners'},
+  {deck:'workflow',q:'What is the role of "Finance Admin" group in EPBCS security?',a:'Full application access: metadata management, loading data, running all rules, locking/unlocking planning units, managing approvals, exporting data. Should be a small team (2-5 people) with strict access control.',hint:'Full access — small team only'},
+  {deck:'workflow',q:'What is Dimension-Level Security in EPBCS?',a:'Restricts which dimension members a user or group can see or write to. Example: APAC planner can only see APAC entities in the Entity dimension — cannot access US or EU entity data.',hint:'User can only see their own entities'},
+  {deck:'workflow',q:'What is the "Power User" role in EPBCS?',a:'Can create and edit forms, dashboards, and business rules — but cannot change application-level settings or manage security. The typical role for an FP&A senior analyst building new reports and forms.',hint:'Can build content, cannot manage application'},
+  {deck:'workflow',q:'What does SOX compliance require from an EPBCS system?',a:'(1) Audit trail for all data changes (who, when, what), (2) Segregation of duties (data entry ≠ approval ≠ admin), (3) Access control documentation, (4) Snapshot/backup evidence. All achievable natively in EPBCS.',hint:'Audit trail + segregation + access docs'},
+  {deck:'workflow',q:'What is the "Viewer" role in EPBCS?',a:'Read-only access to assigned forms, dashboards, and reports. Cannot enter data or run business rules. Appropriate for senior executives who need to see results but should not interact with planning data.',hint:'Read-only — Executive / Audit access'},
+  {deck:'workflow',q:'What is an Application Role vs a Native Directory Group?',a:'Application Role (e.g., Planner, Power User) is assigned in IDCS/OCI Identity. Native Directory Groups are created within EPBCS for dimension security. Both layers work together for complete access control.',hint:'IDCS role + EPBCS group = two-layer security'}
+];
+
+var DECKS = [
+  {id:'all',label:'All Cards'},
+  {id:'fundamentals',label:'EPBCS Fundamentals'},
+  {id:'groovy',label:'Groovy Scripting'},
+  {id:'metadata',label:'Metadata & Essbase'},
+  {id:'fpa',label:'FP&A Concepts'},
+  {id:'workflow',label:'Workflow & Security'},
+  {id:'reporting',label:'Reporting & Dashboards'}
+];
+
+var curDeck='all', filtered=[], idx=0, isFlipped=false, knewSet=new Set(), nopeSet=new Set(), weakMode=false;
+
+function buildDeckBar(){
+  var bar=document.getElementById('deck-bar');bar.innerHTML='';
+  DECKS.forEach(function(d){
+    var cnt=d.id==='all'?CARDS.length:CARDS.filter(function(c){return c.deck===d.id}).length;
+    var btn=document.createElement('button');btn.className='dpill'+(d.id===curDeck?' active':'');
+    btn.innerHTML=d.label+'<span class="dpill-cnt">'+cnt+'</span>';
+    btn.onclick=function(){curDeck=d.id;weakMode=false;initDeck();};
+    bar.appendChild(btn);
+  });
+}
+
+function initDeck(){
+  document.querySelectorAll('.dpill').forEach(function(b){b.classList.remove('active')});
+  document.querySelectorAll('.dpill').forEach(function(b){if(b.innerHTML.startsWith(DECKS.find(function(d){return d.id===curDeck}).label))b.classList.add('active')});
+  buildDeckBar();
+  filtered=curDeck==='all'?[...CARDS]:CARDS.filter(function(c){return c.deck===curDeck});
+  // Shuffle
+  for(var i=filtered.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=filtered[i];filtered[i]=filtered[j];filtered[j]=t;}
+  knewSet=new Set();nopeSet=new Set();idx=0;isFlipped=false;
+  document.getElementById('fc-done').style.display='none';
+  document.getElementById('fc-body').style.display='block';
+  renderCard();
+}
+
+function reviewWeak(){
+  if(nopeSet.size===0){initDeck();return;}
+  filtered=CARDS.filter(function(c,i){return nopeSet.has(i);});
+  knewSet=new Set();nopeSet=new Set();idx=0;isFlipped=false;weakMode=true;
+  document.getElementById('fc-done').style.display='none';
+  document.getElementById('fc-body').style.display='block';
+  renderCard();
+}
+
+var CAT_COLORS={fundamentals:'color:var(--goldLt)',groovy:'color:var(--purpleLt)',metadata:'color:var(--tealLt)',fpa:'color:var(--roseLt)',workflow:'color:var(--redLt)'};
+var CAT_LABELS={fundamentals:'Fundamentals',groovy:'Groovy',metadata:'Metadata',fpa:'FP&A',workflow:'Workflow',reporting:'Reporting'};
+
+function renderCard(){
+  if(idx>=filtered.length){showDone();return;}
+  var c=filtered[idx];
+  // Reset flip
+  isFlipped=false;
+  var card=document.getElementById('fc-card');
+  card.classList.remove('flipped');
+  document.getElementById('flip-hint').textContent='Click the card to reveal the answer';
+  // Content
+  document.getElementById('fc-cnt').textContent=(idx+1)+' / '+filtered.length;
+  document.getElementById('fc-cat-tag').textContent=CAT_LABELS[c.deck]||c.deck;
+  document.getElementById('fc-cat-tag').style.cssText=CAT_COLORS[c.deck]||'';
+  document.getElementById('fc-q-text').textContent=c.q;
+  document.getElementById('fc-hint-text').textContent=c.hint?'💡 Hint: '+c.hint:'';
+  // Answer — support basic <code> tags
+  var aEl=document.getElementById('fc-a-text');aEl.innerHTML=c.a;
+  // Progress
+  var total=filtered.length,done=knewSet.size+nopeSet.size,left=total-done;
+  document.getElementById('fc-prog').style.width=(done/total*100)+'%';
+  document.getElementById('fc-stat-live').textContent=knewSet.size+' / '+done+' ✓';
+  document.getElementById('stat-total').textContent=total;
+  document.getElementById('stat-knew').textContent=knewSet.size;
+  document.getElementById('stat-nope').textContent=nopeSet.size;
+  document.getElementById('stat-left').textContent=left;
+}
+
+function flipCard(){
+  isFlipped=!isFlipped;
+  document.getElementById('fc-card').classList.toggle('flipped',isFlipped);
+  document.getElementById('flip-hint').textContent=isFlipped?'Did you know it?':'Click to reveal answer';
+}
+
+function navCard(dir){
+  idx=Math.max(0,Math.min(filtered.length-1,idx+dir));
+  renderCard();
+}
+
+function markCard(knew){
+  var origIdx=CARDS.indexOf(filtered[idx]);
+  if(knew){knewSet.add(origIdx);nopeSet.delete(origIdx);}
+  else{nopeSet.add(origIdx);knewSet.delete(origIdx);}
+  idx++;
+  renderCard();
+}
+
+function showDone(){
+  var total=filtered.length,pct=total>0?Math.round(knewSet.size/total*100):0;
+  if(window.PQ)window.PQ.saveFlashcardDeck(curDeck,knewSet.size,total);
+  document.getElementById('fc-body').style.display='none';
+  document.getElementById('fc-done').style.display='block';
+  document.getElementById('done-score').textContent=pct+'%';
+  document.getElementById('fc-prog').style.width='100%';
+  document.getElementById('fc-stat-live').textContent=knewSet.size+' / '+total+' ✓';
+  var msgs=[[100,'Perfect recall! You are ready for the Final Boss.'],[80,'Excellent! Strong command of this topic.'],[60,'Good progress — review the missed cards once more.'],[0,'Keep studying — every repetition builds the knowledge.'],
+  {deck:'workflow',q:'What is a Planning Unit Hierarchy (PUH) and how does it define the approval chain?',a:'A configuration mapping Entity+Scenario combinations to a chain of reviewers. Example: Department Manager reviews entity-level, Finance Business Partner reviews regional, CFO reviews Total_Vision. Each combination progresses independently.',hint:'Entity+Scenario maps to reviewer chain'},
+  {deck:'workflow',q:'How do you prove to auditors that the FY2025 Budget was CFO-approved on a specific date?',a:'Manage Approvals then Planning Unit History. Every state change is logged: user identity, timestamp, from-state, to-state, and annotation. This is the primary SOX audit evidence.',hint:'Manage Approvals - Planning Unit History'},
+  {deck:'workflow',q:'What are Valid Intersections and their most critical security use?',a:'A rule set restricting which dimension combinations are allowed for data entry. Most critical use: blocking planners from writing to the Actual scenario, which is loaded via Data Integration only.',hint:'Block planners from writing to Actual'},
+  {deck:'workflow',q:'What is the difference between Dimension Security and Valid Intersections?',a:'Dimension Security controls which members a user can SEE. Valid Intersections controls which combinations are allowed for WRITING regardless of visibility. Both layers work together.',hint:'Dim security = visibility; VI = write control'},
+  {deck:'workflow',q:'A planning unit is stuck Under Review and the reviewer left the company. What is the fix?',a:'Application then Manage Approvals then select the stuck unit then reassign reviewer and force-advance. Full audit trail preserved. Never delete and recreate as you lose all history.',hint:'Manage Approvals - reassign then advance'},
+  {deck:'workflow',q:'What is the Power User role and what can they NOT do?',a:'Power Users can create and edit forms, dashboards, and business rules. They cannot change application-level settings, manage security, or lock/unlock planning units. Typical role: senior FP&A analyst.',hint:'Build content - cannot manage application'},
+  {deck:'workflow',q:'Why must data auditing be enabled before the first planning cycle?',a:'Enabling audit after data exists captures only future changes. Historical entries have zero audit trail. For SOX this is a compliance gap. Treat audit enablement as an irreversible day-one configuration.',hint:'Enable before any data is entered ever'},
+  {deck:'workflow',q:'What does Segregation of Duties require in an EPBCS SOX environment?',a:'Three distinct non-overlapping roles: Planners enter budget data, Reviewers approve submitted data, Finance Admins manage system and locks. The same person cannot enter data and approve their own submission.',hint:'Enter not equal Approve not equal Admin'},
+  {deck:'workflow',q:'What is the Viewer role and when is it appropriate?',a:'Read-only access to assigned forms, dashboards, and reports. Cannot enter data or run rules. Appropriate for senior executives, external auditors, and Board members with read access.',hint:'Read-only for executives and auditors'},
+  {deck:'workflow',q:'What happens when you Lock a Planning Unit via EPM Automate?',a:'All data becomes read-only even for Service Administrators. An explicit administrative unlock is required before any changes. Command: epmautomate lockPlanningUnit Vision Budget FY2025. This is the SOX data freeze point.',hint:'epmautomate lockPlanningUnit - even admins blocked'},
+  {deck:'workflow',q:'What is the Planning Unit Hierarchy initialisation step?',a:'Creates all Entity+Scenario+Year planning unit instances before the first submission. Must run after PUH configuration, before opening forms to planners. Without initialisation planners cannot submit.',hint:'Must run after PUH setup before forms open'},
+  {deck:'workflow',q:'How does Push Back work in the approval workflow?',a:'A reviewer action returning the planning unit to the previous state. A written annotation explaining the reason is mandatory. The original submitter must address the feedback and resubmit. Full annotation history retained.',hint:'Returns to previous state - annotation mandatory'},
+  {deck:'workflow',q:'What is the Finance Admin group responsible for?',a:'Full application access: metadata management, data loading, running all rules, locking/unlocking planning units, managing approvals, exporting data, user access management. Should be a strictly controlled team of 2-5 people.',hint:'Full access - 2-5 people maximum'},
+  {deck:'workflow',q:'Can a planner edit data in an Approved planning unit without admin intervention?',a:'No. Once Approved, the planning unit is read-only for planners. The reviewer must explicitly Push Back with annotation to reopen it. Groovy rules can also check approval status and block edits.',hint:'Approved means planner read-only'},
+  {deck:'workflow',q:'What EPM Automate command exports a user access audit report for SOX?',a:'epmautomate exportUserAuditInfo ALL then the filename. Exports complete user roles and access assignments. Run quarterly and after every budget cycle as evidence of access control review.',hint:'exportUserAuditInfo - quarterly SOX evidence'},
+  {deck:'reporting',q:'What happened to Financial Reporting Studio (FRS) in EPM 25.06?',a:'Oracle ended FRS development. Reports is now the official standard. FRS still executes but receives zero bug fixes and zero enhancements. Oracle Support directs all FRS issues to reproduce in Reports. Migrate immediately.',hint:'FRS frozen 25.06 - migrate to Reports now'},
+  {deck:'reporting',q:'What is the Page of Pages feature in Reports?',a:'One report run generates separate output for every member in a dimension. One Reports job generates individual P&Ls for all 12 Vision entities simultaneously. Previously required 12 manual runs. Saves hours during monthly close.',hint:'One run generates 12 entity reports automatically'},
+  {deck:'reporting',q:'What is a Row Template in Reports and why is it essential?',a:'A reusable row definition shared across multiple reports. Build the P&L hierarchy once as a Row Template then reference it across 20 reports. When the account hierarchy changes, update the template once and all 20 reports update automatically.',hint:'Update once and all reports update'},
+  {deck:'reporting',q:'What three new actions were added to Dashboard 2.0 in EPM 25.06?',a:'Analyze (ad-hoc pivot), Open in Smart View, and Spreadsheet Export. These were the primary technical objections against migrating from Dashboard 1.0. Their addition removes the last major migration blocker.',hint:'Analyze, Open in Smart View, Spreadsheet Export'},
+  {deck:'reporting',q:'What happened to Infolets in EPM 25.10?',a:'New infolet creation blocked. Copy As blocked. Including infolets in Navigation Flows blocked. Existing infolet dots on the Home Page continue to work. Direction: replace KPI displays with Dashboard 2.0 components.',hint:'New creation blocked 25.10 - use Dashboard 2.0'},
+  {deck:'reporting',q:'What is Narrative Reporting and what Finance pain does it eliminate?',a:'Combines live EPM data references with management narrative text. When data changes all cited figures auto-update. Eliminates manually updating every number in a Board deck after a data change. Saves Vision Corp 2 days per month.',hint:'Live data in narrative - no stale Board numbers'},
+  {deck:'reporting',q:'What is the difference between Reports and Management Reporting Books?',a:'Reports produces individual formatted financial statements - the building blocks. Management Reporting Books assembles multiple Reports plus dashboards plus narrative into one complete CFO Board Pack PDF.',hint:'Reports = statements; Books = complete Board Pack'},
+  {deck:'reporting',q:'What is the recommended migration priority for 20 FRS reports?',a:'Migrate CFO Board Pack P&L first (highest visibility). Build Row and Column Templates before individual reports - template-first reduces total work by 60%. Order remaining by usage frequency. Low-traffic reports last.',hint:'Highest visibility first, templates before reports'},
+  {deck:'reporting',q:'What is conditional formatting in Reports?',a:'Rules that change cell appearance based on value conditions. Vision example: Variance percent less than 0 AND account type = Revenue means red cell. Variance percent less than 0 AND Expense means green (favourable). Drives instant variance identification.',hint:'Variance negative + revenue = red automatically'},
+  {deck:'reporting',q:'What is Database-Level Suppression in Reports added in 25.06?',a:'Reports can now suppress missing rows at the Essbase level not just the display layer. Reduces data returned from the application and eliminates query threshold impacts. Large hierarchies that previously hit query limits now work correctly.',hint:'Essbase-level suppression fixes query limit failures'},
+  {deck:'reporting',q:'How does drill-through from Reports to GL detail work?',a:'Drill-through regions are configured in Data Integration linking account/entity intersections to source system GL data. User right-clicks on a cell in the drill-through region and launches source detail. Requires DI setup and source system connectivity.',hint:'Right-click in report then DI drill-through to GL'},
+  {deck:'reporting',q:'How do you build a rolling 13-month trend report that advances automatically each month?',a:'Use substitution variable &CurPeriod as the ending period in column definitions. Configure 13 columns as CurPeriod, CurPeriod minus 1 through CurPeriod minus 12. When EPM Automate advances &CurPeriod all 13 columns shift automatically.',hint:'SubVar CurPeriod drives automatic column shift'},
+  {deck:'reporting',q:'What are the three types of EPM Cloud reporting tools and when to use each?',a:'Reports: formal pixel-perfect financial statements for Board packs and audit. Dashboards: interactive visual KPI displays for real-time monitoring. Smart View: Excel-based ad-hoc analysis for Finance analysts building custom pivots.',hint:'Reports=Board, Dashboard=KPI, Smart View=ad-hoc'},
+  {deck:'reporting',q:'What is a Report Package in Narrative Reporting?',a:'A collaborative document combining EPM data with management commentary written by multiple contributors. Different sections are assigned to different owners with review workflow. Used for Annual Reports, SEC filings, and Board materials.',hint:'Multi-author narrative document with live EPM data'},
+  {deck:'reporting',q:'What triggers stale data in a Report and how do you diagnose it?',a:'Main causes: data loaded but CALC ALL not re-run (derived members stale), Scenario/Version POV mismatch between report and expectation, suppression settings hiding cells. Diagnose: check job console for last calc run time and verify POV settings.',hint:'Check calc timestamp, POV match, suppression'},
+  {deck:'reporting',q:'How does Vision Corp use the Reports Batch Scheduler in production?',a:'Pipeline runs: load actuals at 2am, calcs at 3am, reports at 6am via runReportingObjectJobset. Finance arrives to current formatted reports every morning with zero manual intervention. CFO morning pack generated automatically.',hint:'2am load, 3am calc, 6am reports - automatic'},
+  {deck:'reporting',q:'What is Smart View Native mode deprecation status?',a:'Native mode is no longer supported for escalations or enhancements as of end 2024. Standard mode is the only mode receiving new development. Smart Forms are not supported in Standard mode. Switch all environments to Standard mode immediately.',hint:'Native mode deprecated - switch to Standard now'},
+  {deck:'reporting',q:'What is the key architectural difference between FRS and Reports Row Templates?',a:'FRS Row Templates are proprietary and only usable in FRS. Reports Row Templates are stored in the Library, accessible to all Report Designers, and auto-update when the dimension hierarchy changes after a refresh.',hint:'Reports templates: library-based, hierarchy-aware'},
+  {deck:'reporting',q:'What is the Reports query threshold and how does suppression help?',a:'EPM Cloud limits the number of cells a report can retrieve in one query. Large hierarchies without suppression can exceed this threshold causing report failures. Database-level suppression (25.06) pushes the filter to Essbase before retrieval, dramatically reducing cell count.',hint:'Threshold = max cells per query; suppression reduces count'},
+  {deck:'reporting',q:'How do you distribute the monthly Board Pack to 15 board members automatically?',a:'Use Management Reporting Books plus automated distribution. Configure a Books job that generates the complete PDF. Use EPM Automate runReportingObjectJobset to trigger it. Add email distribution via Pipeline or external script referencing the Outbox output file.',hint:'Books job + EPM Automate + email distribution'}
+];
+  var msg=msgs.find(function(m){return pct>=m[0]});
+  document.getElementById('done-msg').innerHTML='You knew <strong>'+knewSet.size+' of '+total+'</strong> cards ('+pct+'%). '+(msg?msg[1]:'')+'<br><br>'+(nopeSet.size>0?nopeSet.size+' cards queued for review.':'All cards marked Knew It! 🎉');
+}
+
+buildDeckBar();
+initDeck();
+</script>
+<script src="branding.js"></script>
+</body>
+</html>

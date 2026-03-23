@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Oracle EPBCS interactive simulators — BSO block size calculator, SubVar manager, DI mapping builder, Groovy batch write visualiser. EPM 25.06+.">
+<meta name="keywords" content="EPBCS BSO calculator, EPM block size, SubVar manager, Data Integration mapping, Groovy performance">
+<meta name="author" content="The Planning Quest">
+<meta name="robots" content="index, follow">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://theplanningquest.com/simulators.html">
+<meta property="og:title" content="EPBCS Interactive Simulators · The Planning Quest">
+<meta property="og:description" content="BSO block calculator, SubVar manager, DI mapping builder, and Groovy batch write visualiser. Hands-on tools for EPM architects.">
+<meta property="og:image" content="https://theplanningquest.com/og-image.png">
+<meta property="og:site_name" content="The Planning Quest">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="EPBCS Interactive Simulators · The Planning Quest">
+<meta name="twitter:description" content="BSO block calculator, SubVar manager, DI mapping builder, and Groovy batch write visualiser. Hands-on tools for EPM architects.">
+<meta name="twitter:image" content="https://theplanningquest.com/og-image.png">
+<link rel="canonical" href="https://theplanningquest.com/simulators.html">
+<title>Simulators — The Planning Quest</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Crimson+Pro:ital,wght@0,400;0,500;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ══════════════════════════════════════════════
+   THE PLANNING QUEST — Shared Stylesheet
+   All pages import this file
+══════════════════════════════════════════════ */
+:root{
+  --bg:#07090e;--bg2:#0c0f18;--bg3:#111520;--bg4:#161c2a;
+  --gold:#d4a017;--goldLt:#f0c040;--goldDim:#5c4108;
+  --teal:#1fb8a8;--tealLt:#4dd9c8;
+  --purple:#7c3aed;--purpleLt:#a855f7;
+  --emerald:#059669;--emeraldLt:#10b981;
+  --sky:#0ea5e9;--skyLt:#38bdf8;
+  --red:#c0392b;--redLt:#e74c3c;
+  --amber:#d97706;--amberLt:#fbbf24;
+  --rose:#be185d;--roseLt:#f472b6;
+  --border:rgba(212,160,23,.15);
+  --white:#f0ead6;--dim:#5a6478;
+  --r:10px;--sidebar:268px;--topbar:54px
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Crimson Pro',serif;background:var(--bg);color:var(--white);min-height:100vh;overflow-x:hidden}
+
+/* ── Stars ── */
+#stars{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+.star{position:absolute;border-radius:50%;background:white;animation:twinkle var(--d,3s) infinite var(--delay,0s)}
+@keyframes twinkle{0%,100%{opacity:.05}50%{opacity:var(--op,.6)}}
+@keyframes glow{0%,100%{text-shadow:0 0 20px rgba(212,160,23,.3)}50%{text-shadow:0 0 50px rgba(212,160,23,.55)}}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(212,160,23,.3)}50%{box-shadow:0 0 0 8px rgba(212,160,23,0)}}
+@keyframes slideIn{from{opacity:0;transform:translateX(-10px)}to{opacity:1;transform:none}}
+
+/* ── Topbar ── */
+#topbar{position:fixed;top:0;left:0;right:0;height:var(--topbar);background:rgba(7,9,14,.97);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 20px;gap:14px;z-index:200}
+.tb-home{font-family:'Cinzel',serif;font-size:13px;font-weight:700;color:var(--goldLt);text-decoration:none;display:flex;align-items:center;gap:9px;letter-spacing:.04em}
+.tb-dot{width:8px;height:8px;border-radius:50%;background:var(--tealLt);animation:pulse 2s infinite}
+.tb-sep{color:var(--goldDim,#5c4108)}
+.tb-current{font-family:'Cinzel',serif;font-size:11px;color:var(--teal);letter-spacing:.04em;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tb-prog-wrap{flex:1;height:3px;background:rgba(255,255,255,.05);border-radius:2px;overflow:hidden;margin:0 16px}
+.tb-prog{height:100%;background:linear-gradient(90deg,var(--teal),var(--goldLt));border-radius:2px;transition:width .5s ease}
+.tb-xp{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--goldLt);white-space:nowrap}
+
+
+/* ── Layout ── */
+#shell{display:flex;padding-top:var(--topbar);min-height:100vh}
+
+/* ── Sidebar ── */
+#sb{width:var(--sidebar);background:var(--bg2);border-right:1px solid var(--border);position:fixed;top:var(--topbar);bottom:0;overflow-y:auto;z-index:100}
+#sb::-webkit-scrollbar{width:3px}
+#sb::-webkit-scrollbar-thumb{background:var(--goldDim);border-radius:2px}
+.sb-hdr{padding:10px 16px 6px;font-family:'Cinzel',serif;font-size:9px;font-weight:700;color:var(--goldDim);letter-spacing:.1em;text-transform:uppercase;border-bottom:1px solid rgba(255,255,255,.04)}
+.sb-part{display:flex;align-items:center;gap:8px;padding:9px 14px;cursor:pointer;border-bottom:1px solid rgba(255,255,255,.03);transition:all .12s;text-decoration:none}
+.sb-part:hover,.sb-part.active{background:rgba(212,160,23,.05)}
+.sb-part-icon{font-size:14px;flex-shrink:0}
+.sb-part-info{flex:1;min-width:0}
+.sb-part-num{font-family:'Cinzel',serif;font-size:8.5px;font-weight:700;color:var(--goldDim);letter-spacing:.08em;text-transform:uppercase}
+.sb-part-name{font-family:'Cinzel',serif;font-size:10.5px;color:var(--dim);font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:color .12s}
+.sb-part:hover .sb-part-name,.sb-part.active .sb-part-name{color:var(--goldLt)}
+.sb-part-xp{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--goldDim);white-space:nowrap}
+.sb-lesson{padding:7px 14px 7px 36px;font-size:12px;color:rgba(240,234,214,.35);cursor:pointer;border-left:2px solid transparent;display:flex;align-items:center;gap:8px;transition:all .12s;line-height:1.3;text-decoration:none}
+.sb-lesson:hover{color:rgba(240,234,214,.65);background:rgba(255,255,255,.015)}
+.sb-lesson.active{color:var(--goldLt);border-left-color:var(--goldLt);background:rgba(212,160,23,.06);font-weight:500}
+.sb-lesson.done .sl-dot{background:var(--emeraldLt)}
+.sl-dot{width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,.1);flex-shrink:0;transition:background .2s}
+.sb-tool-link{padding:8px 14px;display:flex;align-items:center;gap:9px;font-size:11.5px;color:var(--dim);cursor:pointer;transition:all .12s;border-left:2px solid transparent;text-decoration:none}
+.sb-tool-link:hover,.sb-tool-link.active{color:var(--tealLt);background:rgba(31,184,168,.04);border-left-color:var(--tealLt)}
+
+/* ── Main Content ── */
+#main{margin-left:var(--sidebar);flex:1;min-width:0;position:relative;z-index:1}
+#main::-webkit-scrollbar{width:4px}
+#main::-webkit-scrollbar-thumb{background:var(--goldDim);border-radius:2px}
+.lesson-wrap{max-width:820px;padding:36px 44px 100px;margin:0 auto;animation:fadeUp .3s ease}
+
+/* ── Typography ── */
+.page-title{font-family:'Cinzel',serif;font-size:28px;font-weight:700;line-height:1.2;margin-bottom:6px}
+.page-sub{font-size:13px;color:rgba(240,234,214,.4);margin-bottom:28px;font-style:italic;padding-bottom:18px;border-bottom:1px solid var(--border)}
+h2{font-family:'Cinzel',serif;font-size:17px;font-weight:600;color:var(--goldLt);margin:28px 0 12px;letter-spacing:.03em}
+h3{font-family:'Cinzel',serif;font-size:13.5px;font-weight:600;color:var(--tealLt);margin:18px 0 8px;letter-spacing:.04em}
+p{font-size:15px;line-height:1.82;color:rgba(240,234,214,.78);margin-bottom:12px}
+strong{color:var(--white);font-weight:500}
+ul,ol{padding-left:20px;margin-bottom:12px}
+li{font-size:15px;line-height:1.78;color:rgba(240,234,214,.72);margin-bottom:4px}
+code{font-family:'JetBrains Mono',monospace;font-size:12px;background:rgba(255,255,255,.06);padding:2px 6px;border-radius:4px;color:var(--tealLt)}
+
+/* ── Narration ── */
+.narration{background:linear-gradient(135deg,rgba(12,15,24,.95),rgba(17,21,32,.9));border:1px solid var(--border);border-left:3px solid var(--gold);border-radius:0 var(--r) var(--r) 0;padding:20px 24px;margin:20px 0;position:relative}
+.nar-lbl{font-family:'Cinzel',serif;font-size:9px;font-weight:700;letter-spacing:.1em;color:var(--gold);margin-bottom:8px;text-transform:uppercase}
+.narration p{font-style:italic;color:rgba(240,234,214,.68);margin:0;font-size:14px;line-height:1.88}
+
+/* ── Checklist ── */
+.checklist{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:20px 24px;margin:20px 0}
+.cl-title{font-family:'Cinzel',serif;font-size:10.5px;font-weight:700;color:var(--teal);letter-spacing:.08em;text-transform:uppercase;margin-bottom:14px}
+.cl-item{display:flex;align-items:flex-start;gap:12px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.04);cursor:pointer;user-select:none}
+.cl-item:last-child{border-bottom:none}
+.cl-box{width:18px;height:18px;border-radius:4px;border:1.5px solid rgba(212,160,23,.25);flex-shrink:0;margin-top:2px;display:flex;align-items:center;justify-content:center;font-size:11px;transition:all .15s}
+.cl-box.on{background:var(--emerald);border-color:var(--emerald);color:white}
+.cl-text{font-size:13.5px;color:rgba(240,234,214,.6);line-height:1.6;transition:all .12s}
+.cl-text.done{text-decoration:line-through;opacity:.35}
+
+/* ── Tables ── */
+.tbl-wrap{overflow-x:auto;margin:16px 0;border-radius:var(--r);border:1px solid var(--border)}
+.dtbl{width:100%;border-collapse:collapse;font-size:13px}
+.dtbl th{background:rgba(212,160,23,.06);color:var(--gold);padding:10px 13px;text-align:left;font-family:'Cinzel',serif;font-size:10.5px;letter-spacing:.04em;border-bottom:1px solid var(--border)}
+.dtbl td{padding:10px 13px;border-bottom:1px solid rgba(255,255,255,.04);color:rgba(240,234,214,.65);vertical-align:top;line-height:1.55}
+.dtbl tr:last-child td{border-bottom:none}
+.dtbl tr:hover td{background:rgba(255,255,255,.015)}
+
+/* ── Callouts ── */
+.callout{border-radius:var(--r);padding:14px 18px;margin:16px 0;font-size:14px;line-height:1.72}
+.tip{background:rgba(5,150,105,.07);border:1px solid rgba(5,150,105,.22);color:rgba(240,234,214,.72)}
+.warn{background:rgba(217,119,6,.07);border:1px solid rgba(217,119,6,.25);color:rgba(240,234,214,.72)}
+.danger{background:rgba(192,57,43,.07);border:1px solid rgba(192,57,43,.25);color:rgba(240,234,214,.72)}
+.lore{background:rgba(14,165,233,.05);border:1px solid rgba(14,165,233,.18);color:rgba(240,234,214,.68)}
+.fpa{background:rgba(124,58,237,.07);border:1px solid rgba(124,58,237,.22);color:rgba(240,234,214,.72)}
+.ci{font-size:15px;margin-right:7px}
+
+/* ── Code blocks ── */
+.code-wrap{margin:16px 0}
+.code-lbl{font-family:'Cinzel',serif;font-size:9px;font-weight:700;letter-spacing:.08em;color:var(--dim);margin-bottom:6px;text-transform:uppercase}
+.code-block{background:#090d14;border:1px solid rgba(255,255,255,.07);border-radius:8px;padding:18px 20px;font-family:'JetBrains Mono',monospace;font-size:11.5px;line-height:1.75;color:#a8d8ea;overflow-x:auto;white-space:pre}
+.ck{color:#ff7b72}.cs{color:#a5d6ff}.cf{color:#d2a8ff}.cc{color:#6a737d}.cn{color:#79c0ff}.cm{color:#ffa657}
+
+/* ── XP Badge ── */
+.xp-badge{display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,rgba(212,160,23,.1),rgba(212,160,23,.04));border:1px solid var(--border);border-radius:20px;padding:5px 14px;font-family:'Cinzel',serif;font-size:11px;color:var(--goldLt);margin-bottom:20px}
+
+/* ── Battle card ── */
+.battle-card{background:linear-gradient(135deg,rgba(124,58,237,.08),rgba(11,14,22,.95));border:1px solid rgba(124,58,237,.3);border-radius:var(--r);padding:22px 26px;margin:20px 0}
+.battle-lbl{font-family:'Cinzel',serif;font-size:9.5px;font-weight:700;letter-spacing:.1em;color:var(--purpleLt);margin-bottom:8px;text-transform:uppercase}
+.battle-title{font-family:'Cinzel',serif;font-size:14px;color:var(--white);margin-bottom:10px;font-weight:600}
+
+/* ── Flow row ── */
+.flow-row{display:flex;align-items:center;flex-wrap:wrap;gap:6px;margin:16px 0}
+.flow-box{padding:8px 14px;background:var(--bg3);border:1px solid var(--border);border-radius:6px;font-size:12px;font-weight:500;font-family:'Cinzel',serif;letter-spacing:.02em}
+.flow-arr{color:var(--dim);font-size:14px}
+
+/* ── Stage flow ── */
+.stage-flow{display:flex;align-items:stretch;flex-wrap:wrap;gap:0;margin:16px 0;overflow:hidden;border-radius:var(--r);border:1px solid var(--border)}
+.stage-box{flex:1;min-width:80px;padding:14px 8px;text-align:center;background:var(--bg3);border-right:1px solid var(--border)}
+.stage-box:last-child{border-right:none}
+.stage-icon{font-size:18px;display:block;margin-bottom:6px}
+.stage-name{font-family:'Cinzel',serif;font-size:9px;font-weight:600;color:var(--dim);letter-spacing:.04em}
+.stage-sub{font-size:10px;color:rgba(240,234,214,.3);margin-top:3px}
+
+/* ── AI Tutor ── */
+.tutor-box{background:linear-gradient(135deg,rgba(8,10,16,.98),rgba(17,21,32,.95));border:1px solid rgba(31,184,168,.18);border-radius:var(--r);padding:22px 26px;margin:28px 0}
+.tutor-hdr{display:flex;align-items:center;gap:12px;margin-bottom:8px}
+.tutor-av{width:38px;height:38px;background:linear-gradient(135deg,var(--purple),var(--teal));border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;box-shadow:0 0 20px rgba(31,184,168,.2)}
+.tutor-nm{font-family:'Cinzel',serif;font-size:13px;font-weight:700;color:var(--tealLt)}
+.tutor-rl{font-size:11px;color:var(--dim)}
+.tutor-desc{font-size:12.5px;color:rgba(240,234,214,.32);margin-bottom:12px}
+.chips{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:12px}
+.chip{font-size:11px;padding:5px 13px;border:1px solid rgba(31,184,168,.18);border-radius:14px;background:transparent;color:rgba(240,234,214,.42);cursor:pointer;transition:all .12s;font-family:'Crimson Pro',serif}
+.chip:hover{border-color:var(--tealLt);color:var(--tealLt);background:rgba(31,184,168,.07)}
+.tutor-row{display:flex;gap:8px}
+.tutor-input{flex:1;padding:9px 14px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:8px;color:var(--white);font-size:13px;font-family:'Crimson Pro',serif;outline:none;transition:border-color .15s}
+.tutor-input:focus{border-color:var(--teal)}
+.tutor-input::placeholder{color:rgba(255,255,255,.18)}
+.tutor-send{padding:9px 18px;background:linear-gradient(135deg,var(--teal),var(--sky));color:var(--bg);border:none;border-radius:8px;font-family:'Cinzel',serif;font-size:10.5px;font-weight:700;letter-spacing:.05em;cursor:pointer;transition:opacity .12s}
+.tutor-send:hover{opacity:.85}
+.tutor-out{margin-top:14px;font-size:14px;line-height:1.78;color:rgba(240,234,214,.68);min-height:0}
+.tutor-out.loading{color:rgba(240,234,214,.28);font-style:italic}
+.tutor-msg{background:var(--bg4);border-radius:8px;padding:12px 16px;margin-bottom:8px}
+.tutor-msg.user-msg{background:rgba(212,160,23,.06);border:1px solid rgba(212,160,23,.1)}
+.tutor-msg.ai-msg{border:1px solid rgba(255,255,255,.05)}
+.tutor-msg-lbl{font-family:'Cinzel',serif;font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:5px;opacity:.45}
+
+/* ── Nav buttons ── */
+.nav-btns{display:flex;justify-content:space-between;margin-top:48px;padding-top:20px;border-top:1px solid var(--border)}
+.nav-btn{padding:10px 22px;font-family:'Cinzel',serif;font-size:11.5px;font-weight:600;letter-spacing:.05em;border-radius:8px;cursor:pointer;transition:all .15s;border:1px solid var(--border);background:transparent;color:rgba(240,234,214,.4);text-decoration:none;display:inline-block}
+.nav-btn:hover{border-color:var(--teal);color:var(--tealLt)}
+.nav-btn.primary{background:linear-gradient(135deg,var(--teal),var(--sky));color:var(--bg);border-color:transparent}
+.nav-btn.primary:hover{opacity:.88;transform:translateY(-1px)}
+.nav-btn.gold{background:linear-gradient(135deg,var(--gold),#d97706);color:var(--bg);border-color:transparent}
+
+/* ── FP&A challenge box ── */
+.fpa-challenge{background:linear-gradient(135deg,rgba(190,24,93,.06),rgba(12,15,24,.97));border:1px solid rgba(190,24,93,.22);border-radius:var(--r);padding:22px 26px;margin:20px 0}
+.fpa-badge{font-family:'Cinzel',serif;font-size:9px;font-weight:700;letter-spacing:.1em;color:var(--roseLt);text-transform:uppercase;margin-bottom:8px}
+.fpa-title{font-family:'Cinzel',serif;font-size:14px;color:var(--white);font-weight:600;margin-bottom:10px}
+.fpa-challenge p{font-size:14px;color:rgba(240,234,214,.68);line-height:1.78;margin-bottom:8px}
+
+/* ── Boss card ── */
+.boss-card{background:linear-gradient(135deg,rgba(212,160,23,.12),rgba(124,58,237,.08),rgba(12,15,24,.97));border:1px solid rgba(212,160,23,.3);border-radius:14px;padding:28px 32px;margin:20px 0;text-align:center}
+.boss-title{font-family:'Cinzel',serif;font-size:22px;font-weight:900;color:var(--goldLt);margin-bottom:8px;animation:glow 3s infinite}
+
+/* ── KPI cards ── */
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin:16px 0}
+.kpi-card{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:16px;position:relative}
+.kpi-lbl{font-size:10px;color:var(--dim);margin-bottom:4px;font-family:'Cinzel',serif;letter-spacing:.04em;text-transform:uppercase}
+.kpi-val{font-family:'Cinzel',serif;font-size:22px;font-weight:700;color:var(--goldLt)}
+.kpi-sub{font-size:11px;color:var(--dim);margin-top:3px}
+.kpi-trend{position:absolute;top:12px;right:12px;font-size:14px}
+
+/* ── Responsive ── */
+@media(max-width:860px){#sb{display:none}#main{margin-left:0}.lesson-wrap{padding:24px 20px 80px}}
+@media(max-width:520px){.lesson-wrap{padding:20px 16px 80px}}
+
+/* ── Topbar tools — scrollable on mobile, current page highlight ── */
+.tb-tools{display:flex;gap:3px;margin-left:6px;overflow-x:auto;flex-shrink:0}
+.tb-tools::-webkit-scrollbar{display:none}
+.tb-tool{padding:4px 8px;border-radius:6px;border:1px solid var(--border);background:transparent;color:var(--dim);font-family:'Cinzel',serif;font-size:8.5px;font-weight:700;letter-spacing:.05em;cursor:pointer;transition:all .15s;text-transform:uppercase;text-decoration:none;display:inline-flex;align-items:center;white-space:nowrap}
+.tb-tool:hover,.tb-tool.active{border-color:var(--gold);color:var(--gold);background:rgba(212,160,23,.06)}
+/* ── Sidebar global nav divider ── */
+.sb-hdr.full-nav-hdr{margin-top:10px;border-top:1px solid rgba(255,255,255,.06);padding-top:10px;color:var(--teal);letter-spacing:.08em}
+
+/* ── Simulator page styles ── */
+body{overflow-x:hidden}
+#topbar-sim{position:fixed;top:0;left:0;right:0;height:54px;background:rgba(7,9,14,.97);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 20px;gap:14px;z-index:200}
+.sim-wrap{max-width:900px;margin:0 auto;padding:82px 28px 80px;position:relative;z-index:1}
+.sim-hero{text-align:center;margin-bottom:36px}
+.sim-title{font-family:'Cinzel',serif;font-size:28px;font-weight:900;color:var(--goldLt);margin-bottom:6px;animation:glow 3s infinite}
+.sim-sub{font-size:14px;color:var(--dim);font-style:italic}
+/* Sim selector tabs */
+.sim-tabs{display:flex;gap:0;border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:32px}
+.sim-tab{flex:1;padding:13px 10px;text-align:center;font-family:'Cinzel',serif;font-size:10px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;cursor:pointer;background:transparent;border:none;color:var(--dim);transition:all .15s;border-right:1px solid var(--border)}
+.sim-tab:last-child{border-right:none}
+.sim-tab:hover{background:rgba(255,255,255,.02);color:var(--goldLt)}
+.sim-tab.active{background:rgba(212,160,23,.08);color:var(--goldLt);border-bottom:2px solid var(--gold)}
+/* Sim panels */
+.sim-panel{display:none}.sim-panel.active{display:block;animation:fadeUp .25s ease}
+/* ── Common sim widget ── */
+.sim-card{background:var(--bg3);border:1px solid var(--border);border-radius:14px;padding:26px 28px;margin-bottom:20px}
+.sim-card-title{font-family:'Cinzel',serif;font-size:15px;font-weight:700;color:var(--goldLt);margin-bottom:6px}
+.sim-card-sub{font-size:13px;color:var(--dim);margin-bottom:20px;line-height:1.6}
+/* Inputs */
+.sim-row{display:flex;align-items:center;gap:12px;margin-bottom:12px;flex-wrap:wrap}
+.sim-label{font-family:'Cinzel',serif;font-size:9.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--dim);min-width:120px;flex-shrink:0}
+.sim-input{padding:8px 12px;background:var(--bg4);border:1px solid var(--border);border-radius:8px;color:var(--white);font-family:'JetBrains Mono',monospace;font-size:13px;outline:none;transition:border-color .15s;width:120px}
+.sim-input:focus{border-color:var(--teal)}
+.sim-select{padding:8px 12px;background:var(--bg4);border:1px solid var(--border);border-radius:8px;color:var(--white);font-family:'Cinzel',serif;font-size:11px;outline:none;cursor:pointer}
+.sim-btn{padding:10px 22px;background:linear-gradient(135deg,var(--teal),var(--sky));color:var(--bg);border:none;border-radius:8px;font-family:'Cinzel',serif;font-size:11px;font-weight:700;letter-spacing:.06em;cursor:pointer;transition:opacity .15s}
+.sim-btn:hover{opacity:.85}
+.sim-btn.secondary{background:var(--bg4);border:1px solid var(--border);color:var(--dim)}
+.sim-btn.secondary:hover{border-color:var(--teal);color:var(--tealLt)}
+/* Result display */
+.sim-result{background:var(--bg4);border:1px solid var(--border);border-radius:10px;padding:18px 20px;margin-top:16px}
+.sim-result-val{font-family:'Cinzel',serif;font-size:26px;font-weight:700;color:var(--goldLt)}
+.sim-result-label{font-size:11px;color:var(--dim);letter-spacing:.06em;text-transform:uppercase;margin-top:4px}
+.sim-result-detail{font-size:13px;color:rgba(240,234,214,.55);margin-top:10px;line-height:1.7}
+/* Gauge bars */
+.gauge-wrap{margin:14px 0}
+.gauge-row{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.gauge-lbl{font-family:'Cinzel',serif;font-size:9px;color:var(--dim);letter-spacing:.05em;text-transform:uppercase;width:110px;flex-shrink:0}
+.gauge-bar{flex:1;height:10px;background:rgba(255,255,255,.06);border-radius:6px;overflow:hidden}
+.gauge-fill{height:100%;border-radius:6px;transition:width .6s ease}
+.gauge-val{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--white);width:60px;text-align:right;flex-shrink:0}
+/* Status chips */
+.status-chip{display:inline-block;padding:3px 10px;border-radius:12px;font-family:'Cinzel',serif;font-size:9px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;margin:0 4px}
+.chip-good{background:rgba(5,150,105,.1);border:1px solid rgba(5,150,105,.3);color:var(--emeraldLt)}
+.chip-warn{background:rgba(217,119,6,.1);border:1px solid rgba(217,119,6,.3);color:var(--amberLt)}
+.chip-bad{background:rgba(192,57,43,.1);border:1px solid rgba(192,57,43,.3);color:var(--redLt)}
+/* DI Mapper */
+.mapper-grid{display:grid;grid-template-columns:1fr 60px 1fr;gap:0;align-items:start;margin-top:16px}
+.mapper-col{background:var(--bg4);border:1px solid var(--border);border-radius:10px;padding:14px}
+.mapper-col-hdr{font-family:'Cinzel',serif;font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--dim);margin-bottom:10px;text-align:center}
+.mapper-item{padding:8px 10px;border:1px solid var(--border);border-radius:7px;margin-bottom:6px;cursor:pointer;transition:all .15s;font-size:12.5px;font-family:'JetBrains Mono',monospace;color:rgba(240,234,214,.7)}
+.mapper-item:hover{border-color:var(--teal);color:var(--tealLt)}
+.mapper-item.selected{border-color:var(--gold);color:var(--goldLt);background:rgba(212,160,23,.08)}
+.mapper-item.mapped{border-color:var(--emerald);color:var(--emeraldLt);background:rgba(5,150,105,.06)}
+.mapper-arrow-col{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding-top:30px}
+.mapper-arrow{font-size:13px;color:var(--dim);width:24px;height:24px;display:flex;align-items:center;justify-content:center;border-radius:50%;background:var(--bg4);border:1px solid var(--border)}
+.mapper-arrow.active{border-color:var(--gold);color:var(--gold);background:rgba(212,160,23,.08)}
+.mapper-result{margin-top:16px;background:var(--bg4);border:1px solid var(--border);border-radius:8px;padding:14px 16px}
+.mapper-rule{display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid rgba(255,255,255,.04);font-size:12px;font-family:'JetBrains Mono',monospace;color:rgba(240,234,214,.6)}
+.mapper-rule:last-child{border-bottom:none}
+/* Batch write visualiser */
+.bw-timeline{display:flex;flex-direction:column;gap:6px;margin-top:16px}
+.bw-call{display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:8px;border:1px solid var(--border);font-size:12px;font-family:'JetBrains Mono',monospace;animation:fadeUp .2s ease}
+.bw-call.network{border-color:rgba(14,165,233,.3);background:rgba(14,165,169,.06);color:var(--skyLt)}
+.bw-call.memory{border-color:rgba(5,150,105,.3);background:rgba(5,150,105,.06);color:var(--emeraldLt)}
+.bw-call.slow{border-color:rgba(192,57,43,.3);background:rgba(192,57,43,.06);color:var(--redLt)}
+.bw-badge{font-family:'Cinzel',serif;font-size:8.5px;font-weight:700;letter-spacing:.07em;padding:2px 8px;border-radius:10px;text-transform:uppercase;flex-shrink:0}
+.bw-time{margin-left:auto;font-size:11px;opacity:.6;flex-shrink:0}
+/* SubVar manager */
+.sv-table{width:100%;border-collapse:collapse;font-size:13px;margin-top:14px}
+.sv-table th{background:rgba(212,160,23,.06);color:var(--gold);padding:9px 12px;text-align:left;font-family:'Cinzel',serif;font-size:10px;letter-spacing:.04em;border-bottom:1px solid var(--border)}
+.sv-table td{padding:9px 12px;border-bottom:1px solid rgba(255,255,255,.04);vertical-align:middle}
+.sv-table tr:last-child td{border-bottom:none}
+.sv-name{font-family:'JetBrains Mono',monospace;color:var(--tealLt)}
+.sv-val-input{background:var(--bg4);border:1px solid var(--border);border-radius:6px;padding:5px 10px;color:var(--white);font-family:'JetBrains Mono',monospace;font-size:12px;outline:none;width:100%;transition:border-color .15s}
+.sv-val-input:focus{border-color:var(--teal)}
+.sv-impact{font-size:11px;color:var(--dim)}
+.sv-save-btn{padding:4px 12px;background:linear-gradient(135deg,var(--emerald),var(--teal));color:white;border:none;border-radius:6px;font-family:'Cinzel',serif;font-size:9px;font-weight:700;letter-spacing:.05em;cursor:pointer}
+.sv-saved{color:var(--emeraldLt);font-size:10px;margin-left:6px;opacity:0;transition:opacity .3s}
+.sv-saved.show{opacity:1}
+/* Impact summary box */
+.impact-box{background:linear-gradient(135deg,rgba(31,184,168,.06),rgba(7,9,14,.98));border:1px solid rgba(31,184,168,.2);border-radius:10px;padding:16px 18px;margin-top:16px;font-size:13.5px;color:rgba(240,234,214,.72);line-height:1.75}
+.impact-box strong{color:var(--tealLt)}
+@media(max-width:700px){.sim-tabs{flex-wrap:wrap}.mapper-grid{grid-template-columns:1fr}.sim-row{flex-direction:column;align-items:flex-start}}
+</style>
+</head>
+<body>
+<div id="stars"></div>
+<div id="topbar-sim">
+  <a href="index.html" style="font-family:'Cinzel',serif;font-size:13px;font-weight:700;color:var(--goldLt);text-decoration:none;display:flex;align-items:center;gap:9px"><span class="tb-dot"></span>The Planning Quest</a>
+  <span style="color:var(--goldDim)">›</span>
+  <span style="font-family:'Cinzel',serif;font-size:11px;color:var(--teal)">Simulators</span>
+  <div style="flex:1"></div>
+  <div style="display:flex;gap:3px;overflow-x:auto">
+    <a href="parts-1-3.html" style="padding:4px 8px;border-radius:6px;border:1px solid var(--border);color:var(--dim);font-family:'Cinzel',serif;font-size:8.5px;font-weight:700;text-decoration:none;white-space:nowrap">📖 I–III</a>
+    <a href="parts-4-5.html" style="padding:4px 8px;border-radius:6px;border:1px solid var(--border);color:var(--dim);font-family:'Cinzel',serif;font-size:8.5px;font-weight:700;text-decoration:none;white-space:nowrap">⚔ IV–V</a>
+    <a href="groovy-ch1.html" style="padding:4px 8px;border-radius:6px;border:1px solid var(--border);color:var(--dim);font-family:'Cinzel',serif;font-size:8.5px;font-weight:700;text-decoration:none;white-space:nowrap">📘 Groovy</a>
+    <a href="parts-6-9.html" style="padding:4px 8px;border-radius:6px;border:1px solid var(--border);color:var(--dim);font-family:'Cinzel',serif;font-size:8.5px;font-weight:700;text-decoration:none;white-space:nowrap">👑 VI–IX</a>
+    <a href="groovy-ch2.html" style="padding:4px 8px;border-radius:6px;border:1px solid var(--border);color:var(--dim);font-family:'Cinzel',serif;font-size:8.5px;font-weight:700;text-decoration:none;white-space:nowrap">⚡ Gr.II</a>
+    <a href="quiz.html" style="padding:4px 8px;border-radius:6px;border:1px solid var(--border);color:var(--dim);font-family:'Cinzel',serif;font-size:8.5px;font-weight:700;text-decoration:none;white-space:nowrap">📝 Quiz</a>
+    <a href="flashcards.html" style="padding:4px 8px;border-radius:6px;border:1px solid var(--border);color:var(--dim);font-family:'Cinzel',serif;font-size:8.5px;font-weight:700;text-decoration:none;white-space:nowrap">🃏 Cards</a>
+    <a href="labs.html" style="padding:4px 8px;border-radius:6px;border:1px solid var(--border);color:var(--dim);font-family:'Cinzel',serif;font-size:8.5px;font-weight:700;text-decoration:none;white-space:nowrap">🔬 Labs</a>
+    <a href="automate-ref.html" style="padding:4px 8px;border-radius:6px;border:1px solid var(--border);color:var(--dim);font-family:'Cinzel',serif;font-size:8.5px;font-weight:700;text-decoration:none;white-space:nowrap">⚙ CLI</a>
+    <a href="whats-new.html" style="padding:4px 8px;border-radius:6px;border:1px solid var(--border);background:transparent;color:var(--dim);font-family:'Cinzel',serif;font-size:8.5px;font-weight:700;text-decoration:none;white-space:nowrap">🆕 New</a>
+    <a href="interview-prep.html" style="padding:4px 8px;border-radius:6px;border:1px solid rgba(212,160,23,.2);background:transparent;color:var(--goldLt);font-family:'Cinzel',serif;font-size:8.5px;font-weight:700;letter-spacing:.04em;text-decoration:none;white-space:nowrap">🎯 Interview</a>
+    <a href="cert.html" style="padding:4px 8px;border-radius:6px;border:1px solid rgba(212,160,23,.25);color:var(--goldLt);font-family:'Cinzel',serif;font-size:8.5px;font-weight:700;text-decoration:none;white-space:nowrap">🏆 Cert</a>
+    <a href="search.html" style="padding:4px 8px;border-radius:6px;border:1px solid rgba(31,184,168,.25);color:var(--tealLt);font-family:'Cinzel',serif;font-size:8.5px;font-weight:700;text-decoration:none;white-space:nowrap">🔍 Search</a>
+  </div>
+</div>
+
+<div class="sim-wrap">
+  <div class="sim-hero">
+    <h1 class="sim-title">⚙ Interactive Simulators</h1>
+    <p class="sim-sub">Hands-on tools for BSO architecture, Data Integration, Groovy performance, and SubVar management</p>
+  </div>
+
+  <!-- Tab selector -->
+  <div class="sim-tabs">
+    <button class="sim-tab active" onclick="showSim('bso',this)">🧊 BSO Block<br>Calculator</button>
+    <button class="sim-tab" onclick="showSim('subvar',this)">🔧 SubVar<br>Manager</button>
+    <button class="sim-tab" onclick="showSim('dimapper',this)">🗺 DI Mapping<br>Builder</button>
+    <button class="sim-tab" onclick="showSim('batchviz',this)">⚡ Groovy Batch<br>Visualiser</button>
+  </div>
+
+  <!-- ══ SIMULATOR 1: BSO Block Calculator ══ -->
+  <div id="sim-bso" class="sim-panel active">
+    <div class="sim-card">
+      <div class="sim-card-title">🧊 BSO Block Size Calculator</div>
+      <div class="sim-card-sub">Calculate Essbase BSO block size from your dimension configuration. See exactly why Account and Period must be dense — and what happens when you get it wrong. <strong style="color:var(--amberLt)">Target: 100KB–200KB per block.</strong></div>
+
+      <div class="sim-row">
+        <span class="sim-label">Dense Dim 1 (Account)</span>
+        <input class="sim-input" id="bso-d1" type="number" value="150" min="1" max="5000" oninput="calcBSO()">
+        <span style="font-size:12px;color:var(--dim)">members</span>
+      </div>
+      <div class="sim-row">
+        <span class="sim-label">Dense Dim 2 (Period)</span>
+        <input class="sim-input" id="bso-d2" type="number" value="17" min="1" max="200" oninput="calcBSO()">
+        <span style="font-size:12px;color:var(--dim)">members (12 months + Q1-Q4 + YTD + Full_Year)</span>
+      </div>
+      <div class="sim-row">
+        <span class="sim-label">Sparse dims</span>
+        <select class="sim-select" id="bso-sparse" onchange="calcBSO()">
+          <option value="1000">Small app — 1,000 sparse combos</option>
+          <option value="10000" selected>Medium — 10,000 sparse combos</option>
+          <option value="100000">Large — 100,000 sparse combos</option>
+          <option value="1000000">Enterprise — 1M sparse combos</option>
+        </select>
+      </div>
+      <div class="sim-row">
+        <span class="sim-label">Data fill %</span>
+        <input class="sim-input" id="bso-fill" type="number" value="15" min="1" max="100" oninput="calcBSO()">
+        <span style="font-size:12px;color:var(--dim)">% of sparse combos have data (typical: 10–25%)</span>
+      </div>
+
+      <div class="sim-result" id="bso-result">
+        <div id="bso-output"></div>
+      </div>
+    </div>
+    <div class="callout lore"><span class="ci">💡</span><strong>Why this matters:</strong> A block size of 2MB means every single Essbase read loads 2MB from disk — even if you only want one cell. 100 entity reads = 200MB I/O. That's why a tight dimension design can make calc scripts 50x faster. Target the 100–200KB sweet spot.</div>
+  </div>
+
+  <!-- ══ SIMULATOR 2: SubVar Manager ══ -->
+  <div id="sim-subvar" class="sim-panel">
+    <div class="sim-card">
+      <div class="sim-card-title">🔧 Substitution Variable Manager</div>
+      <div class="sim-card-sub">Simulate Vision Corporation's SubVar configuration. Edit values and see which forms, rules, and reports are instantly affected — without touching a single form definition.</div>
+      <div style="overflow-x:auto">
+      <table class="sv-table" id="sv-table">
+        <thead><tr><th>Variable</th><th>Current Value</th><th>Type</th><th>Affects</th><th>Action</th></tr></thead>
+        <tbody id="sv-tbody"></tbody>
+      </table>
+      </div>
+      <div id="sv-impact" class="impact-box" style="display:none"></div>
+    </div>
+    <div class="callout tip"><span class="ci">💡</span><strong>EPM Automate command:</strong> <code>epmautomate setSubstitutionVariable CurPeriod Apr</code> — advance all 50+ forms in one command. Schedule this at period-end and Finance arrives to fresh numbers every morning.</div>
+  </div>
+
+  <!-- ══ SIMULATOR 3: DI Mapping Builder ══ -->
+  <div id="sim-dimapper" class="sim-panel">
+    <div class="sim-card">
+      <div class="sim-card-title">🗺 Data Integration Mapping Builder</div>
+      <div class="sim-card-sub">Click a <strong style="color:var(--goldLt)">Source</strong> field, then click its <strong style="color:var(--tealLt)">Target</strong> EPM dimension to create a mapping. Build Vision Corporation's SAP→EPBCS mapping and see the generated rule.</div>
+
+      <div class="mapper-grid">
+        <div class="mapper-col">
+          <div class="mapper-col-hdr" style="color:var(--goldLt)">📤 SAP Source Fields</div>
+          <div id="map-sources"></div>
+        </div>
+        <div class="mapper-arrow-col" id="map-arrows"></div>
+        <div class="mapper-col">
+          <div class="mapper-col-hdr" style="color:var(--tealLt)">📥 EPM Target Dimensions</div>
+          <div id="map-targets"></div>
+        </div>
+      </div>
+      <div id="mapper-result" class="mapper-result" style="display:none">
+        <div style="font-family:'Cinzel',serif;font-size:9.5px;font-weight:700;color:var(--teal);letter-spacing:.08em;text-transform:uppercase;margin-bottom:10px">Generated DI Mapping Rules</div>
+        <div id="mapper-rules"></div>
+      </div>
+      <div style="margin-top:14px;display:flex;gap:8px">
+        <button class="sim-btn" onclick="autoMap()">⚡ Auto-Map All</button>
+        <button class="sim-btn secondary" onclick="resetMap()">↺ Reset</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ SIMULATOR 4: Groovy Batch Write Visualiser ══ -->
+  <div id="sim-batchviz" class="sim-panel">
+    <div class="sim-card">
+      <div class="sim-card-title">⚡ Groovy Batch Write Visualiser</div>
+      <div class="sim-card-sub">See exactly why <code>setCell()</code> in a loop destroys performance — and how <code>setDataCellValues()</code> solves it. Set your entities and accounts, choose the pattern, and see the network call timeline and timing estimate.</div>
+
+      <div class="sim-row">
+        <span class="sim-label">Entities</span>
+        <input class="sim-input" id="bw-entities" type="number" value="8" min="1" max="200" oninput="updateBW()">
+      </div>
+      <div class="sim-row">
+        <span class="sim-label">Months</span>
+        <input class="sim-input" id="bw-months" type="number" value="12" min="1" max="24" oninput="updateBW()">
+      </div>
+      <div class="sim-row">
+        <span class="sim-label">Pattern</span>
+        <select class="sim-select" id="bw-pattern" onchange="updateBW()">
+          <option value="bad">❌ setCell() in nested loop</option>
+          <option value="good" selected>✅ setDataCellValues() batch</option>
+          <option value="compare">📊 Side-by-side comparison</option>
+        </select>
+      </div>
+      <button class="sim-btn" onclick="runBWSimulation()">▶ Run Simulation</button>
+      <div id="bw-result" style="margin-top:16px"></div>
+    </div>
+    <div class="callout danger"><span class="ci">🚨</span><strong>Performance Rule #1:</strong> Never call <code>setCell()</code> inside a loop. Each call = one Essbase network round-trip. For 8 entities × 12 months = 96 individual calls. The batch pattern = 1 call. At 50ms per round-trip: 4.8 seconds vs 0.05 seconds.</div>
+  </div>
+
+</div><!-- sim-wrap -->
+
+<script>
+(function(){var s=document.getElementById('stars');for(var i=0;i<70;i++){var d=document.createElement('div');d.className='star';var sz=Math.random()*2+0.3;d.style.cssText='width:'+sz+'px;height:'+sz+'px;top:'+Math.random()*100+'%;left:'+Math.random()*100+'%;--d:'+(2+Math.random()*4)+'s;--delay:'+Math.random()*5+'s;--op:'+(0.1+Math.random()*0.3);s.appendChild(d);}})();
+
+// ── Tab switching ──────────────────────────────────────────────────────
+function showSim(id, btn){
+  document.querySelectorAll('.sim-panel').forEach(function(p){p.classList.remove('active')});
+  document.querySelectorAll('.sim-tab').forEach(function(b){b.classList.remove('active')});
+  document.getElementById('sim-'+id).classList.add('active');
+  btn.classList.add('active');
+}
+
+// ══════════════════════════════════════════════════════════════════════
+// SIMULATOR 1: BSO Block Calculator
+// ══════════════════════════════════════════════════════════════════════
+function calcBSO(){
+  var d1    = Math.max(1, parseInt(document.getElementById('bso-d1').value)||150);
+  var d2    = Math.max(1, parseInt(document.getElementById('bso-d2').value)||17);
+  var sparse= parseInt(document.getElementById('bso-sparse').value)||10000;
+  var fill  = Math.min(100, Math.max(1, parseInt(document.getElementById('bso-fill').value)||15));
+
+  // Each cell = 8 bytes (double precision float)
+  var cellsPerBlock = d1 * d2;
+  var blockSizeBytes = cellsPerBlock * 8;
+  var blockSizeKB = blockSizeBytes / 1024;
+
+  // Populated blocks (filled sparse combinations)
+  var populatedBlocks = Math.round(sparse * fill / 100);
+  var totalDataMB = (populatedBlocks * blockSizeBytes) / (1024*1024);
+
+  // Status assessment
+  var status, statusClass, advice;
+  if (blockSizeKB < 50) {
+    status = 'Under-sized'; statusClass = 'chip-warn';
+    advice = 'Blocks are small — consider adding more dense dimension members or merging sparse dims. Aggregation overhead may be high relative to data volume.';
+  } else if (blockSizeKB <= 300) {
+    status = 'Optimal'; statusClass = 'chip-good';
+    advice = 'Block size is in the ideal range (50–300KB). Good balance of I/O efficiency and memory usage. Your dense/sparse split looks correct.';
+  } else if (blockSizeKB <= 1024) {
+    status = 'Large'; statusClass = 'chip-warn';
+    advice = 'Blocks are getting heavy. Consider whether some Account members could be Dynamic Calc (no storage). Review whether all periods need to be dense.';
+  } else {
+    status = 'Critical'; statusClass = 'chip-bad';
+    advice = 'Block size exceeds 1MB — this will cause serious performance problems. Every cell read loads this entire block from disk. Reduce dense members urgently.';
+  }
+
+  // Format numbers
+  function fmt(n){
+    if(n>=1048576) return (n/1048576).toFixed(1)+'MB';
+    if(n>=1024)    return (n/1024).toFixed(1)+'KB';
+    return n+'B';
+  }
+  function fmtN(n){
+    if(n>=1000000) return (n/1000000).toFixed(1)+'M';
+    if(n>=1000)    return (n/1000).toFixed(0)+'K';
+    return n;
+  }
+
+  var pctFill = Math.min(100, blockSizeKB / 512 * 100);
+  var fillColor = blockSizeKB <= 300 ? '#10b981' : blockSizeKB <= 1024 ? '#fbbf24' : '#e74c3c';
+
+  document.getElementById('bso-output').innerHTML = [
+    '<div style="display:flex;align-items:center;gap:12px;margin-bottom:14px">',
+      '<div class="sim-result-val">'+fmt(blockSizeBytes)+'</div>',
+      '<div>',
+        '<div class="sim-result-label">per block</div>',
+        '<span class="status-chip '+statusClass+'">'+status+'</span>',
+      '</div>',
+    '</div>',
+    '<div class="gauge-wrap">',
+      '<div class="gauge-row"><span class="gauge-lbl">Block Size</span><div class="gauge-bar"><div class="gauge-fill" style="width:'+Math.min(100,pctFill)+'%;background:'+fillColor+'"></div></div><span class="gauge-val">'+fmt(blockSizeBytes)+'</span></div>',
+    '</div>',
+    '<div class="sim-result-detail">',
+      '<strong>'+fmtN(cellsPerBlock)+' cells/block</strong> ('+d1+' accounts × '+d2+' periods)<br>',
+      '<strong>'+fmtN(populatedBlocks)+' populated blocks</strong> ('+fill+'% fill rate of '+fmtN(sparse)+' sparse combos)<br>',
+      '<strong>'+totalDataMB.toFixed(0)+'MB total data footprint</strong><br>',
+      '<span style="color:rgba(240,234,214,.45);margin-top:8px;display:block">'+advice+'</span>',
+    '</div>'
+  ].join('');
+}
+calcBSO();
+
+// ══════════════════════════════════════════════════════════════════════
+// SIMULATOR 2: SubVar Manager
+// ══════════════════════════════════════════════════════════════════════
+var SV_DATA = [
+  {name:'CurYear',    val:'FY2025', type:'Year',    affects:'All 50+ forms, all rolling forecast columns, budget rules'},
+  {name:'CurPeriod',  val:'Mar',   type:'Period',  affects:'Rolling forecast start column, period-end calc triggers'},
+  {name:'BudgetYear', val:'FY2026', type:'Year',    affects:'Annual budget forms, budget seeding rules'},
+  {name:'FxRate_EUR', val:'1.08',  type:'Rate',    affects:'EUR entity currency translation rules'},
+  {name:'FxRate_GBP', val:'1.26',  type:'Rate',    affects:'GBP entity currency translation rules'},
+  {name:'LockDate',   val:'20250228',type:'Date',  affects:'Groovy validation guard — blocks edits before this date'},
+  {name:'PriorYear',  val:'FY2024', type:'Year',    affects:'Prior year comparison columns in all FRS reports'},
+];
+
+function initSubVar(){
+  var tb = document.getElementById('sv-tbody');
+  tb.innerHTML = SV_DATA.map(function(sv,i){
+    return [
+      '<tr>',
+        '<td><span class="sv-name">&amp;'+sv.name+'</span></td>',
+        '<td><input class="sv-val-input" id="sv-'+i+'" value="'+sv.val+'" onchange="showSVImpact('+i+')"></td>',
+        '<td><span class="status-chip chip-good" style="font-size:8px">'+sv.type+'</span></td>',
+        '<td class="sv-impact">'+sv.affects+'</td>',
+        '<td><button class="sv-save-btn" onclick="saveSV('+i+')">Save</button><span class="sv-saved" id="sv-saved-'+i+'">✓ Saved</span></td>',
+      '</tr>'
+    ].join('');
+  }).join('');
+}
+
+function saveSV(i){
+  var inp = document.getElementById('sv-'+i);
+  SV_DATA[i].val = inp.value;
+  var saved = document.getElementById('sv-saved-'+i);
+  saved.classList.add('show');
+  setTimeout(function(){ saved.classList.remove('show'); }, 1800);
+  showSVImpact(i);
+}
+
+function showSVImpact(i){
+  var sv = SV_DATA[i];
+  var val = document.getElementById('sv-'+i).value;
+  var box = document.getElementById('sv-impact');
+  box.style.display='block';
+  box.innerHTML = '<strong>'+sv.name+' → \''+ val +'\'</strong><br>Impact: '+sv.affects+'<br><br><span style="font-family:JetBrains Mono,monospace;font-size:11.5px;color:var(--tealLt)">epmautomate setSubstitutionVariable '+sv.name+' '+val+'</span>';
+}
+
+initSubVar();
+
+// ══════════════════════════════════════════════════════════════════════
+// SIMULATOR 3: DI Mapping Builder
+// ══════════════════════════════════════════════════════════════════════
+var SOURCES = ['Company_Code','GL_Account','Cost_Centre','Fiscal_Year','Period','Amount_LC','Currency'];
+var TARGETS = ['Entity','Account','Segment','Year','Period','Data','Currency'];
+var SUGGESTIONS = {'Company_Code':'Entity','GL_Account':'Account','Fiscal_Year':'Year','Period':'Period','Amount_LC':'Data','Currency':'Currency'};
+var mappings = {};
+var selectedSource = null;
+
+function initMapper(){
+  var srcDiv = document.getElementById('map-sources');
+  var tgtDiv = document.getElementById('map-targets');
+  var arrDiv = document.getElementById('map-arrows');
+
+  srcDiv.innerHTML = SOURCES.map(function(s){
+    return '<div class="mapper-item" id="src-'+s+'" onclick="selectSource(\''+ s +'\')">'+s+'</div>';
+  }).join('');
+
+  tgtDiv.innerHTML = TARGETS.map(function(t){
+    return '<div class="mapper-item" id="tgt-'+t+'" onclick="selectTarget(\''+ t +'\')">'+t+'</div>';
+  }).join('');
+
+  arrDiv.innerHTML = SOURCES.map(function(){ return '<div class="mapper-arrow" style="opacity:.2">→</div>'; }).join('');
+}
+
+function selectSource(s){
+  selectedSource = s;
+  document.querySelectorAll('#map-sources .mapper-item').forEach(function(el){el.classList.remove('selected')});
+  var el = document.getElementById('src-'+s);
+  if(el) el.classList.add('selected');
+}
+
+function selectTarget(t){
+  if(!selectedSource) return;
+  mappings[selectedSource] = t;
+  // Update UI
+  document.getElementById('src-'+selectedSource).classList.remove('selected');
+  document.getElementById('src-'+selectedSource).classList.add('mapped');
+  document.getElementById('tgt-'+t).classList.add('mapped');
+  selectedSource = null;
+  renderMappingRules();
+}
+
+function autoMap(){
+  Object.entries(SUGGESTIONS).forEach(function(entry){
+    var src=entry[0], tgt=entry[1];
+    mappings[src] = tgt;
+    var se=document.getElementById('src-'+src), te=document.getElementById('tgt-'+tgt);
+    if(se) se.classList.add('mapped');
+    if(te) te.classList.add('mapped');
+  });
+  renderMappingRules();
+}
+
+function resetMap(){
+  mappings = {}; selectedSource = null;
+  document.querySelectorAll('.mapper-item').forEach(function(el){el.classList.remove('mapped','selected')});
+  document.getElementById('mapper-result').style.display='none';
+}
+
+function renderMappingRules(){
+  if(Object.keys(mappings).length===0) return;
+  var rules = Object.entries(mappings).map(function(e){
+    return '<div class="mapper-rule"><span style="color:var(--goldLt);min-width:130px">'+e[0]+'</span><span style="color:var(--dim)">→</span><span style="color:var(--tealLt);min-width:90px">'+e[1]+'</span></div>';
+  }).join('');
+  var res = document.getElementById('mapper-result');
+  document.getElementById('mapper-rules').innerHTML = rules;
+  res.style.display='block';
+}
+
+initMapper();
+
+// ══════════════════════════════════════════════════════════════════════
+// SIMULATOR 4: Groovy Batch Write Visualiser
+// ══════════════════════════════════════════════════════════════════════
+function updateBW(){ /* just re-render on run */ }
+
+function runBWSimulation(){
+  var entities = Math.max(1, Math.min(200, parseInt(document.getElementById('bw-entities').value)||8));
+  var months   = Math.max(1, Math.min(24,  parseInt(document.getElementById('bw-months').value)||12));
+  var pattern  = document.getElementById('bw-pattern').value;
+  var totalCells = entities * months;
+
+  // Timing estimates (ms per call)
+  var NETWORK_MS  = 45;  // per Essbase round-trip
+  var BATCH_MS    = 55;  // single batch call overhead
+  var MEMORY_MS   = 0.05; // per in-memory op
+
+  function renderBad(){
+    var calls = [];
+    var time = 0;
+    for(var e=0;e<Math.min(entities,4);e++){
+      for(var m=0;m<Math.min(months,3);m++){
+        calls.push({type:'slow',label:'setCell("E'+(e+1)+'", "Rev", "'+['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][m%12]+'", ...)',badge:'Network',ms:NETWORK_MS});
+        time+=NETWORK_MS;
+      }
+    }
+    if(totalCells>12) calls.push({type:'slow',label:'... '+(totalCells-12)+' more network calls ...',badge:'Network',ms:NETWORK_MS*(totalCells-12)});
+    var totalTime = totalCells*NETWORK_MS;
+    return {calls:calls, totalTime:totalTime, callCount:totalCells};
+  }
+
+  function renderGood(){
+    var calls = [];
+    // Pre-fetch reads
+    for(var e=0;e<Math.min(entities,3);e++){
+      calls.push({type:'memory',label:'reads → revenueMap["E'+(e+1)+'"] = {Jan:..., Feb:..., ...}',badge:'Memory',ms:MEMORY_MS*months});
+    }
+    if(entities>3) calls.push({type:'memory',label:'... '+(entities-3)+' more reads (in-memory)',badge:'Memory',ms:MEMORY_MS*(entities-3)*months});
+    calls.push({type:'network',label:'setDataCellValues(writes)  // '+totalCells+' cells, 1 call',badge:'1 Network',ms:BATCH_MS});
+    var totalTime = Math.max(5, BATCH_MS + (entities*months*MEMORY_MS));
+    return {calls:calls, totalTime:totalTime, callCount:1};
+  }
+
+  var result = document.getElementById('bw-result');
+
+  if(pattern==='compare'){
+    var bad=renderBad(), good=renderGood();
+    var speedup = Math.round(bad.totalTime/good.totalTime);
+    result.innerHTML = [
+      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">',
+        '<div>',
+          '<div style="font-family:Cinzel,serif;font-size:11px;font-weight:700;color:var(--redLt);letter-spacing:.06em;text-transform:uppercase;margin-bottom:10px">❌ setCell() in loop</div>',
+          '<div style="font-family:JetBrains Mono,monospace;font-size:22px;font-weight:700;color:var(--redLt);margin-bottom:4px">'+(bad.totalTime/1000).toFixed(2)+'s</div>',
+          '<div style="font-size:11px;color:var(--dim);margin-bottom:10px">'+ bad.callCount+' network calls</div>',
+        '</div>',
+        '<div>',
+          '<div style="font-family:Cinzel,serif;font-size:11px;font-weight:700;color:var(--emeraldLt);letter-spacing:.06em;text-transform:uppercase;margin-bottom:10px">✅ setDataCellValues()</div>',
+          '<div style="font-family:JetBrains Mono,monospace;font-size:22px;font-weight:700;color:var(--emeraldLt);margin-bottom:4px">'+(good.totalTime/1000).toFixed(3)+'s</div>',
+          '<div style="font-size:11px;color:var(--dim);margin-bottom:10px">1 network call</div>',
+        '</div>',
+      '</div>',
+      '<div class="impact-box">Batch write is <strong>~'+speedup+'x faster</strong> for '+entities+' entities × '+months+' months = '+totalCells+' cells.</div>'
+    ].join('');
+    return;
+  }
+
+  var data = pattern==='bad' ? renderBad() : renderGood();
+  var timeline = data.calls.map(function(c){
+    return '<div class="bw-call '+ c.type +'"><span class="bw-badge" style="background:'+(c.type==='slow'?'rgba(192,57,43,.2)':c.type==='network'?'rgba(14,165,233,.2)':'rgba(5,150,105,.2)')+'">'+c.badge+'</span>'+c.label+'<span class="bw-time">~'+(c.ms<1?c.ms.toFixed(1):Math.round(c.ms))+'ms</span></div>';
+  }).join('');
+
+  var timeLabel = data.totalTime < 1000
+    ? Math.round(data.totalTime)+'ms'
+    : (data.totalTime/1000).toFixed(2)+'s';
+
+  result.innerHTML = [
+    '<div style="display:flex;align-items:center;gap:14px;margin-bottom:14px">',
+      '<div class="sim-result-val" style="color:'+(pattern==='bad'?'var(--redLt)':'var(--emeraldLt)')+'">'+timeLabel+'</div>',
+      '<div><div class="sim-result-label">estimated time</div>',
+      '<div style="font-size:12px;color:var(--dim);margin-top:2px">'+(pattern==='bad'?data.callCount+' network calls':'1 network call')+'</div></div>',
+    '</div>',
+    '<div class="bw-timeline">'+timeline+'</div>'
+  ].join('');
+}
+// Auto-run comparison on load
+setTimeout(function(){ document.getElementById('bw-pattern').value='compare'; runBWSimulation(); }, 100);
+</script>
+<script src="branding.js"></script>
+</body>
+</html>

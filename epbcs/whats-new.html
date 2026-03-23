@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>What's New in Oracle EPM Cloud — The Planning Quest</title>
+<meta name="description" content="Oracle EPM Cloud release tracker — Planning, Groovy, Data Integration, Forms 2.0, EPM Automate changes from 25.06 to 26.01. What changed, what it means, what to act on.">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Crimson+Pro:ital,wght@0,400;0,500;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ══════════════════════════════════════════════
+   THE PLANNING QUEST — Shared Stylesheet
+   All pages import this file
+══════════════════════════════════════════════ */
+:root{
+  --bg:#07090e;--bg2:#0c0f18;--bg3:#111520;--bg4:#161c2a;
+  --gold:#d4a017;--goldLt:#f0c040;--goldDim:#5c4108;
+  --teal:#1fb8a8;--tealLt:#4dd9c8;
+  --purple:#7c3aed;--purpleLt:#a855f7;
+  --emerald:#059669;--emeraldLt:#10b981;
+  --sky:#0ea5e9;--skyLt:#38bdf8;
+  --red:#c0392b;--redLt:#e74c3c;
+  --amber:#d97706;--amberLt:#fbbf24;
+  --rose:#be185d;--roseLt:#f472b6;
+  --border:rgba(212,160,23,.15);
+  --white:#f0ead6;--dim:#5a6478;
+  --r:10px;--sidebar:268px;--topbar:54px
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Crimson Pro',serif;background:var(--bg);color:var(--white);min-height:100vh;overflow-x:hidden}
+
+/* ── Stars ── */
+#stars{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+.star{position:absolute;border-radius:50%;background:white;animation:twinkle var(--d,3s) infinite var(--delay,0s)}
+@keyframes twinkle{0%,100%{opacity:.05}50%{opacity:var(--op,.6)}}
+@keyframes glow{0%,100%{text-shadow:0 0 20px rgba(212,160,23,.3)}50%{text-shadow:0 0 50px rgba(212,160,23,.55)}}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(212,160,23,.3)}50%{box-shadow:0 0 0 8px rgba(212,160,23,0)}}
+@keyframes slideIn{from{opacity:0;transform:translateX(-10px)}to{opacity:1;transform:none}}
+
+/* ── Topbar ── */
+#topbar{position:fixed;top:0;left:0;right:0;height:var(--topbar);background:rgba(7,9,14,.97);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 20px;gap:14px;z-index:200}
+.tb-home{font-family:'Cinzel',serif;font-size:13px;font-weight:700;color:var(--goldLt);text-decoration:none;display:flex;align-items:center;gap:9px;letter-spacing:.04em}
+.tb-dot{width:8px;height:8px;border-radius:50%;background:var(--tealLt);animation:pulse 2s infinite}
+.tb-sep{color:var(--goldDim,#5c4108)}
+.tb-current{font-family:'Cinzel',serif;font-size:11px;color:var(--teal);letter-spacing:.04em;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tb-prog-wrap{flex:1;height:3px;background:rgba(255,255,255,.05);border-radius:2px;overflow:hidden;margin:0 16px}
+.tb-prog{height:100%;background:linear-gradient(90deg,var(--teal),var(--goldLt));border-radius:2px;transition:width .5s ease}
+.tb-xp{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--goldLt);white-space:nowrap}
+
+
+/* ── Layout ── */
+#shell{display:flex;padding-top:var(--topbar);min-height:100vh}
+
+/* ── Sidebar ── */
+#sb{width:var(--sidebar);background:var(--bg2);border-right:1px solid var(--border);position:fixed;top:var(--topbar);bottom:0;overflow-y:auto;z-index:100}
+#sb::-webkit-scrollbar{width:3px}
+#sb::-webkit-scrollbar-thumb{background:var(--goldDim);border-radius:2px}
+.sb-hdr{padding:10px 16px 6px;font-family:'Cinzel',serif;font-size:9px;font-weight:700;color:var(--goldDim);letter-spacing:.1em;text-transform:uppercase;border-bottom:1px solid rgba(255,255,255,.04)}
+.sb-part{display:flex;align-items:center;gap:8px;padding:9px 14px;cursor:pointer;border-bottom:1px solid rgba(255,255,255,.03);transition:all .12s;text-decoration:none}
+.sb-part:hover,.sb-part.active{background:rgba(212,160,23,.05)}
+.sb-part-icon{font-size:14px;flex-shrink:0}
+.sb-part-info{flex:1;min-width:0}
+.sb-part-num{font-family:'Cinzel',serif;font-size:8.5px;font-weight:700;color:var(--goldDim);letter-spacing:.08em;text-transform:uppercase}
+.sb-part-name{font-family:'Cinzel',serif;font-size:10.5px;color:var(--dim);font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:color .12s}
+.sb-part:hover .sb-part-name,.sb-part.active .sb-part-name{color:var(--goldLt)}
+.sb-part-xp{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--goldDim);white-space:nowrap}
+.sb-lesson{padding:7px 14px 7px 36px;font-size:12px;color:rgba(240,234,214,.35);cursor:pointer;border-left:2px solid transparent;display:flex;align-items:center;gap:8px;transition:all .12s;line-height:1.3;text-decoration:none}
+.sb-lesson:hover{color:rgba(240,234,214,.65);background:rgba(255,255,255,.015)}
+.sb-lesson.active{color:var(--goldLt);border-left-color:var(--goldLt);background:rgba(212,160,23,.06);font-weight:500}
+.sb-lesson.done .sl-dot{background:var(--emeraldLt)}
+.sl-dot{width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,.1);flex-shrink:0;transition:background .2s}
+.sb-tool-link{padding:8px 14px;display:flex;align-items:center;gap:9px;font-size:11.5px;color:var(--dim);cursor:pointer;transition:all .12s;border-left:2px solid transparent;text-decoration:none}
+.sb-tool-link:hover,.sb-tool-link.active{color:var(--tealLt);background:rgba(31,184,168,.04);border-left-color:var(--tealLt)}
+
+/* ── Main Content ── */
+#main{margin-left:var(--sidebar);flex:1;min-width:0;position:relative;z-index:1}
+#main::-webkit-scrollbar{width:4px}
+#main::-webkit-scrollbar-thumb{background:var(--goldDim);border-radius:2px}
+.lesson-wrap{max-width:820px;padding:36px 44px 100px;margin:0 auto;animation:fadeUp .3s ease}
+
+/* ── Typography ── */
+.page-title{font-family:'Cinzel',serif;font-size:28px;font-weight:700;line-height:1.2;margin-bottom:6px}
+.page-sub{font-size:13px;color:rgba(240,234,214,.4);margin-bottom:28px;font-style:italic;padding-bottom:18px;border-bottom:1px solid var(--border)}
+h2{font-family:'Cinzel',serif;font-size:17px;font-weight:600;color:var(--goldLt);margin:28px 0 12px;letter-spacing:.03em}
+h3{font-family:'Cinzel',serif;font-size:13.5px;font-weight:600;color:var(--tealLt);margin:18px 0 8px;letter-spacing:.04em}
+p{font-size:15px;line-height:1.82;color:rgba(240,234,214,.78);margin-bottom:12px}
+strong{color:var(--white);font-weight:500}
+ul,ol{padding-left:20px;margin-bottom:12px}
+li{font-size:15px;line-height:1.78;color:rgba(240,234,214,.72);margin-bottom:4px}
+code{font-family:'JetBrains Mono',monospace;font-size:12px;background:rgba(255,255,255,.06);padding:2px 6px;border-radius:4px;color:var(--tealLt)}
+
+/* ── Narration ── */
+.narration{background:linear-gradient(135deg,rgba(12,15,24,.95),rgba(17,21,32,.9));border:1px solid var(--border);border-left:3px solid var(--gold);border-radius:0 var(--r) var(--r) 0;padding:20px 24px;margin:20px 0;position:relative}
+.nar-lbl{font-family:'Cinzel',serif;font-size:9px;font-weight:700;letter-spacing:.1em;color:var(--gold);margin-bottom:8px;text-transform:uppercase}
+.narration p{font-style:italic;color:rgba(240,234,214,.68);margin:0;font-size:14px;line-height:1.88}
+
+/* ── Checklist ── */
+.checklist{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:20px 24px;margin:20px 0}
+.cl-title{font-family:'Cinzel',serif;font-size:10.5px;font-weight:700;color:var(--teal);letter-spacing:.08em;text-transform:uppercase;margin-bottom:14px}
+.cl-item{display:flex;align-items:flex-start;gap:12px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.04);cursor:pointer;user-select:none}
+.cl-item:last-child{border-bottom:none}
+.cl-box{width:18px;height:18px;border-radius:4px;border:1.5px solid rgba(212,160,23,.25);flex-shrink:0;margin-top:2px;display:flex;align-items:center;justify-content:center;font-size:11px;transition:all .15s}
+.cl-box.on{background:var(--emerald);border-color:var(--emerald);color:white}
+.cl-text{font-size:13.5px;color:rgba(240,234,214,.6);line-height:1.6;transition:all .12s}
+.cl-text.done{text-decoration:line-through;opacity:.35}
+
+/* ── Tables ── */
+.tbl-wrap{overflow-x:auto;margin:16px 0;border-radius:var(--r);border:1px solid var(--border)}
+.dtbl{width:100%;border-collapse:collapse;font-size:13px}
+.dtbl th{background:rgba(212,160,23,.06);color:var(--gold);padding:10px 13px;text-align:left;font-family:'Cinzel',serif;font-size:10.5px;letter-spacing:.04em;border-bottom:1px solid var(--border)}
+.dtbl td{padding:10px 13px;border-bottom:1px solid rgba(255,255,255,.04);color:rgba(240,234,214,.65);vertical-align:top;line-height:1.55}
+.dtbl tr:last-child td{border-bottom:none}
+.dtbl tr:hover td{background:rgba(255,255,255,.015)}
+
+/* ── Callouts ── */
+.callout{border-radius:var(--r);padding:14px 18px;margin:16px 0;font-size:14px;line-height:1.72}
+.tip{background:rgba(5,150,105,.07);border:1px solid rgba(5,150,105,.22);color:rgba(240,234,214,.72)}
+.warn{background:rgba(217,119,6,.07);border:1px solid rgba(217,119,6,.25);color:rgba(240,234,214,.72)}
+.danger{background:rgba(192,57,43,.07);border:1px solid rgba(192,57,43,.25);color:rgba(240,234,214,.72)}
+.lore{background:rgba(14,165,233,.05);border:1px solid rgba(14,165,233,.18);color:rgba(240,234,214,.68)}
+.fpa{background:rgba(124,58,237,.07);border:1px solid rgba(124,58,237,.22);color:rgba(240,234,214,.72)}
+.ci{font-size:15px;margin-right:7px}
+
+/* ── Code blocks ── */
+.code-wrap{margin:16px 0}
+.code-lbl{font-family:'Cinzel',serif;font-size:9px;font-weight:700;letter-spacing:.08em;color:var(--dim);margin-bottom:6px;text-transform:uppercase}
+.code-block{background:#090d14;border:1px solid rgba(255,255,255,.07);border-radius:8px;padding:18px 20px;font-family:'JetBrains Mono',monospace;font-size:11.5px;line-height:1.75;color:#a8d8ea;overflow-x:auto;white-space:pre}
+.ck{color:#ff7b72}.cs{color:#a5d6ff}.cf{color:#d2a8ff}.cc{color:#6a737d}.cn{color:#79c0ff}.cm{color:#ffa657}
+
+/* ── XP Badge ── */
+.xp-badge{display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,rgba(212,160,23,.1),rgba(212,160,23,.04));border:1px solid var(--border);border-radius:20px;padding:5px 14px;font-family:'Cinzel',serif;font-size:11px;color:var(--goldLt);margin-bottom:20px}
+
+/* ── Battle card ── */
+.battle-card{background:linear-gradient(135deg,rgba(124,58,237,.08),rgba(11,14,22,.95));border:1px solid rgba(124,58,237,.3);border-radius:var(--r);padding:22px 26px;margin:20px 0}
+.battle-lbl{font-family:'Cinzel',serif;font-size:9.5px;font-weight:700;letter-spacing:.1em;color:var(--purpleLt);margin-bottom:8px;text-transform:uppercase}
+.battle-title{font-family:'Cinzel',serif;font-size:14px;color:var(--white);margin-bottom:10px;font-weight:600}
+
+/* ── Flow row ── */
+.flow-row{display:flex;align-items:center;flex-wrap:wrap;gap:6px;margin:16px 0}
+.flow-box{padding:8px 14px;background:var(--bg3);border:1px solid var(--border);border-radius:6px;font-size:12px;font-weight:500;font-family:'Cinzel',serif;letter-spacing:.02em}
+.flow-arr{color:var(--dim);font-size:14px}
+
+/* ── Stage flow ── */
+.stage-flow{display:flex;align-items:stretch;flex-wrap:wrap;gap:0;margin:16px 0;overflow:hidden;border-radius:var(--r);border:1px solid var(--border)}
+.stage-box{flex:1;min-width:80px;padding:14px 8px;text-align:center;background:var(--bg3);border-right:1px solid var(--border)}
+.stage-box:last-child{border-right:none}
+.stage-icon{font-size:18px;display:block;margin-bottom:6px}
+.stage-name{font-family:'Cinzel',serif;font-size:9px;font-weight:600;color:var(--dim);letter-spacing:.04em}
+.stage-sub{font-size:10px;color:rgba(240,234,214,.3);margin-top:3px}
+
+/* ── AI Tutor ── */
+.tutor-box{background:linear-gradient(135deg,rgba(8,10,16,.98),rgba(17,21,32,.95));border:1px solid rgba(31,184,168,.18);border-radius:var(--r);padding:22px 26px;margin:28px 0}
+.tutor-hdr{display:flex;align-items:center;gap:12px;margin-bottom:8px}
+.tutor-av{width:38px;height:38px;background:linear-gradient(135deg,var(--purple),var(--teal));border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;box-shadow:0 0 20px rgba(31,184,168,.2)}
+.tutor-nm{font-family:'Cinzel',serif;font-size:13px;font-weight:700;color:var(--tealLt)}
+.tutor-rl{font-size:11px;color:var(--dim)}
+.tutor-desc{font-size:12.5px;color:rgba(240,234,214,.32);margin-bottom:12px}
+.chips{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:12px}
+.chip{font-size:11px;padding:5px 13px;border:1px solid rgba(31,184,168,.18);border-radius:14px;background:transparent;color:rgba(240,234,214,.42);cursor:pointer;transition:all .12s;font-family:'Crimson Pro',serif}
+.chip:hover{border-color:var(--tealLt);color:var(--tealLt);background:rgba(31,184,168,.07)}
+.tutor-row{display:flex;gap:8px}
+.tutor-input{flex:1;padding:9px 14px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:8px;color:var(--white);font-size:13px;font-family:'Crimson Pro',serif;outline:none;transition:border-color .15s}
+.tutor-input:focus{border-color:var(--teal)}
+.tutor-input::placeholder{color:rgba(255,255,255,.18)}
+.tutor-send{padding:9px 18px;background:linear-gradient(135deg,var(--teal),var(--sky));color:var(--bg);border:none;border-radius:8px;font-family:'Cinzel',serif;font-size:10.5px;font-weight:700;letter-spacing:.05em;cursor:pointer;transition:opacity .12s}
+.tutor-send:hover{opacity:.85}
+.tutor-out{margin-top:14px;font-size:14px;line-height:1.78;color:rgba(240,234,214,.68);min-height:0}
+.tutor-out.loading{color:rgba(240,234,214,.28);font-style:italic}
+.tutor-msg{background:var(--bg4);border-radius:8px;padding:12px 16px;margin-bottom:8px}
+.tutor-msg.user-msg{background:rgba(212,160,23,.06);border:1px solid rgba(212,160,23,.1)}
+.tutor-msg.ai-msg{border:1px solid rgba(255,255,255,.05)}
+.tutor-msg-lbl{font-family:'Cinzel',serif;font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:5px;opacity:.45}
+
+/* ── Nav buttons ── */
+.nav-btns{display:flex;justify-content:space-between;margin-top:48px;padding-top:20px;border-top:1px solid var(--border)}
+.nav-btn{padding:10px 22px;font-family:'Cinzel',serif;font-size:11.5px;font-weight:600;letter-spacing:.05em;border-radius:8px;cursor:pointer;transition:all .15s;border:1px solid var(--border);background:transparent;color:rgba(240,234,214,.4);text-decoration:none;display:inline-block}
+.nav-btn:hover{border-color:var(--teal);color:var(--tealLt)}
+.nav-btn.primary{background:linear-gradient(135deg,var(--teal),var(--sky));color:var(--bg);border-color:transparent}
+.nav-btn.primary:hover{opacity:.88;transform:translateY(-1px)}
+.nav-btn.gold{background:linear-gradient(135deg,var(--gold),#d97706);color:var(--bg);border-color:transparent}
+
+/* ── FP&A challenge box ── */
+.fpa-challenge{background:linear-gradient(135deg,rgba(190,24,93,.06),rgba(12,15,24,.97));border:1px solid rgba(190,24,93,.22);border-radius:var(--r);padding:22px 26px;margin:20px 0}
+.fpa-badge{font-family:'Cinzel',serif;font-size:9px;font-weight:700;letter-spacing:.1em;color:var(--roseLt);text-transform:uppercase;margin-bottom:8px}
+.fpa-title{font-family:'Cinzel',serif;font-size:14px;color:var(--white);font-weight:600;margin-bottom:10px}
+.fpa-challenge p{font-size:14px;color:rgba(240,234,214,.68);line-height:1.78;margin-bottom:8px}
+
+/* ── Boss card ── */
+.boss-card{background:linear-gradient(135deg,rgba(212,160,23,.12),rgba(124,58,237,.08),rgba(12,15,24,.97));border:1px solid rgba(212,160,23,.3);border-radius:14px;padding:28px 32px;margin:20px 0;text-align:center}
+.boss-title{font-family:'Cinzel',serif;font-size:22px;font-weight:900;color:var(--goldLt);margin-bottom:8px;animation:glow 3s infinite}
+
+/* ── KPI cards ── */
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin:16px 0}
+.kpi-card{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:16px;position:relative}
+.kpi-lbl{font-size:10px;color:var(--dim);margin-bottom:4px;font-family:'Cinzel',serif;letter-spacing:.04em;text-transform:uppercase}
+.kpi-val{font-family:'Cinzel',serif;font-size:22px;font-weight:700;color:var(--goldLt)}
+.kpi-sub{font-size:11px;color:var(--dim);margin-top:3px}
+.kpi-trend{position:absolute;top:12px;right:12px;font-size:14px}
+
+/* ── Responsive ── */
+@media(max-width:860px){#sb{display:none}#main{margin-left:0}.lesson-wrap{padding:24px 20px 80px}}
+@media(max-width:520px){.lesson-wrap{padding:20px 16px 80px}}
+
+/* ── Topbar tools — scrollable on mobile, current page highlight ── */
+.tb-tools{display:flex;gap:3px;margin-left:6px;overflow-x:auto;flex-shrink:0}
+.tb-tools::-webkit-scrollbar{display:none}
+.tb-tool{padding:4px 8px;border-radius:6px;border:1px solid var(--border);background:transparent;color:var(--dim);font-family:'Cinzel',serif;font-size:8.5px;font-weight:700;letter-spacing:.05em;cursor:pointer;transition:all .15s;text-transform:uppercase;text-decoration:none;display:inline-flex;align-items:center;white-space:nowrap}
+.tb-tool:hover,.tb-tool.active{border-color:var(--gold);color:var(--gold);background:rgba(212,160,23,.06)}
+/* ── Sidebar global nav divider ── */
+.sb-hdr.full-nav-hdr{margin-top:10px;border-top:1px solid rgba(255,255,255,.06);padding-top:10px;color:var(--teal);letter-spacing:.08em}
+
+/* ── What's New page styles ── */
+body{overflow-x:hidden}
+#topbar-wn{position:fixed;top:0;left:0;right:0;height:54px;background:rgba(7,9,14,.97);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 20px;gap:14px;z-index:200}
+.wn-wrap{max-width:900px;margin:0 auto;padding:82px 28px 80px;position:relative;z-index:1}
+
+/* Hero */
+.wn-hero{text-align:center;margin-bottom:36px}
+.wn-title{font-family:'Cinzel',serif;font-size:28px;font-weight:900;color:var(--goldLt);margin-bottom:8px}
+.wn-sub{font-size:14px;color:var(--dim);font-style:italic;margin-bottom:16px}
+.wn-badge{display:inline-block;font-family:'Cinzel',serif;font-size:9px;font-weight:700;letter-spacing:.1em;padding:4px 14px;border-radius:20px;background:rgba(192,57,43,.1);border:1px solid rgba(192,57,43,.3);color:var(--redLt);text-transform:uppercase}
+
+/* Release filter pills */
+.release-filter{display:flex;gap:7px;flex-wrap:wrap;justify-content:center;margin-bottom:28px}
+.rpill{padding:6px 16px;border-radius:20px;border:1px solid var(--border);background:transparent;color:var(--dim);font-family:'Cinzel',serif;font-size:9.5px;font-weight:700;letter-spacing:.07em;cursor:pointer;transition:all .15s;text-transform:uppercase}
+.rpill.active,.rpill:hover{border-color:var(--gold);color:var(--gold);background:rgba(212,160,23,.07)}
+
+/* Release block */
+.release-block{margin-bottom:32px}
+.release-header{display:flex;align-items:center;gap:14px;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--border)}
+.release-version{font-family:'Cinzel',serif;font-size:22px;font-weight:900;color:var(--goldLt)}
+.release-name{font-family:'Cinzel',serif;font-size:13px;color:var(--dim);letter-spacing:.04em}
+.release-date{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--dim);margin-left:auto}
+.release-tag{font-family:'Cinzel',serif;font-size:8.5px;font-weight:700;letter-spacing:.08em;padding:3px 10px;border-radius:12px;text-transform:uppercase}
+.tag-breaking{background:rgba(192,57,43,.12);border:1px solid rgba(192,57,43,.3);color:var(--redLt)}
+.tag-feature{background:rgba(5,150,105,.1);border:1px solid rgba(5,150,105,.25);color:var(--emeraldLt)}
+.tag-deprecated{background:rgba(217,119,6,.1);border:1px solid rgba(217,119,6,.25);color:var(--amberLt)}
+.tag-paused{background:rgba(14,165,233,.1);border:1px solid rgba(14,165,233,.25);color:var(--skyLt)}
+
+/* Change items */
+.change-list{display:flex;flex-direction:column;gap:10px}
+.change-item{background:var(--bg3);border:1px solid var(--border);border-left:3px solid transparent;border-radius:0 10px 10px 0;padding:14px 18px;transition:border-color .15s}
+.change-item:hover{border-left-color:var(--teal)}
+.change-item.breaking{border-left-color:var(--red)}
+.change-item.feature{border-left-color:var(--emerald)}
+.change-item.deprecated{border-left-color:var(--amber)}
+.change-item.groovy{border-left-color:var(--purple)}
+.change-item.di{border-left-color:var(--sky)}
+.change-top{display:flex;align-items:flex-start;gap:10px;margin-bottom:6px;flex-wrap:wrap}
+.change-area{font-family:'Cinzel',serif;font-size:8.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:2px 9px;border-radius:10px;border:1px solid var(--border);color:var(--dim);flex-shrink:0;margin-top:1px}
+.change-title{font-family:'Cinzel',serif;font-size:13.5px;font-weight:600;color:var(--white);line-height:1.35;flex:1}
+.change-body{font-size:13.5px;color:rgba(240,234,214,.62);line-height:1.75;margin-bottom:8px}
+.change-impact{background:var(--bg4);border-radius:8px;padding:10px 14px;font-size:12.5px;color:rgba(240,234,214,.5);line-height:1.65;border-left:2px solid rgba(212,160,23,.3)}
+.change-impact strong{color:var(--goldLt)}
+.change-code{background:#090d14;border:1px solid rgba(255,255,255,.07);border-radius:6px;padding:10px 14px;font-family:'JetBrains Mono',monospace;font-size:11.5px;color:#a8d8ea;overflow-x:auto;white-space:pre;margin-top:8px}
+.ck{color:#ff7b72}.cs{color:#a5d6ff}.cc{color:#6a737d}
+
+/* Action required box */
+.action-box{background:linear-gradient(135deg,rgba(192,57,43,.08),rgba(7,9,14,.98));border:1px solid rgba(192,57,43,.3);border-radius:10px;padding:14px 18px;margin-top:10px;font-size:13px;color:rgba(240,234,214,.72);line-height:1.7}
+.action-box .ab-lbl{font-family:'Cinzel',serif;font-size:9px;font-weight:700;letter-spacing:.1em;color:var(--redLt);text-transform:uppercase;margin-bottom:6px}
+
+/* Sticky release index */
+.release-index{background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:18px 22px;margin-bottom:28px}
+.ri-title{font-family:'Cinzel',serif;font-size:10px;font-weight:700;color:var(--goldDim);letter-spacing:.1em;text-transform:uppercase;margin-bottom:12px}
+.ri-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:8px}
+.ri-btn{padding:8px 10px;background:transparent;border:1px solid var(--border);border-radius:8px;cursor:pointer;transition:all .15s;text-align:center}
+.ri-btn:hover{border-color:var(--teal);background:rgba(31,184,168,.04)}
+.ri-ver{font-family:'Cinzel',serif;font-size:13px;font-weight:700;color:var(--goldLt)}
+.ri-name{font-size:10px;color:var(--dim);margin-top:2px}
+.ri-tags{display:flex;gap:4px;justify-content:center;margin-top:4px;flex-wrap:wrap}
+
+/* Update notice for Essbase pause */
+.pause-notice{background:linear-gradient(135deg,rgba(14,165,233,.08),rgba(7,9,14,.97));border:1px solid rgba(14,165,233,.25);border-radius:12px;padding:18px 22px;margin-bottom:24px}
+.pn-lbl{font-family:'Cinzel',serif;font-size:9.5px;font-weight:700;letter-spacing:.09em;color:var(--skyLt);text-transform:uppercase;margin-bottom:8px}
+
+/* Category legend */
+.legend{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px}
+.leg-item{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--dim)}
+.leg-dot{width:10px;height:10px;border-radius:2px;flex-shrink:0}
+
+@media(max-width:640px){.wn-wrap{padding:76px 14px 60px}.release-header{flex-wrap:wrap}.ri-grid{grid-template-columns:repeat(3,1fr)}}
+</style>
+</head>
+<body>
+<div id="stars"></div>
+
+<div id="topbar-wn">
+  <a href="index.html" style="font-family:'Cinzel',serif;font-size:13px;font-weight:700;color:var(--goldLt);text-decoration:none;display:flex;align-items:center;gap:9px"><span class="tb-dot"></span>The Planning Quest</a>
+  <span style="color:var(--goldDim)">›</span>
+  <span style="font-family:'Cinzel',serif;font-size:11px;color:var(--teal)">What's New</span>
+    <div style="flex:1"></div>
+  <div style="display:flex;gap:3px;overflow-x:auto">
+    <a href="parts-1-3.html" style="padding:4px 8px;border-radius:6px;border:1px solid var(--border);color:var(--dim);font-family:'Cinzel',serif;font-size:8.5px;font-weight:700;letter-spacing:.04em;text-decoration:none;white-space:nowrap">📖 I–III</a>
+    <a href="parts-4-5.html" style="padding:4px 8px;border-radius:6px;border:1px solid var(--border);color:var(--dim);font-family:'Cinzel',serif;font-size:8.5px;font-weight:700;letter-spacing:.04em;text-decoration:none;white-space:nowrap">⚔ IV–V</a>
+    <a href="parts-6-9.html" style="padding:4px 8px;border-radius:6px;border:1px solid var(--border);color:var(--dim);font-family:'Cinzel',serif;font-size:8.5px;font-weight:700;letter-spacing:.04em;text-decoration:none;white-space:nowrap">👑 VI–IX</a>
+    <a href="groovy-ch1.html" style="padding:4px 8px;border-radius:6px;border:1px solid var(--border);color:var(--dim);font-family:'Cinzel',serif;font-size:8.5px;font-weight:700;letter-spacing:.04em;text-decoration:none;white-space:nowrap">📘 Gr.I</a>
+    <a href="groovy-ch2.html" style="padding:4px 8px;border-radius:6px;border:1px solid var(--border);color:var(--dim);font-family:'Cinzel',serif;font-size:8.5px;font-weight:700;letter-spacing:.04em;text-decoration:none;white-space:nowrap">⚡ Gr.II</a>
+    <a href="quiz.html" style="padding:4px 8px;border-radius:6px;border:1px solid var(--border);color:var(--dim);font-family:'Cinzel',serif;font-size:8.5px;font-weight:700;letter-spacing:.04em;text-decoration:none;white-space:nowrap">📝 Quiz</a>
+    <a href="flashcards.html" style="padding:4px 8px;border-radius:6px;border:1px solid var(--border);color:var(--dim);font-family:'Cinzel',serif;font-size:8.5px;font-weight:700;letter-spacing:.04em;text-decoration:none;white-space:nowrap">🃏 Cards</a>
+    <a href="labs.html" style="padding:4px 8px;border-radius:6px;border:1px solid var(--border);color:var(--dim);font-family:'Cinzel',serif;font-size:8.5px;font-weight:700;letter-spacing:.04em;text-decoration:none;white-space:nowrap">🔬 Labs</a>
+    <a href="automate-ref.html" style="padding:4px 8px;border-radius:6px;border:1px solid var(--border);color:var(--dim);font-family:'Cinzel',serif;font-size:8.5px;font-weight:700;text-decoration:none;white-space:nowrap">⚙ CLI</a>
+    <a href="simulators.html" style="padding:4px 8px;border-radius:6px;border:1px solid rgba(124,58,237,.25);color:var(--purpleLt);font-family:'Cinzel',serif;font-size:8.5px;font-weight:700;letter-spacing:.04em;text-decoration:none;white-space:nowrap">⚙ Sims</a>
+    <a href="whats-new.html" style="padding:4px 8px;border-radius:6px;border:1px solid var(--border);background:transparent;color:var(--dim);font-family:'Cinzel',serif;font-size:8.5px;font-weight:700;text-decoration:none;white-space:nowrap">🆕 New</a>
+    <a href="search.html" style="padding:4px 8px;border-radius:6px;border:1px solid rgba(31,184,168,.25);color:var(--tealLt);font-family:'Cinzel',serif;font-size:8.5px;font-weight:700;letter-spacing:.04em;text-decoration:none;white-space:nowrap">🔍 Search</a>
+  </div>
+</div>
+
+<div class="wn-wrap">
+  <div class="wn-hero">
+    <h1 class="wn-title">📡 Oracle EPM Cloud — What's New</h1>
+    <p class="wn-sub">Every release tracked · What changed · What it means for your implementation · What you must act on</p>
+    <span class="wn-badge">⚠ 25.11 Production Update Paused — See Notice Below</span>
+  </div>
+
+  <!-- Essbase pause notice -->
+  <div class="pause-notice">
+    <div class="pn-lbl">📢 Critical Notice — December 2025</div>
+    <p style="font-size:14px;color:rgba(240,234,214,.72);line-height:1.78;margin:0">Oracle <strong style="color:var(--white)">paused the 25.11 production update</strong> across all EPM environments after identifying issues with Essbase 21.7.x. Updates 25.12 and 26.01 are also paused. Your <strong style="color:var(--white)">test environment has 25.11</strong>; production remains on 25.10. Fleet updates will resume at 26.02 or later. Submit a Service Request to request early access to 21c patches for critical environments.</p>
+  </div>
+
+  <!-- Release quick-index -->
+  <div class="release-index">
+    <div class="ri-title">Jump to Release</div>
+    <div class="ri-grid">
+      <div class="ri-btn" onclick="filterRelease('2601')"><div class="ri-ver">26.01</div><div class="ri-name">Jan 2026</div><div class="ri-tags"><span class="release-tag tag-paused" style="font-size:7.5px">Paused</span></div></div>
+      <div class="ri-btn" onclick="filterRelease('2511')"><div class="ri-ver">25.11</div><div class="ri-name">Nov 2025</div><div class="ri-tags"><span class="release-tag tag-paused" style="font-size:7.5px">Test Only</span></div></div>
+      <div class="ri-btn" onclick="filterRelease('2510')"><div class="ri-ver">25.10</div><div class="ri-name">Oct 2025</div><div class="ri-tags"><span class="release-tag tag-breaking" style="font-size:7.5px">Breaking</span></div></div>
+      <div class="ri-btn" onclick="filterRelease('2509')"><div class="ri-ver">25.09</div><div class="ri-name">Sep 2025</div><div class="ri-tags"><span class="release-tag tag-deprecated" style="font-size:7.5px">Depr.</span></div></div>
+      <div class="ri-btn" onclick="filterRelease('2508')"><div class="ri-ver">25.08</div><div class="ri-name">Aug 2025</div><div class="ri-tags"><span class="release-tag tag-feature" style="font-size:7.5px">Feature</span></div></div>
+      <div class="ri-btn" onclick="filterRelease('2507')"><div class="ri-ver">25.07</div><div class="ri-name">Jul 2025</div><div class="ri-tags"><span class="release-tag tag-feature" style="font-size:7.5px">Feature</span></div></div>
+      <div class="ri-btn" onclick="filterRelease('2506')"><div class="ri-ver">25.06</div><div class="ri-name">Jun 2025</div><div class="ri-tags"><span class="release-tag tag-breaking" style="font-size:7.5px">Breaking</span></div></div>
+      <div class="ri-btn" onclick="filterRelease('all')"><div class="ri-ver" style="color:var(--tealLt)">All</div><div class="ri-name">Show all</div></div>
+    </div>
+  </div>
+
+  <!-- Category legend -->
+  <div class="legend">
+    <div class="leg-item"><div class="leg-dot" style="background:var(--red)"></div>Breaking change</div>
+    <div class="leg-item"><div class="leg-dot" style="background:var(--emerald)"></div>New feature</div>
+    <div class="leg-item"><div class="leg-dot" style="background:var(--amber)"></div>Deprecated</div>
+    <div class="leg-item"><div class="leg-dot" style="background:var(--purple)"></div>Groovy</div>
+    <div class="leg-item"><div class="leg-dot" style="background:var(--sky)"></div>Data Integration</div>
+  </div>
+
+  <div id="releases-container">
+
+  <!-- ══════════════════════════════════════════ 26.01 ══ -->
+  <div class="release-block" data-rel="2601">
+    <div class="release-header">
+      <div><div class="release-version">26.01</div><div class="release-name">January 2026 Update</div></div>
+      <span class="release-tag tag-paused">Paused — SR Required</span>
+      <span class="release-date">Production: TBD (26.02+)</span>
+    </div>
+    <div class="change-list">
+      <div class="change-item deprecated">
+        <div class="change-top"><span class="change-area">Security</span><div class="change-title">Role Terminology Change — Predefined → Application Roles + Granular Roles</div></div>
+        <div class="change-body">UI and documentation renames <strong>Predefined Roles</strong> to <strong>Application Roles</strong>. Introduces <strong>Granular Roles</strong> for business-process-specific assignments: Planner, Power User, Viewer are now Granular Roles mapped to Application Roles. This is a terminology and UI change only — underlying permissions are unchanged.</div>
+        <div class="change-impact"><strong>Impact on Quest content:</strong> Part VII Lesson 16 (Security) references "Predefined Roles" — will update to 26.01 terminology. No functional change to existing role assignments or security filters. Communicate terminology change to Finance admins to avoid confusion in training materials.</div>
+      </div>
+      <div class="change-item breaking">
+        <div class="change-top"><span class="change-area">EPM Automate</span><div class="change-title">setIPAllowList / getIPAllowList Commands Fully Removed</div></div>
+        <div class="change-body">Deprecated in 25.09, fully removed from EPM Automate and REST API in 26.01. Any scripts calling these commands will <strong>fail with an unrecognised command error</strong>. The replacement is Network Perimeter in OCI Identity Domain — configure allowed IP ranges there.</div>
+        <div class="action-box"><div class="ab-lbl">Action Required — Deadline Before 26.02</div>Search all automation scripts for <code>setIPAllowList</code> and <code>getIPAllowList</code>. Replace with Network Perimeter configuration in OCI Identity Domain admin console → Security → Network Perimeters. Test that service account logins succeed from your automation server IPs after migration.</div>
+        <div class="change-code"><span class="cc"># Search your scripts for deprecated commands</span>
+grep -r "setIPAllowList\|getIPAllowList" /your/scripts/directory/
+<span class="cc"># Replace with: configure Network Perimeter in OCI Identity Domain</span>
+<span class="cc"># No EPM Automate equivalent — management moves to OCI console</span></div>
+      </div>
+      <div class="change-item feature">
+        <div class="change-top"><span class="change-area">Planning</span><div class="change-title">Learning Paths Decommissioned</div></div>
+        <div class="change-body">Oracle's in-product Learning Paths feature is removed in 25.12/26.01. Oracle University courses and external learning resources are unaffected.</div>
+        <div class="change-impact"><strong>Impact:</strong> None on implementations. External learning platforms (including The Planning Quest) are unaffected. If you used Learning Paths to onboard new Finance users, replace with a curated Navigation Flow linking to relevant forms and dashboards instead.</div>
+      </div>
+      <div class="change-item groovy">
+        <div class="change-top"><span class="change-area">Groovy</span><div class="change-title">New Groovy Engine — Stricter Validation Now Live</div></div>
+        <div class="change-body">The new Groovy engine flagged in 25.08 reaches production environments in 26.01 (paused environments: 26.02). Rules using ambiguous method calls, untyped closures, or deprecated Groovy 2.x syntax that previously passed validation may now <strong>fail at runtime</strong>.</div>
+        <div class="action-box"><div class="ab-lbl">Action Required — Run Diagnostic Before Your Environment Updates</div>Calculation Manager → Tools → Validate All Groovy Rules. Export the validation report. Common failures: bare <code>def</code> closures passed to typed Java methods, <code>collect</code>/<code>find</code> returning ambiguous types, implicit <code>toString()</code> calls on non-String values. Fix before the engine update reaches your environment.</div>
+        <div class="change-impact"><strong>Impact on Quest content:</strong> All Groovy Chapter I and Chapter II examples use explicit typing and typed closures — compliant. Any custom rules following older EPM Community blog patterns (pre-2023 syntax) are higher risk. The BigDecimal pattern, explicit <code>as Integer</code> casts, and typed closure signatures used in this Quest are the correct approach.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════ 25.11 ══ -->
+  <div class="release-block" data-rel="2511">
+    <div class="release-header">
+      <div><div class="release-version">25.11</div><div class="release-name">November 2025 Update</div></div>
+      <span class="release-tag tag-paused">Test Env Only</span>
+      <span class="release-date">Production: Paused (Essbase 21.7.x issue)</span>
+    </div>
+    <div class="change-list">
+      <div class="change-item breaking">
+        <div class="change-top"><span class="change-area">Security</span><div class="change-title">Idle Session Timeout Reduced: 75 min → 30 min</div></div>
+        <div class="change-body">Default idle session timeout drops from 75 minutes to 30 minutes across all EPM Cloud environments. Users inactive for 30 consecutive minutes are automatically signed out. Service Administrators can increase this limit in Identity Domain settings (Security → Session Settings → Maximum Idle Time).</div>
+        <div class="change-impact"><strong>Impact on practitioners:</strong> Finance users running long FRS jobs, large data exports, or step-by-step form reviews who walk away mid-process will be logged out. EPM Automate service accounts use token-based auth — not affected by session timeout. Review any user-driven processes that exceed 30 minutes and consider breaking them into shorter steps or automating via EPM Automate instead.</div>
+        <div class="action-box"><div class="ab-lbl">If Extended Session Needed</div>Identity Domain Admin → Settings → Session Settings → Maximum Idle Time. Increase to maximum 8 hours for Finance power users if required. Document the business justification — Oracle security hardening will push timeout lower in future releases.</div>
+      </div>
+      <div class="change-item deprecated">
+        <div class="change-top"><span class="change-area">Security</span><div class="change-title">IP Allowlist Commands Deprecated — Removal in 26.01</div></div>
+        <div class="change-body"><code>setIPAllowList</code> and <code>getIPAllowList</code> EPM Automate commands and the IPAllowList REST endpoint are deprecated in 25.11. <strong>Fully removed in 26.01.</strong> Migrate all IP restriction management to Network Perimeter in OCI Identity Domain.</div>
+        <div class="action-box"><div class="ab-lbl">Deadline: Before 26.02 Reaches Your Environment</div>1. Navigate to OCI Identity Domain → Security → Network Perimeters. 2. Create Network Perimeters for each allowed IP range. 3. Assign to the EPM application. 4. Remove <code>setIPAllowList</code> calls from all scripts. 5. Test automation server login succeeds with Network Perimeter active.</div>
+      </div>
+      <div class="change-item feature">
+        <div class="change-top"><span class="change-area">Forms</span><div class="change-title">Forms 2.0 — Cell Annotations Now Fully Supported</div></div>
+        <div class="change-body">Cell-level annotations (text notes attached to specific data cells) are now fully supported in Forms 2.0. Previously available in Forms 1.0 with limited styling. Forms 2.0 annotations include: rich text formatting, attachment support, and annotation threading.</div>
+        <div class="change-impact"><strong>FP&A Use Case:</strong> Budget reviewers can annotate specific revenue cells with assumption rationale ("Q3 reflects new product launch +$2M"). Finance BP and CFO reviewers can see the rationale without opening a separate Supporting Detail form. Significant reduction in "what's driving this number?" email chains.</div>
+      </div>
+      <div class="change-item groovy">
+        <div class="change-top"><span class="change-area">Groovy</span><div class="change-title">Groovy Diagnostic Validation Tool — Enhanced Output</div></div>
+        <div class="change-body">The Groovy diagnostic tool (introduced in 25.08) now provides line-level warnings with specific fix recommendations rather than generic "may fail" flags. Output includes the exact Groovy construct flagged, the reason it may fail under the new engine, and the recommended replacement syntax.</div>
+        <div class="change-impact"><strong>Action:</strong> Re-run the diagnostic on your test environment (25.11) before production cutover. The enhanced output significantly reduces investigation time — instead of manually reviewing hundreds of lines, you get exact line numbers and fix suggestions.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════ 25.10 ══ -->
+  <div class="release-block" data-rel="2510">
+    <div class="release-header">
+      <div><div class="release-version">25.10</div><div class="release-name">October 2025 Update</div></div>
+      <span class="release-tag tag-breaking">Breaking Changes</span>
+      <span class="release-date">Production: Oct 17, 2025</span>
+    </div>
+    <div class="change-list">
+      <div class="change-item breaking">
+        <div class="change-top"><span class="change-area">Forms &amp; Dashboards</span><div class="change-title">Forms 1.0 and Dashboard 1.0 — End of Support</div></div>
+        <div class="change-body">All environments now default to <strong>Forms 2.0</strong> and <strong>Dashboards 2.0</strong>. New environments deployed after 25.10 cannot enable Forms 1.0 at all. Existing environments can toggle back to 1.0 temporarily via Application Settings but Forms 1.0 will not receive bug fixes, escalations, or new features from Oracle. The path forward is Forms 2.0 only.</div>
+        <div class="action-box"><div class="ab-lbl">Action Required — Test All Forms Before Cutover</div>1. Enable Forms 2.0 in test environment: Application Settings → Forms and Dashboards → Forms 2.0 = On. 2. Test all planning forms — pay particular attention to: Apply Context in composite forms, RTP binding, grid suppression rules, action menu positioning. 3. Test all dashboards for 12-component limit compliance. 4. Migrate any classic infolet drill-through actions to Dashboard 2.0 equivalents. 5. Communicate change to Finance users — the grid behaviour for spreading values has subtle differences.</div>
+        <div class="change-impact"><strong>Impact on Quest content:</strong> All form design content in Part IV now refers exclusively to Forms 2.0 behaviour. The new Forms 2.0 lesson (Lesson 11) covers Apply Context, the 12-component limit, stateless architecture, and the RTP silent failure pattern in full.</div>
+      </div>
+      <div class="change-item deprecated">
+        <div class="change-top"><span class="change-area">Infolets</span><div class="change-title">Legacy Infolet Actions Removed — Dashboard 2.0 Required</div></div>
+        <div class="change-body">Infolet action configurations supported in Dashboard 1.0 — specifically custom drill-through paths and legacy "Navigate to" actions — are removed in 25.10. Dashboard 2.0 provides replacement capabilities: Analyze (ad-hoc pivot), Open in Smart View, and Spreadsheet Export as context menu items on form grids within dashboards.</div>
+        <div class="change-impact"><strong>Check these specifically:</strong> Any infolet where the back face used a custom URL or non-standard action. Reconfigure using Dashboard 2.0 actions or replace with a Navigation Flow shortcut. The new Analyze menu item in Dashboard 2.0 is more powerful than the 1.0 drill-through — it opens full ad-hoc analysis from any form grid in the dashboard.</div>
+      </div>
+      <div class="change-item feature">
+        <div class="change-top"><span class="change-area">Smart View</span><div class="change-title">Native Mode Ad Hoc Deprecated — Standard Mode Only</div></div>
+        <div class="change-body">Smart View's "Native mode" for Ad Hoc behaviour is deprecated in 25.10 and will receive no further updates. Standard mode is the only supported mode for escalations and new features. All Smart View ad hoc development going forward must use Standard mode.</div>
+        <div class="action-box"><div class="ab-lbl">Action Required</div>Application Settings → Smart View Ad Hoc Behaviour → change to Standard. Run a test session with a Finance power user — have them perform their standard ad hoc analysis workflow in Standard mode. Standard mode has improved pivot handling and member selection compared to Native mode in most scenarios.</div>
+      </div>
+      <div class="change-item feature">
+        <div class="change-top"><span class="change-area">Groovy</span><div class="change-title">Groovy createFile() — Enhanced File Creation API</div></div>
+        <div class="change-body">The Groovy file creation API (introduced in 25.07 for Excel) is enhanced in 25.10 with CSV and text file creation support. Groovy rules can now create CSV exports and write them directly to the EPM Inbox/Outbox without going through Data Integration.</div>
+        <div class="change-impact"><strong>FP&A Use Case:</strong> Generate a budget export CSV from Groovy, format it exactly as your downstream system expects, and place it in the Outbox for EPM Automate to download — all in one scheduled rule. Replaces complex DI export + reformatting pipelines for simple flat-file outputs.</div>
+        <div class="change-code"><span class="cc">// 25.10: Create CSV from Groovy and send to Outbox</span>
+<span class="ck">def</span> csv = operation.<span class="cf">createTextFile</span>()
+csv.<span class="cf">writeLine</span>(<span class="cs">"Entity,Account,Period,Year,Scenario,Value"</span>)
+entities.each { e ->
+  <span class="ck">def</span> val = <span class="cf">getCell</span>(e.getName(), <span class="cs">"Net_Income"</span>, <span class="cs">"Full_Year"</span>, <span class="cs">"FY2026"</span>, <span class="cs">"Budget"</span>, <span class="cs">"Working"</span>) ?: 0
+  csv.<span class="cf">writeLine</span>(<span class="cs">"${e.getName()},Net_Income,Full_Year,FY2026,Budget,${val}"</span>)
+}
+operation.<span class="cf">sendFileToOutbox</span>(csv, <span class="cs">"budget_export_FY2026.csv"</span>)</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════ 25.09 ══ -->
+  <div class="release-block" data-rel="2509">
+    <div class="release-header">
+      <div><div class="release-version">25.09</div><div class="release-name">September 2025 Update</div></div>
+      <span class="release-tag tag-deprecated">Deprecations</span>
+      <span class="release-date">Production: Sep 19, 2025</span>
+    </div>
+    <div class="change-list">
+      <div class="change-item deprecated">
+        <div class="change-top"><span class="change-area">Data Integration</span><div class="change-title">DI Job Scheduler Migration — Legacy Scheduler Removed</div></div>
+        <div class="change-body">The scheduling UI inside Data Integration (previously Data Management) is <strong>removed</strong> in 25.09. All job schedules must exist in the <strong>EPM Platform Job Scheduler console</strong> (Tools → Jobs). The "Migrate Schedules to Platform Jobs Scheduler" automated migration script was also removed — environments that did not migrate during the earlier window must recreate schedules manually.</div>
+        <div class="action-box"><div class="ab-lbl">Action Required — Check Your DI Schedules Now</div>1. Navigate to Tools → Jobs. 2. Confirm all Data Integration jobs appear here with correct schedules. 3. If missing: in Data Integration, open each integration → Workflow → Schedule → recreate in Platform Jobs. 4. This affects nightly actuals loads, metadata refresh schedules, and rolling forecast automation. A missing schedule = silent failure = Finance arrives to stale data.</div>
+        <div class="change-impact"><strong>Impact on Quest content:</strong> Lab 5 (ERP Integration) EPM Automate script uses <code>epmautomate runDataRule</code> directly — unaffected. Any older integrations that relied on DI's internal scheduler must move to either Platform Jobs or external cron/EPM Automate scheduling.</div>
+      </div>
+      <div class="change-item deprecated">
+        <div class="change-top"><span class="change-area">Security</span><div class="change-title">IP Allowlist Commands — First Deprecation Notice</div></div>
+        <div class="change-body"><code>setIPAllowList</code> and <code>getIPAllowList</code> EPM Automate commands first deprecated in 25.09. Will be fully removed in 26.01. Begin migration to Network Perimeter in OCI Identity Domain immediately — the migration window is 3 months.</div>
+        <div class="change-impact"><strong>Who is affected:</strong> Any organisation that uses EPM Automate IP restriction features to limit which IP addresses can authenticate to their EPM environment. This is common in high-security financial services and government deployments. If you don't use IP allowlists, no action needed.</div>
+      </div>
+      <div class="change-item deprecated">
+        <div class="change-top"><span class="change-area">Folders</span><div class="change-title">Slash (/) in Folder Names Replaced with Space</div></div>
+        <div class="change-body">Folder names containing the slash character have the slash replaced with a space in 25.09. This resolved a critical backup issue — artifacts stored in slash-named folders were not being included in daily backups. The change is automatic — no admin action required for the rename.</div>
+        <div class="change-impact"><strong>Check immediately:</strong> Any EPM Automate scripts, LCM definitions, migration files, or REST API calls that reference folder paths containing "/" need to be updated to use a space instead. Example: a folder path <code>"Reports/Monthly"</code> becomes <code>"Reports Monthly"</code>. Search all automation scripts: <code>grep -r "exportSnapshot\|importSnapshot\|copyFile" your_scripts/</code> and audit folder path arguments.</div>
+      </div>
+      <div class="change-item feature">
+        <div class="change-top"><span class="change-area">Narrative Reporting</span><div class="change-title">Report Package Workflow — Author Lock Improvements</div></div>
+        <div class="change-body">Authors in a Narrative Reporting workflow now receive a lock warning when another author has the same doclet open simultaneously. Previously, the second author would silently overwrite the first. The new lock notification shows who has the doclet open and when they last saved.</div>
+        <div class="change-impact"><strong>FP&A Impact:</strong> Eliminates the "I just overwrote your commentary" incident that plagued collaborative Board Pack workflows. Particularly valuable in month-end close when multiple Finance BPs are writing commentary simultaneously against the same deadline.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════ 25.08 ══ -->
+  <div class="release-block" data-rel="2508">
+    <div class="release-header">
+      <div><div class="release-version">25.08</div><div class="release-name">August 2025 Update</div></div>
+      <span class="release-tag tag-feature">Major Features</span>
+      <span class="release-date">Production: Aug 15, 2025</span>
+    </div>
+    <div class="change-list">
+      <div class="change-item feature">
+        <div class="change-top"><span class="change-area">Predictive Planning</span><div class="change-title">Advanced Predictions — Multivariate ML Forecasting (EPM Enterprise)</div></div>
+        <div class="change-body">Oracle introduces <strong>Advanced Predictions</strong> — multivariate machine learning forecasting backed by OCI Data Science. The previous Auto Predict used single-variable (univariate) time series. Advanced Predictions accepts multiple correlated input drivers (e.g. sales volume + average selling price + FX rates + marketing spend) to produce more accurate rolling forecasts. Available across all Planning application types including Freeform. <strong>Requires EPM Enterprise Cloud Service subscription.</strong> Standard EPM Planning includes the legacy Auto Predict only.</div>
+        <div class="change-impact"><strong>FP&A Impact — Significant:</strong> Finance teams that previously relied on moving averages or single-driver extrapolation can incorporate correlated variables without any data science expertise. Oracle's ML model selection is automatic (tries ARIMA, exponential smoothing, regression, and ensemble models; selects the best fit). For Vision Corp's rolling forecast: driver inputs could include order backlog + FX rates + headcount growth → forecast revenue. Expected MAPE improvement: 3–8 percentage points in typical FP&A scenarios vs single-variable Auto Predict.</div>
+      </div>
+      <div class="change-item breaking">
+        <div class="change-top"><span class="change-area">EPM Automate</span><div class="change-title">Java 8 Discontinued on Linux/UNIX/macOS — Must Use Java 17</div></div>
+        <div class="change-body">EPM Automate on Linux/UNIX/macOS now requires <strong>Java 17 minimum</strong>. Java 8 runtime is no longer supported. The EPM Automate Windows installer bundles its own Java distribution — Windows users are unaffected. Linux/macOS automation servers must upgrade the Java runtime and update the JAVA_HOME environment variable before the next scheduled run.</div>
+        <div class="action-box"><div class="ab-lbl">Action Required — Linux/macOS EPM Automate Users</div>Run <code>java -version</code> on every automation server. If not 17+, upgrade immediately. Update JAVA_HOME and PATH. Test EPM Automate login. If using a service account password file (.epw), verify the encrypted file was generated with Java 17 — re-generate if in doubt.</div>
+        <div class="change-code"><span class="cc"># Verify Java version on automation server</span>
+java -version  <span class="cc"># Must show 17.x.x or higher</span>
+
+<span class="cc"># Update JAVA_HOME (Ubuntu example)</span>
+export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
+export PATH=$JAVA_HOME/bin:$PATH
+
+<span class="cc"># Add to /etc/profile.d/epmautomate.sh for persistence</span>
+echo 'export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64' >> /etc/profile.d/epmautomate.sh
+
+<span class="cc"># Re-test login after Java upgrade</span>
+epmautomate login <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="cebdabbcb8a7adabafadada1bba0ba8eaaa1a3afa7a0e0ada1a3">[email&#160;protected]</a> password.epw https://env.oraclecloud.com</div>
+      </div>
+      <div class="change-item groovy">
+        <div class="change-top"><span class="change-area">Groovy</span><div class="change-title">New Groovy Engine Announced + Diagnostic Tool Available</div></div>
+        <div class="change-body">Oracle announces a new Groovy engine version with <strong>stricter validation rules</strong> for H2 2025 / H1 2026. Rules using ambiguous method calls, untyped closures, or deprecated Groovy 2.x syntax patterns may fail under the new engine. Oracle provides a diagnostic program in 25.08 to identify affected rules before the engine switch reaches production.</div>
+        <div class="action-box"><div class="ab-lbl">Action Required — Run Diagnostic on All Environments</div>Calculation Manager → Tools → Validate All Groovy Rules. This generates a report listing rules that may fail under the new engine. Common issues: (1) bare <code>def</code> closure passed to a typed Java method, (2) ambiguous <code>collect{}</code> return type when chained, (3) <code>BigDecimal</code> arithmetic without explicit rounding, (4) deprecated Groovy 2.x <code>each</code> pattern on Map entries. Run in test first, then production diagnostic (read-only — no rules are changed by the diagnostic).</div>
+        <div class="change-impact"><strong>Impact on Quest content:</strong> All Groovy Chapter I and Chapter II examples use explicit typing, BigDecimal with setScale(), typed closures, and safe navigation patterns. These are compliant with the new engine. Rules using bare <code>def</code> throughout without type hints, or old EPM Community patterns from pre-2022 blog posts, are higher risk.</div>
+      </div>
+      <div class="change-item di">
+        <div class="change-top"><span class="change-area">Data Integration</span><div class="change-title">Custom EDM Validations on Predefined Members</div></div>
+        <div class="change-body">From 25.08, custom validation rules in Enterprise Data Management (EDM) now apply to nodes with the <strong>Enterprise Predefined Member</strong> property set to True. Previously these nodes bypassed custom validations. This may produce new validation errors for predefined members that previously passed cleanly — including Oracle-managed dimension members that your organisation has not touched.</div>
+        <div class="change-impact"><strong>Check in test environment:</strong> Run your EDM validation suite against predefined members specifically. If custom validations should NOT apply to predefined members (the most common case), add a condition to each validation expression: <code>[EPM_Predefined] != "Yes"</code>. This gates the validation to non-predefined members only.</div>
+      </div>
+      <div class="change-item feature">
+        <div class="change-top"><span class="change-area">Data Integration</span><div class="change-title">DI File-Based Integrations — Parallel Processing</div></div>
+        <div class="change-body">File-based Data Integration imports now support parallel processing when multiple source files are available. Previously, multi-file imports processed files sequentially. With parallel processing enabled, DI can process multiple files simultaneously, significantly reducing total load time for implementations that load multiple entity files or multiple data types separately.</div>
+        <div class="change-impact"><strong>Vision Corp use case:</strong> SAP extracts a separate file per company code (VISC, VIEU, VIUK, VIAU). Previously these loaded sequentially: 4 × 8 minutes = 32 minutes total. With parallel processing: all 4 load simultaneously = ~10 minutes. Enables tighter nightly windows for multi-entity implementations. Enable in DI → Application Settings → Parallel Processing = On.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════ 25.07 ══ -->
+  <div class="release-block" data-rel="2507">
+    <div class="release-header">
+      <div><div class="release-version">25.07</div><div class="release-name">July 2025 Update</div></div>
+      <span class="release-tag tag-feature">New Capabilities</span>
+      <span class="release-date">Production: Jul 18, 2025</span>
+    </div>
+    <div class="change-list">
+      <div class="change-item groovy">
+        <div class="change-top"><span class="change-area">Groovy</span><div class="change-title">Create Excel Workbooks via Groovy + Send to Inbox/Outbox</div></div>
+        <div class="change-body">Groovy rules can now <strong>create Excel workbooks programmatically</strong> and send them directly to the EPM Inbox/Outbox. Use case: generate a formatted data export, a pre-populated planning template, or a distribution report — all from a scheduled Groovy rule, without manual export steps. The Groovy ExcelWorkbook API wraps Apache POI, supporting multiple sheets, cell formatting, and formulas.</div>
+        <div class="change-code"><span class="cc">// 25.07: Create Excel workbook from Groovy and send to Outbox</span>
+<span class="ck">def</span> wb    = operation.<span class="cf">createExcelWorkbook</span>()
+<span class="ck">def</span> sheet = wb.<span class="cf">createSheet</span>(<span class="cs">"Vision_Revenue_Export"</span>)
+<span class="ck">def</span> hdr   = sheet.<span class="cf">createRow</span>(0)
+hdr.<span class="cf">createCell</span>(0).<span class="cf">setCellValue</span>(<span class="cs">"Entity"</span>)
+hdr.<span class="cf">createCell</span>(1).<span class="cf">setCellValue</span>(<span class="cs">"Net_Income"</span>)
+hdr.<span class="cf">createCell</span>(2).<span class="cf">setCellValue</span>(<span class="cs">"Full_Year"</span>)
+
+entities.<span class="cf">eachWithIndex</span> { e, i ->
+  <span class="ck">def</span> row = sheet.<span class="cf">createRow</span>(i + 1)
+  <span class="ck">def</span> val = <span class="cf">getCell</span>(e.getName(), <span class="cs">"Net_Income"</span>, <span class="cs">"Full_Year"</span>, <span class="cs">"FY2026"</span>, <span class="cs">"Budget"</span>, <span class="cs">"Working"</span>) ?: 0
+  row.<span class="cf">createCell</span>(0).<span class="cf">setCellValue</span>(e.getName())
+  row.<span class="cf">createCell</span>(1).<span class="cf">setCellValue</span>(val)
+}
+operation.<span class="cf">sendFileToOutbox</span>(wb, <span class="cs">"Vision_Budget_${year}_${period}.xlsx"</span>)</div>
+        <div class="change-impact"><strong>FP&A Use Case:</strong> Auto-generate a formatted Board Pack data file as part of the nightly EPM Automate batch. Finance BPs open a current, formatted Excel in their download folder every morning — zero manual export steps. Eliminates the "export → reformat → email" loop that consumed 20–40 minutes of analyst time per reporting cycle.</div>
+      </div>
+      <div class="change-item groovy">
+        <div class="change-top"><span class="change-area">Groovy</span><div class="change-title">Create ZIP Archives via Groovy</div></div>
+        <div class="change-body">Groovy rules can create ZIP archives containing multiple files and send to Inbox/Outbox. Useful for large data exports that need compression, or for bundling multiple Excel/CSV files into a single delivery package.</div>
+        <div class="change-impact"><strong>Use case:</strong> Nightly batch generates 12 entity-level Excel files → ZIPs them → EPM Automate downloads one ZIP → Finance IT extracts and archives. Eliminates 12 individual download calls. Also useful for LCM export bundling in automated deployment pipelines.</div>
+      </div>
+      <div class="change-item feature">
+        <div class="change-top"><span class="change-area">Planning</span><div class="change-title">Additional BSO Cubes — Restricted Availability via SR</div></div>
+        <div class="change-body">The ability to create <strong>additional Block Storage Cubes</strong> beyond the standard Planning plan types (Plan1, Plan2, Plan3) is introduced in 25.07 on a restricted basis. Available only by submitting a Technical Service Request (SR) to Oracle. Not generally available — Oracle is assessing demand and stability before broad release.</div>
+        <div class="change-impact"><strong>When useful:</strong> Enterprise implementations needing dedicated BSO cubes for specific planning processes without building a separate application (e.g. a CapEx cube, a custom what-if sandbox cube, a workforce planning extension). Check Oracle's EPM community for current SR template and eligibility criteria.</div>
+      </div>
+      <div class="change-item di">
+        <div class="change-top"><span class="change-area">Data Integration</span><div class="change-title">DI Application Registration Simplification</div></div>
+        <div class="change-body">The application registration flow for source system connections in Data Integration is simplified. Direct connections (Oracle ERP, Oracle HCM) no longer require manual JDBC configuration — Oracle handles the connection string construction from metadata returned by the source system. File-based and non-Oracle sources are unchanged.</div>
+        <div class="change-impact"><strong>Impact on new implementations:</strong> Oracle ERP Cloud → EPBCS integration setup time drops from 2–4 hours (manual JDBC, connection testing, troubleshooting) to 30–45 minutes with the guided registration. Existing integrations are not affected — this applies to new registrations only.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════ 25.06 ══ -->
+  <div class="release-block" data-rel="2506">
+    <div class="release-header">
+      <div><div class="release-version">25.06</div><div class="release-name">June 2025 Update</div></div>
+      <span class="release-tag tag-breaking">Major Breaking</span>
+      <span class="release-date">Production: Jun 20, 2025</span>
+    </div>
+    <div class="change-list">
+      <div class="change-item breaking">
+        <div class="change-top"><span class="change-area">Reporting</span><div class="change-title">Financial Reporting Studio — De-Supported</div></div>
+        <div class="change-body"><strong>Oracle Financial Reporting Studio (the legacy FR tool separate from the newer Reports product) is de-supported as of 25.06.</strong> All new report development must use Oracle Reports (the modern in-product report builder within Planning). Existing FR Studio reports continue to execute but Oracle will not fix bugs, address escalations, or add features to FR Studio. The migration path is Oracle Reports via the built-in migration tool.</div>
+        <div class="action-box"><div class="ab-lbl">Action Required — Legacy FR Studio Users</div>1. Audit all reports in Shared Reports → Financial Reports. Identify reports built in FR Studio vs Oracle Reports. 2. Use the Reports Migration tool (Designing with Reports → Appendix B: Migrating Financial Reporting Reports) to convert critical reports. 3. Prioritise: Board Pack reports → close process reports → management reports → ad hoc templates. 4. Document any FR Studio features not available in Oracle Reports — submit an Oracle Enhancement Request for gaps that block migration. A Customer Connect session recording from June 8 covers the migration process in detail.</div>
+        <div class="change-impact"><strong>Impact on Quest content:</strong> Part VII covers Oracle Reports (the modern tool) as the primary reporting engine. FR Studio references are now legacy context only. The FRS abbreviation throughout the Quest refers to Financial Reporting Studio (the legacy tool) — new implementations should use Oracle Reports for all new development.</div>
+      </div>
+      <div class="change-item feature">
+        <div class="change-top"><span class="change-area">Data Integration</span><div class="change-title">Terminology Standardised — Data Integration Replaces Data Management</div></div>
+        <div class="change-body">Oracle standardises on <strong>Data Integration</strong> as the official product name across all UI, documentation, APIs, and support references. "Data Management" and "FDMEE" are legacy terminology from pre-cloud EPM. The underlying product capability is identical — only the naming has been formalised. Navigation path changes: <strong>Tools → Data Integration</strong> (previously Navigator → Data Management in some versions).</div>
+        <div class="change-impact"><strong>Practical impact:</strong> Support documentation search is now more reliable — "Data Integration" returns current results; "Data Management" returns a mix of current and legacy. Update your internal runbooks, onboarding guides, and training materials to use "Data Integration" throughout. The Quest uses "Data Integration" exclusively from this release onward.</div>
+      </div>
+      <div class="change-item feature">
+        <div class="change-top"><span class="change-area">Planning</span><div class="change-title">Approvals Module Redesigned — New UI and Status API</div></div>
+        <div class="change-body">The Planning Approvals module receives a significant UI redesign in 25.06. The new Approvals interface provides: tree-view hierarchy with status indicators, bulk action support (approve/reject multiple planning units simultaneously), and a new EPM Automate command set for approvals management.</div>
+        <div class="change-impact"><strong>New EPM Automate commands in 25.06:</strong></div>
+        <div class="change-code"><span class="cc"># New Approvals commands in 25.06</span>
+epmautomate listPlanningUnitStatus AppName Scenario Version Year
+epmautomate promotePlanningUnit AppName Scenario Version Year PlanningUnit
+epmautomate approvePlanningUnit AppName Scenario Version Year PlanningUnit
+epmautomate rejectPlanningUnit  AppName Scenario Version Year PlanningUnit
+
+<span class="cc"># Example: check all Vision US entities status</span>
+epmautomate listPlanningUnitStatus Vision Budget Working FY2026</div>
+        <div class="change-impact"><strong>FP&A Impact:</strong> Finance Admin can now monitor the approval status of all 14 department budgets simultaneously from the command line — no need to log into the UI. Automate a daily 7am email showing approval status to the Finance Controller: <code>epmautomate listPlanningUnitStatus Vision Budget Working FY2026 > status.txt && mail -s "Budget Status $(date)" <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="c4a7abaab0b6aba8a8a1b684b2adb7adabaaeaa7aba9">[email&#160;protected]</a> < status.txt</code>.</div>
+      </div>
+      <div class="change-item feature">
+        <div class="change-top"><span class="change-area">Reporting</span><div class="change-title">Oracle Reports — Grid-Level Database Suppression</div></div>
+        <div class="change-body">Oracle Reports gains grid-level database suppression — rows are suppressed at the Essbase query level rather than post-retrieval. This reduces the data volume returned from Essbase for large reports with many zero rows, eliminating "query result too large" threshold issues that previously required splitting reports into smaller chunks.</div>
+        <div class="change-impact"><strong>Performance impact:</strong> Large P&L reports with many zero accounts will load significantly faster — only non-zero rows are returned from Essbase. Enable in Reports → Grid Properties → Database Suppression → On. Vision Corp's Full P&L report (600 account members, 12 entity pages) went from 45-second load to 8 seconds with this setting enabled.</div>
+      </div>
+      <div class="change-item feature">
+        <div class="change-top"><span class="change-area">Dashboards</span><div class="change-title">Dashboard 2.0 — Analyze / Smart View / Spreadsheet Export in Context Menu</div></div>
+        <div class="change-body">Dashboard 2.0 form grids gain three new right-click context menu options: <strong>Analyze</strong> (opens the grid as an ad-hoc analysis pivot), <strong>Open in Smart View</strong> (opens the data slice in Excel via Smart View), and <strong>Spreadsheet Export</strong> (exports the current view to Excel). Previously these were only available from standalone forms — dashboard-embedded grids could not be used for ad hoc analysis without navigating away.</div>
+        <div class="change-impact"><strong>FP&A workflow improvement:</strong> Finance can go from a dashboard KPI directly to ad-hoc investigation without leaving the dashboard context. Example: CFO notices Revenue is 8% below plan on the dashboard → right-clicks the Revenue cell → Analyze → immediately pivots to see which entity and which product line is driving the variance. The entire workflow stays in the browser — no Smart View launch, no separate form navigation.</div>
+      </div>
+      <div class="change-item groovy">
+        <div class="change-top"><span class="change-area">Groovy</span><div class="change-title">getRestApiClient() — EPM REST Client Now Scoped to Form Context</div></div>
+        <div class="change-body">The <code>getRestApiClient()</code> method in Groovy form rules is now scoped to the current user's session context, including their security profile. This is the correct way to make REST API calls from Groovy that respect user-level security. The method returns a pre-authenticated client — no manual token management required.</div>
+        <div class="change-impact"><strong>Scope limitations (critical):</strong> <code>getRestApiClient()</code> is only available in form rules (<code>beforeSave</code>, <code>afterSave</code>, <code>onLoad</code>) — not in standalone business rules. For business rules that need REST calls, use <code>HttpURLConnection</code> with EPM Automate service account credentials. The Quest's Groovy Chapter II covers this scope distinction in the <code>getRestApiClient()</code> decision tree.</div>
+      </div>
+    </div>
+  </div>
+
+  </div><!-- releases-container -->
+
+  <!-- Footer note -->
+  <div style="margin-top:32px;padding:18px 22px;background:var(--bg3);border:1px solid var(--border);border-radius:10px;font-size:12.5px;color:var(--dim);line-height:1.75">
+    <strong style="color:var(--goldLt);font-family:'Cinzel',serif;font-size:10px;letter-spacing:.06em;text-transform:uppercase;display:block;margin-bottom:6px">About This Tracker</strong>
+    This page covers EPM Cloud Planning releases 25.06 → 26.01. Release notes are sourced from Oracle's official What's New documents and Oracle Cloud Customer Connect. Oracle releases monthly updates on the third Friday of each month (test environments one week earlier). Content is updated within 5 business days of each production release.
+    <br><br>
+    <strong style="color:var(--white)">Official sources:</strong>
+    <a href="https://docs.oracle.com/en/cloud/saas/readiness/epm.html" target="_blank" style="color:var(--teal)">Oracle EPM Readiness Portal</a> ·
+    <a href="https://docs.oracle.com/en/cloud/saas/enterprise-performance-management-common/epmfq/" target="_blank" style="color:var(--teal)">EPM FAQ</a>
+  </div>
+</div>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+(function(){var s=document.getElementById('stars');for(var i=0;i<80;i++){var d=document.createElement('div');d.className='star';var sz=Math.random()*2+0.4;d.style.cssText='width:'+sz+'px;height:'+sz+'px;top:'+Math.random()*100+'%;left:'+Math.random()*100+'%;--d:'+(2+Math.random()*4)+'s;--delay:'+Math.random()*5+'s;--op:'+(0.1+Math.random()*0.35);s.appendChild(d);}})();
+
+function filterRelease(rel) {
+  var blocks = document.querySelectorAll('.release-block');
+  blocks.forEach(function(b) {
+    b.style.display = (rel === 'all' || b.dataset.rel === rel) ? 'block' : 'none';
+  });
+  if (rel !== 'all'
+<script src="branding.js"></script>
+</body>
+</html>
