@@ -1,0 +1,1985 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Observatory — Academy of Profit Center · EPCM Study Tour · BrainSpring</title>
+<meta name="description" content="Rule Balancing and Profit Curves reveal where value flows and where it vanishes. Hall 7 covers the PCM_Balance dimension, Rule Balancing reports, profit curve analysis, and the decision framework for NovaPrism's 60 engagements.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Pro:ital,wght@0,300;0,400;0,500;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+/* ══════════════════════════════════════════
+   ACADEMY OF PROFIT CENTER — DESIGN SYSTEM
+   Hall 7: Observatory
+   Accent: lime #a3e635
+══════════════════════════════════════════ */
+:root {
+  --navy:    #08111e;
+  --navy2:   #0d1b2e;
+  --navy3:   #112240;
+  --navy4:   #172d47;
+  --navy5:   #1e3855;
+  --amber:   #f59e0b;
+  --amber2:  #d97706;
+  --amber-dim: rgba(245,158,11,.12);
+  --amber-border: rgba(245,158,11,.25);
+  /* Hall 7 accent — lime */
+  --accent:  #a3e635;
+  --accent2: #84cc16;
+  --accent-dim: rgba(163,230,53,.08);
+  --accent-border: rgba(163,230,53,.28);
+  --green:   #4ade80;
+  --green-dim: rgba(74,222,128,.08);
+  --red:     #f87171;
+  --red-dim: rgba(248,113,113,.08);
+  --purple:  #a855f7;
+  --teal:    #2dd4bf;
+  --sky:     #38bdf8;
+  --lime:    #a3e635;
+  --coral:   #fb923c;
+  --white:   #e8f0f8;
+  --silver:  #c8d4e0;
+  --silver2: #8fa3b8;
+  --dim:     #4a6080;
+  --border:  rgba(200,212,224,.08);
+  --border2: rgba(200,212,224,.14);
+  --font-display: 'Cinzel', serif;
+  --font-body:    'Crimson Pro', serif;
+  --font-mono:    'JetBrains Mono', monospace;
+  --topbar-h: 52px;
+  --sidebar-w: 228px;
+  --r: 10px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--font-body);
+  background: var(--navy);
+  color: var(--white);
+  min-height: 100vh;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+}
+body::before {
+  content: '';
+  position: fixed; inset: 0; pointer-events: none; z-index: 0;
+  background-image:
+    linear-gradient(rgba(163,230,53,.012) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(163,230,53,.012) 1px, transparent 1px);
+  background-size: 60px 60px;
+}
+body::after {
+  content: '';
+  position: fixed; inset: 0; pointer-events: none; z-index: 0;
+  background: radial-gradient(ellipse 90% 60% at 50% -5%, rgba(163,230,53,.05) 0%, transparent 65%);
+}
+
+#stars { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
+.star { position: absolute; border-radius: 50%; background: #a3e635; animation: twinkle var(--d,4s) infinite var(--delay,0s); }
+@keyframes twinkle { 0%,100%{opacity:.015} 50%{opacity:var(--op,.12)} }
+@keyframes fadeUp { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:none} }
+@keyframes slideIn { from{opacity:0;transform:translateX(-10px)} to{opacity:1;transform:none} }
+@keyframes pulse { 0%,100%{box-shadow:0 0 0 0 rgba(163,230,53,.28)} 50%{box-shadow:0 0 0 6px transparent} }
+@keyframes glow { 0%,100%{text-shadow:0 0 12px rgba(163,230,53,.3)} 50%{text-shadow:0 0 28px rgba(163,230,53,.65)} }
+
+/* ── TOPBAR ── */
+#topbar {
+  position: fixed; top: 0; left: 0; right: 0; height: var(--topbar-h);
+  background: rgba(8,17,30,.92); backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 14px;
+  padding: 0 20px; z-index: 100;
+}
+.tb-logo { display: flex; align-items: center; gap: 8px; text-decoration: none; flex-shrink: 0; }
+.tb-logo svg { flex-shrink: 0; }
+.tb-brand { font-family: var(--font-mono); font-size: 12px; font-weight: 600; letter-spacing: .04em; }
+.tb-brain { color: var(--accent); }
+.tb-spring { color: var(--silver2); }
+.tb-sep { color: var(--dim); font-size: 12px; }
+.tb-course { font-family: var(--font-mono); font-size: 10px; letter-spacing: .06em; color: var(--amber); text-transform: uppercase; }
+.tb-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); animation: pulse 2.5s infinite; flex-shrink: 0; margin-left: 2px; }
+.tb-hall-badge { font-family: var(--font-mono); font-size: 9.5px; letter-spacing: .06em; color: var(--silver2); text-transform: uppercase; margin-left: auto; }
+.tb-hamburger { display: none; background: none; border: none; cursor: pointer; padding: 6px; color: var(--silver2); }
+.tb-nav-right { display: flex; align-items: center; gap: 4px; margin-left: 16px; overflow-x: auto; scrollbar-width: none; }
+.tb-nav-right::-webkit-scrollbar { display: none; }
+.tb-link {
+  font-family: var(--font-mono); font-size: 9px; letter-spacing: .07em; text-transform: uppercase;
+  color: var(--dim); text-decoration: none; padding: 5px 10px; border-radius: 5px;
+  transition: color .15s, background .15s; white-space: nowrap;
+}
+.tb-link:hover { color: var(--silver); background: rgba(255,255,255,.05); }
+.tb-link.current { color: var(--accent); background: var(--accent-dim); }
+
+/* ── SIDEBAR ── */
+.sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.5); z-index: 89; }
+.sidebar-overlay.open { display: block; }
+.sidebar {
+  width: var(--sidebar-w); flex-shrink: 0;
+  position: sticky; top: var(--topbar-h);
+  height: calc(100vh - var(--topbar-h));
+  overflow-y: auto; overflow-x: hidden;
+  background: rgba(8,17,30,.7);
+  border-right: 1px solid var(--border);
+  padding: 24px 0 40px;
+  scrollbar-width: thin; scrollbar-color: var(--navy3) transparent;
+}
+.sidebar::-webkit-scrollbar { width: 3px; }
+.sidebar::-webkit-scrollbar-thumb { background: var(--navy3); }
+.sb-label {
+  font-family: var(--font-mono); font-size: 8px; letter-spacing: .14em;
+  color: var(--dim); text-transform: uppercase;
+  padding: 0 18px; margin: 20px 0 8px;
+}
+.sb-label:first-child { margin-top: 0; }
+.sb-hall {
+  display: flex; align-items: center; gap: 10px;
+  padding: 8px 18px; text-decoration: none;
+  transition: background .15s; position: relative;
+}
+.sb-hall:hover { background: rgba(255,255,255,.03); }
+.sb-hall.current { background: var(--accent-dim); }
+.sb-hall.current::before {
+  content: ''; position: absolute; left: 0; top: 0; bottom: 0;
+  width: 2px; background: var(--accent);
+}
+.sb-hall-num {
+  width: 22px; height: 22px; border-radius: 6px; flex-shrink: 0;
+  border: 1px solid var(--border2);
+  font-family: var(--font-mono); font-size: 10px; font-weight: 600;
+  color: var(--dim); display: flex; align-items: center; justify-content: center;
+}
+.sb-hall.current .sb-hall-num { border-color: var(--accent-border); color: var(--accent); background: var(--accent-dim); }
+.sb-hall-info { flex: 1; min-width: 0; }
+.sb-hall-name { font-family: var(--font-mono); font-size: 10px; font-weight: 500; color: var(--silver2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sb-hall.current .sb-hall-name { color: var(--accent); }
+.sb-hall-title { font-size: 10px; color: var(--dim); margin-top: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sb-status { width: 5px; height: 5px; border-radius: 50%; background: var(--dim); flex-shrink: 0; }
+.sb-status.current { background: var(--accent); animation: pulse 2s infinite; }
+.sb-status.done { background: var(--green); }
+.sb-status.locked { background: transparent; border: 1px solid var(--dim); }
+.sb-toc-item {
+  display: block; padding: 5px 18px 5px 26px;
+  font-size: 11.5px; color: var(--dim); text-decoration: none;
+  border-left: 1px solid transparent; margin-left: 10px;
+  transition: color .15s, border-color .15s; line-height: 1.4;
+}
+.sb-toc-item:hover { color: var(--silver2); border-left-color: var(--border2); }
+
+/* Dean Eliot sidebar */
+.sb-eliot {
+  margin: 16px 12px 0;
+  background: var(--accent-dim);
+  border: 1px solid var(--accent-border);
+  border-radius: var(--r); overflow: hidden;
+}
+.sb-eliot-header {
+  display: flex; align-items: center; gap: 8px;
+  padding: 10px 12px; border-bottom: 1px solid var(--accent-border);
+}
+.sb-eliot-avatar {
+  width: 28px; height: 28px; border-radius: 8px;
+  background: rgba(163,230,53,.12); border: 1px solid var(--accent-border);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; flex-shrink: 0;
+}
+.sb-eliot-name { font-family: var(--font-mono); font-size: 9.5px; font-weight: 600; letter-spacing: .06em; color: var(--accent); }
+.sb-eliot-role { font-size: 9px; color: var(--silver2); margin-top: 1px; }
+.sb-chips { padding: 8px 10px; display: flex; flex-direction: column; gap: 5px; }
+.sb-chip {
+  font-size: 10.5px; color: var(--silver2); padding: 5px 8px;
+  background: rgba(255,255,255,.03); border: 1px solid var(--border);
+  border-radius: 6px; cursor: pointer; line-height: 1.4;
+  transition: background .15s, border-color .15s, color .15s;
+}
+.sb-chip:hover { background: var(--accent-dim); border-color: var(--accent-border); color: var(--white); }
+.sb-eliot-input-row { display: flex; gap: 6px; padding: 8px 10px; border-top: 1px solid var(--border); }
+.sb-eliot-input {
+  flex: 1; background: rgba(255,255,255,.04); border: 1px solid var(--border);
+  border-radius: 6px; padding: 5px 8px; font-size: 11px;
+  font-family: var(--font-body); color: var(--white); outline: none;
+}
+.sb-eliot-input:focus { border-color: var(--accent-border); }
+.sb-eliot-input::placeholder { color: var(--dim); }
+.sb-eliot-send {
+  width: 28px; height: 28px; border-radius: 6px;
+  background: var(--accent-dim); border: 1px solid var(--accent-border);
+  color: var(--accent); cursor: pointer; font-size: 13px;
+  display: flex; align-items: center; justify-content: center;
+  transition: background .15s;
+}
+.sb-eliot-send:hover { background: rgba(163,230,53,.2); }
+.sb-eliot-msgs { max-height: 160px; overflow-y: auto; padding: 8px 10px; display: flex; flex-direction: column; gap: 6px; scrollbar-width: thin; }
+.sb-eliot-msgs:empty { display: none; }
+.sb-msg { font-size: 11px; line-height: 1.55; padding: 6px 8px; border-radius: 6px; }
+.sb-msg.user { background: rgba(163,230,53,.1); color: var(--silver); text-align: right; }
+.sb-msg.guide { background: rgba(132,204,22,.06); color: var(--silver); }
+.sb-msg.typing { opacity: .5; }
+
+.sb-company {
+  margin: 12px 12px 0;
+  background: rgba(255,255,255,.02);
+  border: 1px solid var(--border);
+  border-radius: var(--r); padding: 12px;
+}
+.sb-company-label { font-family: var(--font-mono); font-size: 7.5px; letter-spacing: .1em; color: var(--dim); text-transform: uppercase; margin-bottom: 8px; }
+.sb-company-name { font-family: var(--font-display); font-size: 12px; color: var(--white); margin-bottom: 3px; }
+.sb-company-desc { font-size: 10.5px; color: var(--silver2); line-height: 1.5; }
+
+/* ── LAYOUT ── */
+#app { display: flex; flex-direction: column; min-height: 100vh; padding-top: var(--topbar-h); position: relative; z-index: 1; }
+#body { display: flex; flex: 1; }
+.main { flex: 1; min-width: 0; padding: 36px 52px 96px; animation: fadeUp .5s ease both; }
+
+/* ── CAMPUS MAP ── */
+.campus-map-wrap {
+  margin-bottom: 32px; background: rgba(13,27,46,.6);
+  border: 1px solid var(--border); border-radius: 14px;
+  padding: 16px 20px; overflow: hidden;
+}
+.campus-map-label {
+  font-family: var(--font-mono); font-size: 8.5px; letter-spacing: .14em;
+  color: var(--dim); text-transform: uppercase; margin-bottom: 12px;
+  display: flex; align-items: center; gap: 8px;
+}
+.campus-map-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+.campus-map-row { display: flex; align-items: center; gap: 0; overflow-x: auto; scrollbar-width: none; }
+.campus-map-row::-webkit-scrollbar { display: none; }
+.campus-stop { display: flex; flex-direction: column; align-items: center; gap: 5px; flex-shrink: 0; }
+.campus-building {
+  width: 40px; height: 40px; border-radius: 10px;
+  border: 1px solid var(--border2); background: var(--navy3);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-mono); font-size: 12px; font-weight: 600;
+  color: var(--dim); text-decoration: none; transition: all .2s;
+}
+.campus-building:hover { transform: translateY(-2px); border-color: var(--silver2); color: var(--silver2); }
+.campus-building.done { background: rgba(74,222,128,.06); border-color: rgba(74,222,128,.2); color: #22c55e; }
+.campus-building.active { background: var(--accent-dim); border-color: var(--accent); color: var(--accent); box-shadow: 0 0 18px rgba(163,230,53,.2); }
+.campus-building.locked { opacity: .35; cursor: default; pointer-events: none; }
+.campus-stop-label { font-family: var(--font-mono); font-size: 8px; letter-spacing: .04em; color: var(--dim); text-align: center; max-width: 52px; line-height: 1.3; white-space: nowrap; }
+.campus-stop.active-stop .campus-stop-label { color: var(--accent); }
+.campus-stop.done-stop .campus-stop-label { color: #22c55e; }
+.campus-connector { width: 24px; height: 1px; background: var(--border2); flex-shrink: 0; margin-bottom: 18px; position: relative; }
+.campus-connector::after { content: '›'; position: absolute; right: -5px; top: -9px; color: var(--dim); font-size: 10px; }
+
+/* ── HALL HERO ── */
+.hall-hero { margin-bottom: 32px; }
+.hall-eyebrow {
+  display: flex; align-items: center; gap: 8px;
+  font-family: var(--font-mono); font-size: 10px; letter-spacing: .1em;
+  color: var(--accent); text-transform: uppercase; margin-bottom: 10px;
+}
+.hall-eyebrow-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--accent); animation: pulse 2s infinite; }
+.hall-building-name {
+  font-family: var(--font-display); font-size: 11px; letter-spacing: .18em;
+  color: var(--accent2); text-transform: uppercase; margin-bottom: 6px;
+}
+.hall-title {
+  font-family: var(--font-display); font-size: 36px; font-weight: 600;
+  color: var(--white); line-height: 1.15; margin-bottom: 14px; letter-spacing: .02em;
+}
+.hall-title em { font-style: normal; color: var(--accent); animation: glow 4s infinite; }
+.hall-tagline { font-size: 16px; color: var(--silver2); line-height: 1.75; max-width: 700px; margin-bottom: 18px; font-style: italic; }
+.hall-tags { display: flex; gap: 7px; flex-wrap: wrap; }
+.htag {
+  font-family: var(--font-mono); font-size: 9px; letter-spacing: .08em;
+  text-transform: uppercase; padding: 4px 10px; border-radius: 5px;
+  border: 1px solid var(--border2); color: var(--silver2);
+}
+.htag.conceptual { border-color: rgba(56,189,248,.2); color: var(--sky); background: rgba(56,189,248,.05); }
+.htag.technical   { border-color: rgba(168,85,247,.2); color: var(--purple); background: rgba(168,85,247,.05); }
+.htag.lab         { border-color: rgba(74,222,128,.2); color: var(--green); background: var(--green-dim); }
+.htag.exam        { border-color: rgba(251,191,36,.2); color: var(--amber); background: var(--amber-dim); }
+.htag.interactive { border-color: rgba(163,230,53,.2); color: var(--accent); background: var(--accent-dim); }
+
+/* ── TABS ── */
+.tab-bar {
+  display: flex; gap: 2px; border-bottom: 1px solid var(--border);
+  margin-bottom: 32px;
+  position: sticky; top: var(--topbar-h);
+  background: rgba(8,17,30,.95); backdrop-filter: blur(12px);
+  z-index: 20; padding: 10px 0 0;
+  margin-left: -52px; margin-right: -52px;
+  padding-left: 52px; padding-right: 52px;
+}
+.tab-btn {
+  display: flex; align-items: center; gap: 7px;
+  padding: 9px 16px; border: none; background: none; cursor: pointer;
+  font-family: var(--font-mono); font-size: 10px; letter-spacing: .07em;
+  text-transform: uppercase; color: var(--dim);
+  border-bottom: 2px solid transparent; margin-bottom: -1px;
+  transition: color .15s, border-color .15s; white-space: nowrap;
+}
+.tab-btn:hover { color: var(--silver2); }
+.tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+.tab-icon { font-size: 13px; }
+.tab-panel { display: none; animation: fadeUp .25s ease; }
+.tab-panel.active { display: block; }
+
+/* ── SECTIONS ── */
+.section { margin-bottom: 48px; }
+.sec-type-bar { display: flex; align-items: center; gap: 8px; margin-bottom: 14px; }
+.sec-type-icon {
+  width: 28px; height: 28px; border-radius: 7px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center; font-size: 13px;
+}
+.sec-type-icon.conceptual { background: rgba(56,189,248,.08); border: 1px solid rgba(56,189,248,.18); }
+.sec-type-icon.technical   { background: rgba(168,85,247,.08); border: 1px solid rgba(168,85,247,.18); }
+.sec-type-icon.lab         { background: rgba(74,222,128,.08); border: 1px solid rgba(74,222,128,.18); }
+.sec-type-icon.exam        { background: rgba(251,191,36,.08); border: 1px solid rgba(251,191,36,.18); }
+.sec-type-icon.interactive { background: rgba(163,230,53,.08); border: 1px solid rgba(163,230,53,.18); }
+.sec-type-label { font-family: var(--font-mono); font-size: 9px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; }
+.sec-type-label.conceptual { color: var(--sky); }
+.sec-type-label.technical   { color: var(--purple); }
+.sec-type-label.lab         { color: var(--green); }
+.sec-type-label.exam        { color: var(--amber); }
+.sec-type-label.interactive { color: var(--accent); }
+.sec-h { font-family: var(--font-display); font-size: 22px; font-weight: 600; color: var(--white); margin-bottom: 6px; letter-spacing: .02em; }
+.sec-div { width: 40px; height: 2px; background: linear-gradient(to right, var(--accent), transparent); margin-bottom: 14px; }
+.sec-sub { font-size: 14px; color: var(--silver2); margin-bottom: 20px; font-style: italic; line-height: 1.6; }
+.prose { font-size: 15px; color: var(--silver); line-height: 1.78; margin-bottom: 14px; }
+.prose strong { color: var(--white); font-weight: 500; }
+.prose code { font-family: var(--font-mono); font-size: 12px; background: rgba(255,255,255,.06); border: 1px solid var(--border2); border-radius: 4px; padding: 1px 6px; color: var(--accent); }
+
+/* ── INFOBOXES ── */
+.infobox { display: flex; gap: 12px; border-radius: 10px; padding: 14px 16px; margin: 18px 0; line-height: 1.65; }
+.infobox-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+.infobox-body { font-size: 13.5px; }
+.infobox-body strong { font-weight: 500; }
+.infobox.note { background: rgba(56,189,248,.06); border: 1px solid rgba(56,189,248,.15); color: var(--silver2); }
+.infobox.note .infobox-body strong { color: var(--sky); }
+.infobox.trap { background: rgba(248,113,113,.06); border: 1px solid rgba(248,113,113,.15); color: var(--silver2); }
+.infobox.trap .infobox-body strong { color: var(--red); }
+.infobox.tip { background: var(--green-dim); border: 1px solid rgba(74,222,128,.18); color: var(--silver2); }
+.infobox.tip .infobox-body strong { color: var(--green); }
+.infobox.warn { background: var(--amber-dim); border: 1px solid var(--amber-border); color: var(--silver2); }
+.infobox.warn .infobox-body strong { color: var(--amber); }
+.infobox.accent { background: var(--accent-dim); border: 1px solid var(--accent-border); color: var(--silver2); }
+.infobox.accent .infobox-body strong { color: var(--accent); }
+
+/* ── TABLE ── */
+.tbl-wrap { overflow-x: auto; margin: 18px 0; border-radius: 10px; border: 1px solid var(--border); }
+.tbl { width: 100%; border-collapse: collapse; font-size: 13px; }
+.tbl th {
+  font-family: var(--font-mono); font-size: 8.5px; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--accent);
+  padding: 10px 14px; text-align: left;
+  border-bottom: 1px solid var(--border2); white-space: nowrap;
+  background: rgba(163,230,53,.04);
+}
+.tbl td { padding: 10px 14px; border-bottom: 1px solid var(--border); color: var(--silver2); vertical-align: top; line-height: 1.55; }
+.tbl tr:last-child td { border-bottom: none; }
+.tbl tr:hover td { background: rgba(255,255,255,.02); }
+.badge { font-family: var(--font-mono); font-size: 9px; letter-spacing: .06em; text-transform: uppercase; padding: 3px 8px; border-radius: 4px; white-space: nowrap; }
+.badge.green  { background: var(--green-dim); color: var(--green); border: 1px solid rgba(74,222,128,.2); }
+.badge.amber  { background: var(--amber-dim); color: var(--amber); border: 1px solid var(--amber-border); }
+.badge.red    { background: var(--red-dim); color: var(--red); border: 1px solid rgba(248,113,113,.2); }
+.badge.purple { background: rgba(168,85,247,.08); color: var(--purple); border: 1px solid rgba(168,85,247,.2); }
+.badge.sky    { background: rgba(56,189,248,.08); color: var(--sky); border: 1px solid rgba(56,189,248,.2); }
+.badge.lime   { background: var(--accent-dim); color: var(--accent); border: 1px solid var(--accent-border); }
+
+/* ── CODE BLOCK ── */
+.code-wrap { margin: 18px 0; border-radius: 10px; border: 1px solid var(--border); overflow: hidden; }
+.code-header { display: flex; align-items: center; justify-content: space-between; padding: 8px 14px; background: rgba(255,255,255,.03); border-bottom: 1px solid var(--border); }
+.code-lang { font-family: var(--font-mono); font-size: 9px; letter-spacing: .08em; color: var(--dim); text-transform: uppercase; }
+.code-copy { font-family: var(--font-mono); font-size: 9px; background: none; border: 1px solid var(--border2); border-radius: 4px; padding: 2px 8px; color: var(--silver2); cursor: pointer; transition: border-color .15s, color .15s; }
+.code-copy:hover { border-color: var(--accent-border); color: var(--accent); }
+pre.code { margin: 0; padding: 14px; background: rgba(0,0,0,.25); font-family: var(--font-mono); font-size: 12px; line-height: 1.7; color: var(--silver); overflow-x: auto; }
+pre.code .kw { color: var(--purple); }
+pre.code .fn { color: var(--sky); }
+pre.code .str { color: var(--green); }
+pre.code .num { color: var(--coral); }
+pre.code .cm { color: var(--dim); font-style: italic; }
+pre.code .dim { color: var(--accent); }
+
+/* ── CARDS ── */
+.card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; margin: 18px 0; }
+.card {
+  background: rgba(255,255,255,.02);
+  border: 1px solid var(--border);
+  border-radius: var(--r); padding: 18px;
+  transition: border-color .2s, transform .2s;
+}
+.card:hover { border-color: var(--accent-border); transform: translateY(-2px); }
+.card-icon { font-size: 22px; margin-bottom: 10px; }
+.card-title { font-family: var(--font-mono); font-size: 11px; font-weight: 600; letter-spacing: .05em; color: var(--white); margin-bottom: 6px; }
+.card-desc { font-size: 13px; color: var(--silver2); line-height: 1.6; }
+
+/* ── PROFIT CURVE VISUALIZATION ── */
+.profit-curve-wrap {
+  margin: 24px 0;
+  background: rgba(13,27,46,.6);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 20px;
+}
+.profit-curve-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 16px;
+}
+.profit-curve-title {
+  font-family: var(--font-mono); font-size: 11px; font-weight: 600;
+  letter-spacing: .06em; color: var(--accent); text-transform: uppercase;
+}
+.profit-curve-legend { display: flex; gap: 16px; }
+.legend-item { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--silver2); }
+.legend-dot { width: 8px; height: 8px; border-radius: 50%; }
+.legend-dot.profitable { background: var(--green); }
+.legend-dot.marginal { background: var(--amber); }
+.legend-dot.unprofitable { background: var(--red); }
+.profit-curve-chart {
+  position: relative;
+  height: 200px;
+  background: rgba(0,0,0,.2);
+  border-radius: 8px;
+  overflow: hidden;
+}
+.curve-axis-y {
+  position: absolute; left: 0; top: 0; bottom: 0; width: 50px;
+  display: flex; flex-direction: column; justify-content: space-between;
+  padding: 8px 6px; font-family: var(--font-mono); font-size: 9px; color: var(--dim);
+}
+.curve-axis-x {
+  position: absolute; left: 50px; right: 0; bottom: 0; height: 24px;
+  display: flex; justify-content: space-between;
+  padding: 4px 8px; font-family: var(--font-mono); font-size: 9px; color: var(--dim);
+}
+.curve-svg { position: absolute; left: 50px; top: 8px; right: 8px; bottom: 24px; }
+.profit-curve-stats {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px;
+  margin-top: 16px;
+}
+.curve-stat {
+  text-align: center; padding: 12px;
+  background: rgba(255,255,255,.02);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+.curve-stat-value { font-family: var(--font-mono); font-size: 18px; font-weight: 600; color: var(--white); margin-bottom: 4px; }
+.curve-stat-value.green { color: var(--green); }
+.curve-stat-value.amber { color: var(--amber); }
+.curve-stat-value.red { color: var(--red); }
+.curve-stat-label { font-size: 10px; color: var(--dim); text-transform: uppercase; letter-spacing: .06em; }
+
+/* ── DECISION FRAMEWORK ── */
+.decision-framework {
+  margin: 24px 0;
+  background: linear-gradient(135deg, rgba(163,230,53,.04) 0%, rgba(13,27,46,.6) 100%);
+  border: 1px solid var(--accent-border);
+  border-radius: var(--r);
+  padding: 24px;
+}
+.df-header {
+  display: flex; align-items: center; gap: 12px;
+  margin-bottom: 20px;
+}
+.df-icon {
+  width: 40px; height: 40px; border-radius: 10px;
+  background: var(--accent-dim); border: 1px solid var(--accent-border);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px;
+}
+.df-title { font-family: var(--font-display); font-size: 18px; color: var(--white); }
+.df-subtitle { font-size: 12px; color: var(--silver2); margin-top: 2px; }
+.df-quadrants {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
+}
+.df-quadrant {
+  padding: 16px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+}
+.df-quadrant.green { background: rgba(74,222,128,.06); border-color: rgba(74,222,128,.2); }
+.df-quadrant.amber { background: rgba(245,158,11,.06); border-color: rgba(245,158,11,.2); }
+.df-quadrant.red { background: rgba(248,113,113,.06); border-color: rgba(248,113,113,.2); }
+.df-quadrant.purple { background: rgba(168,85,247,.06); border-color: rgba(168,85,247,.2); }
+.df-q-header { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+.df-q-icon { font-size: 16px; }
+.df-q-title { font-family: var(--font-mono); font-size: 10px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; }
+.df-quadrant.green .df-q-title { color: var(--green); }
+.df-quadrant.amber .df-q-title { color: var(--amber); }
+.df-quadrant.red .df-q-title { color: var(--red); }
+.df-quadrant.purple .df-q-title { color: var(--purple); }
+.df-q-desc { font-size: 13px; color: var(--silver2); line-height: 1.6; margin-bottom: 8px; }
+.df-q-action { font-family: var(--font-mono); font-size: 10px; color: var(--white); padding: 4px 8px; background: rgba(0,0,0,.2); border-radius: 4px; display: inline-block; }
+
+/* ── LAB CHECKLIST ── */
+.lab-card { margin: 24px 0; background: rgba(74,222,128,.04); border: 1px solid rgba(74,222,128,.18); border-radius: var(--r); overflow: hidden; }
+.lab-header { display: flex; align-items: center; justify-content: space-between; padding: 14px 18px; border-bottom: 1px solid rgba(74,222,128,.12); }
+.lab-title { font-family: var(--font-mono); font-size: 11px; font-weight: 600; letter-spacing: .06em; color: var(--green); }
+.lab-progress { display: flex; align-items: center; gap: 8px; }
+.lab-pct { font-family: var(--font-mono); font-size: 11px; color: var(--green); }
+.lab-bar { width: 80px; height: 4px; background: rgba(74,222,128,.15); border-radius: 2px; overflow: hidden; }
+.lab-fill { height: 100%; background: var(--green); transition: width .3s; }
+.lab-body { padding: 18px; }
+.lab-scenario { font-size: 14px; color: var(--silver); line-height: 1.7; margin-bottom: 16px; padding: 12px; background: rgba(0,0,0,.15); border-radius: 8px; border-left: 3px solid var(--green); }
+.lab-checklist { display: flex; flex-direction: column; gap: 8px; }
+.lab-check-item { display: flex; align-items: flex-start; gap: 10px; padding: 10px 12px; background: rgba(255,255,255,.02); border: 1px solid var(--border); border-radius: 8px; cursor: pointer; transition: background .15s, border-color .15s; }
+.lab-check-item:hover { background: rgba(74,222,128,.04); border-color: rgba(74,222,128,.15); }
+.lab-check-item.checked { background: rgba(74,222,128,.08); border-color: rgba(74,222,128,.25); }
+.lab-check-box { width: 18px; height: 18px; border-radius: 5px; border: 1px solid var(--dim); flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 11px; color: transparent; transition: all .15s; margin-top: 1px; }
+.lab-check-box.checked { background: var(--green); border-color: var(--green); color: var(--navy); }
+.lab-check-text { font-size: 13px; color: var(--silver2); line-height: 1.5; }
+.lab-check-item.checked .lab-check-text { color: var(--silver); }
+
+/* ── QUIZ ── */
+.quiz-container { display: flex; flex-direction: column; gap: 24px; }
+.quiz-q { background: rgba(255,255,255,.02); border: 1px solid var(--border); border-radius: var(--r); padding: 20px; }
+.quiz-meta { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+.quiz-diff { font-family: var(--font-mono); font-size: 8px; letter-spacing: .1em; text-transform: uppercase; padding: 3px 8px; border-radius: 4px; }
+.quiz-diff.foundation { background: rgba(56,189,248,.1); color: var(--sky); border: 1px solid rgba(56,189,248,.2); }
+.quiz-diff.practitioner { background: rgba(163,230,53,.1); color: var(--accent); border: 1px solid var(--accent-border); }
+.quiz-diff.expert { background: rgba(248,113,113,.1); color: var(--red); border: 1px solid rgba(248,113,113,.2); }
+.quiz-qnum { font-family: var(--font-mono); font-size: 10px; color: var(--dim); }
+.quiz-stem { font-size: 15px; color: var(--white); line-height: 1.65; margin-bottom: 16px; }
+.quiz-options { display: flex; flex-direction: column; gap: 8px; }
+.quiz-opt { text-align: left; padding: 12px 14px; background: rgba(255,255,255,.03); border: 1px solid var(--border2); border-radius: 8px; font-size: 13.5px; color: var(--silver2); cursor: pointer; transition: background .15s, border-color .15s; line-height: 1.5; font-family: var(--font-body); }
+.quiz-opt:hover:not(.revealed) { background: var(--accent-dim); border-color: var(--accent-border); color: var(--white); }
+.quiz-opt.revealed { cursor: default; }
+.quiz-opt.revealed.correct { background: rgba(74,222,128,.12); border-color: rgba(74,222,128,.3); color: var(--green); }
+.quiz-opt.revealed.wrong { background: rgba(248,113,113,.12); border-color: rgba(248,113,113,.3); color: var(--red); }
+.quiz-explanation { display: none; margin-top: 14px; padding: 12px 14px; background: rgba(163,230,53,.06); border: 1px solid var(--accent-border); border-radius: 8px; font-size: 13px; color: var(--silver); line-height: 1.65; }
+.quiz-explanation.show { display: block; }
+.quiz-explanation strong { color: var(--accent); }
+.quiz-score { display: none; margin-top: 24px; padding: 20px; background: linear-gradient(135deg, var(--accent-dim), rgba(13,27,46,.6)); border: 1px solid var(--accent-border); border-radius: var(--r); text-align: center; }
+.quiz-score.show { display: block; }
+.quiz-score-num { font-family: var(--font-display); font-size: 32px; color: var(--accent); margin-bottom: 6px; }
+.quiz-score-msg { font-size: 14px; color: var(--silver2); }
+
+/* ── INTERACTIVE PLAYGROUND ── */
+.playground {
+  margin: 24px 0;
+  background: rgba(13,27,46,.6);
+  border: 1px solid var(--accent-border);
+  border-radius: var(--r);
+  overflow: hidden;
+}
+.pg-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 18px;
+  background: var(--accent-dim);
+  border-bottom: 1px solid var(--accent-border);
+}
+.pg-title { font-family: var(--font-mono); font-size: 11px; font-weight: 600; letter-spacing: .06em; color: var(--accent); }
+.pg-btns { display: flex; gap: 6px; }
+.pg-btn {
+  font-family: var(--font-mono); font-size: 9px; letter-spacing: .06em;
+  padding: 5px 10px; border-radius: 5px;
+  background: rgba(255,255,255,.05); border: 1px solid var(--border2);
+  color: var(--silver2); cursor: pointer; transition: all .15s;
+}
+.pg-btn:hover { border-color: var(--accent-border); color: var(--accent); }
+.pg-btn.active { background: var(--accent-dim); border-color: var(--accent); color: var(--accent); }
+.pg-body { padding: 18px; }
+.pg-result {
+  background: rgba(0,0,0,.3);
+  border-radius: 8px;
+  padding: 14px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  line-height: 1.8;
+  color: var(--silver2);
+  min-height: 200px;
+  overflow-x: auto;
+}
+.result-line { white-space: pre; }
+.result-key { color: var(--accent); font-weight: 500; }
+.result-good { color: var(--green); }
+.result-bad { color: var(--red); }
+.result-warn { color: var(--amber); }
+
+/* ── ENGAGEMENT SIMULATOR ── */
+.engagement-sim {
+  margin: 24px 0;
+  background: rgba(13,27,46,.6);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 20px;
+}
+.eng-controls {
+  display: flex; flex-wrap: wrap; gap: 12px;
+  margin-bottom: 16px;
+}
+.eng-control { display: flex; flex-direction: column; gap: 4px; }
+.eng-label { font-family: var(--font-mono); font-size: 9px; letter-spacing: .06em; color: var(--dim); text-transform: uppercase; }
+.eng-select {
+  padding: 6px 10px;
+  background: rgba(255,255,255,.04);
+  border: 1px solid var(--border2);
+  border-radius: 6px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--white);
+  cursor: pointer;
+}
+.eng-select:focus { outline: none; border-color: var(--accent-border); }
+.eng-btn {
+  padding: 8px 16px;
+  background: var(--accent-dim);
+  border: 1px solid var(--accent-border);
+  border-radius: 6px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: .06em;
+  color: var(--accent);
+  cursor: pointer;
+  transition: background .15s;
+  align-self: flex-end;
+}
+.eng-btn:hover { background: rgba(163,230,53,.15); }
+.eng-results { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
+.eng-result-card {
+  padding: 14px;
+  background: rgba(255,255,255,.02);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+.eng-result-label { font-family: var(--font-mono); font-size: 9px; letter-spacing: .06em; color: var(--dim); text-transform: uppercase; margin-bottom: 4px; }
+.eng-result-value { font-family: var(--font-mono); font-size: 20px; font-weight: 600; color: var(--white); }
+.eng-result-value.positive { color: var(--green); }
+.eng-result-value.negative { color: var(--red); }
+.eng-result-value.neutral { color: var(--amber); }
+
+/* ── RESPONSIVE ── */
+@media(max-width:900px){
+  .sidebar { display: none; position: fixed; left: 0; top: var(--topbar-h); bottom: 0; z-index: 90; }
+  .sidebar.open { display: block; }
+  .tb-hamburger { display: flex; margin-left: auto; }
+  .tb-hall-badge { display: none; }
+  .main { padding: 28px 20px 64px; }
+  .tab-bar { margin-left: -20px; margin-right: -20px; padding-left: 20px; padding-right: 20px; overflow-x: auto; }
+  .df-quadrants { grid-template-columns: 1fr; }
+  .profit-curve-stats { grid-template-columns: repeat(2, 1fr); }
+}
+@media(max-width:600px){
+  .hall-title { font-size: 26px; }
+  .card-grid { grid-template-columns: 1fr; }
+  .profit-curve-stats { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<div id="stars"></div>
+
+<!-- ════════════════════════════════════════════════════════════════════════
+     TOPBAR
+════════════════════════════════════════════════════════════════════════ -->
+<header id="topbar">
+  <a href="index.html" class="tb-logo" aria-label="BrainSpring Home">
+    <svg width="26" height="26" viewBox="0 0 36 36" fill="none">
+      <circle cx="18" cy="18" r="17" stroke="#a3e635" stroke-width="1.5"/>
+      <path d="M18 6 C24 10, 26 16, 26 20 C26 26, 22 30, 18 30 C14 30, 10 26, 10 20 C10 16, 12 10, 18 6Z" fill="#a3e63520" stroke="#a3e635" stroke-width="1.2"/>
+      <ellipse cx="14" cy="16" rx="1.5" ry="2" fill="#a3e635"/>
+      <ellipse cx="22" cy="16" rx="1.5" ry="2" fill="#a3e635"/>
+      <path d="M14 22 Q18 25, 22 22" stroke="#a3e635" stroke-width="1.2" fill="none"/>
+    </svg>
+    <span class="tb-brand"><span class="tb-brain">Brain</span><span class="tb-spring">Spring</span></span>
+  </a>
+  <span class="tb-sep">/</span>
+  <span class="tb-course">EPCM Study Tour</span>
+  <span class="tb-dot"></span>
+  <span class="tb-hall-badge">Hall 7 of 9</span>
+
+  <button class="tb-hamburger" onclick="toggleSidebar()" aria-label="Toggle navigation">
+    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 6h14M3 10h14M3 14h14"/></svg>
+  </button>
+
+  <nav class="tb-nav-right">
+    <a href="hall-1.html" class="tb-link">1 Foundations</a>
+    <a href="hall-2.html" class="tb-link">2 Dimensions</a>
+    <a href="hall-3.html" class="tb-link">3 Models</a>
+    <a href="hall-4.html" class="tb-link">4 Logic</a>
+    <a href="hall-5.html" class="tb-link">5 Workshop</a>
+    <a href="hall-6.html" class="tb-link">6 Control</a>
+    <a href="hall-7.html" class="tb-link current">7 Observatory</a>
+    <a href="hall-8.html" class="tb-link">8 Pipeline</a>
+    <a href="hall-9.html" class="tb-link">9 Exam</a>
+  </nav>
+</header>
+
+<div id="overlay" class="sidebar-overlay" onclick="closeSidebar()"></div>
+
+<div id="app">
+<div id="body">
+
+<!-- ════════════════════════════════════════════════════════════════════════
+     SIDEBAR
+════════════════════════════════════════════════════════════════════════ -->
+<aside id="sidebar" class="sidebar">
+  <div class="sb-label">Academy Halls</div>
+
+  <a href="hall-1.html" class="sb-hall">
+    <span class="sb-hall-num">1</span>
+    <span class="sb-hall-info"><span class="sb-hall-name">Foundations Hall</span><span class="sb-hall-title">Why Profitability?</span></span>
+    <span class="sb-status done"></span>
+  </a>
+  <a href="hall-2.html" class="sb-hall">
+    <span class="sb-hall-num">2</span>
+    <span class="sb-hall-info"><span class="sb-hall-name">Dimensions Gallery</span><span class="sb-hall-title">Cube Architecture</span></span>
+    <span class="sb-status done"></span>
+  </a>
+  <a href="hall-3.html" class="sb-hall">
+    <span class="sb-hall-num">3</span>
+    <span class="sb-hall-info"><span class="sb-hall-name">Models Pavilion</span><span class="sb-hall-title">App & POV Design</span></span>
+    <span class="sb-status done"></span>
+  </a>
+  <a href="hall-4.html" class="sb-hall">
+    <span class="sb-hall-num">4</span>
+    <span class="sb-hall-info"><span class="sb-hall-name">Hall of Logic</span><span class="sb-hall-title">Rules & Rulesets</span></span>
+    <span class="sb-status done"></span>
+  </a>
+  <a href="hall-5.html" class="sb-hall">
+    <span class="sb-hall-num">5</span>
+    <span class="sb-hall-info"><span class="sb-hall-name">Workshop of Precision</span><span class="sb-hall-title">Calc Scripts</span></span>
+    <span class="sb-status done"></span>
+  </a>
+  <a href="hall-6.html" class="sb-hall">
+    <span class="sb-hall-num">6</span>
+    <span class="sb-hall-info"><span class="sb-hall-name">Control Tower</span><span class="sb-hall-title">Calc Analysis</span></span>
+    <span class="sb-status done"></span>
+  </a>
+  <a href="hall-7.html" class="sb-hall current">
+    <span class="sb-hall-num">7</span>
+    <span class="sb-hall-info"><span class="sb-hall-name">Observatory</span><span class="sb-hall-title">Rule Balancing</span></span>
+    <span class="sb-status current"></span>
+  </a>
+  <a href="hall-8.html" class="sb-hall">
+    <span class="sb-hall-num">8</span>
+    <span class="sb-hall-info"><span class="sb-hall-name">Pipeline Lab</span><span class="sb-hall-title">Data Integration</span></span>
+    <span class="sb-status locked"></span>
+  </a>
+  <a href="hall-9.html" class="sb-hall">
+    <span class="sb-hall-num">9</span>
+    <span class="sb-hall-info"><span class="sb-hall-name">Exam Arena</span><span class="sb-hall-title">Mock Exam</span></span>
+    <span class="sb-status locked"></span>
+  </a>
+
+  <div class="sb-label">This Hall</div>
+  <div id="sb-toc"></div>
+
+  <!-- Dean Eliot -->
+  <div class="sb-eliot">
+    <div class="sb-eliot-header">
+      <div class="sb-eliot-avatar">🎓</div>
+      <div><div class="sb-eliot-name">Dean Eliot</div><div class="sb-eliot-role">AI Practitioner Guide</div></div>
+    </div>
+    <div class="sb-chips">
+      <div class="sb-chip" onclick="chipAsk(this)">What is PCM_Balance?</div>
+      <div class="sb-chip" onclick="chipAsk(this)">How do I read a profit curve?</div>
+      <div class="sb-chip" onclick="chipAsk(this)">Which NovaPrism engagements lose money?</div>
+    </div>
+    <div id="sb-msgs" class="sb-eliot-msgs"></div>
+    <div class="sb-eliot-input-row">
+      <input type="text" id="sb-input" class="sb-eliot-input" placeholder="Ask about rule balancing..." onkeydown="if(event.key==='Enter')sbSend()">
+      <button class="sb-eliot-send" onclick="sbSend()">➤</button>
+    </div>
+  </div>
+
+  <!-- Case Company -->
+  <div class="sb-company">
+    <div class="sb-company-label">Case Company</div>
+    <div id="sb-company-name" class="sb-company-name">NovaPrism Group</div>
+    <div id="sb-company-desc" class="sb-company-desc">Loading...</div>
+  </div>
+</aside>
+
+<!-- ════════════════════════════════════════════════════════════════════════
+     MAIN CONTENT
+════════════════════════════════════════════════════════════════════════ -->
+<main class="main">
+
+<!-- CAMPUS MAP -->
+<div class="campus-map-wrap">
+  <div class="campus-map-label">Academy Campus</div>
+  <div class="campus-map-row">
+    <div class="campus-stop done-stop"><a href="hall-1.html" class="campus-building done">1</a><span class="campus-stop-label">Foundations</span></div>
+    <div class="campus-connector"></div>
+    <div class="campus-stop done-stop"><a href="hall-2.html" class="campus-building done">2</a><span class="campus-stop-label">Dimensions</span></div>
+    <div class="campus-connector"></div>
+    <div class="campus-stop done-stop"><a href="hall-3.html" class="campus-building done">3</a><span class="campus-stop-label">Models</span></div>
+    <div class="campus-connector"></div>
+    <div class="campus-stop done-stop"><a href="hall-4.html" class="campus-building done">4</a><span class="campus-stop-label">Logic</span></div>
+    <div class="campus-connector"></div>
+    <div class="campus-stop done-stop"><a href="hall-5.html" class="campus-building done">5</a><span class="campus-stop-label">Workshop</span></div>
+    <div class="campus-connector"></div>
+    <div class="campus-stop done-stop"><a href="hall-6.html" class="campus-building done">6</a><span class="campus-stop-label">Control</span></div>
+    <div class="campus-connector"></div>
+    <div class="campus-stop active-stop"><a href="hall-7.html" class="campus-building active">7</a><span class="campus-stop-label">Observatory</span></div>
+    <div class="campus-connector"></div>
+    <div class="campus-stop"><a href="hall-8.html" class="campus-building locked">8</a><span class="campus-stop-label">Pipeline</span></div>
+    <div class="campus-connector"></div>
+    <div class="campus-stop"><a href="hall-9.html" class="campus-building locked">9</a><span class="campus-stop-label">Exam</span></div>
+  </div>
+</div>
+
+<!-- HALL HERO -->
+<header class="hall-hero">
+  <div class="hall-eyebrow"><span class="hall-eyebrow-dot"></span> Hall 7 · Observatory</div>
+  <div class="hall-building-name">Profit Curve Observatory</div>
+  <h1 class="hall-title">Rule Balancing &<br><em>Profit Curve</em> Analysis</h1>
+  <p class="hall-tagline">"Rule Balancing traces every dollar through your model. Profit Curves reveal which customers create value — and which destroy it. Together, they transform NovaPrism's $134M blind spot into actionable intelligence."</p>
+  <div class="hall-tags">
+    <span class="htag conceptual">PCM_Balance</span>
+    <span class="htag technical">Rule Balancing Reports</span>
+    <span class="htag interactive">Profit Curve Simulator</span>
+    <span class="htag lab">60 Engagements</span>
+    <span class="htag exam">Exam: Analytics</span>
+  </div>
+</header>
+
+<!-- TAB BAR -->
+<div class="tab-bar">
+  <button class="tab-btn active" onclick="switchTab('conceptual',this)"><span class="tab-icon">📐</span> PCM_Balance</button>
+  <button class="tab-btn" onclick="switchTab('technical',this)"><span class="tab-icon">📊</span> Rule Balancing</button>
+  <button class="tab-btn" onclick="switchTab('curves',this)"><span class="tab-icon">📈</span> Profit Curves</button>
+  <button class="tab-btn" onclick="switchTab('lab',this)"><span class="tab-icon">🔬</span> Lab</button>
+  <button class="tab-btn" onclick="switchTab('exam',this)"><span class="tab-icon">🎯</span> Exam Prep</button>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════════
+     TAB 1: CONCEPTUAL — PCM_BALANCE
+═══════════════════════════════════════════════════════════════════════ -->
+<div id="tab-conceptual" class="tab-panel active">
+
+<section class="section" id="pcm-balance-intro">
+  <div class="sec-type-bar">
+    <div class="sec-type-icon conceptual">💡</div>
+    <span class="sec-type-label conceptual">Conceptual</span>
+  </div>
+  <h2 class="sec-h">The PCM_Balance Dimension</h2>
+  <div class="sec-div"></div>
+  <p class="sec-sub">How EPCM preserves your original data while tracking every allocation and adjustment.</p>
+
+  <p class="prose">
+    Every EPCM application includes a system-generated dimension called <strong>PCM_Balance</strong>. This dimension is the audit trail for your entire model — it tracks where data came from (Input), where it moved (Allocation In/Out), and how it was modified (Adjustment In/Out).
+  </p>
+
+  <div class="infobox accent">
+    <span class="infobox-icon">🔑</span>
+    <div class="infobox-body">
+      <strong>Key Insight:</strong> The PCM_Balance dimension ensures your original loaded data (Input) is <em>never overwritten</em> by calculations. Allocations and adjustments are stored separately, and PCM_Net Balance aggregates all components to show the final result.
+    </div>
+  </div>
+
+  <div class="card-grid">
+    <div class="card">
+      <div class="card-icon">📥</div>
+      <div class="card-title">PCM_Input</div>
+      <div class="card-desc">Original data loaded from source systems. Never modified by EPCM calculations. NovaPrism loads $134M Enterprise Support costs here.</div>
+    </div>
+    <div class="card">
+      <div class="card-icon">➡️</div>
+      <div class="card-title">PCM_Allocation In</div>
+      <div class="card-desc">Costs allocated TO this intersection from other sources. Divisions receive their share of allocated costs here.</div>
+    </div>
+    <div class="card">
+      <div class="card-icon">⬅️</div>
+      <div class="card-title">PCM_Allocation Out</div>
+      <div class="card-desc">Costs allocated FROM this intersection to destinations. Enterprise Support's $134M flows out through this member.</div>
+    </div>
+    <div class="card">
+      <div class="card-icon">➕</div>
+      <div class="card-title">PCM_Adjustment In</div>
+      <div class="card-desc">Values added by Custom Calculation rules. Used for calculated drivers, markup adjustments, or derived values.</div>
+    </div>
+    <div class="card">
+      <div class="card-icon">➖</div>
+      <div class="card-title">PCM_Adjustment Out</div>
+      <div class="card-desc">Values removed by Custom Calculation rules. Offsets for adjustments, reversing entries, or correction postings.</div>
+    </div>
+    <div class="card">
+      <div class="card-icon">⚖️</div>
+      <div class="card-title">PCM_Net Balance</div>
+      <div class="card-desc">The sum: Input + Allocation In + Allocation Out + Adjustment In + Adjustment Out. This is your "truth" for reporting.</div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="balance-example">
+  <div class="sec-type-bar">
+    <div class="sec-type-icon conceptual">💡</div>
+    <span class="sec-type-label conceptual">Conceptual</span>
+  </div>
+  <h2 class="sec-h">NovaPrism Balance Flow Example</h2>
+  <div class="sec-div"></div>
+  <p class="sec-sub">Tracing $52M IT costs through the PCM_Balance dimension.</p>
+
+  <p class="prose">
+    Let's follow NovaPrism's <strong>$52M IT cost pool</strong> through the PCM_Balance dimension. Initially loaded to Enterprise Support, it gets allocated to the four operating divisions based on IT ticket counts.
+  </p>
+
+  <div class="tbl-wrap">
+    <table class="tbl">
+      <thead>
+        <tr>
+          <th>Entity</th>
+          <th>PCM_Input</th>
+          <th>Alloc In</th>
+          <th>Alloc Out</th>
+          <th>Adj In</th>
+          <th>Adj Out</th>
+          <th>Net Balance</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Enterprise Support</strong></td>
+          <td>$52.0M</td>
+          <td>—</td>
+          <td>($52.0M)</td>
+          <td>—</td>
+          <td>—</td>
+          <td><span class="badge amber">$0</span></td>
+        </tr>
+        <tr>
+          <td><strong>Digital Services (DS)</strong></td>
+          <td>—</td>
+          <td>$18.7M</td>
+          <td>—</td>
+          <td>—</td>
+          <td>—</td>
+          <td><span class="badge sky">$18.7M</span></td>
+        </tr>
+        <tr>
+          <td><strong>Infrastructure Solutions (IS)</strong></td>
+          <td>—</td>
+          <td>$15.1M</td>
+          <td>—</td>
+          <td>—</td>
+          <td>—</td>
+          <td><span class="badge sky">$15.1M</span></td>
+        </tr>
+        <tr>
+          <td><strong>Consulting Labs (CL)</strong></td>
+          <td>—</td>
+          <td>$10.4M</td>
+          <td>—</td>
+          <td>—</td>
+          <td>—</td>
+          <td><span class="badge sky">$10.4M</span></td>
+        </tr>
+        <tr>
+          <td><strong>Engineering Services (ES)</strong></td>
+          <td>—</td>
+          <td>$7.8M</td>
+          <td>—</td>
+          <td>—</td>
+          <td>—</td>
+          <td><span class="badge sky">$7.8M</span></td>
+        </tr>
+        <tr>
+          <td><strong>TOTAL</strong></td>
+          <td>$52.0M</td>
+          <td>$52.0M</td>
+          <td>($52.0M)</td>
+          <td>—</td>
+          <td>—</td>
+          <td><span class="badge green">$52.0M</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="infobox tip">
+    <span class="infobox-icon">✓</span>
+    <div class="infobox-body">
+      <strong>Balance Check:</strong> Notice that Allocation In ($52M) exactly equals Allocation Out ($52M). This is the fundamental integrity check of EPCM — every dollar allocated out must be allocated in somewhere. If these don't balance, you have a model error.
+    </div>
+  </div>
+</section>
+
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════════
+     TAB 2: TECHNICAL — RULE BALANCING
+═══════════════════════════════════════════════════════════════════════ -->
+<div id="tab-technical" class="tab-panel">
+
+<section class="section" id="rule-balancing-reports">
+  <div class="sec-type-bar">
+    <div class="sec-type-icon technical">⚙️</div>
+    <span class="sec-type-label technical">Technical</span>
+  </div>
+  <h2 class="sec-h">Generating Rule Balancing Reports</h2>
+  <div class="sec-div"></div>
+  <p class="sec-sub">The Rule Balancing page lets you trace fund flow rule-by-rule through your entire model.</p>
+
+  <p class="prose">
+    Rule Balancing is accessed via <code>Home → Modeling → Rule Balancing</code>. Unlike Calculation Analysis (which shows performance), Rule Balancing shows <strong>data flow</strong> — how much moved through each rule.
+  </p>
+
+  <div class="card-grid">
+    <div class="card">
+      <div class="card-icon">1️⃣</div>
+      <div class="card-title">Select Cube & Form</div>
+      <div class="card-desc">Choose the cube and a pre-designed data form that displays Rule Balancing results. Forms must include PCM_Rule and PCM_Balance dimensions.</div>
+    </div>
+    <div class="card">
+      <div class="card-icon">2️⃣</div>
+      <div class="card-title">Set POV</div>
+      <div class="card-desc">Specify Years, Period, Scenario, and Version to analyze. Rule Balancing shows results for the exact POV combination selected.</div>
+    </div>
+    <div class="card">
+      <div class="card-icon">3️⃣</div>
+      <div class="card-title">Click Refresh</div>
+      <div class="card-desc">EPCM generates the rule balancing report showing Allocation In, Allocation Out, Adjustment In, Adjustment Out, and Net Balance by rule.</div>
+    </div>
+    <div class="card">
+      <div class="card-icon">4️⃣</div>
+      <div class="card-title">Analyze Results</div>
+      <div class="card-desc">Click any rule to view its definition, open an ad-hoc grid, or export to Smart View for deeper analysis.</div>
+    </div>
+  </div>
+
+  <div class="infobox note">
+    <span class="infobox-icon">📋</span>
+    <div class="infobox-body">
+      <strong>Data Form Requirement:</strong> Before you can run Rule Balancing, a Service Administrator or Power User must design a data form specifically for Rule Balancing. The form must include the PCM_Rule dimension (to show rule-by-rule breakdown) and PCM_Balance (to show the balance components).
+    </div>
+  </div>
+</section>
+
+<section class="section" id="rule-balancing-form">
+  <div class="sec-type-bar">
+    <div class="sec-type-icon technical">⚙️</div>
+    <span class="sec-type-label technical">Technical</span>
+  </div>
+  <h2 class="sec-h">Designing Data Forms for Rule Balancing</h2>
+  <div class="sec-div"></div>
+  <p class="sec-sub">Form layout determines what insights you can extract from Rule Balancing.</p>
+
+  <p class="prose">
+    The data form you select controls what the Rule Balancing report displays. Here are common form designs for NovaPrism:
+  </p>
+
+  <div class="tbl-wrap">
+    <table class="tbl">
+      <thead>
+        <tr>
+          <th>Form Name</th>
+          <th>Row Dimension</th>
+          <th>Column Dimension</th>
+          <th>Use Case</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Balancing - All Steps</strong></td>
+          <td>PCM_Rule (All Rules)</td>
+          <td>PCM_Balance</td>
+          <td>High-level view of all 18 allocation rules</td>
+        </tr>
+        <tr>
+          <td><strong>Balancing - By Entity</strong></td>
+          <td>Entity (All Divisions)</td>
+          <td>PCM_Balance</td>
+          <td>See how costs land on each division</td>
+        </tr>
+        <tr>
+          <td><strong>Balancing - IT Only</strong></td>
+          <td>PCM_Rule (IT Rules)</td>
+          <td>PCM_Balance</td>
+          <td>Drill into $52M IT allocation</td>
+        </tr>
+        <tr>
+          <td><strong>Balancing - Customer Level</strong></td>
+          <td>Customer (Level 0)</td>
+          <td>PCM_Balance</td>
+          <td>See fully-loaded costs by engagement</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="infobox warn">
+    <span class="infobox-icon">⚠️</span>
+    <div class="infobox-body">
+      <strong>Performance Warning:</strong> Rule Balancing queries live data. A form with 60 customers × 5 balance members × 18 rules = 5,400 cells. Keep your forms focused — use filters and hierarchies to limit scope.
+    </div>
+  </div>
+</section>
+
+<section class="section" id="rule-balancing-actions">
+  <div class="sec-type-bar">
+    <div class="sec-type-icon technical">⚙️</div>
+    <span class="sec-type-label technical">Technical</span>
+  </div>
+  <h2 class="sec-h">Rule Balancing Actions</h2>
+  <div class="sec-div"></div>
+  <p class="sec-sub">What you can do after generating a Rule Balancing report.</p>
+
+  <div class="card-grid">
+    <div class="card">
+      <div class="card-icon">📤</div>
+      <div class="card-title">Export to Excel</div>
+      <div class="card-desc">Download the Rule Balancing report as an Excel file for offline analysis, sharing with stakeholders, or archival.</div>
+    </div>
+    <div class="card">
+      <div class="card-icon">📜</div>
+      <div class="card-title">View Rule Definition</div>
+      <div class="card-desc">Select any rule and click the definition icon to see the complete rule configuration — source, destination, driver, and offset settings.</div>
+    </div>
+    <div class="card">
+      <div class="card-icon">📊</div>
+      <div class="card-title">View Rule Data (Ad-Hoc)</div>
+      <div class="card-desc">Open an ad-hoc grid pre-filtered to show the data slice for a specific rule. Drill down, pivot, and analyze interactively.</div>
+    </div>
+    <div class="card">
+      <div class="card-icon">📈</div>
+      <div class="card-title">View in Smart View</div>
+      <div class="card-desc">Open context-sensitive ad-hoc in Oracle Smart View for Office. Add dimensions, create pivot tables, and build custom reports.</div>
+    </div>
+  </div>
+</section>
+
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════════
+     TAB 3: PROFIT CURVES
+═══════════════════════════════════════════════════════════════════════ -->
+<div id="tab-curves" class="tab-panel">
+
+<section class="section" id="profit-curve-concept">
+  <div class="sec-type-bar">
+    <div class="sec-type-icon interactive">📈</div>
+    <span class="sec-type-label interactive">Interactive</span>
+  </div>
+  <h2 class="sec-h">Understanding Profit Curves</h2>
+  <div class="sec-div"></div>
+  <p class="sec-sub">A profit curve reveals which segments of your population create value — and which destroy it.</p>
+
+  <p class="prose">
+    A <strong>profit curve</strong> is a graphical representation showing how a population dimension (customers, products, channels) contributes to cumulative profitability. The x-axis shows population members sorted by profitability (most profitable on left, least on right). The y-axis shows cumulative net profit.
+  </p>
+
+  <div class="profit-curve-wrap">
+    <div class="profit-curve-header">
+      <div class="profit-curve-title">NovaPrism Engagement Profit Curve (60 Clients)</div>
+      <div class="profit-curve-legend">
+        <div class="legend-item"><span class="legend-dot profitable"></span> Profitable (36)</div>
+        <div class="legend-item"><span class="legend-dot marginal"></span> Marginal (12)</div>
+        <div class="legend-item"><span class="legend-dot unprofitable"></span> Unprofitable (12)</div>
+      </div>
+    </div>
+    <div class="profit-curve-chart">
+      <div class="curve-axis-y">
+        <span>$48M</span>
+        <span>$36M</span>
+        <span>$24M</span>
+        <span>$12M</span>
+        <span>$0</span>
+      </div>
+      <div class="curve-axis-x">
+        <span>1</span>
+        <span>15</span>
+        <span>30</span>
+        <span>45</span>
+        <span>60</span>
+      </div>
+      <svg class="curve-svg" viewBox="0 0 400 150" preserveAspectRatio="none">
+        <!-- Profit curve path -->
+        <defs>
+          <linearGradient id="curveGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" style="stop-color:#4ade80"/>
+            <stop offset="60%" style="stop-color:#fbbf24"/>
+            <stop offset="100%" style="stop-color:#f87171"/>
+          </linearGradient>
+        </defs>
+        <!-- Area fill -->
+        <path d="M0,150 L0,120 Q40,80 80,50 Q120,25 160,15 Q200,8 240,10 Q280,15 320,30 Q360,50 400,70 L400,150 Z" fill="url(#curveGrad)" fill-opacity="0.15"/>
+        <!-- Curve line -->
+        <path d="M0,120 Q40,80 80,50 Q120,25 160,15 Q200,8 240,10 Q280,15 320,30 Q360,50 400,70" stroke="url(#curveGrad)" stroke-width="3" fill="none"/>
+        <!-- Peak indicator -->
+        <circle cx="200" cy="8" r="5" fill="#a3e635" stroke="#08111e" stroke-width="2"/>
+        <text x="200" y="-5" text-anchor="middle" fill="#a3e635" font-size="10" font-family="JetBrains Mono">Peak: $46.2M</text>
+        <!-- End point -->
+        <circle cx="400" cy="70" r="4" fill="#f87171"/>
+      </svg>
+    </div>
+    <div class="profit-curve-stats">
+      <div class="curve-stat">
+        <div class="curve-stat-value green">$46.2M</div>
+        <div class="curve-stat-label">Peak Profit (Client 36)</div>
+      </div>
+      <div class="curve-stat">
+        <div class="curve-stat-value amber">$38.4M</div>
+        <div class="curve-stat-label">Final Net Profit</div>
+      </div>
+      <div class="curve-stat">
+        <div class="curve-stat-value red">-$7.8M</div>
+        <div class="curve-stat-label">Value Destroyed (24 clients)</div>
+      </div>
+      <div class="curve-stat">
+        <div class="curve-stat-value">60%</div>
+        <div class="curve-stat-label">Clients Creating Value</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="infobox accent">
+    <span class="infobox-icon">🎯</span>
+    <div class="infobox-body">
+      <strong>NovaPrism Insight:</strong> The curve peaks at client #36 with $46.2M cumulative profit. After that, every additional client <em>reduces</em> total profitability. The final 24 clients collectively destroy $7.8M in value. This is the intelligence that was invisible before EPCM — NovaPrism now knows exactly which engagements to grow, renegotiate, or exit.
+    </div>
+  </div>
+</section>
+
+<section class="section" id="profit-curve-anatomy">
+  <div class="sec-type-bar">
+    <div class="sec-type-icon conceptual">💡</div>
+    <span class="sec-type-label conceptual">Conceptual</span>
+  </div>
+  <h2 class="sec-h">Anatomy of a Profit Curve</h2>
+  <div class="sec-div"></div>
+  <p class="sec-sub">Reading the three zones of customer profitability.</p>
+
+  <div class="card-grid">
+    <div class="card" style="border-color: rgba(74,222,128,.3);">
+      <div class="card-icon">📈</div>
+      <div class="card-title" style="color: var(--green);">Zone 1: Steep Rise (Profitable)</div>
+      <div class="card-desc">The first part of the curve rises steeply — these are your most profitable customers. Each one adds significant value. For NovaPrism, the top 15 engagements generate 78% of total profit. <strong>Action: Protect, expand, replicate.</strong></div>
+    </div>
+    <div class="card" style="border-color: rgba(245,158,11,.3);">
+      <div class="card-icon">➡️</div>
+      <div class="card-title" style="color: var(--amber);">Zone 2: Flattening (Marginal)</div>
+      <div class="card-desc">The middle section flattens — these customers contribute marginally. They're not losing money, but they're not moving the needle either. For NovaPrism, clients 16-36 are in this zone. <strong>Action: Optimize, automate, increase efficiency.</strong></div>
+    </div>
+    <div class="card" style="border-color: rgba(248,113,113,.3);">
+      <div class="card-icon">📉</div>
+      <div class="card-title" style="color: var(--red);">Zone 3: Decline (Unprofitable)</div>
+      <div class="card-desc">The curve drops — these customers destroy value. Every dollar of revenue costs more than a dollar to serve. For NovaPrism, the bottom 24 engagements collectively destroy $7.8M. <strong>Action: Reprice, renegotiate, or exit.</strong></div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="decision-framework">
+  <div class="sec-type-bar">
+    <div class="sec-type-icon interactive">🎯</div>
+    <span class="sec-type-label interactive">Framework</span>
+  </div>
+  <h2 class="sec-h">The Profit Curve Decision Framework</h2>
+  <div class="sec-div"></div>
+  <p class="sec-sub">Four quadrants for customer portfolio management.</p>
+
+  <div class="decision-framework">
+    <div class="df-header">
+      <div class="df-icon">🧭</div>
+      <div>
+        <div class="df-title">NovaPrism Customer Portfolio Matrix</div>
+        <div class="df-subtitle">Based on fully-loaded profitability from EPCM</div>
+      </div>
+    </div>
+    <div class="df-quadrants">
+      <div class="df-quadrant green">
+        <div class="df-q-header">
+          <span class="df-q-icon">⭐</span>
+          <span class="df-q-title">Stars (High Profit, High Revenue)</span>
+        </div>
+        <div class="df-q-desc">Top-tier engagements with excellent margins. NovaPrism's top 10 clients generate $28M profit on $180M revenue (15.6% margin).</div>
+        <span class="df-q-action">Protect & Expand</span>
+      </div>
+      <div class="df-quadrant amber">
+        <div class="df-q-header">
+          <span class="df-q-icon">🔄</span>
+          <span class="df-q-title">Cash Cows (Marginal Profit, High Revenue)</span>
+        </div>
+        <div class="df-q-desc">Large but thin-margin engagements. Volume is there but allocated costs eat the profit. 12 NovaPrism clients in this zone.</div>
+        <span class="df-q-action">Optimize Delivery</span>
+      </div>
+      <div class="df-quadrant purple">
+        <div class="df-q-header">
+          <span class="df-q-icon">🚀</span>
+          <span class="df-q-title">Rising Stars (High Profit %, Low Revenue)</span>
+        </div>
+        <div class="df-q-desc">Small but highly profitable. Often newer engagements with efficient delivery. Growth opportunity if scalable.</div>
+        <span class="df-q-action">Scale if Possible</span>
+      </div>
+      <div class="df-quadrant red">
+        <div class="df-q-header">
+          <span class="df-q-icon">⚠️</span>
+          <span class="df-q-title">Dogs (Negative Profit)</span>
+        </div>
+        <div class="df-q-desc">Value destroyers. Every engagement hour loses money. 12 NovaPrism clients destroy $7.8M annually. Legacy contracts, underpriced deals.</div>
+        <span class="df-q-action">Reprice or Exit</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="creating-profit-curves">
+  <div class="sec-type-bar">
+    <div class="sec-type-icon technical">⚙️</div>
+    <span class="sec-type-label technical">Technical</span>
+  </div>
+  <h2 class="sec-h">Creating Profit Curves in EPCM</h2>
+  <div class="sec-div"></div>
+  <p class="sec-sub">Setting up profit curve analytics for NovaPrism.</p>
+
+  <p class="prose">
+    Profit Curves are created in <code>Home → Intelligence → Profit Curves</code>. Only Service Administrators and Power Users can define profit curves, but all users can view them once created.
+  </p>
+
+  <div class="tbl-wrap">
+    <table class="tbl">
+      <thead>
+        <tr>
+          <th>Setting</th>
+          <th>Description</th>
+          <th>NovaPrism Example</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Data Form</strong></td>
+          <td>Select a form that contains the data to analyze</td>
+          <td>Engagement Profitability Form</td>
+        </tr>
+        <tr>
+          <td><strong>Cube</strong></td>
+          <td>The cube containing your profitability data</td>
+          <td>NovaPrism_Profit</td>
+        </tr>
+        <tr>
+          <td><strong>Measure Dimension</strong></td>
+          <td>The dimension containing your profit measure</td>
+          <td>Account</td>
+        </tr>
+        <tr>
+          <td><strong>Measure Member</strong></td>
+          <td>The specific member to plot (usually Net Profit)</td>
+          <td>Net_Profit</td>
+        </tr>
+        <tr>
+          <td><strong>Row Dimension</strong></td>
+          <td>The population to analyze (customers, products, etc.)</td>
+          <td>Customer (Level 0 members)</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="infobox tip">
+    <span class="infobox-icon">💡</span>
+    <div class="infobox-body">
+      <strong>Category Analysis:</strong> After generating a profit curve, you can select any portion of the curve and run a Category Analysis. This breaks down the selected segment by an attribute (like Region or Industry) to understand why those customers are profitable or unprofitable.
+    </div>
+  </div>
+</section>
+
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════════
+     TAB 4: LAB
+═══════════════════════════════════════════════════════════════════════ -->
+<div id="tab-lab" class="tab-panel">
+
+<section class="section" id="lab-rule-balancing">
+  <div class="sec-type-bar">
+    <div class="sec-type-icon lab">🔬</div>
+    <span class="sec-type-label lab">Lab Exercise</span>
+  </div>
+  <h2 class="sec-h">Lab 7.1: Generate NovaPrism Rule Balancing Report</h2>
+  <div class="sec-div"></div>
+  <p class="sec-sub">Trace the $134M Enterprise Support allocation through every rule.</p>
+
+  <div class="lab-card">
+    <div class="lab-header">
+      <span class="lab-title">Lab 7.1 — Rule Balancing Analysis</span>
+      <div class="lab-progress">
+        <span class="lab-pct" id="lab1-pct">0</span>%
+        <div class="lab-bar"><div class="lab-fill" id="lab1-fill" style="width:0%"></div></div>
+      </div>
+    </div>
+    <div class="lab-body">
+      <div class="lab-scenario">
+        <strong>Scenario:</strong> The CFO wants to understand exactly how the $134M Enterprise Support costs flow through the model. Generate a Rule Balancing report that shows allocations by rule, and verify that Allocation In equals Allocation Out at each step.
+      </div>
+      <div class="lab-checklist" id="lab1-checklist">
+        <div class="lab-check-item" onclick="toggleCheck(this)">
+          <span class="lab-check-box">✓</span>
+          <span class="lab-check-text">Navigate to Home → Modeling → Rule Balancing</span>
+        </div>
+        <div class="lab-check-item" onclick="toggleCheck(this)">
+          <span class="lab-check-box">✓</span>
+          <span class="lab-check-text">Select NovaPrism_Profit cube from the dropdown</span>
+        </div>
+        <div class="lab-check-item" onclick="toggleCheck(this)">
+          <span class="lab-check-box">✓</span>
+          <span class="lab-check-text">Click the data form link and select "Balancing - All Steps" form</span>
+        </div>
+        <div class="lab-check-item" onclick="toggleCheck(this)">
+          <span class="lab-check-box">✓</span>
+          <span class="lab-check-text">Set POV: FY24 → Jan → Actual → Working</span>
+        </div>
+        <div class="lab-check-item" onclick="toggleCheck(this)">
+          <span class="lab-check-box">✓</span>
+          <span class="lab-check-text">Click Refresh to generate the report</span>
+        </div>
+        <div class="lab-check-item" onclick="toggleCheck(this)">
+          <span class="lab-check-box">✓</span>
+          <span class="lab-check-text">Verify: IT Allocation rule shows $52M Allocation Out from ES</span>
+        </div>
+        <div class="lab-check-item" onclick="toggleCheck(this)">
+          <span class="lab-check-box">✓</span>
+          <span class="lab-check-text">Verify: Division rows show matching $52M total Allocation In</span>
+        </div>
+        <div class="lab-check-item" onclick="toggleCheck(this)">
+          <span class="lab-check-box">✓</span>
+          <span class="lab-check-text">Export to Excel for CFO review</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="lab-profit-curve">
+  <div class="sec-type-bar">
+    <div class="sec-type-icon lab">🔬</div>
+    <span class="sec-type-label lab">Lab Exercise</span>
+  </div>
+  <h2 class="sec-h">Lab 7.2: Analyze NovaPrism Profit Curve</h2>
+  <div class="sec-div"></div>
+  <p class="sec-sub">Generate the engagement profit curve and identify the value-destroying clients.</p>
+
+  <div class="lab-card">
+    <div class="lab-header">
+      <span class="lab-title">Lab 7.2 — Profit Curve Analysis</span>
+      <div class="lab-progress">
+        <span class="lab-pct" id="lab2-pct">0</span>%
+        <div class="lab-bar"><div class="lab-fill" id="lab2-fill" style="width:0%"></div></div>
+      </div>
+    </div>
+    <div class="lab-body">
+      <div class="lab-scenario">
+        <strong>Scenario:</strong> The VP of Sales wants to see which client engagements are destroying value. Generate the profit curve for all 60 engagements and identify the clients in the "decline zone" that collectively destroy $7.8M.
+      </div>
+      <div class="lab-checklist" id="lab2-checklist">
+        <div class="lab-check-item" onclick="toggleCheck(this)">
+          <span class="lab-check-box">✓</span>
+          <span class="lab-check-text">Navigate to Home → Intelligence → Profit Curves</span>
+        </div>
+        <div class="lab-check-item" onclick="toggleCheck(this)">
+          <span class="lab-check-box">✓</span>
+          <span class="lab-check-text">Select "Engagement Profitability" profit curve definition</span>
+        </div>
+        <div class="lab-check-item" onclick="toggleCheck(this)">
+          <span class="lab-check-box">✓</span>
+          <span class="lab-check-text">Set POV: FY24 → Q4 → Actual → Final</span>
+        </div>
+        <div class="lab-check-item" onclick="toggleCheck(this)">
+          <span class="lab-check-box">✓</span>
+          <span class="lab-check-text">Click Generate to render the profit curve</span>
+        </div>
+        <div class="lab-check-item" onclick="toggleCheck(this)">
+          <span class="lab-check-box">✓</span>
+          <span class="lab-check-text">Identify the peak point (client #36, $46.2M cumulative)</span>
+        </div>
+        <div class="lab-check-item" onclick="toggleCheck(this)">
+          <span class="lab-check-box">✓</span>
+          <span class="lab-check-text">Select the decline zone (clients 37-60) on the curve</span>
+        </div>
+        <div class="lab-check-item" onclick="toggleCheck(this)">
+          <span class="lab-check-box">✓</span>
+          <span class="lab-check-text">Run Category Analysis by "Industry" attribute</span>
+        </div>
+        <div class="lab-check-item" onclick="toggleCheck(this)">
+          <span class="lab-check-box">✓</span>
+          <span class="lab-check-text">Download data snippet showing unprofitable client list</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="engagement-simulator">
+  <div class="sec-type-bar">
+    <div class="sec-type-icon interactive">🎮</div>
+    <span class="sec-type-label interactive">Interactive</span>
+  </div>
+  <h2 class="sec-h">Engagement Profitability Simulator</h2>
+  <div class="sec-div"></div>
+  <p class="sec-sub">Explore how different engagement characteristics affect fully-loaded profitability.</p>
+
+  <div class="engagement-sim">
+    <div class="eng-controls">
+      <div class="eng-control">
+        <label class="eng-label">Revenue Size</label>
+        <select class="eng-select" id="eng-revenue">
+          <option value="small">Small ($500K-$2M)</option>
+          <option value="medium" selected>Medium ($2M-$5M)</option>
+          <option value="large">Large ($5M-$15M)</option>
+          <option value="enterprise">Enterprise ($15M+)</option>
+        </select>
+      </div>
+      <div class="eng-control">
+        <label class="eng-label">IT Ticket Volume</label>
+        <select class="eng-select" id="eng-tickets">
+          <option value="low">Low (0.5x avg)</option>
+          <option value="medium" selected>Medium (1x avg)</option>
+          <option value="high">High (2x avg)</option>
+          <option value="critical">Critical (3x avg)</option>
+        </select>
+      </div>
+      <div class="eng-control">
+        <label class="eng-label">Office Space</label>
+        <select class="eng-select" id="eng-space">
+          <option value="remote">Remote (minimal)</option>
+          <option value="hybrid" selected>Hybrid (0.8x avg)</option>
+          <option value="onsite">Onsite (1.2x avg)</option>
+          <option value="dedicated">Dedicated (2x avg)</option>
+        </select>
+      </div>
+      <div class="eng-control">
+        <label class="eng-label">Headcount</label>
+        <select class="eng-select" id="eng-headcount">
+          <option value="lean">Lean (0.6x avg)</option>
+          <option value="standard" selected>Standard (1x avg)</option>
+          <option value="heavy">Heavy (1.5x avg)</option>
+          <option value="overstaffed">Overstaffed (2x avg)</option>
+        </select>
+      </div>
+      <button class="eng-btn" onclick="calculateEngagement()">Calculate Profitability</button>
+    </div>
+    <div class="eng-results" id="eng-results">
+      <div class="eng-result-card">
+        <div class="eng-result-label">Direct Revenue</div>
+        <div class="eng-result-value" id="eng-direct-rev">$3.5M</div>
+      </div>
+      <div class="eng-result-card">
+        <div class="eng-result-label">Allocated Costs</div>
+        <div class="eng-result-value" id="eng-alloc-costs">$1.2M</div>
+      </div>
+      <div class="eng-result-card">
+        <div class="eng-result-label">Fully-Loaded Margin</div>
+        <div class="eng-result-value positive" id="eng-margin">12.4%</div>
+      </div>
+      <div class="eng-result-card">
+        <div class="eng-result-label">Profit Band</div>
+        <div class="eng-result-value" id="eng-band"><span class="badge green">Profitable</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════════
+     TAB 5: EXAM PREP
+═══════════════════════════════════════════════════════════════════════ -->
+<div id="tab-exam" class="tab-panel">
+
+<section class="section" id="exam-quiz">
+  <div class="sec-type-bar">
+    <div class="sec-type-icon exam">🎯</div>
+    <span class="sec-type-label exam">Exam Prep</span>
+  </div>
+  <h2 class="sec-h">Rule Balancing & Profit Curve Quiz</h2>
+  <div class="sec-div"></div>
+  <p class="sec-sub">Test your knowledge on PCM_Balance, Rule Balancing reports, and profit curve analysis.</p>
+
+  <div class="quiz-container" id="quiz-container"></div>
+
+  <div class="quiz-score" id="quiz-score">
+    <div class="quiz-score-num" id="quiz-score-num">0/5</div>
+    <div class="quiz-score-msg" id="quiz-score-msg">Loading...</div>
+  </div>
+</section>
+
+<section class="section" id="exam-takeaways">
+  <div class="sec-type-bar">
+    <div class="sec-type-icon exam">📝</div>
+    <span class="sec-type-label exam">Key Takeaways</span>
+  </div>
+  <h2 class="sec-h">Exam Focus: Analytics & Reporting</h2>
+  <div class="sec-div"></div>
+  <p class="sec-sub">What to remember for the 1Z0-1082-25 exam.</p>
+
+  <div class="card-grid">
+    <div class="card">
+      <div class="card-icon">⚖️</div>
+      <div class="card-title">PCM_Balance Purpose</div>
+      <div class="card-desc">Preserves original Input data while tracking all allocations and adjustments. PCM_Net Balance = Input + Alloc In + Alloc Out + Adj In + Adj Out.</div>
+    </div>
+    <div class="card">
+      <div class="card-icon">📊</div>
+      <div class="card-title">Rule Balancing Access</div>
+      <div class="card-desc">Home → Modeling → Rule Balancing. Requires a pre-designed data form with PCM_Rule and PCM_Balance dimensions.</div>
+    </div>
+    <div class="card">
+      <div class="card-icon">📈</div>
+      <div class="card-title">Profit Curve X-Axis</div>
+      <div class="card-desc">Population dimension (customers, products) sorted by profitability — most profitable on LEFT, least on RIGHT. This is a common exam trap.</div>
+    </div>
+    <div class="card">
+      <div class="card-icon">📉</div>
+      <div class="card-title">Profit Curve Y-Axis</div>
+      <div class="card-desc">Cumulative measure (usually Net Profit). The curve rises steeply for profitable segments, flattens for marginal, and declines for unprofitable.</div>
+    </div>
+    <div class="card">
+      <div class="card-icon">🔍</div>
+      <div class="card-title">Category Analysis</div>
+      <div class="card-desc">After generating a profit curve, select a portion and run Category Analysis to break down by attribute (Region, Industry, etc.).</div>
+    </div>
+    <div class="card">
+      <div class="card-icon">🔐</div>
+      <div class="card-title">Security Model</div>
+      <div class="card-desc">Only Service Administrators and Power Users can define profit curves. All users can view and generate them once defined.</div>
+    </div>
+  </div>
+</section>
+
+</div>
+
+</main>
+</div>
+</div>
+
+<script src="constants.js"></script>
+<script>
+/* ── Stars ── */
+(function(){
+  var c=document.getElementById('stars');
+  for(var i=0;i<40;i++){
+    var s=document.createElement('div');
+    s.className='star';
+    s.style.cssText='width:'+(.8+Math.random()*1.4)+'px;height:'+(.8+Math.random()*1.4)+'px;left:'+Math.random()*100+'%;top:'+Math.random()*100+'%;--d:'+(3+Math.random()*4)+'s;--delay:'+Math.random()*4+'s;--op:'+(.04+Math.random()*.1)+';';
+    c.appendChild(s);
+  }
+})();
+
+/* ── TOC ── */
+(function(){
+  var toc=document.getElementById('sb-toc');
+  var sections=[
+    {id:'pcm-balance-intro',name:'PCM_Balance Dimension'},
+    {id:'balance-example',name:'Balance Flow Example'},
+    {id:'rule-balancing-reports',name:'Rule Balancing Reports'},
+    {id:'rule-balancing-form',name:'Data Form Design'},
+    {id:'profit-curve-concept',name:'Profit Curves'},
+    {id:'profit-curve-anatomy',name:'Curve Anatomy'},
+    {id:'decision-framework',name:'Decision Framework'},
+    {id:'lab-rule-balancing',name:'Lab: Rule Balancing'},
+    {id:'lab-profit-curve',name:'Lab: Profit Curve'},
+    {id:'exam-quiz',name:'Exam Practice'}
+  ];
+  sections.forEach(function(s){
+    var a=document.createElement('a');
+    a.href='#'+s.id;
+    a.className='sb-toc-item';
+    a.textContent=s.name;
+    toc.appendChild(a);
+  });
+})();
+
+/* ── Sidebar company ── */
+(function(){
+  if(typeof NP!=='undefined'){
+    document.getElementById('sb-company-name').textContent=NP.company.name;
+    document.getElementById('sb-company-desc').textContent=NP.company.type+' · $'+NP.company.revenue+'M · '+NP.company.employees.toLocaleString()+' employees';
+  }
+})();
+
+/* ── Tab Switching ── */
+function switchTab(id,btn){
+  document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('active');});
+  document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.remove('active');});
+  btn.classList.add('active');
+  document.getElementById('tab-'+id).classList.add('active');
+}
+
+/* ── Sidebar toggle (mobile) ── */
+function toggleSidebar(){
+  document.getElementById('sidebar').classList.toggle('open');
+  document.getElementById('overlay').classList.toggle('open');
+}
+function closeSidebar(){
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('overlay').classList.remove('open');
+}
+
+/* ── Lab Checklist ── */
+function toggleCheck(item){
+  item.classList.toggle('checked');
+  item.querySelector('.lab-check-box').classList.toggle('checked');
+  updateLabProgress();
+}
+function updateLabProgress(){
+  ['lab1','lab2'].forEach(function(lab){
+    var list=document.getElementById(lab+'-checklist');
+    if(!list) return;
+    var items=list.querySelectorAll('.lab-check-item');
+    var checked=list.querySelectorAll('.lab-check-item.checked');
+    var pct=Math.round(checked.length/items.length*100);
+    document.getElementById(lab+'-pct').textContent=pct;
+    document.getElementById(lab+'-fill').style.width=pct+'%';
+  });
+}
+
+/* ── Engagement Simulator ── */
+function calculateEngagement(){
+  var revenue = document.getElementById('eng-revenue').value;
+  var tickets = document.getElementById('eng-tickets').value;
+  var space = document.getElementById('eng-space').value;
+  var headcount = document.getElementById('eng-headcount').value;
+
+  // Revenue base
+  var revBases = {small: 1.2, medium: 3.5, large: 9.0, enterprise: 22.0};
+  var revBase = revBases[revenue];
+
+  // Cost multipliers
+  var ticketMult = {low: 0.5, medium: 1.0, high: 2.0, critical: 3.0};
+  var spaceMult = {remote: 0.2, hybrid: 0.8, onsite: 1.2, dedicated: 2.0};
+  var hcMult = {lean: 0.6, standard: 1.0, heavy: 1.5, overstaffed: 2.0};
+
+  // Base allocated cost (as % of revenue)
+  var baseCostPct = 0.25;
+  var adjustedCostPct = baseCostPct * (ticketMult[tickets] * 0.4 + spaceMult[space] * 0.3 + hcMult[headcount] * 0.3);
+  var allocCost = revBase * adjustedCostPct;
+  var directCost = revBase * 0.55; // 55% direct costs
+  var netProfit = revBase - directCost - allocCost;
+  var margin = (netProfit / revBase) * 100;
+
+  // Update display
+  document.getElementById('eng-direct-rev').textContent = '$' + revBase.toFixed(1) + 'M';
+  document.getElementById('eng-alloc-costs').textContent = '$' + allocCost.toFixed(2) + 'M';
+
+  var marginEl = document.getElementById('eng-margin');
+  marginEl.textContent = margin.toFixed(1) + '%';
+  marginEl.className = 'eng-result-value ' + (margin > 10 ? 'positive' : margin > 0 ? 'neutral' : 'negative');
+
+  var bandEl = document.getElementById('eng-band');
+  if (margin > 10) {
+    bandEl.innerHTML = '<span class="badge green">Profitable</span>';
+  } else if (margin > 0) {
+    bandEl.innerHTML = '<span class="badge amber">Marginal</span>';
+  } else {
+    bandEl.innerHTML = '<span class="badge red">Unprofitable</span>';
+  }
+}
+
+/* ── Quiz ── */
+var quizData=[
+  {
+    diff:'foundation',qnum:'Q1',
+    stem:'What does the PCM_Balance dimension track in EPCM?',
+    options:[
+      'The balance between assets and liabilities in the general ledger',
+      'Original input data plus all allocation and adjustment flows, preserving the audit trail',
+      'The number of rules executed in each calculation run',
+      'Currency exchange rate balances for multi-currency applications'
+    ],
+    correct:1,
+    explanation:'<strong>PCM_Balance</strong> tracks the audit trail of data flow: Input (original loaded data), Allocation In/Out (where data moved via allocation rules), and Adjustment In/Out (modifications from custom calc rules). PCM_Net Balance is the sum of all components.'
+  },
+  {
+    diff:'foundation',qnum:'Q2',
+    stem:'How do you access the Rule Balancing page in EPCM?',
+    options:[
+      'Home → Modeling → Rule Balancing',
+      'Home → Administration → Rule Analysis',
+      'Home → Intelligence → Rule Balancing',
+      'Home → Application → Rules → Balancing Report'
+    ],
+    correct:0,
+    explanation:'Rule Balancing is accessed via <strong>Home → Modeling → Rule Balancing</strong>. This is different from Profit Curves, which are under Home → Intelligence.'
+  },
+  {
+    diff:'practitioner',qnum:'Q3',
+    stem:'On a profit curve, the x-axis shows customers sorted by profitability. Which customer appears at the far LEFT of the curve?',
+    options:[
+      'The least profitable customer (most negative)',
+      'The most profitable customer (highest positive)',
+      'The median profitability customer',
+      'The customer with the highest revenue (regardless of profit)'
+    ],
+    correct:1,
+    explanation:'Profit curves sort the population dimension in <strong>descending order by profitability</strong>. The most profitable customer is at the far LEFT, and the least profitable (potentially negative) is at the far RIGHT. This is a common exam trap — candidates often assume ascending order.'
+  },
+  {
+    diff:'practitioner',qnum:'Q4',
+    stem:'NovaPrism\'s profit curve peaks at client #36 with $46.2M cumulative profit, then declines to $38.4M at client #60. What does this pattern indicate?',
+    options:[
+      'The model has a calculation error — profit should never decrease when adding customers',
+      'Clients 37-60 are unprofitable — they collectively destroy $7.8M in value',
+      'The profit curve is displaying revenue instead of profit by mistake',
+      'Clients 37-60 are new acquisitions that haven\'t ramped up yet'
+    ],
+    correct:1,
+    explanation:'A profit curve that declines after the peak indicates <strong>unprofitable customers</strong>. The drop from $46.2M to $38.4M means clients 37-60 collectively destroy $7.8M in value ($46.2M - $38.4M). This is the core insight that EPCM provides — identifying which customers cost more to serve than the revenue they generate.'
+  },
+  {
+    diff:'expert',qnum:'Q5',
+    stem:'A Power User wants to create a Rule Balancing report that shows how $52M IT costs are distributed across NovaPrism\'s 60 customer engagements. What data form design is required?',
+    options:[
+      'Rows: PCM_Rule, Columns: Customer — to show rule-by-rule allocation per customer',
+      'Rows: Customer (Level 0), Columns: PCM_Balance — to show balance components per engagement',
+      'Rows: Account (IT Costs), Columns: Entity — to show IT costs by division',
+      'No data form is needed — Rule Balancing automatically generates all combinations'
+    ],
+    correct:1,
+    explanation:'To see IT costs at the customer engagement level, the form needs <strong>Customer (Level 0) on rows</strong> and <strong>PCM_Balance on columns</strong>. This shows each engagement\'s Input, Allocation In, Allocation Out, and Net Balance. The form would also need POV selections for Account (IT Costs) and Entity (filtered to show only the receiving divisions). Rule Balancing always requires a pre-designed data form — it doesn\'t auto-generate.'
+  }
+];
+
+var quizAnswers={};
+(function renderQuiz(){
+  var container=document.getElementById('quiz-container');
+  if(!container) return;
+  var html='';
+  quizData.forEach(function(q,i){
+    html+='<div class="quiz-q" id="qq-'+i+'">';
+    html+='<div class="quiz-meta"><span class="quiz-diff '+q.diff+'">'+q.diff+'</span><span class="quiz-qnum">'+q.qnum+'</span></div>';
+    html+='<div class="quiz-stem">'+q.stem+'</div>';
+    html+='<div class="quiz-options">';
+    q.options.forEach(function(opt,j){
+      html+='<button class="quiz-opt" onclick="answerQ('+i+','+j+')">'+String.fromCharCode(65+j)+'. '+opt+'</button>';
+    });
+    html+='</div>';
+    html+='<div class="quiz-explanation" id="qexp-'+i+'"></div>';
+    html+='</div>';
+  });
+  container.innerHTML=html;
+})();
+
+function answerQ(qi,oi){
+  if(quizAnswers[qi]!==undefined) return;
+  quizAnswers[qi]=oi;
+  var q=quizData[qi];
+  document.querySelectorAll('#qq-'+qi+' .quiz-opt').forEach(function(o,j){
+    o.classList.add('revealed');
+    if(j===q.correct) o.classList.add('correct');
+    else if(j===oi&&oi!==q.correct) o.classList.add('wrong');
+  });
+  var exp=document.getElementById('qexp-'+qi);
+  exp.innerHTML='<strong>'+(oi===q.correct?'Correct':'Incorrect')+'</strong> — '+q.explanation;
+  exp.classList.add('show');
+  if(Object.keys(quizAnswers).length===quizData.length) showScore();
+}
+function showScore(){
+  var correct=0;
+  quizData.forEach(function(q,i){if(quizAnswers[i]===q.correct)correct++;});
+  var total=quizData.length;
+  var pct=Math.round(correct/total*100);
+  document.getElementById('quiz-score-num').textContent=correct+'/'+total;
+  document.getElementById('quiz-score-msg').textContent=pct<60?'Review the Observatory before moving on.':pct<100?'Good analysis — proceed to the Pipeline Lab.':'Perfect. You can read any profit curve.';
+  document.getElementById('quiz-score').classList.add('show');
+}
+
+/* ── Dean Eliot ── */
+var HALL_SYSTEM_EXTENSION=[
+  'CURRENT HALL: Hall 7 — Observatory (Academy of Profit Center)',
+  'HALL SCOPE: Rule Balancing, PCM_Balance dimension, Profit Curves, and engagement profitability analysis.',
+  '',
+  'KEY CONCEPTS IN THIS HALL:',
+  '- PCM_Balance dimension: System-generated. Members: PCM_Input, PCM_Allocation In, PCM_Allocation Out, PCM_Adjustment In, PCM_Adjustment Out, PCM_Net Balance.',
+  '- PCM_Net Balance = Input + Allocation In + Allocation Out + Adjustment In + Adjustment Out.',
+  '- Rule Balancing: Home → Modeling → Rule Balancing. Requires a pre-designed data form with PCM_Rule and PCM_Balance.',
+  '- Rule Balancing actions: Export to Excel, View Rule Definition, View Rule Data (Ad-Hoc), View in Smart View.',
+  '- Profit Curves: Home → Intelligence → Profit Curves. Graphical view of profitability by population dimension.',
+  '- Profit Curve X-axis: Population (customers, products) sorted DESCENDING by profitability. Most profitable on LEFT.',
+  '- Profit Curve Y-axis: Cumulative measure (usually Net Profit). Rises for profitable, flattens for marginal, declines for unprofitable.',
+  '- Category Analysis: Select portion of curve, analyze by attribute (Region, Industry) to understand drivers.',
+  '- Security: Only Service Administrators and Power Users can define profit curves. All users can view/generate.',
+  '',
+  'NOVAPRISM IN THIS HALL:',
+  '60 client engagements analyzed via profit curve.',
+  'Curve peaks at client #36 with $46.2M cumulative profit.',
+  'Final net profit: $38.4M (after all 60 clients).',
+  'Bottom 24 clients destroy $7.8M in value.',
+  'Top 15 clients generate 78% of total profit.',
+  'IT allocation: $52M flows from ES to 4 divisions via PCM_Balance.',
+  '',
+  'DECISION FRAMEWORK:',
+  '- Stars: High profit, high revenue → Protect & Expand',
+  '- Cash Cows: Marginal profit, high revenue → Optimize Delivery',
+  '- Rising Stars: High profit %, low revenue → Scale if Possible',
+  '- Dogs: Negative profit → Reprice or Exit',
+  '',
+  'EXAM TOPICS: Analytics features, profit curves, rule balancing, PCM_Balance dimension.',
+  '',
+  'OUT OF SCOPE: Data Integration → Pipeline Lab (Hall 8). Calculation tuning → Control Tower (Hall 6).'
+].join('\n');
+
+function buildSystemPrompt(){
+  var pa=(typeof NP!=='undefined')?NP.postAllocation:null;
+  return [
+    'You are Dean Eliot, the AI practitioner-guide for the BrainSpring EPCM Study Tour — Academy of Profit Center.',
+    'You are a senior Oracle EPM practitioner who has implemented EPCM at 40+ enterprises.',
+    'Voice: direct (no hedging), practitioner-honest, concise (3–5 sentences target), never sycophantic.',
+    '',
+    'CASE COMPANY: NovaPrism Group — $2.1B professional services conglomerate. 8,400 employees. 4 divisions.',
+    pa?('IS: $'+pa.IS.revenue+'M revenue | '+pa.IS.directPct+'% direct → '+pa.IS.marginPct+'% fully-loaded | $'+pa.IS.allocatedIn+'M allocated in.'):'',
+    'Enterprise Support: $134M costs across IT $52M (tickets), Facilities $38M (sqft), Finance $28M (headcount), HR $16M (headcount).',
+    '60 client engagements. Profit curve peaks at client #36 ($46.2M). Bottom 24 destroy $7.8M.',
+    '',
+    'RULES: Connect every answer to NovaPrism. Name exam answer AND implementation reality when they differ.',
+    'Never invent product behaviour. For out-of-scope topics, name the hall that covers them.',
+    '',
+    HALL_SYSTEM_EXTENSION
+  ].filter(Boolean).join('\n');
+}
+
+var sbHistory=[];
+function sbSend(){
+  var inp=document.getElementById('sb-input');
+  var txt=inp.value.trim(); if(!txt) return;
+  inp.value='';
+  sbAddMsg('user',txt);
+  sbHistory.push({role:'user',content:txt});
+  var typing=sbAddMsg('guide','...');
+  typing.classList.add('typing');
+  sbCall(typing);
+}
+function chipAsk(chip){
+  document.getElementById('sb-input').value=chip.textContent;
+  sbSend();
+}
+function sbAddMsg(role,text){
+  var msgs=document.getElementById('sb-msgs');
+  var div=document.createElement('div');
+  div.className='sb-msg '+role;
+  div.textContent=text;
+  msgs.appendChild(div);
+  msgs.scrollTop=msgs.scrollHeight;
+  return div;
+}
+async function sbCall(typingEl){
+  try{
+    var resp=await fetch('https://epbcs-tutor.fancy-brook-fc0d.workers.dev',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        model:'claude-sonnet-4-20250514',
+        max_tokens:500,
+        system:buildSystemPrompt(),
+        messages:sbHistory
+      })
+    });
+    var data=await resp.json();
+    var reply=(data.content&&data.content[0]&&data.content[0].text)||'Try rephrasing — I had trouble with that one.';
+    typingEl.textContent=reply;
+    typingEl.classList.remove('typing');
+    sbHistory.push({role:'assistant',content:reply});
+  }catch(e){
+    typingEl.textContent='Connection issue — please try again.';
+    typingEl.classList.remove('typing');
+  }
+}
+
+document.querySelectorAll('a[href^="#"]').forEach(function(a){
+  a.addEventListener('click',function(e){
+    var id=this.getAttribute('href').slice(1);
+    var el=document.getElementById(id);
+    if(el){e.preventDefault();el.scrollIntoView({behavior:'smooth',block:'start'});}
+  });
+});
+
+// Initialize engagement simulator
+calculateEngagement();
+</script>
+</body>
+</html>
