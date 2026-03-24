@@ -1,0 +1,1328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Examination Hall — Academy of Profit Center · EPCM Study Tour · BrainSpring</title>
+<meta name="description" content="50-question timed mock exam for 1Z0-1082-25. Hall 9 of the EPCM Study Tour — graduation from the Academy of Profit Center.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Pro:ital,wght@0,300;0,400;0,500;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+/* ══════════════════════════════════════════
+   ACADEMY OF PROFIT CENTER — DESIGN SYSTEM
+   Hall 9: Examination Hall
+   Accent: red #f87171
+══════════════════════════════════════════ */
+:root {
+  --navy:    #08111e;
+  --navy2:   #0d1b2e;
+  --navy3:   #112240;
+  --navy4:   #172d47;
+  --amber:   #f59e0b;
+  --amber-dim: rgba(245,158,11,.12);
+  --amber-border: rgba(245,158,11,.25);
+  --accent:  #f87171;
+  --accent2: #dc2626;
+  --accent-dim: rgba(248,113,113,.08);
+  --accent-border: rgba(248,113,113,.28);
+  --green:   #4ade80;
+  --green-dim: rgba(74,222,128,.08);
+  --red:     #f87171;
+  --red-dim: rgba(248,113,113,.08);
+  --purple:  #a855f7;
+  --teal:    #2dd4bf;
+  --sky:     #38bdf8;
+  --coral:   #fb923c;
+  --white:   #e8f0f8;
+  --silver:  #c8d4e0;
+  --silver2: #8fa3b8;
+  --dim:     #4a6080;
+  --border:  rgba(200,212,224,.08);
+  --border2: rgba(200,212,224,.14);
+  --font-display: 'Cinzel', serif;
+  --font-body:    'Crimson Pro', serif;
+  --font-mono:    'JetBrains Mono', monospace;
+  --topbar-h: 52px;
+  --sidebar-w: 228px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--font-body);
+  background: var(--navy);
+  color: var(--white);
+  min-height: 100vh;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+}
+body::before {
+  content: '';
+  position: fixed; inset: 0; pointer-events: none; z-index: 0;
+  background-image:
+    linear-gradient(rgba(248,113,113,.012) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(248,113,113,.012) 1px, transparent 1px);
+  background-size: 60px 60px;
+}
+body::after {
+  content: '';
+  position: fixed; inset: 0; pointer-events: none; z-index: 0;
+  background: radial-gradient(ellipse 90% 60% at 50% -5%, rgba(248,113,113,.05) 0%, transparent 65%);
+}
+#stars { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
+.star { position: absolute; border-radius: 50%; background: #f87171; animation: twinkle var(--d,4s) infinite var(--delay,0s); }
+@keyframes twinkle { 0%,100%{opacity:.015} 50%{opacity:var(--op,.12)} }
+@keyframes fadeUp { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:none} }
+@keyframes pulse { 0%,100%{box-shadow:0 0 0 0 rgba(248,113,113,.25)} 50%{box-shadow:0 0 0 6px transparent} }
+@keyframes glow { 0%,100%{text-shadow:0 0 12px rgba(248,113,113,.3)} 50%{text-shadow:0 0 28px rgba(248,113,113,.65)} }
+@keyframes timerPulse { 0%,100%{opacity:1} 50%{opacity:.6} }
+@keyframes celebrate { 0%{transform:scale(1)} 50%{transform:scale(1.05)} 100%{transform:scale(1)} }
+
+/* ── TOPBAR ── */
+#topbar {
+  position: fixed; top: 0; left: 0; right: 0; height: var(--topbar-h);
+  background: rgba(8,17,30,.92); backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 14px;
+  padding: 0 20px; z-index: 100;
+}
+.tb-logo { display: flex; align-items: center; gap: 8px; text-decoration: none; flex-shrink: 0; }
+.tb-logo svg { flex-shrink: 0; }
+.tb-brand { font-family: var(--font-mono); font-size: 12px; font-weight: 600; letter-spacing: .04em; }
+.tb-brain { color: var(--accent); }
+.tb-spring { color: var(--silver2); }
+.tb-sep { color: var(--dim); font-size: 12px; }
+.tb-course { font-family: var(--font-mono); font-size: 10px; letter-spacing: .06em; color: var(--amber); text-transform: uppercase; }
+.tb-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); animation: pulse 2.5s infinite; flex-shrink: 0; margin-left: 2px; }
+.tb-hall-badge { font-family: var(--font-mono); font-size: 9.5px; letter-spacing: .06em; color: var(--silver2); text-transform: uppercase; margin-left: auto; }
+.tb-hamburger { display: none; background: none; border: none; cursor: pointer; padding: 6px; color: var(--silver2); }
+.tb-nav-right { display: flex; align-items: center; gap: 4px; margin-left: 16px; overflow-x: auto; scrollbar-width: none; }
+.tb-nav-right::-webkit-scrollbar { display: none; }
+.tb-link {
+  font-family: var(--font-mono); font-size: 9px; letter-spacing: .07em; text-transform: uppercase;
+  color: var(--dim); text-decoration: none; padding: 5px 10px; border-radius: 5px;
+  transition: color .15s, background .15s; white-space: nowrap;
+}
+.tb-link:hover { color: var(--silver); background: rgba(255,255,255,.05); }
+.tb-link.current { color: var(--accent); background: var(--accent-dim); }
+
+/* ── SIDEBAR ── */
+.sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.5); z-index: 89; }
+.sidebar-overlay.open { display: block; }
+.sidebar {
+  width: var(--sidebar-w); flex-shrink: 0;
+  position: sticky; top: var(--topbar-h);
+  height: calc(100vh - var(--topbar-h));
+  overflow-y: auto; overflow-x: hidden;
+  background: rgba(8,17,30,.7);
+  border-right: 1px solid var(--border);
+  padding: 24px 0 40px;
+  scrollbar-width: thin; scrollbar-color: var(--navy3) transparent;
+}
+.sidebar::-webkit-scrollbar { width: 3px; }
+.sidebar::-webkit-scrollbar-thumb { background: var(--navy3); }
+.sb-label { font-family: var(--font-mono); font-size: 8px; letter-spacing: .14em; color: var(--dim); text-transform: uppercase; padding: 0 18px; margin: 20px 0 8px; }
+.sb-label:first-child { margin-top: 0; }
+.sb-hall {
+  display: flex; align-items: center; gap: 10px;
+  padding: 8px 18px; text-decoration: none;
+  transition: background .15s; position: relative;
+}
+.sb-hall:hover { background: rgba(255,255,255,.03); }
+.sb-hall.current { background: var(--accent-dim); }
+.sb-hall.current::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 2px; background: var(--accent); }
+.sb-hall-num { width: 22px; height: 22px; border-radius: 6px; flex-shrink: 0; border: 1px solid var(--border2); font-family: var(--font-mono); font-size: 10px; font-weight: 600; color: var(--dim); display: flex; align-items: center; justify-content: center; }
+.sb-hall.current .sb-hall-num { border-color: var(--accent-border); color: var(--accent); background: var(--accent-dim); }
+.sb-hall-info { flex: 1; min-width: 0; }
+.sb-hall-name { font-family: var(--font-mono); font-size: 10px; font-weight: 500; color: var(--silver2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sb-hall.current .sb-hall-name { color: var(--accent); }
+.sb-hall-title { font-size: 10px; color: var(--dim); margin-top: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sb-status { width: 5px; height: 5px; border-radius: 50%; background: var(--dim); flex-shrink: 0; }
+.sb-status.current { background: var(--accent); animation: pulse 2s infinite; }
+.sb-status.done { background: var(--green); }
+
+/* Dean Eliot sidebar */
+.sb-eliot { margin: 16px 12px 0; background: var(--accent-dim); border: 1px solid var(--accent-border); border-radius: 10px; overflow: hidden; }
+.sb-eliot-header { display: flex; align-items: center; gap: 8px; padding: 10px 12px; border-bottom: 1px solid var(--accent-border); }
+.sb-eliot-avatar { width: 28px; height: 28px; border-radius: 8px; background: rgba(248,113,113,.12); border: 1px solid var(--accent-border); display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0; }
+.sb-eliot-name { font-family: var(--font-mono); font-size: 9.5px; font-weight: 600; letter-spacing: .06em; color: var(--accent); }
+.sb-eliot-role { font-size: 9px; color: var(--silver2); margin-top: 1px; }
+.sb-chips { padding: 8px 10px; display: flex; flex-direction: column; gap: 5px; }
+.sb-chip { font-size: 10.5px; color: var(--silver2); padding: 5px 8px; background: rgba(255,255,255,.03); border: 1px solid var(--border); border-radius: 6px; cursor: pointer; line-height: 1.4; transition: background .15s, border-color .15s; }
+.sb-chip:hover { background: var(--accent-dim); border-color: var(--accent-border); color: var(--white); }
+.sb-eliot-input-row { display: flex; gap: 6px; padding: 8px 10px; border-top: 1px solid var(--border); }
+.sb-eliot-input { flex: 1; background: rgba(255,255,255,.04); border: 1px solid var(--border); border-radius: 6px; padding: 5px 8px; font-size: 11px; font-family: var(--font-body); color: var(--white); outline: none; }
+.sb-eliot-input:focus { border-color: var(--accent-border); }
+.sb-eliot-input::placeholder { color: var(--dim); }
+.sb-eliot-send { width: 28px; height: 28px; border-radius: 6px; background: var(--accent-dim); border: 1px solid var(--accent-border); color: var(--accent); cursor: pointer; font-size: 13px; display: flex; align-items: center; justify-content: center; transition: background .15s; }
+.sb-eliot-send:hover { background: rgba(248,113,113,.2); }
+.sb-eliot-msgs { max-height: 160px; overflow-y: auto; padding: 8px 10px; display: flex; flex-direction: column; gap: 6px; scrollbar-width: thin; }
+.sb-eliot-msgs:empty { display: none; }
+.sb-msg { font-size: 11px; line-height: 1.55; padding: 6px 8px; border-radius: 6px; }
+.sb-msg.user { background: rgba(248,113,113,.1); color: var(--silver); text-align: right; }
+.sb-msg.guide { background: rgba(245,158,11,.06); color: var(--silver); }
+.sb-msg.typing { opacity: .5; }
+.sb-company { margin: 12px 12px 0; background: rgba(255,255,255,.02); border: 1px solid var(--border); border-radius: 10px; padding: 12px; }
+.sb-company-label { font-family: var(--font-mono); font-size: 7.5px; letter-spacing: .1em; color: var(--dim); text-transform: uppercase; margin-bottom: 8px; }
+.sb-company-name { font-family: var(--font-display); font-size: 12px; color: var(--white); margin-bottom: 3px; }
+.sb-company-desc { font-size: 10.5px; color: var(--silver2); line-height: 1.5; }
+
+/* ── LAYOUT ── */
+#app { display: flex; flex-direction: column; min-height: 100vh; padding-top: var(--topbar-h); position: relative; z-index: 1; }
+#body { display: flex; flex: 1; }
+.main { flex: 1; min-width: 0; padding: 36px 52px 96px; animation: fadeUp .5s ease both; }
+
+/* ── CAMPUS MAP ── */
+.campus-map-wrap { margin-bottom: 32px; background: rgba(13,27,46,.6); border: 1px solid var(--border); border-radius: 14px; padding: 16px 20px; overflow: hidden; }
+.campus-map-label { font-family: var(--font-mono); font-size: 8.5px; letter-spacing: .14em; color: var(--dim); text-transform: uppercase; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+.campus-map-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+.campus-map-row { display: flex; align-items: center; gap: 0; overflow-x: auto; scrollbar-width: none; }
+.campus-map-row::-webkit-scrollbar { display: none; }
+.campus-stop { display: flex; flex-direction: column; align-items: center; gap: 5px; flex-shrink: 0; }
+.campus-building { width: 40px; height: 40px; border-radius: 10px; border: 1px solid var(--border2); background: var(--navy3); display: flex; align-items: center; justify-content: center; font-family: var(--font-mono); font-size: 12px; font-weight: 600; color: var(--dim); text-decoration: none; transition: all .2s; }
+.campus-building:hover { transform: translateY(-2px); border-color: var(--silver2); color: var(--silver2); }
+.campus-building.done { background: rgba(74,222,128,.06); border-color: rgba(74,222,128,.2); color: var(--green); }
+.campus-building.active { background: var(--accent-dim); border-color: var(--accent); color: var(--accent); box-shadow: 0 0 18px rgba(248,113,113,.22); }
+.campus-building.locked { opacity: .35; cursor: default; pointer-events: none; }
+.campus-stop-label { font-family: var(--font-mono); font-size: 8px; letter-spacing: .04em; color: var(--dim); text-align: center; max-width: 52px; line-height: 1.3; white-space: nowrap; }
+.campus-stop.active-stop .campus-stop-label { color: var(--accent); }
+.campus-stop.done-stop .campus-stop-label { color: var(--green); }
+.campus-connector { width: 24px; height: 1px; background: var(--border2); flex-shrink: 0; margin-bottom: 18px; position: relative; }
+.campus-connector::after { content: '›'; position: absolute; right: -5px; top: -9px; color: var(--dim); font-size: 10px; }
+
+/* ── HALL HERO ── */
+.hall-hero { margin-bottom: 32px; }
+.hall-eyebrow { display: flex; align-items: center; gap: 8px; font-family: var(--font-mono); font-size: 10px; letter-spacing: .1em; color: var(--accent); text-transform: uppercase; margin-bottom: 10px; }
+.hall-eyebrow-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--accent); animation: pulse 2s infinite; }
+.hall-building-name { font-family: var(--font-display); font-size: 11px; letter-spacing: .18em; color: var(--accent2); text-transform: uppercase; margin-bottom: 6px; }
+.hall-title { font-family: var(--font-display); font-size: 36px; font-weight: 600; color: var(--white); line-height: 1.15; margin-bottom: 14px; letter-spacing: .02em; }
+.hall-title em { font-style: normal; color: var(--accent); animation: glow 4s infinite; }
+.hall-tagline { font-size: 16px; color: var(--silver2); line-height: 1.75; max-width: 700px; margin-bottom: 18px; font-style: italic; }
+.hall-tags { display: flex; gap: 7px; flex-wrap: wrap; }
+.htag { font-family: var(--font-mono); font-size: 9px; letter-spacing: .08em; text-transform: uppercase; padding: 4px 10px; border-radius: 5px; border: 1px solid var(--border2); color: var(--silver2); }
+.htag.red { border-color: rgba(248,113,113,.2); color: var(--red); background: rgba(248,113,113,.05); }
+.htag.amber { border-color: rgba(251,191,36,.2); color: var(--amber); background: var(--amber-dim); }
+.htag.green { border-color: rgba(74,222,128,.2); color: var(--green); background: var(--green-dim); }
+
+/* ── TABS ── */
+.tab-bar { display: flex; gap: 2px; border-bottom: 1px solid var(--border); margin-bottom: 32px; position: sticky; top: var(--topbar-h); background: rgba(8,17,30,.95); backdrop-filter: blur(12px); z-index: 20; padding: 10px 0 0; margin-left: -52px; margin-right: -52px; padding-left: 52px; padding-right: 52px; }
+.tab-btn { display: flex; align-items: center; gap: 7px; padding: 9px 16px; border: none; background: none; cursor: pointer; font-family: var(--font-mono); font-size: 10px; letter-spacing: .07em; text-transform: uppercase; color: var(--dim); border-bottom: 2px solid transparent; margin-bottom: -1px; transition: color .15s, border-color .15s; white-space: nowrap; }
+.tab-btn:hover { color: var(--silver2); }
+.tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+.tab-panel { display: none; animation: fadeUp .25s ease; }
+.tab-panel.active { display: block; }
+
+/* ── GENERAL ── */
+.section { margin-bottom: 48px; }
+.sec-type-bar { display: flex; align-items: center; gap: 8px; margin-bottom: 14px; }
+.sec-h { font-family: var(--font-display); font-size: 22px; font-weight: 600; color: var(--white); margin-bottom: 6px; letter-spacing: .02em; }
+.sec-div { width: 40px; height: 2px; background: linear-gradient(to right, var(--accent), transparent); margin-bottom: 14px; }
+.sec-sub { font-size: 14px; color: var(--silver2); margin-bottom: 20px; font-style: italic; line-height: 1.6; }
+.prose { font-size: 15px; color: var(--silver); line-height: 1.78; margin-bottom: 14px; }
+.prose strong { color: var(--white); font-weight: 500; }
+
+.infobox { display: flex; gap: 12px; border-radius: 10px; padding: 14px 16px; margin: 18px 0; line-height: 1.65; }
+.infobox-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+.infobox-body { font-size: 13.5px; }
+.infobox-body strong { font-weight: 500; }
+.infobox.red { background: rgba(248,113,113,.06); border: 1px solid rgba(248,113,113,.15); color: var(--silver2); }
+.infobox.red .infobox-body strong { color: var(--red); }
+.infobox.tip { background: rgba(74,222,128,.05); border: 1px solid rgba(74,222,128,.14); color: var(--silver2); }
+.infobox.tip .infobox-body strong { color: var(--green); }
+.infobox.warn { background: var(--amber-dim); border: 1px solid var(--amber-border); color: var(--silver2); }
+.infobox.warn .infobox-body strong { color: var(--amber); }
+.infobox.note { background: rgba(56,189,248,.06); border: 1px solid rgba(56,189,248,.15); color: var(--silver2); }
+.infobox.note .infobox-body strong { color: var(--sky); }
+
+/* ── EXAM OVERVIEW ── */
+.exam-overview-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px,1fr)); gap: 12px; margin: 20px 0; }
+.exam-stat { background: var(--navy3); border: 1px solid var(--border); border-radius: 12px; padding: 18px; text-align: center; }
+.exam-stat-value { font-family: var(--font-display); font-size: 32px; font-weight: 600; color: var(--accent); display: block; }
+.exam-stat-label { font-family: var(--font-mono); font-size: 9px; letter-spacing: .1em; text-transform: uppercase; color: var(--dim); margin-top: 4px; }
+.exam-stat.green .exam-stat-value { color: var(--green); }
+.exam-stat.amber .exam-stat-value { color: var(--amber); }
+
+/* ── TOPIC BREAKDOWN ── */
+.topic-grid { display: flex; flex-direction: column; gap: 8px; margin: 20px 0; }
+.topic-row { display: flex; align-items: center; gap: 12px; padding: 12px 16px; background: var(--navy3); border: 1px solid var(--border); border-radius: 10px; transition: border-color .15s; }
+.topic-row:hover { border-color: var(--accent-border); }
+.topic-num { font-family: var(--font-mono); font-size: 10px; color: var(--dim); width: 20px; flex-shrink: 0; }
+.topic-name { flex: 1; font-size: 14px; color: var(--silver); }
+.topic-bar-wrap { width: 120px; height: 6px; background: rgba(255,255,255,.06); border-radius: 3px; overflow: hidden; flex-shrink: 0; }
+.topic-bar { height: 100%; border-radius: 3px; background: var(--accent); }
+.topic-count { font-family: var(--font-mono); font-size: 10px; color: var(--dim); width: 40px; text-align: right; flex-shrink: 0; }
+.topic-badge { font-family: var(--font-mono); font-size: 8px; letter-spacing: .06em; text-transform: uppercase; padding: 2px 8px; border-radius: 4px; flex-shrink: 0; }
+.topic-badge.high { background: rgba(248,113,113,.1); color: var(--red); border: 1px solid rgba(248,113,113,.2); }
+.topic-badge.med { background: var(--amber-dim); color: var(--amber); border: 1px solid var(--amber-border); }
+.topic-badge.low { background: var(--green-dim); color: var(--green); border: 1px solid rgba(74,222,128,.2); }
+
+/* ── MOCK EXAM ENGINE ── */
+.exam-engine { background: var(--navy2); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; }
+.exam-start-screen { padding: 48px 40px; text-align: center; }
+.exam-start-title { font-family: var(--font-display); font-size: 28px; font-weight: 600; color: var(--white); margin-bottom: 12px; }
+.exam-start-desc { font-size: 15px; color: var(--silver2); line-height: 1.7; max-width: 500px; margin: 0 auto 32px; }
+.exam-start-rules { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; max-width: 480px; margin: 0 auto 32px; text-align: left; }
+.exam-rule { display: flex; gap: 10px; align-items: flex-start; padding: 10px 12px; background: rgba(255,255,255,.02); border: 1px solid var(--border); border-radius: 8px; }
+.exam-rule-icon { font-size: 16px; flex-shrink: 0; }
+.exam-rule-text { font-size: 12px; color: var(--silver2); line-height: 1.5; }
+.exam-start-btn { padding: 14px 40px; background: var(--accent); border: none; border-radius: 10px; font-family: var(--font-display); font-size: 14px; font-weight: 600; color: var(--white); cursor: pointer; letter-spacing: .06em; transition: all .2s; }
+.exam-start-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(248,113,113,.3); }
+
+/* ── RUNNING EXAM ── */
+#exam-running { display: none; }
+.exam-topbar { display: flex; align-items: center; justify-content: space-between; padding: 14px 24px; background: rgba(8,17,30,.8); border-bottom: 1px solid var(--border); flex-wrap: wrap; gap: 10px; }
+.exam-q-indicator { font-family: var(--font-mono); font-size: 11px; color: var(--silver2); }
+.exam-q-indicator span { color: var(--white); font-weight: 600; }
+.exam-timer { display: flex; align-items: center; gap: 8px; }
+.exam-timer-icon { font-size: 14px; }
+.exam-timer-value { font-family: var(--font-mono); font-size: 16px; font-weight: 600; color: var(--white); }
+.exam-timer-value.warning { color: var(--amber); animation: timerPulse 1s infinite; }
+.exam-timer-value.danger { color: var(--red); animation: timerPulse .5s infinite; }
+.exam-progress-strip { height: 3px; background: rgba(255,255,255,.06); }
+.exam-progress-fill { height: 100%; background: linear-gradient(to right, var(--accent), var(--amber)); transition: width .3s; }
+.exam-body { padding: 32px 36px 24px; }
+.exam-q-meta { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
+.exam-topic-tag { font-family: var(--font-mono); font-size: 8px; letter-spacing: .08em; text-transform: uppercase; padding: 3px 9px; border-radius: 4px; }
+.exam-diff-tag { font-family: var(--font-mono); font-size: 8px; letter-spacing: .08em; text-transform: uppercase; padding: 3px 9px; border-radius: 4px; }
+.exam-diff-tag.foundation { background: rgba(74,222,128,.1); color: var(--green); border: 1px solid rgba(74,222,128,.2); }
+.exam-diff-tag.practitioner { background: var(--amber-dim); color: var(--amber); border: 1px solid var(--amber-border); }
+.exam-diff-tag.expert { background: rgba(248,113,113,.1); color: var(--red); border: 1px solid rgba(248,113,113,.2); }
+.exam-stem { font-size: 16px; color: var(--white); line-height: 1.7; margin-bottom: 22px; padding: 18px 20px; background: rgba(255,255,255,.02); border: 1px solid var(--border); border-radius: 10px; }
+.exam-options { display: flex; flex-direction: column; gap: 9px; margin-bottom: 24px; }
+.exam-opt { display: flex; align-items: flex-start; gap: 12px; padding: 12px 16px; background: rgba(255,255,255,.02); border: 1px solid var(--border2); border-radius: 9px; cursor: pointer; transition: all .15s; text-align: left; }
+.exam-opt:hover:not(.answered) { border-color: var(--accent-border); background: var(--accent-dim); }
+.exam-opt.selected:not(.answered) { border-color: var(--accent); background: var(--accent-dim); }
+.exam-opt.answered { pointer-events: none; }
+.exam-opt.correct { background: rgba(74,222,128,.08); border-color: rgba(74,222,128,.3); }
+.exam-opt.wrong { background: rgba(248,113,113,.08); border-color: rgba(248,113,113,.3); }
+.exam-opt-letter { font-family: var(--font-mono); font-size: 11px; font-weight: 600; color: var(--dim); width: 20px; flex-shrink: 0; padding-top: 1px; }
+.exam-opt.selected:not(.answered) .exam-opt-letter { color: var(--accent); }
+.exam-opt.correct .exam-opt-letter { color: var(--green); }
+.exam-opt.wrong .exam-opt-letter { color: var(--red); }
+.exam-opt-text { font-size: 14px; color: var(--silver2); line-height: 1.55; flex: 1; }
+.exam-opt.correct .exam-opt-text { color: var(--white); }
+.exam-explanation { margin-bottom: 20px; padding: 14px 16px; background: rgba(56,189,248,.05); border: 1px solid rgba(56,189,248,.14); border-radius: 8px; font-size: 13px; color: var(--silver2); line-height: 1.65; display: none; }
+.exam-explanation.show { display: block; animation: fadeUp .2s ease; }
+.exam-explanation strong { color: var(--sky); }
+.exam-nav-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.exam-nav-btn { padding: 10px 22px; border-radius: 8px; font-family: var(--font-mono); font-size: 10px; letter-spacing: .07em; text-transform: uppercase; cursor: pointer; transition: all .15s; border: 1px solid var(--border2); background: rgba(255,255,255,.03); color: var(--silver2); }
+.exam-nav-btn:hover { border-color: var(--accent-border); color: var(--accent); }
+.exam-nav-btn.primary { background: var(--accent-dim); border-color: var(--accent); color: var(--accent); }
+.exam-nav-btn:disabled { opacity: .35; cursor: default; }
+.exam-answered-dots { display: flex; gap: 4px; flex-wrap: wrap; max-width: 300px; }
+.exam-dot { width: 10px; height: 10px; border-radius: 50%; background: rgba(255,255,255,.1); transition: background .2s; }
+.exam-dot.correct { background: var(--green); }
+.exam-dot.wrong { background: var(--red); }
+.exam-dot.current { background: var(--accent); box-shadow: 0 0 6px rgba(248,113,113,.4); }
+
+/* ── RESULTS SCREEN ── */
+#exam-results { display: none; padding: 40px 36px; }
+.results-header { text-align: center; margin-bottom: 36px; }
+.results-score-circle { width: 140px; height: 140px; border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; margin: 0 auto 20px; border: 3px solid var(--accent); }
+.results-score-circle.pass { border-color: var(--green); }
+.results-score-circle.fail { border-color: var(--red); }
+.results-score-pct { font-family: var(--font-display); font-size: 36px; font-weight: 600; }
+.results-score-circle.pass .results-score-pct { color: var(--green); }
+.results-score-circle.fail .results-score-pct { color: var(--red); }
+.results-score-label { font-family: var(--font-mono); font-size: 9px; letter-spacing: .1em; color: var(--dim); text-transform: uppercase; }
+.results-verdict { font-family: var(--font-display); font-size: 24px; color: var(--white); margin-bottom: 8px; }
+.results-subtitle { font-size: 14px; color: var(--silver2); }
+.results-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px,1fr)); gap: 12px; margin: 24px 0; }
+.results-stat { background: var(--navy3); border: 1px solid var(--border); border-radius: 10px; padding: 16px; text-align: center; }
+.rs-value { font-family: var(--font-display); font-size: 26px; color: var(--white); }
+.rs-label { font-family: var(--font-mono); font-size: 9px; letter-spacing: .08em; color: var(--dim); text-transform: uppercase; margin-top: 4px; }
+.results-topic-breakdown { margin: 24px 0; }
+.rtb-title { font-family: var(--font-mono); font-size: 9px; letter-spacing: .1em; text-transform: uppercase; color: var(--dim); margin-bottom: 12px; }
+.rtb-row { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--border); }
+.rtb-row:last-child { border-bottom: none; }
+.rtb-name { flex: 1; font-size: 13px; color: var(--silver2); }
+.rtb-bar-wrap { width: 100px; height: 5px; background: rgba(255,255,255,.06); border-radius: 3px; overflow: hidden; }
+.rtb-bar { height: 100%; border-radius: 3px; }
+.rtb-score { font-family: var(--font-mono); font-size: 10px; color: var(--dim); width: 36px; text-align: right; }
+.results-review-btn { width: 100%; padding: 14px; background: var(--accent-dim); border: 1px solid var(--accent-border); border-radius: 10px; font-family: var(--font-display); font-size: 14px; color: var(--accent); cursor: pointer; letter-spacing: .06em; transition: all .2s; margin-top: 20px; }
+.results-review-btn:hover { background: rgba(248,113,113,.15); }
+.results-restart-btn { width: 100%; padding: 12px; background: rgba(255,255,255,.03); border: 1px solid var(--border2); border-radius: 10px; font-family: var(--font-mono); font-size: 11px; color: var(--silver2); cursor: pointer; letter-spacing: .07em; text-transform: uppercase; transition: all .2s; margin-top: 10px; }
+.results-restart-btn:hover { border-color: var(--accent-border); color: var(--accent); }
+
+/* ── REVIEW MODE ── */
+#exam-review { display: none; }
+.review-header { display: flex; align-items: center; justify-content: space-between; padding: 14px 24px; background: rgba(8,17,30,.8); border-bottom: 1px solid var(--border); }
+.review-title { font-family: var(--font-mono); font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--dim); }
+.review-back-btn { font-family: var(--font-mono); font-size: 9px; letter-spacing: .07em; text-transform: uppercase; padding: 5px 12px; background: none; border: 1px solid var(--border2); border-radius: 5px; color: var(--silver2); cursor: pointer; transition: all .15s; }
+.review-back-btn:hover { border-color: var(--accent-border); color: var(--accent); }
+.review-body { padding: 24px 28px; }
+.review-q { margin-bottom: 28px; padding: 20px; background: var(--navy3); border: 1px solid var(--border); border-radius: 12px; }
+.review-q.correct-q { border-color: rgba(74,222,128,.2); }
+.review-q.wrong-q { border-color: rgba(248,113,113,.2); }
+.review-q-header { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+.review-q-num { font-family: var(--font-mono); font-size: 10px; font-weight: 600; color: var(--dim); }
+.review-q-result { font-family: var(--font-mono); font-size: 9px; letter-spacing: .07em; text-transform: uppercase; padding: 3px 9px; border-radius: 4px; }
+.review-q-result.correct { background: rgba(74,222,128,.1); color: var(--green); border: 1px solid rgba(74,222,128,.2); }
+.review-q-result.wrong { background: rgba(248,113,113,.1); color: var(--red); border: 1px solid rgba(248,113,113,.2); }
+.review-q-result.skipped { background: rgba(74,96,128,.1); color: var(--dim); border: 1px solid rgba(74,96,128,.2); }
+.review-q-stem { font-size: 14px; color: var(--silver); line-height: 1.65; margin-bottom: 14px; }
+.review-correct-answer { padding: 10px 14px; background: rgba(74,222,128,.06); border: 1px solid rgba(74,222,128,.18); border-radius: 7px; font-size: 13px; color: var(--silver2); margin-bottom: 10px; }
+.review-correct-answer strong { color: var(--green); font-weight: 500; }
+.review-explanation { padding: 10px 14px; background: rgba(56,189,248,.05); border: 1px solid rgba(56,189,248,.14); border-radius: 7px; font-size: 12.5px; color: var(--silver2); line-height: 1.65; }
+
+/* ── SYLLABUS QUICK REF ── */
+.syllabus-table { margin: 20px 0; }
+.syllabus-row { display: flex; gap: 12px; padding: 12px 16px; background: var(--navy3); border: 1px solid var(--border); border-radius: 8px; margin-bottom: 8px; align-items: flex-start; }
+.syllabus-num { font-family: var(--font-mono); font-size: 11px; font-weight: 600; color: var(--accent); width: 24px; flex-shrink: 0; }
+.syllabus-topic { flex: 1; }
+.syllabus-topic-name { font-size: 14px; color: var(--white); font-weight: 500; margin-bottom: 4px; }
+.syllabus-topic-desc { font-size: 12px; color: var(--dim); line-height: 1.55; }
+.syllabus-weight { font-family: var(--font-mono); font-size: 10px; color: var(--amber); flex-shrink: 0; }
+
+/* ── HALL NAV FOOTER ── */
+.hall-nav-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 64px; padding-top: 28px; border-top: 1px solid var(--border); }
+.hnf-prev, .hnf-next { display: flex; align-items: center; gap: 10px; text-decoration: none; padding: 12px 16px; border-radius: 10px; border: 1px solid var(--border); background: var(--navy3); transition: all .2s; }
+.hnf-prev:hover, .hnf-next:hover { border-color: var(--accent-border); background: var(--accent-dim); }
+.hnf-dir { font-family: var(--font-mono); font-size: 8.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--dim); }
+.hnf-name { font-size: 14px; color: var(--white); margin-top: 2px; }
+.hnf-next { flex-direction: row-reverse; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 900px) {
+  .sidebar { display: none; position: fixed; left: 0; top: var(--topbar-h); height: calc(100vh - var(--topbar-h)); z-index: 90; transform: translateX(-100%); transition: transform .25s ease; }
+  .sidebar.open { display: flex; flex-direction: column; transform: translateX(0); }
+  .sidebar-overlay { display: none; }
+  .sidebar-overlay.open { display: block; }
+  .tb-hamburger { display: flex; }
+  .main { padding: 20px 18px 80px; }
+  .tab-bar { margin-left: -18px; margin-right: -18px; padding-left: 18px; padding-right: 18px; overflow-x: auto; scrollbar-width: none; }
+  .tab-bar::-webkit-scrollbar { display: none; }
+  .hall-title { font-size: 26px; }
+  .exam-start-rules { grid-template-columns: 1fr; }
+  .exam-body { padding: 20px 18px 18px; }
+  .review-body { padding: 16px 14px; }
+}
+</style>
+</head>
+<body>
+
+<div id="stars"></div>
+<div class="sidebar-overlay" id="overlay" onclick="closeSidebar()"></div>
+
+<div id="app">
+
+  <!-- ── TOPBAR ── -->
+  <header id="topbar">
+    <a href="https://brainspring.ai" class="tb-logo" target="_blank" rel="noopener">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 36" width="18" height="20">
+        <path d="M16 2L3 9v18l13 7 13-7V9L16 2z" fill="none" stroke="#f87171" stroke-width="2"/>
+        <path d="M16 8l7 4v8l-7 4-7-4v-8l7-4z" fill="#f87171" opacity=".3"/>
+      </svg>
+      <span class="tb-brand"><span class="tb-brain">Brain</span><span class="tb-spring">Spring</span></span>
+    </a>
+    <span class="tb-sep">›</span>
+    <span class="tb-course">Academy of Profit Center</span>
+    <div class="tb-dot"></div>
+    <nav class="tb-nav-right">
+      <a href="hall-1.html" class="tb-link">Foundations</a>
+      <a href="hall-2.html" class="tb-link">Dimensions</a>
+      <a href="hall-3.html" class="tb-link">Models</a>
+      <a href="hall-4.html" class="tb-link">Logic</a>
+      <a href="hall-5.html" class="tb-link">Workshop</a>
+      <a href="hall-6.html" class="tb-link">Control</a>
+      <a href="hall-7.html" class="tb-link">Observatory</a>
+      <a href="hall-8.html" class="tb-link">Pipeline</a>
+      <a href="hall-9.html" class="tb-link current">Exam Hall</a>
+    </nav>
+    <span class="tb-hall-badge">Hall 9 of 9 · Examination Hall</span>
+    <button class="tb-hamburger" onclick="toggleSidebar()" aria-label="Menu">
+      <svg width="18" height="14" viewBox="0 0 18 14" fill="none"><rect width="18" height="2" rx="1" fill="currentColor"/><rect y="6" width="18" height="2" rx="1" fill="currentColor"/><rect y="12" width="18" height="2" rx="1" fill="currentColor"/></svg>
+    </button>
+  </header>
+
+  <div id="body">
+
+    <!-- ── SIDEBAR ── -->
+    <nav class="sidebar" id="sidebar">
+      <div class="sb-label">Academy Halls</div>
+      <a href="hall-1.html" class="sb-hall"><div class="sb-hall-num">1</div><div class="sb-hall-info"><div class="sb-hall-name">Foundations Hall</div><div class="sb-hall-title">Orientation</div></div><div class="sb-status done"></div></a>
+      <a href="hall-2.html" class="sb-hall"><div class="sb-hall-num">2</div><div class="sb-hall-info"><div class="sb-hall-name">Dimensions Gallery</div><div class="sb-hall-title">Geometry of Profit Center</div></div><div class="sb-status done"></div></a>
+      <a href="hall-3.html" class="sb-hall"><div class="sb-hall-num">3</div><div class="sb-hall-info"><div class="sb-hall-name">Models Pavilion</div><div class="sb-hall-title">Perspective Gallery</div></div><div class="sb-status done"></div></a>
+      <a href="hall-4.html" class="sb-hall"><div class="sb-hall-num">4</div><div class="sb-hall-info"><div class="sb-hall-name">Hall of Logic</div><div class="sb-hall-title">Rule Sets &amp; Sequences</div></div><div class="sb-status done"></div></a>
+      <a href="hall-5.html" class="sb-hall"><div class="sb-hall-num">5</div><div class="sb-hall-info"><div class="sb-hall-name">Workshop of Precision</div><div class="sb-hall-title">Custom Calculations</div></div><div class="sb-status done"></div></a>
+      <a href="hall-6.html" class="sb-hall"><div class="sb-hall-num">6</div><div class="sb-hall-info"><div class="sb-hall-name">Control Tower</div><div class="sb-hall-title">Calc Analysis Chamber</div></div><div class="sb-status done"></div></a>
+      <a href="hall-7.html" class="sb-hall"><div class="sb-hall-num">7</div><div class="sb-hall-info"><div class="sb-hall-name">Profit Curve Observatory</div><div class="sb-hall-title">Rule Balancing</div></div><div class="sb-status done"></div></a>
+      <a href="hall-8.html" class="sb-hall"><div class="sb-hall-num">8</div><div class="sb-hall-info"><div class="sb-hall-name">Pipeline Lab</div><div class="sb-hall-title">Data Integration Workshop</div></div><div class="sb-status done"></div></a>
+      <a href="hall-9.html" class="sb-hall current"><div class="sb-hall-num">9</div><div class="sb-hall-info"><div class="sb-hall-name">Examination Hall</div><div class="sb-hall-title">Graduation</div></div><div class="sb-status current"></div></a>
+
+      <div class="sb-label">Dean's Office</div>
+      <div class="sb-eliot">
+        <div class="sb-eliot-header">
+          <div class="sb-eliot-avatar">🎓</div>
+          <div>
+            <div class="sb-eliot-name">Dean Eliot</div>
+            <div class="sb-eliot-role">Senior Oracle EPM Practitioner</div>
+          </div>
+        </div>
+        <div class="sb-chips">
+          <span class="sb-chip" onclick="chipAsk(this)">What are the most dangerous exam distractors?</span>
+          <span class="sb-chip" onclick="chipAsk(this)">Which topics are highest-weighted on 1Z0-1082-25?</span>
+          <span class="sb-chip" onclick="chipAsk(this)">How should I approach the 90-minute timer?</span>
+          <span class="sb-chip" onclick="chipAsk(this)">What is migration from PCM to EPCM?</span>
+        </div>
+        <div class="sb-eliot-msgs" id="sb-msgs"></div>
+        <div class="sb-eliot-input-row">
+          <input class="sb-eliot-input" id="sb-input" type="text" placeholder="Ask the Dean anything…" onkeydown="if(event.key==='Enter')sbSend()">
+          <button class="sb-eliot-send" onclick="sbSend()">↑</button>
+        </div>
+      </div>
+
+      <div class="sb-company">
+        <div class="sb-company-label">Case Company</div>
+        <div class="sb-company-name" id="sb-company-name">NovaPrism Group</div>
+        <div class="sb-company-desc" id="sb-company-desc">$2.1B · 3 divisions · 1 cost centre · 8,400 staff</div>
+      </div>
+    </nav>
+
+    <!-- ── MAIN ── -->
+    <main class="main">
+
+      <!-- Campus Map -->
+      <div class="campus-map-wrap">
+        <div class="campus-map-label">Academy of Profit Center — Your Journey</div>
+        <div class="campus-map-row" id="campus-map"></div>
+      </div>
+
+      <!-- Hall Hero -->
+      <header class="hall-hero">
+        <div class="hall-building-name">Examination Hall</div>
+        <div class="hall-eyebrow">
+          <span class="hall-eyebrow-dot"></span>
+          Hall 9 of 9 · Academy of Profit Center · EPCM Study Tour
+        </div>
+        <h1 class="hall-title">The <em>graduation</em> exam</h1>
+        <p class="hall-tagline">50 questions. 90 minutes. 68% to pass. This is the simulation of Oracle's 1Z0-1082-25 certification exam — built from every concept you've encountered across the nine halls of the Academy. The same traps, the same topic weights, the same pressure. The only difference: here you get the explanations.</p>
+        <div class="hall-tags">
+          <span class="htag red">1Z0-1082-25</span>
+          <span class="htag amber">50 Questions · 90 Min</span>
+          <span class="htag green">68% to Pass</span>
+        </div>
+      </header>
+
+      <!-- TAB BAR -->
+      <div class="tab-bar" role="tablist">
+        <button class="tab-btn active" role="tab" onclick="switchTab('overview',this)"><span>📋</span> Exam Overview</button>
+        <button class="tab-btn" role="tab" onclick="switchTab('mock',this)"><span>📝</span> Mock Exam</button>
+        <button class="tab-btn" role="tab" onclick="switchTab('syllabus',this)"><span>📚</span> Syllabus</button>
+        <button class="tab-btn" role="tab" onclick="switchTab('traps',this)"><span>⚠️</span> Exam Traps</button>
+      </div>
+
+      <!-- ═══════ TAB 1: OVERVIEW ═══════ -->
+      <div class="tab-panel active" id="tab-overview">
+
+        <section class="section">
+          <h2 class="sec-h">Exam at a glance</h2>
+          <div class="sec-div"></div>
+          <p class="sec-sub">Everything you need to know about the 1Z0-1082-25 certification before you enter the exam room.</p>
+
+          <div class="exam-overview-grid">
+            <div class="exam-stat">
+              <span class="exam-stat-value">50</span>
+              <span class="exam-stat-label">Questions</span>
+            </div>
+            <div class="exam-stat amber">
+              <span class="exam-stat-value">90</span>
+              <span class="exam-stat-label">Minutes</span>
+            </div>
+            <div class="exam-stat green">
+              <span class="exam-stat-value">68%</span>
+              <span class="exam-stat-label">Pass Mark</span>
+            </div>
+            <div class="exam-stat">
+              <span class="exam-stat-value">34</span>
+              <span class="exam-stat-label">Min Correct</span>
+            </div>
+            <div class="exam-stat">
+              <span class="exam-stat-value">1.8m</span>
+              <span class="exam-stat-label">Per Question</span>
+            </div>
+            <div class="exam-stat">
+              <span class="exam-stat-value">8</span>
+              <span class="exam-stat-label">Topic Areas</span>
+            </div>
+          </div>
+
+          <div class="infobox tip">
+            <div class="infobox-icon">💡</div>
+            <div class="infobox-body"><strong>Strategy:</strong> You have 1.8 minutes per question. Don't spend more than 2 minutes on any single question — flag it and return. The exam does not penalise skipped questions. Your NovaPrism case study knowledge covers 70%+ of the content.</div>
+          </div>
+        </section>
+
+        <section class="section">
+          <h2 class="sec-h">Topic weight distribution</h2>
+          <div class="sec-div"></div>
+          <p class="sec-sub">The exam syllabus has 8 topic areas. The highest-weighted area — Managing Rule Sets and Rules — can deliver 8–10 questions alone.</p>
+
+          <div class="topic-grid" id="topic-breakdown">
+            <!-- Rendered by JS -->
+          </div>
+        </section>
+
+        <section class="section">
+          <h2 class="sec-h">The three most dangerous distractors</h2>
+          <div class="sec-div"></div>
+
+          <div class="infobox red">
+            <div class="infobox-icon">⚠️</div>
+            <div class="infobox-body"><strong>Distractor 1 — "EPCM uses BSO for its calculation engine."</strong><br>FALSE. EPCM Standard uses ASO (Aggregate Storage) for both cubes. BSO is Planning's engine. This confusion trips candidates who switch between products.</div>
+          </div>
+          <div class="infobox red">
+            <div class="infobox-icon">⚠️</div>
+            <div class="infobox-body"><strong>Distractor 2 — "Dynamic storage members improve performance, so use them for driver members."</strong><br>FALSE. Dynamic members in ASO do not persist values written by rules. Any allocation rule targeting a Dynamic member fails silently. Always Stored for operational dimensions.</div>
+          </div>
+          <div class="infobox red">
+            <div class="infobox-icon">⚠️</div>
+            <div class="infobox-body"><strong>Distractor 3 — "Physical Clear is the EPCM default clear type."</strong><br>FALSE. Logical Clear is the EPCM default. Physical Clear wipes data across all POVs in the ASO block — devastating in a multi-model environment.</div>
+          </div>
+          <div class="infobox red">
+            <div class="infobox-icon">⚠️</div>
+            <div class="infobox-body"><strong>Distractor 4 — "Parallel rule sets can have rules that read values written by other rules in the same set."</strong><br>FALSE. In Parallel execution, all rules start simultaneously. No rule sees another rule's writes within the same parallel set. This produces silent data corruption with no error message.</div>
+          </div>
+          <div class="infobox red">
+            <div class="infobox-icon">⚠️</div>
+            <div class="infobox-body"><strong>Distractor 5 — "Copy POV copies data from PCM_REP to PCM_CLC."</strong><br>FALSE. Copy POV always goes from PCM_CLC (calculation) to PCM_REP (reporting). The direction is one-way and cannot be reversed.</div>
+          </div>
+        </section>
+
+      </div><!-- /overview -->
+
+      <!-- ═══════ TAB 2: MOCK EXAM ═══════ -->
+      <div class="tab-panel" id="tab-mock">
+
+        <section class="section">
+          <h2 class="sec-h">Mock Exam — 1Z0-1082-25 Simulation</h2>
+          <div class="sec-div"></div>
+          <p class="sec-sub">50 questions across all 8 exam topics. Timed at 90 minutes. Explanations shown after each answer.</p>
+
+          <div class="exam-engine" id="exam-engine">
+
+            <!-- START SCREEN -->
+            <div class="exam-start-screen" id="exam-start">
+              <div style="font-size:48px;margin-bottom:16px">📝</div>
+              <div class="exam-start-title">Mock Exam · 1Z0-1082-25</div>
+              <div class="exam-start-desc">Oracle Profitability and Cost Management 2025 Implementation Professional — full simulation across all 8 topic areas.</div>
+              <div class="exam-start-rules">
+                <div class="exam-rule"><div class="exam-rule-icon">⏱️</div><div class="exam-rule-text">90-minute timer starts on first question</div></div>
+                <div class="exam-rule"><div class="exam-rule-icon">📋</div><div class="exam-rule-text">50 multiple-choice questions</div></div>
+                <div class="exam-rule"><div class="exam-rule-icon">💡</div><div class="exam-rule-text">Explanation shown after each answer</div></div>
+                <div class="exam-rule"><div class="exam-rule-icon">🎯</div><div class="exam-rule-text">68% correct = pass (34 of 50)</div></div>
+                <div class="exam-rule"><div class="exam-rule-icon">🔄</div><div class="exam-rule-text">Navigate forward and backward freely</div></div>
+                <div class="exam-rule"><div class="exam-rule-icon">📊</div><div class="exam-rule-text">Full topic breakdown in results</div></div>
+              </div>
+              <button class="exam-start-btn" onclick="startExam()">Begin Exam →</button>
+            </div>
+
+            <!-- RUNNING EXAM -->
+            <div id="exam-running">
+              <div class="exam-topbar">
+                <div class="exam-q-indicator">Question <span id="exam-q-current">1</span> of <span id="exam-q-total">50</span></div>
+                <div class="exam-answered-dots" id="exam-dots"></div>
+                <div class="exam-timer">
+                  <div class="exam-timer-icon">⏱️</div>
+                  <div class="exam-timer-value" id="exam-timer">90:00</div>
+                </div>
+              </div>
+              <div class="exam-progress-strip">
+                <div class="exam-progress-fill" id="exam-progress-fill" style="width:0%"></div>
+              </div>
+              <div class="exam-body">
+                <div class="exam-q-meta">
+                  <span class="exam-diff-tag" id="exam-diff-tag">Foundation</span>
+                  <span class="exam-topic-tag" id="exam-topic-tag" style="font-family:var(--font-mono);font-size:8px;color:var(--dim)"></span>
+                </div>
+                <div class="exam-stem" id="exam-stem"></div>
+                <div class="exam-options" id="exam-options"></div>
+                <div class="exam-explanation" id="exam-explanation"></div>
+                <div class="exam-nav-row">
+                  <button class="exam-nav-btn" id="btn-prev" onclick="examNav(-1)" disabled>← Previous</button>
+                  <button class="exam-nav-btn" id="btn-skip" onclick="skipQuestion()">Skip for Now</button>
+                  <button class="exam-nav-btn primary" id="btn-next" onclick="examNav(1)">Next →</button>
+                  <button class="exam-nav-btn primary" id="btn-finish" onclick="finishExam()" style="display:none">Finish Exam</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- RESULTS -->
+            <div id="exam-results">
+              <div class="results-header">
+                <div class="results-score-circle" id="results-circle">
+                  <div class="results-score-pct" id="results-pct">0%</div>
+                  <div class="results-score-label">Score</div>
+                </div>
+                <div class="results-verdict" id="results-verdict">—</div>
+                <div class="results-subtitle" id="results-subtitle">—</div>
+              </div>
+              <div class="results-grid" id="results-grid"></div>
+              <div class="results-topic-breakdown">
+                <div class="rtb-title">Performance by topic</div>
+                <div id="rtb-rows"></div>
+              </div>
+              <button class="results-review-btn" onclick="enterReview()">Review All Questions →</button>
+              <button class="results-restart-btn" onclick="restartExam()">Start New Attempt</button>
+            </div>
+
+            <!-- REVIEW -->
+            <div id="exam-review">
+              <div class="review-header">
+                <span class="review-title">Question Review — All 50</span>
+                <button class="review-back-btn" onclick="backToResults()">← Back to Results</button>
+              </div>
+              <div class="review-body" id="review-body"></div>
+            </div>
+
+          </div>
+        </section>
+
+      </div><!-- /mock -->
+
+      <!-- ═══════ TAB 3: SYLLABUS ═══════ -->
+      <div class="tab-panel" id="tab-syllabus">
+
+        <section class="section">
+          <h2 class="sec-h">Official Syllabus — 1Z0-1082-25</h2>
+          <div class="sec-div"></div>
+          <p class="sec-sub">Eight topic areas, mapped to the Academy halls where they are covered. Use this as your revision checklist.</p>
+
+          <div class="syllabus-table" id="syllabus-table">
+            <!-- Rendered by JS -->
+          </div>
+        </section>
+
+      </div><!-- /syllabus -->
+
+      <!-- ═══════ TAB 4: TRAPS ═══════ -->
+      <div class="tab-panel" id="tab-traps">
+
+        <section class="section">
+          <h2 class="sec-h">The Complete Exam Trap Reference</h2>
+          <div class="sec-div"></div>
+          <p class="sec-sub">Every significant distractor pattern across all 9 halls. Memorise these before exam day.</p>
+
+          <div id="all-traps-container">
+            <!-- Rendered by JS -->
+          </div>
+        </section>
+
+      </div><!-- /traps -->
+
+      <!-- Hall Nav Footer -->
+      <div class="hall-nav-footer">
+        <a href="hall-8.html" class="hnf-prev">
+          <span style="font-size:14px">←</span>
+          <div><div class="hnf-dir">Previous Hall</div><div class="hnf-name">Pipeline Lab</div></div>
+        </a>
+        <a href="index.html" class="hnf-next">
+          <div><div class="hnf-dir">Back to</div><div class="hnf-name">Academy Home</div></div>
+          <span style="font-size:14px">→</span>
+        </a>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<!-- ══ SCRIPTS ══ -->
+<script src="./constants.js"></script>
+<script>
+
+/* ── Stars ── */
+(function(){
+  var s=document.getElementById('stars');
+  for(var i=0;i<50;i++){
+    var d=document.createElement('div');d.className='star';
+    var sz=Math.random()*1.2+0.3;
+    d.style.cssText='width:'+sz+'px;height:'+sz+'px;top:'+Math.random()*100+'%;left:'+Math.random()*100+'%;--d:'+(3+Math.random()*6)+'s;--delay:'+Math.random()*8+'s;--op:'+(0.04+Math.random()*0.12);
+    s.appendChild(d);
+  }
+})();
+
+/* ── Sidebar ── */
+function toggleSidebar(){ document.getElementById('sidebar').classList.toggle('open'); document.getElementById('overlay').classList.toggle('open'); }
+function closeSidebar(){ document.getElementById('sidebar').classList.remove('open'); document.getElementById('overlay').classList.remove('open'); }
+
+/* ── Campus map ── */
+(function(){
+  var halls=[{n:1,name:'Foundations',url:'hall-1.html'},{n:2,name:'Dimensions',url:'hall-2.html'},{n:3,name:'Models',url:'hall-3.html'},{n:4,name:'Logic',url:'hall-4.html'},{n:5,name:'Workshop',url:'hall-5.html'},{n:6,name:'Control',url:'hall-6.html'},{n:7,name:'Observatory',url:'hall-7.html'},{n:8,name:'Pipeline',url:'hall-8.html'},{n:9,name:'Exam Hall',url:'hall-9.html'}];
+  var map=document.getElementById('campus-map');
+  var html='';
+  halls.forEach(function(h,i){
+    var cls=h.n===9?'campus-building active':h.n<9?'campus-building done':'campus-building locked';
+    var stopCls=h.n===9?'campus-stop active-stop':h.n<9?'campus-stop done-stop':'campus-stop';
+    html+='<div class="'+stopCls+'"><a href="'+h.url+'" class="'+cls+'">'+h.n+'</a><div class="campus-stop-label">'+h.name+'</div></div>';
+    if(i<halls.length-1) html+='<div class="campus-connector"></div>';
+  });
+  map.innerHTML=html;
+})();
+
+/* ── Company sidebar ── */
+(function(){
+  if(typeof NP==='undefined') return;
+  var c=NP.company;
+  var el=document.getElementById('sb-company-desc');
+  if(el) el.textContent='$'+(c.revenue/1000).toFixed(1)+'B · 3 divisions · 1 cost centre · '+c.employees.toLocaleString()+' staff';
+})();
+
+/* ── Tabs ── */
+function switchTab(name,btn){
+  document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.remove('active');});
+  document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('active');});
+  document.getElementById('tab-'+name).classList.add('active');
+  btn.classList.add('active');
+}
+
+/* ══════════════════════════════════════════
+   TOPIC DATA
+══════════════════════════════════════════ */
+var TOPICS = [
+  { name:'Setting up the application', hall:1, qCount:5, weight:'high' },
+  { name:'Designing dimensions', hall:2, qCount:7, weight:'high' },
+  { name:'Working with POVs and models', hall:3, qCount:5, weight:'med' },
+  { name:'Managing rule sets and rules', hall:4, qCount:10, weight:'high' },
+  { name:'Calculating models', hall:5, qCount:7, weight:'high' },
+  { name:'Analyzing data', hall:7, qCount:6, weight:'med' },
+  { name:'Managing data integration', hall:8, qCount:6, weight:'med' },
+  { name:'Migrating PCM applications to EPCM', hall:1, qCount:4, weight:'low' },
+];
+
+/* ── Topic breakdown ── */
+(function(){
+  var container=document.getElementById('topic-breakdown');
+  if(!container) return;
+  var html='';
+  TOPICS.forEach(function(t,i){
+    var barW=Math.round(t.qCount/10*100);
+    var badgeCls=t.weight==='high'?'high':t.weight==='med'?'med':'low';
+    html+='<div class="topic-row">';
+    html+='<span class="topic-num">H'+t.hall+'</span>';
+    html+='<span class="topic-name">'+t.name+'</span>';
+    html+='<div class="topic-bar-wrap"><div class="topic-bar" style="width:'+barW+'%"></div></div>';
+    html+='<span class="topic-count">~'+t.qCount+'q</span>';
+    html+='<span class="topic-badge '+badgeCls+'">'+t.weight+'</span>';
+    html+='</div>';
+  });
+  container.innerHTML=html;
+})();
+
+/* ── Syllabus ── */
+var SYLLABUS_DETAIL = [
+  { topic:'Setting up the application', hall:1, subtopics:['Describe EPCM applications (Standard vs Custom)', 'Create an application', 'Configure application settings (calcThreads, allocPrec)', 'Understand the dual-cube architecture (PCM_CLC + PCM_REP)'] },
+  { topic:'Designing dimensions', hall:2, subtopics:['Describe dimension types and storage properties', 'Explain PCM_Balance system dimension and its 6 members', 'Design alternate hierarchies for Period/View', 'Consequences of Dynamic vs Stored storage', 'Max user dimensions (20 in Standard)'] },
+  { topic:'Working with POVs and models', hall:3, subtopics:['Describe POVs and models', 'Manage POVs (Named POV vs Copy POV)', 'Copy POV direction (PCM_CLC → PCM_REP)', 'Default Clear Type (Logical Clear)', 'Model property locking after first calculation run'] },
+  { topic:'Managing rule sets and rules', hall:4, subtopics:['Describe rule sets (Serial vs Parallel execution)', 'Describe rule types (Allocation, Custom Calc, Offset)', 'Manage rule sets — sequence numbers and dependencies', 'calcThreads application setting', 'Custom Calculation script syntax (FIX, NONEMPTYTUPLE)'] },
+  { topic:'Calculating models', hall:5, subtopics:['Calculate a model (Execution Control)', 'Multi-POV calculation', 'Calculation Analysis page', 'Statistics reports (Summary, Diagnostics, Comparison)', 'Performance tuning: FIX, NONEMPTYTUPLE, Logical Clear'] },
+  { topic:'Analyzing data', hall:7, subtopics:['Rule Balancing page and reports', 'PCM_Balance dimension members', 'Profit Curves (x-axis sorting, y-axis cumulative measure)', 'Category Analysis on profit curve segments', 'Security: who can define vs view profit curves'] },
+  { topic:'Managing data integration', hall:8, subtopics:['Registration types (Local Application, Cloud EPM, ERP Cloud)', 'Integration types (Direct, File-based, Cross-EPM, REST API)', 'Member mapping types (Explicit, Like, Between, Multi-dimensional)', 'Pipeline job types supported for EPCM', 'Writeback to Oracle ERP Cloud GL'] },
+  { topic:'Migrating PCM applications to EPCM', hall:1, subtopics:['Differences between legacy PCM and EPCM', 'Dual-cube architecture (new in June 2022)', 'ASO vs BSO architecture differences', 'Migration approach and considerations'] },
+];
+
+(function(){
+  var container=document.getElementById('syllabus-table');
+  if(!container) return;
+  var html='';
+  SYLLABUS_DETAIL.forEach(function(s,i){
+    html+='<div class="syllabus-row">';
+    html+='<span class="syllabus-num">'+(i+1)+'</span>';
+    html+='<div class="syllabus-topic">';
+    html+='<div class="syllabus-topic-name">'+s.topic+'</div>';
+    html+='<div class="syllabus-topic-desc">Hall '+s.hall+' · '+s.subtopics.join(' · ')+'</div>';
+    html+='</div>';
+    var t=TOPICS[i];
+    if(t) html+='<span class="syllabus-weight">~'+t.qCount+'q</span>';
+    html+='</div>';
+  });
+  container.innerHTML=html;
+})();
+
+/* ── All Traps ── */
+var ALL_TRAPS = [
+  { hall:'H1', trap:'EPCM is just PCM renamed', truth:'FALSE — EPCM added dual-cube ASO architecture + EPM Platform integration, released June 2022. Legacy PCM was single-cube on-premise.' },
+  { hall:'H1', trap:'EPCM Standard uses BSO for calculation', truth:'FALSE — Both PCM_CLC and PCM_REP are ASO. Planning uses BSO. Do not confuse the two products.' },
+  { hall:'H1', trap:'Physical Clear is the EPCM default', truth:'FALSE — Logical Clear is the default. Physical Clear wipes the entire ASO block including other models' data.' },
+  { hall:'H2', trap:'Dynamic members are fine for rule targets', truth:'FALSE — Dynamic members in ASO do not persist values written by rules. Any rule targeting a Dynamic member fails silently.' },
+  { hall:'H2', trap:'PCM_Balance can be renamed', truth:'FALSE — PCM_Balance is a System dimension. Its 6 member names and structure are fixed and cannot be modified.' },
+  { hall:'H2', trap:'YTD needs a separate View dimension with Dynamic members', truth:'FALSE — Use alternate hierarchies in the Period dimension (Stored members). Dynamic YTD formula members cannot be rule write targets.' },
+  { hall:'H3', trap:'Copy POV copies from PCM_REP to PCM_CLC', truth:'FALSE — Copy POV is always CLC → REP. This is a one-way operation from calculation to reporting.' },
+  { hall:'H3', trap:'Scenario can be changed after first calculation run', truth:'FALSE — Scenario and Version are locked after the first calculation run. You must create a new model.' },
+  { hall:'H3', trap:'Named POV and Copy POV are the same thing', truth:'FALSE — Named POV is a saved navigation shortcut. Copy POV is an administrative data transfer operation between cubes.' },
+  { hall:'H4', trap:'Parallel rule sets are always faster than Serial', truth:'FALSE — Parallel only helps when calcThreads > 1 AND rules have no intra-set read/write dependencies.' },
+  { hall:'H4', trap:'Parallel rule sets can have rules that read each other\'s writes', truth:'FALSE — All rules in a Parallel set start simultaneously. No rule sees another rule\'s freshly written values. Silent data corruption results.' },
+  { hall:'H4', trap:'Allocation rules can aggregate GL accounts into pools', truth:'FALSE — Allocation rules require a pre-existing pool total. Use Custom Calculation rules for aggregation.' },
+  { hall:'H4', trap:'calcThreads is set per rule set', truth:'FALSE — calcThreads is an application-level property. It applies to all models and rule sets.' },
+  { hall:'H5', trap:'FIX and NONEMPTYTUPLE are interchangeable', truth:'FALSE — FIX restricts to named members. NONEMPTYTUPLE skips empty combinations within the FIX scope. Both serve different purposes.' },
+  { hall:'H5', trap:'Custom Calc automatically writes PCM_Allocated_Out', truth:'FALSE — Only Allocation rules auto-manage PCM_Balance. Custom Calc requires explicit writes of both PCM_Allocated_In AND PCM_Allocated_Out.' },
+  { hall:'H5', trap:'Removing FIX gives more accurate results', truth:'FALSE — FIX is a performance scope restriction. Removing it does not change results — only makes the script catastrophically slower.' },
+  { hall:'H6', trap:'Calculation Statistics Summary shows Physical Clear settings', truth:'FALSE — Summary shows Top 10 Longest Running Rules, elapsed time, updated cells, and scripts generated. Not clear settings.' },
+  { hall:'H6', trap:'Calculation records are kept indefinitely', truth:'FALSE — EPCM auto-purges old calculation records. Archive important runs via Export to Excel before they disappear.' },
+  { hall:'H7', trap:'Profit curve x-axis shows least profitable customers on left', truth:'FALSE — The x-axis sorts in DESCENDING order. Most profitable is on the LEFT, least (or negative) on the RIGHT.' },
+  { hall:'H8', trap:'EPCM can integrate with EPM Planning', truth:'FALSE — EPCM does NOT integrate with EPM Planning (EPBCS). It integrates with ERP Cloud and other EPM processes, not Planning.' },
+  { hall:'H8', trap:'Native EPCM rules can be called directly from a Pipeline', truth:'FALSE — Only Calculation Manager business rules work in Pipelines. Use Groovy to call EPCM REST APIs as a workaround for native rules.' },
+];
+
+(function(){
+  var container=document.getElementById('all-traps-container');
+  if(!container) return;
+  var byHall={};
+  ALL_TRAPS.forEach(function(t){
+    if(!byHall[t.hall]) byHall[t.hall]=[];
+    byHall[t.hall].push(t);
+  });
+  var html='';
+  Object.keys(byHall).sort().forEach(function(hall){
+    var traps=byHall[hall];
+    html+='<h3 style="font-family:var(--font-mono);font-size:11px;letter-spacing:.1em;color:var(--dim);text-transform:uppercase;margin:28px 0 12px">'+hall+'</h3>';
+    traps.forEach(function(t){
+      html+='<div class="infobox red" style="margin:8px 0">';
+      html+='<div class="infobox-icon">⚠️</div>';
+      html+='<div class="infobox-body"><strong>'+t.trap+'</strong><br>'+t.truth+'</div>';
+      html+='</div>';
+    });
+  });
+  container.innerHTML=html;
+})();
+
+/* ══════════════════════════════════════════
+   EXAM QUESTION BANK — 50 QUESTIONS
+══════════════════════════════════════════ */
+var EXAM_QUESTIONS = [
+  // TOPIC 1: Setting up the application (5)
+  { topic:0, diff:'foundation', stem:'Which statement correctly describes the architecture of EPCM Standard?', opts:['EPCM Standard uses a single BSO cube for both calculation and reporting','EPCM Standard uses two prebuilt ASO cubes: PCM_CLC for calculation and PCM_REP for reporting','EPCM Standard uses BSO for calculation (PCM_CLC) and ASO for reporting (PCM_REP)','EPCM Standard can use either BSO or ASO depending on the application type selected at creation'], correct:1, explain:'EPCM Standard uses ASO (Aggregate Storage) for BOTH prebuilt cubes — PCM_CLC (calculation) and PCM_REP (reporting). This is one of the most commonly tested facts and the most common wrong answer substitutes BSO, which is the Planning engine.' },
+  { topic:0, diff:'foundation', stem:'NovaPrism\'s implementation team wants to create the EPCM application in the production environment. Which role is required?', opts:['Power User','Calculation Manager Designer','Service Administrator','Provisioning Administrator'], correct:2, explain:'Only a Service Administrator can create an EPCM application. Power Users can manage many features but cannot provision new applications. This is tested because it establishes the governance boundary around application creation.' },
+  { topic:0, diff:'practitioner', stem:'NovaPrism uses Oracle EPM Cloud and already has Financial Consolidation and Close (FCCS). They want to add EPCM. What is true about the licensing?', opts:['EPCM requires a separate licence add-on to the EPM subscription','EPCM is included in Oracle\'s Enterprise EPM bundle at no additional licence cost','EPCM requires Oracle ERP Cloud as a prerequisite','EPCM can only be provisioned as a standalone application, not alongside FCCS'], correct:1, explain:'EPCM is included in Oracle\'s Enterprise EPM bundle. If NovaPrism already runs Planning, FCCS, or other Oracle EPM Cloud applications, EPCM is available at no additional licence cost. This changes the build-vs-buy calculation significantly.' },
+  { topic:0, diff:'foundation', stem:'EPCM was introduced as a cloud-native product (as distinct from legacy on-premises PCM) in which year?', opts:['2019','2020','2021','2022'], correct:3, explain:'EPCM was released in June 2022. Any question about migration from legacy PCM to EPCM assumes the target was the cloud-native product launched in 2022 with the dual-cube ASO architecture.' },
+  { topic:0, diff:'expert', stem:'What is the primary architectural difference between legacy on-premises PCM and EPCM that makes EPCM suitable for production monthly close?', opts:['EPCM uses a relational database instead of Essbase','EPCM separates calculation (PCM_CLC) from reporting (PCM_REP) in two ASO cubes, preventing mid-calculation reporting interruptions','EPCM uses BSO instead of ASO, providing better multi-user write performance','EPCM supports unlimited parallel calculation threads, whereas legacy PCM was limited to single-threaded'], correct:1, explain:'The dual-cube design is the primary architectural advance. Legacy PCM used a single ASO database where calculation and reporting happened concurrently — users saw partial or intermediate results during recalculation. EPCM\'s PCM_REP is only updated when Copy POV explicitly runs, keeping it stable throughout the calculation window.' },
+
+  // TOPIC 2: Designing dimensions (7)
+  { topic:1, diff:'foundation', stem:'In EPCM Standard (ASO), what is the consequence of setting an operational dimension member to Dynamic storage?', opts:['The member calculates faster than Stored members','Allocation rules targeting Dynamic members will fail silently — written values are not persisted','Dynamic members cannot have child members in the hierarchy','Dynamic members cause the model to exceed the maximum dimension count'], correct:1, explain:'Dynamic members in ASO do not persist written values. They recalculate from stored children at query time. Any allocation rule targeting a Dynamic member will execute without error but the written value disappears immediately. This is the most dangerous ASO dimension misconfiguration.' },
+  { topic:1, diff:'foundation', stem:'How many members does the PCM_Balance system dimension have?', opts:['4','5','6','8'], correct:2, explain:'PCM_Balance has exactly 6 members: PCM_Input, PCM_Allocated_In, PCM_Allocated_Out, PCM_Adjustment_In, PCM_Adjustment_Out, and PCM_Output. Memorise all 6 — they appear in rule syntax questions throughout the exam.' },
+  { topic:1, diff:'practitioner', stem:'NovaPrism needs YTD and QTD views in their EPCM reports. A developer proposes creating a View dimension with Dynamic Calculation formula members that sum Period members. What is the primary problem with this approach?', opts:['EPCM Standard does not support Dynamic Calculation members in any dimension','Dynamic members cannot be targets of allocation rule writes — any rule needing to write a value at a View intersection will fail silently','The YTD formula would create a circular reference with the Period dimension','The View dimension would exceed the 20 user-defined dimension limit'], correct:1, explain:'Dynamic members do not store values. If any rule needs to write to a View dimension member, the write fails silently. The correct design uses alternate hierarchies within the Period dimension — YTD and QTD are aggregations of Stored Period members, not Dynamic formula members.' },
+  { topic:1, diff:'foundation', stem:'What is the maximum number of user-defined dimensions in EPCM Standard?', opts:['10','15','20','Unlimited'], correct:2, explain:'EPCM Standard supports up to 20 user-defined dimensions. NovaPrism uses 10 user-defined plus PCM_Balance (system) = 11 total. Note: the limit is on USER-DEFINED dimensions, not total dimensions including system dimensions.' },
+  { topic:1, diff:'practitioner', stem:'NovaPrism\'s Account dimension has 1,200 GL accounts. These must be grouped into 8 cost pools for allocation. Which design correctly handles this?', opts:['Create a separate Cost_Pool dimension with 8 members','Use alternate hierarchies within the Account dimension to group GL accounts into cost pool parents','Create a Custom Calculation rule that assigns each GL account to a pool at runtime','Use the Function dimension to represent cost pools instead of Account'], correct:1, explain:'Alternate hierarchies within the Account dimension group the 1,200 GL accounts into cost pools without adding a new dimension. This avoids a cross-dimensional design requiring rules to manage two representations of the same concept, and reduces cube complexity.' },
+  { topic:1, diff:'practitioner', stem:'Which of the following describes the PCM_Balance dimension correctly?', opts:['A user-defined dimension that the implementer configures during application setup','A prebuilt System dimension with 6 fixed members that cannot be renamed or restructured','An optional dimension added only when the model requires adjustment tracking','A dimension specific to the reporting cube (PCM_REP) that does not appear in PCM_CLC'], correct:1, explain:'PCM_Balance is a System dimension — prebuilt by EPCM, not configurable by the implementer. Its 6 member names are fixed. This is the most commonly misunderstood dimension because legacy PCM gave more flexibility in dimension naming.' },
+  { topic:1, diff:'expert', stem:'NovaPrism\'s Customer dimension has 60 engagement codes plus an All_Customers rollup. After running the Engagement Contribution ruleset, the Customer dimension total for DS does not reconcile with the Entity dimension total for DS. What is most likely missing?', opts:['The All_Customers rollup member should be Dynamic, not Stored','A No_Customer member is missing — costs not yet attributed to a specific engagement have no valid target and are lost from the Customer subtotal','The Customer dimension should be set to Dynamic to allow runtime aggregation','The Engagement Contribution ruleset must run in Serial mode, not Parallel'], correct:1, explain:'Without a No_Customer member, costs that cannot be attributed to a specific engagement at allocation time have no valid Customer target. These costs effectively disappear from the Customer dimension total, causing it to fall short of the Entity dimension total. No_Customer is the holding member for unattributed costs, and its presence restores the balance.' },
+
+  // TOPIC 3: POVs and Models (5)
+  { topic:2, diff:'foundation', stem:'What does Copy POV do in EPCM?', opts:['It copies a saved POV selector setting from one user to another','It transfers a specific Scenario × Version × Period slice from PCM_CLC to PCM_REP','It copies data from PCM_REP back to PCM_CLC for recalculation','It creates a snapshot of the PCM_CLC cube for archival purposes'], correct:1, explain:'Copy POV transfers data from the calculation cube (PCM_CLC) to the reporting cube (PCM_REP). This is a one-way administrative operation. PCM_REP is only updated when Copy POV explicitly runs — not automatically during or after calculation.' },
+  { topic:2, diff:'foundation', stem:'What is the default Clear Type in EPCM?', opts:['Physical Clear','Logical Clear','Full Clear','Partial Clear'], correct:1, explain:'Logical Clear is the EPCM default. It marks the target POV cells as cleared without physically deleting them. Physical Clear removes data from the entire ASO block — which includes data from other models at the same Period intersection — making it dangerous in multi-model environments.' },
+  { topic:2, diff:'practitioner', stem:'After creating model M01 with Scenario = Actual and running the first calculation, the Finance Director wants to change the Scenario to Forecast. What is the correct action?', opts:['Edit M01\'s Scenario property — this is editable at any time','Delete all data from PCM_CLC, then edit M01\'s Scenario property','Create a new model M02 with Scenario = Forecast — M01\'s Scenario is locked after first calculation','Change the Scenario in the POV selector before the next M01 run'], correct:2, explain:'Scenario and Version are locked after the first calculation run. They cannot be edited regardless of whether data is cleared. The correct action is to create a new model. Model Name and rule set assignments remain editable — but not the Scenario or Version.' },
+  { topic:2, diff:'practitioner', stem:'NovaPrism\'s CFO is reviewing Q1 Actual results in Smart View (connected to PCM_REP) while the Finance Controller runs the Q1 Forecast allocation in PCM_CLC. What happens to the CFO\'s view?', opts:['The Forecast recalculation overwrites PCM_REP in real time, disrupting the CFO\'s view','PCM_REP is locked during any active PCM_CLC calculation, preventing the CFO from accessing it','PCM_REP remains stable with the last published data — the CFO\'s view is unaffected until Copy POV runs','Both cubes must be cleared before a new calculation, so the CFO must wait'], correct:2, explain:'The dual-cube architecture\'s core value is exactly this scenario. PCM_REP contains the last published data and is untouched by PCM_CLC calculations. The CFO can continue reading from PCM_REP indefinitely while any calculation runs in PCM_CLC.' },
+  { topic:2, diff:'expert', stem:'NovaPrism\'s M04 What-If model uses Scenario = Actual and Version = WhatIf. Why not Scenario = What-If and Version = Working?', opts:['What-If is not a valid Scenario in EPCM Standard','Using Actual/WhatIf allows M04 to read M01\'s real Actual base data, while the WhatIf Version isolates restructure results from real Actual/Working data','The WhatIf Version forces Serial execution mode required for the restructure scenario','Copy POV only works between Actual Scenario members'], correct:1, explain:'By using Actual as the Scenario and WhatIf as the Version, M04 can reference NovaPrism\'s real Q1 Actual data from M01 as its starting point without a separate data load. The WhatIf Version then isolates the restructure calculation results from the real Actual/Working data, preventing contamination.' },
+
+  // TOPIC 4: Rule sets and rules (10)
+  { topic:3, diff:'foundation', stem:'In a Parallel rule set, Rule 2 requires the value that Rule 1 writes. What happens?', opts:['EPCM detects the dependency and automatically sequences Rule 2 to run after Rule 1','Rule 2 runs simultaneously with Rule 1 and reads the pre-execution value — typically zero — not Rule 1\'s output','EPCM raises a validation error at model save time preventing the model from running','Rule 2 is automatically moved to a Serial rule set by the EPCM engine'], correct:1, explain:'In a Parallel rule set, all rules start simultaneously and read the values that exist in the cube BEFORE any rule in the set has written anything. Rule 2 reads the pre-execution value (zero or last period\'s data), producing wrong output with no error message. This is the most dangerous Parallel misconfiguration.' },
+  { topic:3, diff:'foundation', stem:'What is the purpose of sequence numbers in EPCM rule sets?', opts:['They control the execution order within a rule set (lower = first)','They control the execution order of rule sets within a model — EPCM always runs in ascending sequence number order','They identify rules uniquely within the application and must be globally unique','They determine whether a rule set runs in Serial or Parallel mode'], correct:1, explain:'EPCM executes all rule sets assigned to a model in ascending sequence number order, without exception. The sequence number is the dependency contract — seq:40 cannot start until all lower-numbered rule sets complete. No additional dependency configuration is needed.' },
+  { topic:3, diff:'practitioner', stem:'Which rule type should be used to sum 120+ GL account members into a single IT pool staging member?', opts:['Allocation rule — it is designed for aggregating source data','Custom Calculation rule — it can read a set of members and write a computed total','Offset rule — it creates a balancing entry that aggregates costs','All three rule types support aggregation equally'], correct:1, explain:'Allocation rules require a single pre-existing pool total as source. They cannot aggregate multiple members. A Custom Calculation rule using @SUMRANGE and @DESCENDANTS iterates over the GL account members and writes the aggregate to the staging member.' },
+  { topic:3, diff:'practitioner', stem:'NovaPrism\'s seq:10 (IT Cost Pool Formation) is Serial. Seq:40 (IT Allocation) is also Serial and depends on seq:10. How does EPCM enforce this dependency?', opts:['Seq:40 includes a dependency declaration naming seq:10 as its prerequisite','EPCM runs rule sets in ascending sequence number order — seq:40\'s higher number ensures it runs after seq:10 completes','The Finance Controller must manually verify seq:10 completed before running seq:40','Seq:10 writes a completion flag that seq:40 reads before starting'], correct:1, explain:'No dependency declaration is needed. EPCM\'s guaranteed ascending sequence execution means seq:40 simply cannot start until all lower-numbered rule sets (10, 20, 30) have completed. The sequence number IS the dependency contract.' },
+  { topic:3, diff:'practitioner', stem:'Which of the following correctly describes when to use a Serial execution rule set?', opts:['When you want faster execution — Serial uses multiple threads','When later rules in the set need to read values written by earlier rules in the same set','When all rules in the set write to completely independent cell intersections','When performance is not a concern and you want simpler rule design'], correct:1, explain:'Serial execution is required when any rule in the set reads a value written by a prior rule in the same set. Rules execute sequentially, so Rule N+1 sees Rule N\'s written values. Parallel execution, where all rules start simultaneously, cannot support any intra-set read/write dependency.' },
+  { topic:3, diff:'foundation', stem:'What is the purpose of an Offset rule?', opts:['It offsets the cost of running a calculation by optimising resource use','It creates a balancing contra-entry to zero out a cost centre after all its costs have allocated out','It allocates costs in the opposite direction to reverse a prior allocation','It is a type of Custom Calculation rule for computing net values'], correct:1, explain:'An Offset rule creates the balancing entry that confirms a cost centre has fully allocated its costs out. For NovaPrism\'s Enterprise Support, after all four pools allocate out, an Offset rule confirms ES\'s PCM_Output = $134M − $134M = $0. If this fails, Rule Balancing flags the residual.' },
+  { topic:3, diff:'expert', stem:'NovaPrism has 18 rules across 5 rule sets. The application has calcThreads = 5. What is the maximum number of rules that can execute simultaneously at any moment during a model run?', opts:['5 — limited by the calcThreads setting','18 — all rules can run in parallel','6 — the parallel rule set with the most rules (seq:50 with 6 rules)','3 — only Serial rule sets with 3 rules can saturate available threads'], correct:2, explain:'The maximum simultaneous rule execution equals the largest Parallel rule set or calcThreads, whichever is smaller. Seq:50 has 6 parallel rules. With calcThreads = 5, only 5 start simultaneously, with the 6th queued. The maximum theoretical concurrent execution at any point is min(6, 5) = 5.' },
+  { topic:3, diff:'practitioner', stem:'NovaPrism\'s implementation team wants to insert a new rule set between seq:20 and seq:30. What sequence number should the new rule set receive?', opts:['21 — the next available integer','25 — midpoint in the gap between 20 and 30','30 — renumber the existing rule sets after inserting','This is not possible — rule set sequence numbers cannot be changed after creation'], correct:1, explain:'The convention of using gaps between sequence numbers (10, 20, 30...) exists precisely for this scenario. A new rule set numbered 25 slots between the existing seq:20 and seq:30 without requiring any renumbering. This is why production implementations always leave gaps.' },
+  { topic:3, diff:'practitioner', stem:'What is the purpose of the FIX statement in a Custom Calculation rule?', opts:['It prevents other users from editing the rule while a calculation is running','It restricts the calculation to specific named member intersections, dramatically improving performance','It fixes the calculation result to a constant value to prevent recalculation','It defines the fixed driver ratio to use for the allocation calculation'], correct:1, explain:'FIX restricts which cell intersections the script calculates. Without FIX, EPCM iterates over every possible cell combination in the cube slice — including millions of empty ones. For NovaPrism\'s 11-dimension cube, an unscoped Custom Calc can take 47 minutes; with FIX("ES","PCM_Input") it takes 4 seconds.' },
+  { topic:3, diff:'expert', stem:'A Custom Calculation rule writes PCM_Allocated_In to target divisions but does NOT write PCM_Allocated_Out to the source cost centre. The rule completes with no error. What happens at Rule Balancing?', opts:['Rule Balancing reports success because the target side is correctly written','Rule Balancing flags the source cost centre as having a residual balance equal to the allocated amount','EPCM automatically generates the missing PCM_Allocated_Out entry during the balance check','The model fails to calculate any subsequent rule sets in the sequence'], correct:1, explain:'PCM_Allocated_Out must be written explicitly in Custom Calc rules — unlike Allocation rules which auto-manage both sides. Without the Allocated_Out write, the source cost centre\'s PCM_Output = PCM_Input − $0 allocated out = the full unallocated amount. Rule Balancing flags this non-zero residual as a model error.' },
+
+  // TOPIC 5: Calculating models (7)
+  { topic:4, diff:'foundation', stem:'How do you access Calculation Analysis in EPCM?', opts:['Home → Modeling → Calculation Analysis','Home → Application → Calculations → History','Home → Administration → Jobs → Calc Log','Home → Reports → Calculation Statistics'], correct:0, explain:'Calculation Analysis is accessed via Home → Modeling → Calculation Analysis. This page shows all calculation records with timestamps, status, elapsed time, and links to statistics reports.' },
+  { topic:4, diff:'foundation', stem:'Which Calculation Statistics report shows the "Top 10 Longest Running Rules"?', opts:['Calculation Statistics Diagnostics','Calculation Statistics Summary','Calculation Statistics Comparison','Model Documentation report'], correct:1, explain:'The Calculation Statistics Summary report includes the Top 10 Longest Running Rules sorted by elapsed time descending. This is your first stop for performance diagnosis.' },
+  { topic:4, diff:'practitioner', stem:'NovaPrism\'s seq:10 Custom Calc Rule 1 shows 14,200 Scripts Generated in the statistics report. The rule should touch only 3 cell intersections. What does this indicate?', opts:['The rule is correctly parallelised across 14,200 threads for performance','The rule is missing a FIX statement and is iterating over every cell intersection in the cube','The rule has 14,200 source GL accounts in the IT account group','The calcThreads setting is too low, causing the rule to generate redundant scripts'], correct:1, explain:'A high Scripts Generated count far exceeding the expected cell count is the diagnostic signature of an unscoped Custom Calc rule. Without FIX, EPCM generates a script for every cell combination in the cube slice — producing 14,200 scripts for a rule that should generate 3.' },
+  { topic:4, diff:'practitioner', stem:'What does NONEMPTYTUPLE do in a Custom Calculation rule?', opts:['It prevents the script from running on empty (zero) data values, treating them as non-existent','Within the FIX scope, it skips dimension member combinations where no data exists, avoiding empty-cell iteration','It forces the calculation to only run on non-empty cubes, requiring data to be loaded first','It is a synonym for FIX — both restrict calculation scope'], correct:1, explain:'NONEMPTYTUPLE iterates only over dimension member combinations where at least one specified member contains actual data. Within a FIX scope that still spans many combinations, NONEMPTYTUPLE eliminates empty-cell overhead. FIX and NONEMPTYTUPLE solve different parts of the scoping problem and are often used together.' },
+  { topic:4, diff:'practitioner', stem:'After tuning NovaPrism\'s M01 with FIX + NONEMPTYTUPLE, the runtime drops from 47 minutes to 4 seconds. Are the results affected?', opts:['Yes — FIX restricts which cells are considered, so results may differ for some intersections','No — FIX is a performance scope restriction. It restricts which cells are evaluated but does not change the arithmetic result for cells within scope','Yes — NONEMPTYTUPLE skips empty cells, which can cause under-allocation if empty cells should receive values','Yes — the two optimisations may skip cells that received driver values in prior periods'], correct:1, explain:'FIX and NONEMPTYTUPLE are performance tools. They restrict which cells the script calculates but do not change the arithmetic result for cells within scope. A correctly scoped script produces identical results to an unscoped one — just 750× faster.' },
+  { topic:4, diff:'expert', stem:'NovaPrism needs to run the same M01 allocation rules against both Q1 and Q2 data in a single calculation execution. How is this configured?', opts:['Create two separate models M01-Q1 and M01-Q2 with different Period members','Use Multi-POV Calculation on Execution Control — specify Q1 and Q2 as Data POVs with M01 as the Model POV','Run M01 twice sequentially, changing the Period POV selector between runs','Configure M01 to run against both periods by selecting a YTD alternate hierarchy member'], correct:1, explain:'Multi-POV Calculation allows one model\'s rules to execute against multiple data POVs in a single run. The Model POV defines which rules apply; the Data POVs define which period/scenario data those rules process. Two calculation records appear in Calculation Analysis — one for Q1, one for Q2.' },
+  { topic:4, diff:'practitioner', stem:'How long are calculation records retained by default in EPCM before auto-purge?', opts:['Records are never purged','Records are purged after 90 days','Records are purged when volume exceeds system thresholds','Records are purged after each model redesign'], correct:2, explain:'EPCM auto-purges calculation records when the volume grows to exceed system thresholds — there is no fixed time-based retention. Best practice is to Export to Excel before records are purged, particularly for month-end close records you may need for audit or trend comparison.' },
+
+  // TOPIC 6: Analyzing data (6)
+  { topic:5, diff:'foundation', stem:'Where in EPCM do you access the Rule Balancing page?', opts:['Home → Modeling → Rule Balancing','Home → Intelligence → Rule Balancing','Home → Analytics → Rule Verification','Home → Application → Cube → Balance Check'], correct:0, explain:'Rule Balancing is accessed via Home → Modeling → Rule Balancing. Note the difference from Profit Curves which are under Home → Intelligence.' },
+  { topic:5, diff:'foundation', stem:'On a profit curve, which customer appears on the far LEFT of the X-axis?', opts:['The customer with the lowest revenue','The customer with the highest revenue regardless of profit','The most profitable customer (highest positive net profit)','The least profitable customer (most negative net profit)'], correct:2, explain:'Profit curves sort the population dimension in DESCENDING order by profitability. The most profitable customer is on the FAR LEFT; the least profitable (potentially most negative) is on the FAR RIGHT. This reversal from "ascending" intuition is one of the exam\'s most reliable traps.' },
+  { topic:5, diff:'practitioner', stem:'NovaPrism\'s profit curve peaks at engagement #36 with $46.2M cumulative profit, then declines to $38.4M at engagement #60. What does this indicate?', opts:['The model has a calculation error — cumulative profit should never decrease','Engagements 37–60 are unprofitable — they collectively destroy $7.8M in value','The curve is displaying revenue instead of profit by mistake','Engagements 37–60 are new accounts that have not yet ramped to profitability'], correct:1, explain:'A profit curve declining after its peak indicates unprofitable customers. The drop from $46.2M to $38.4M represents $7.8M destroyed by engagements 37–60. Each of those engagements costs more to serve than the revenue it generates — invisible without EPCM\'s fully-loaded allocation.' },
+  { topic:5, diff:'foundation', stem:'After generating a profit curve, you want to understand why engagements in the "decline zone" are unprofitable. Which feature provides this?', opts:['Rule Balancing analysis on decline zone engagements','Category Analysis — select the decline zone portion and analyse by an attribute (e.g., Industry or Region)','Calculation Statistics Comparison for the profitable vs unprofitable segment','PCM_Balance drill-down at the engagement level'], correct:1, explain:'Category Analysis allows you to select a portion of the profit curve and break that segment down by an attribute dimension (like Industry, Region, or Service Line). This reveals whether the unprofitable engagements share a common characteristic — a critical diagnostic for pricing strategy.' },
+  { topic:5, diff:'practitioner', stem:'Which roles can DEFINE (create) a profit curve in EPCM?', opts:['All users with read access to the cube','Power Users only','Service Administrators and Power Users','Service Administrators only'], correct:2, explain:'Both Service Administrators and Power Users can define profit curves. All users (including Viewers) can view and generate profit curves once defined.' },
+  { topic:5, diff:'expert', stem:'A Rule Balancing report for NovaPrism\'s IT pool allocation shows PCM_Allocated_In total = $51.98M against the $52M IT pool. The $0.02 difference is flagged. Should this be investigated?', opts:['Yes — any imbalance indicates a model error requiring immediate rule correction','No — this is a rounding artifact from the allocation precision setting (allocPrec: 2) and is expected','Yes — the $0.02 represents costs that were not allocated to any division and remain in Enterprise Support','No — but the Finance Controller must approve the variance in writing each period'], correct:1, explain:'NovaPrism\'s allocPrec is set to 2 decimal places in constants.js. Allocating $52M by ticket ratios (1,240/4,540, 2,890/4,540, 410/4,540) produces $14.19 + $33.09 + $4.70 = $51.98M — a $0.02 rounding gap. EPCM\'s balance verification allows a configurable tolerance for exactly this scenario.' },
+
+  // TOPIC 7: Managing data integration (6)
+  { topic:6, diff:'foundation', stem:'When registering an EPCM application in Data Integration, under which application category does it appear?', opts:['Profitability','Enterprise Profitability','Planning','Cost Management'], correct:2, explain:'Despite being a distinct application, EPCM registers under the "Planning" category in Data Integration because it shares the Essbase calculation engine with Planning applications. This is a direct exam trap.' },
+  { topic:6, diff:'practitioner', stem:'NovaPrism wants to connect EPCM to Oracle ERP Cloud to load GL actuals directly. Which integration type supports this?', opts:['File-based integration using CSV export from ERP','Direct Integration — Oracle ERP Cloud to EPCM','Cross-EPM Integration — ERP Cloud registers as an EPM application','REST API integration using the ERP Cloud\'s native endpoints'], correct:1, explain:'Direct Integration is the Oracle-supported path for Oracle ERP Cloud to EPCM data loading. It extracts GL and sub-ledger balances, applies member mappings, and loads in a single automated process. This is the recommended approach for Oracle Fusion Cloud ERP customers.' },
+  { topic:6, diff:'foundation', stem:'NovaPrism\'s GL uses account codes 6100–6199 for IT costs. Which mapping type maps this entire range to the single EPCM member "IT_Cost_Pool"?', opts:['Explicit mapping','Like mapping with wildcards','Between mapping','Multi-dimensional mapping'], correct:2, explain:'Between mapping handles numeric ranges. "Between 6100 and 6199 → IT_Cost_Pool" maps all accounts in that range to a single target. Like mapping uses wildcards (61* would work similarly but is pattern-based, not range-based). Between is cleaner for numeric account ranges.' },
+  { topic:6, diff:'practitioner', stem:'NovaPrism wants their monthly close pipeline to automatically run the EPCM allocation rulesets after loading actuals. Which statement is correct?', opts:['Pipeline supports calling native EPCM rules and rulesets directly as a job type','Pipeline supports only Calculation Manager business rules — native EPCM rules require a Groovy workaround calling EPCM REST APIs','Pipeline cannot execute any calculation logic — only data movement','Pipeline can call EPCM rules only if they are assigned to a model configured for pipeline execution'], correct:1, explain:'Native EPCM rules/rulesets cannot be called directly from a Pipeline. Only Calculation Manager-based business rules work in Pipeline job steps. The standard workaround is a Groovy script within a Calculation Manager rule that calls the EPCM REST API to trigger the ruleset execution.' },
+  { topic:6, diff:'practitioner', stem:'After EPCM completes NovaPrism\'s Q1 allocation, the CFO wants the per-engagement allocated costs to appear in Oracle ERP Cloud as journal entries. Which mechanism supports this?', opts:['Rule Balancing export with GL mapping applied','EPCM Writeback — creates actual journal entries in Oracle ERP Cloud General Ledger','Smart View data submission from EPCM forms to ERP','EPMAutomate export to a flat file for manual ERP upload'], correct:1, explain:'Writeback creates actual journal entries in Oracle ERP Cloud\'s General Ledger. The entries offset the original cost pool with credits to the receiving cost objects. This is the "closed-loop" integration — actuals in, allocations run, journal entries back in ERP for financial reporting.' },
+  { topic:6, diff:'expert', stem:'Which EPM application does EPCM specifically NOT integrate with via Oracle\'s Data Integration framework?', opts:['Financial Consolidation and Close (FCCS)','Account Reconciliation (ARCS)','EPM Planning (EPBCS/PBCS)','Oracle ERP Cloud (Fusion Financials)'], correct:2, explain:'EPCM does not integrate with EPM Planning via Data Integration. It can integrate with FCCS, ARCS, ERP Cloud, and other EPM processes — but the Planning product is explicitly excluded. This is a tested limitation that catches candidates who assume all EPM Cloud products interoperate freely.' },
+
+  // TOPIC 8: Migration from PCM to EPCM (4)
+  { topic:7, diff:'foundation', stem:'What is the most significant architectural change from legacy on-premises PCM to EPCM?', opts:['EPCM moved from relational database to Essbase','EPCM replaced the single-cube architecture with dual ASO cubes (PCM_CLC + PCM_REP)','EPCM changed from BSO to ASO as the storage engine','EPCM added support for more than 10 dimensions'], correct:1, explain:'The dual-cube architecture is the defining change. Legacy PCM used a single ASO database where calculation and reporting competed. EPCM\'s PCM_CLC (calculation) and PCM_REP (reporting) are separate cubes, enabling stable reporting during active calculation.' },
+  { topic:7, diff:'practitioner', stem:'Legacy PCM applications built before June 2022 used a single-cube architecture. What is the primary migration consideration for rule design?', opts:['Rules must be rewritten from Calculation Manager to EPCM\'s native rule engine','Driver and pool staging members previously written to a reporting cube must be remapped to PCM_CLC staging members','Rules are automatically converted during migration with no changes required','Legacy PCM used BSO rules that are incompatible with EPCM\'s ASO engine'], correct:1, explain:'In legacy single-cube PCM, staging members could exist in the reporting area. EPCM\'s separation into PCM_CLC (where rules execute) and PCM_REP (read-only reporting) means any intermediate staging targets must be in PCM_CLC. Rule review is the primary migration task.' },
+  { topic:7, diff:'practitioner', stem:'A legacy PCM application was migrated to EPCM. After migration, users report that some dimensions are returning incorrect aggregation values. What is the most likely cause?', opts:['The migration tool incorrectly converted BSO Block Storage dimensions to ASO', 'Dimensions that were Dynamic in legacy PCM may need to be reviewed — Dynamic behaviour differs between legacy and EPCM ASO','The PCM_Balance dimension members were renamed during migration','The migration tool doubled all dimension members by accident'], correct:1, explain:'Dynamic dimension member behaviour has nuances between legacy and EPCM ASO implementations. Members that were Dynamic in legacy PCM and worked correctly may not persist writes correctly in EPCM\'s ASO model. Migration review should include a dimension-by-dimension storage type audit.' },
+  { topic:7, diff:'expert', stem:'A legacy PCM had 22 dimensions. An EPCM Standard application supports up to 20 user-defined dimensions. How should this be handled in migration?', opts:['Upgrade to EPCM Custom, which supports more than 20 dimensions','Consolidate or eliminate 2 dimensions before migrating — analyse whether alternate hierarchies within existing dimensions can replace the extra dimensions','Create two separate EPCM applications and link them via Data Integration','The migration is not possible until Oracle releases a higher-dimension-count Standard edition'], correct:0, explain:'EPCM has Custom application types that support different dimension limits. If migrating from a legacy application with more user-defined dimensions than Standard supports, the implementation team should evaluate EPCM Custom or use alternate hierarchy consolidation to reduce dimension count.' },
+];
+
+/* ── Shuffle helper ── */
+function shuffle(arr){
+  var a=arr.slice();
+  for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}
+  return a;
+}
+
+/* ══════════════════════════════════════════
+   EXAM ENGINE STATE
+══════════════════════════════════════════ */
+var examState={
+  questions:[],
+  current:0,
+  answers:{},
+  timerInterval:null,
+  secondsRemaining:90*60,
+  started:false,
+  finished:false,
+};
+
+function startExam(){
+  // Shuffle and pick 50 (we have exactly 50)
+  examState.questions=shuffle(EXAM_QUESTIONS);
+  examState.current=0;
+  examState.answers={};
+  examState.secondsRemaining=90*60;
+  examState.started=true;
+  examState.finished=false;
+
+  document.getElementById('exam-start').style.display='none';
+  document.getElementById('exam-running').style.display='block';
+  document.getElementById('exam-results').style.display='none';
+  document.getElementById('exam-review').style.display='none';
+
+  examState.timerInterval=setInterval(tickTimer,1000);
+  buildDots();
+  renderQuestion();
+}
+
+function tickTimer(){
+  examState.secondsRemaining--;
+  var mins=Math.floor(examState.secondsRemaining/60);
+  var secs=examState.secondsRemaining%60;
+  var display=(mins<10?'0':'')+mins+':'+(secs<10?'0':'')+secs;
+  var el=document.getElementById('exam-timer');
+  el.textContent=display;
+  el.className='exam-timer-value'+(examState.secondsRemaining<300?' danger':examState.secondsRemaining<900?' warning':'');
+  if(examState.secondsRemaining<=0){
+    clearInterval(examState.timerInterval);
+    finishExam();
+  }
+}
+
+function buildDots(){
+  var container=document.getElementById('exam-dots');
+  var html='';
+  for(var i=0;i<examState.questions.length;i++){
+    html+='<div class="exam-dot'+(i===examState.current?' current':'')+'" id="dot-'+i+'"></div>';
+  }
+  container.innerHTML=html;
+}
+
+function updateDots(){
+  var qs=examState.questions;
+  for(var i=0;i<qs.length;i++){
+    var dot=document.getElementById('dot-'+i);
+    if(!dot) continue;
+    dot.className='exam-dot';
+    if(i===examState.current) dot.classList.add('current');
+    else if(examState.answers[i]!==undefined){
+      dot.classList.add(examState.answers[i]===qs[i].correct?'correct':'wrong');
+    }
+  }
+}
+
+function renderQuestion(){
+  var q=examState.questions[examState.current];
+  var total=examState.questions.length;
+  var idx=examState.current;
+
+  document.getElementById('exam-q-current').textContent=idx+1;
+  document.getElementById('exam-q-total').textContent=total;
+  document.getElementById('exam-progress-fill').style.width=Math.round((idx+1)/total*100)+'%';
+
+  var diffTag=document.getElementById('exam-diff-tag');
+  diffTag.textContent=q.diff.charAt(0).toUpperCase()+q.diff.slice(1);
+  diffTag.className='exam-diff-tag '+q.diff;
+
+  document.getElementById('exam-topic-tag').textContent=TOPICS[q.topic]?TOPICS[q.topic].name:'';
+  document.getElementById('exam-stem').textContent=q.stem;
+
+  var optsHtml='';
+  q.opts.forEach(function(opt,i){
+    var letter=String.fromCharCode(65+i);
+    var cls='exam-opt';
+    var answered=examState.answers[idx]!==undefined;
+    if(answered) cls+=' answered';
+    if(answered&&i===q.correct) cls+=' correct';
+    if(answered&&i===examState.answers[idx]&&i!==q.correct) cls+=' wrong';
+    if(!answered&&examState.answers[idx]===i) cls+=' selected';
+    optsHtml+='<div class="'+cls+'" onclick="selectOpt('+i+')">';
+    optsHtml+='<span class="exam-opt-letter">'+letter+'.</span>';
+    optsHtml+='<span class="exam-opt-text">'+opt+'</span>';
+    optsHtml+='</div>';
+  });
+  document.getElementById('exam-options').innerHTML=optsHtml;
+
+  var expEl=document.getElementById('exam-explanation');
+  if(examState.answers[idx]!==undefined){
+    expEl.innerHTML='<strong>'+(examState.answers[idx]===q.correct?'✓ Correct':'✗ Incorrect')+'</strong> — '+q.explain;
+    expEl.classList.add('show');
+  } else {
+    expEl.classList.remove('show');
+    expEl.innerHTML='';
+  }
+
+  document.getElementById('btn-prev').disabled=(idx===0);
+  var isLast=(idx===total-1);
+  document.getElementById('btn-next').style.display=isLast?'none':'';
+  document.getElementById('btn-finish').style.display=isLast?'':'none';
+  document.getElementById('btn-skip').style.display=examState.answers[idx]!==undefined?'none':'';
+
+  updateDots();
+}
+
+function selectOpt(oi){
+  var idx=examState.current;
+  if(examState.answers[idx]!==undefined) return;
+  examState.answers[idx]=oi;
+  renderQuestion();
+}
+
+function skipQuestion(){
+  examState.answers[examState.current]=-1; // skipped
+  renderQuestion();
+}
+
+function examNav(dir){
+  var newIdx=examState.current+dir;
+  if(newIdx<0||newIdx>=examState.questions.length) return;
+  examState.current=newIdx;
+  renderQuestion();
+}
+
+function finishExam(){
+  clearInterval(examState.timerInterval);
+  examState.finished=true;
+  document.getElementById('exam-running').style.display='none';
+  document.getElementById('exam-results').style.display='block';
+  renderResults();
+}
+
+function renderResults(){
+  var qs=examState.questions;
+  var total=qs.length;
+  var correct=0;
+  var byTopic={};
+  TOPICS.forEach(function(_,i){ byTopic[i]={correct:0,total:0}; });
+
+  qs.forEach(function(q,i){
+    var ans=examState.answers[i];
+    if(byTopic[q.topic]!==undefined){
+      byTopic[q.topic].total++;
+      if(ans===q.correct){ correct++; byTopic[q.topic].correct++; }
+    } else {
+      if(ans===q.correct) correct++;
+    }
+  });
+
+  var pct=Math.round(correct/total*100);
+  var pass=pct>=68;
+  var timeUsed=90*60-examState.secondsRemaining;
+  var timeMins=Math.floor(timeUsed/60);
+  var timeSecs=timeUsed%60;
+
+  var circle=document.getElementById('results-circle');
+  circle.className='results-score-circle '+(pass?'pass':'fail');
+  document.getElementById('results-pct').textContent=pct+'%';
+  document.getElementById('results-verdict').textContent=pass?'🎓 Congratulations — You Passed!':'📚 Keep Studying';
+  document.getElementById('results-subtitle').textContent=pass?'Score of '+correct+'/'+total+' ('+pct+'%) exceeds the 68% pass mark.':'Score of '+correct+'/'+total+' ('+pct+'%). You need '+34+' correct to pass (68%).';
+
+  var gridHtml='';
+  gridHtml+='<div class="results-stat"><div class="rs-value">'+correct+'/'+total+'</div><div class="rs-label">Score</div></div>';
+  gridHtml+='<div class="results-stat"><div class="rs-value">'+pct+'%</div><div class="rs-label">Percentage</div></div>';
+  gridHtml+='<div class="results-stat"><div class="rs-value">'+(pass?'PASS':'FAIL')+'</div><div class="rs-label">Result</div></div>';
+  gridHtml+='<div class="results-stat"><div class="rs-value">'+timeMins+'m '+timeSecs+'s</div><div class="rs-label">Time Used</div></div>';
+  document.getElementById('results-grid').innerHTML=gridHtml;
+
+  var rowsHtml='';
+  TOPICS.forEach(function(t,i){
+    var bt=byTopic[i];
+    if(!bt) return;
+    var tPct=bt.total>0?Math.round(bt.correct/bt.total*100):0;
+    var barColor=tPct>=68?'var(--green)':tPct>=50?'var(--amber)':'var(--red)';
+    rowsHtml+='<div class="rtb-row">';
+    rowsHtml+='<span class="rtb-name">'+t.name+'</span>';
+    rowsHtml+='<div class="rtb-bar-wrap"><div class="rtb-bar" style="width:'+tPct+'%;background:'+barColor+'"></div></div>';
+    rowsHtml+='<span class="rtb-score">'+bt.correct+'/'+bt.total+'</span>';
+    rowsHtml+='</div>';
+  });
+  document.getElementById('rtb-rows').innerHTML=rowsHtml;
+}
+
+function enterReview(){
+  document.getElementById('exam-results').style.display='none';
+  document.getElementById('exam-review').style.display='block';
+  var qs=examState.questions;
+  var html='';
+  qs.forEach(function(q,i){
+    var ans=examState.answers[i];
+    var isCorrect=ans===q.correct;
+    var isSkipped=ans===-1||ans===undefined;
+    var qCls='review-q '+(isSkipped?'':'isCorrect'?'correct-q':'wrong-q');
+    var resCls=isSkipped?'skipped':isCorrect?'correct':'wrong';
+    var resLabel=isSkipped?'Skipped':isCorrect?'Correct':'Incorrect';
+    html+='<div class="'+qCls+'">';
+    html+='<div class="review-q-header">';
+    html+='<span class="review-q-num">Q'+(i+1)+'</span>';
+    html+='<span class="review-q-result '+resCls+'">'+resLabel+'</span>';
+    html+='<span style="font-family:var(--font-mono);font-size:8px;color:var(--dim);margin-left:auto">'+TOPICS[q.topic].name+'</span>';
+    html+='</div>';
+    html+='<div class="review-q-stem">'+q.stem+'</div>';
+    html+='<div class="review-correct-answer"><strong>Correct Answer:</strong> '+String.fromCharCode(65+q.correct)+'. '+q.opts[q.correct]+'</div>';
+    if(ans!==undefined&&ans!==-1&&!isCorrect){
+      html+='<div style="padding:8px 12px;background:rgba(248,113,113,.05);border:1px solid rgba(248,113,113,.15);border-radius:6px;font-size:12px;color:var(--silver2);margin-bottom:8px"><strong style="color:var(--red)">Your Answer:</strong> '+String.fromCharCode(65+ans)+'. '+q.opts[ans]+'</div>';
+    }
+    html+='<div class="review-explanation">'+q.explain+'</div>';
+    html+='</div>';
+  });
+  document.getElementById('review-body').innerHTML=html;
+}
+
+function backToResults(){
+  document.getElementById('exam-review').style.display='none';
+  document.getElementById('exam-results').style.display='block';
+}
+
+function restartExam(){
+  clearInterval(examState.timerInterval);
+  document.getElementById('exam-results').style.display='none';
+  document.getElementById('exam-review').style.display='none';
+  document.getElementById('exam-running').style.display='none';
+  document.getElementById('exam-start').style.display='block';
+}
+
+/* ══════════════════════════════════════════
+   DEAN ELIOT AI GUIDE
+══════════════════════════════════════════ */
+var HALL_SYSTEM_EXTENSION=[
+  'CURRENT HALL: Hall 9 — Examination Hall (Academy of Profit Center)',
+  'HALL SCOPE: 1Z0-1082-25 exam prep, topic weights, dangerous distractors, mock exam with 50 questions, full syllabus reference.',
+  '',
+  'EXAM FACTS:',
+  '- Code: 1Z0-1082-25. Name: Oracle Profitability and Cost Management 2025 Implementation Professional.',
+  '- 50 questions, 90 minutes, 68% to pass (34 correct minimum).',
+  '- 8 topic areas. Highest-weighted: Managing Rule Sets and Rules (~10 questions).',
+  '',
+  'TOPIC WEIGHTS (approximate):',
+  '1. Setting up the application: ~5q',
+  '2. Designing dimensions: ~7q',
+  '3. Working with POVs and models: ~5q',
+  '4. Managing rule sets and rules: ~10q',
+  '5. Calculating models: ~7q',
+  '6. Analyzing data: ~6q',
+  '7. Managing data integration: ~6q',
+  '8. Migrating PCM applications to EPCM: ~4q',
+  '',
+  'TOP EXAM DISTRACTORS:',
+  '1. EPCM uses BSO: FALSE. Both cubes are ASO.',
+  '2. Dynamic is fine for driver members: FALSE. Silent rule failure.',
+  '3. Physical Clear is the default: FALSE. Logical Clear.',
+  '4. Parallel allows intra-set read/write deps: FALSE. Silent data corruption.',
+  '5. Copy POV goes REP→CLC: FALSE. Always CLC→REP.',
+  '6. Scenario is editable after first calc run: FALSE. Locked.',
+  '7. EPCM integrates with EPM Planning: FALSE. Planning is excluded.',
+  '8. Profit curve left = least profitable: FALSE. Left = MOST profitable.',
+  '',
+  'NOVAPRISM IN THIS HALL:',
+  'The full NovaPrism case study ($134M, 4 pools, 60 engagements, 4 models) appears throughout the 50-question mock exam.',
+  'IS margin blind spot (11.2% → 3.0%) illustrates why EPCM matters for exam context questions.',
+  '',
+  'MIGRATION TOPIC (often underestimated):',
+  'June 2022 = EPCM cloud launch. Before = legacy on-premise PCM (single cube).',
+  'Migration involves moving from single-cube to dual-cube (CLC + REP) architecture.',
+  'Dynamic dimension review is the primary migration technical task.',
+  '',
+  'STRATEGY:',
+  '1.8 minutes per question average. Skip and return rather than dwelling on hard questions.',
+  'Topic 4 (Rule Sets) is the highest weight — master Serial vs Parallel and rule types above all.',
+  '',
+  'OUT OF SCOPE: Everything is in scope for Hall 9 — this is the graduation hall.'
+].join('\n');
+
+function buildSystemPrompt(){
+  var pa=(typeof NP!=='undefined')?NP.postAllocation:null;
+  return [
+    'You are Dean Eliot, the AI practitioner-guide for the BrainSpring EPCM Study Tour — Academy of Profit Center.',
+    'You are a senior Oracle EPM practitioner who has implemented EPCM at 40+ enterprises.',
+    'Voice: direct (no hedging), practitioner-honest, concise (3–5 sentences target), never sycophantic.',
+    '',
+    'CASE COMPANY: NovaPrism Group — $2.1B professional services conglomerate. 8,400 employees. 4 divisions.',
+    pa?('IS: $'+pa.IS.revenue+'M revenue | '+pa.IS.directPct+'% direct → '+pa.IS.marginPct+'% fully-loaded | $'+pa.IS.allocatedIn+'M allocated in.'):'',
+    'Enterprise Support: $134M costs across IT $52M (tickets), Facilities $38M (sqft), Finance $28M (headcount), HR $16M (headcount).',
+    '',
+    'RULES: This is the Exam Hall — answer questions about ANY topic from all 9 halls. Name exam answer AND implementation reality when they differ.',
+    'Never invent product behaviour.',
+    '',
+    HALL_SYSTEM_EXTENSION
+  ].filter(Boolean).join('\n');
+}
+
+var sbHistory=[];
+function sbSend(){
+  var inp=document.getElementById('sb-input');
+  var txt=inp.value.trim(); if(!txt) return;
+  inp.value='';
+  sbAddMsg('user',txt);
+  sbHistory.push({role:'user',content:txt});
+  var typing=sbAddMsg('guide','…');
+  typing.classList.add('typing');
+  sbCall(typing);
+}
+function chipAsk(chip){
+  document.getElementById('sb-input').value=chip.textContent;
+  sbSend();
+}
+function sbAddMsg(role,text){
+  var msgs=document.getElementById('sb-msgs');
+  var div=document.createElement('div');
+  div.className='sb-msg '+role;
+  div.textContent=text;
+  msgs.appendChild(div);
+  msgs.scrollTop=msgs.scrollHeight;
+  return div;
+}
+async function sbCall(typingEl){
+  try{
+    var resp=await fetch('https://epbcs-tutor.fancy-brook-fc0d.workers.dev',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        model:'claude-sonnet-4-20250514',
+        max_tokens:500,
+        system:buildSystemPrompt(),
+        messages:sbHistory
+      })
+    });
+    var data=await resp.json();
+    var reply=(data.content&&data.content[0]&&data.content[0].text)||'Try rephrasing — I had trouble with that one.';
+    typingEl.textContent=reply;
+    typingEl.classList.remove('typing');
+    sbHistory.push({role:'assistant',content:reply});
+  }catch(e){
+    typingEl.textContent='Connection issue — please try again.';
+    typingEl.classList.remove('typing');
+  }
+}
+
+document.querySelectorAll('a[href^="#"]').forEach(function(a){
+  a.addEventListener('click',function(e){
+    var id=this.getAttribute('href').slice(1);
+    var el=document.getElementById(id);
+    if(el){e.preventDefault();el.scrollIntoView({behavior:'smooth',block:'start'});}
+  });
+});
+</script>
+</body>
+</html>
