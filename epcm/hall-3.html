@@ -1,0 +1,1408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Models Pavilion — Academy of Profit Center · EPCM Study Tour · BrainSpring</title>
+<meta name="description" content="Four models. One POV selector. Every calculation run in EPCM requires a model — understanding what a model is and how POVs, Scenarios and Versions intersect is Hall 3's mission.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Pro:ital,wght@0,300;0,400;0,500;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+/* ══════════════════════════════════════════
+   ACADEMY OF PROFIT CENTER — DESIGN SYSTEM
+   Hall 3: Models Pavilion
+   Accent: green #4ade80
+══════════════════════════════════════════ */
+:root {
+  --navy:    #08111e;
+  --navy2:   #0d1b2e;
+  --navy3:   #112240;
+  --navy4:   #172d47;
+  --navy5:   #1e3855;
+  --amber:   #f59e0b;
+  --amber2:  #d97706;
+  --amber-dim: rgba(245,158,11,.12);
+  --amber-border: rgba(245,158,11,.25);
+  /* Hall 3 accent — green */
+  --accent:  #4ade80;
+  --accent2: #22c55e;
+  --accent-dim: rgba(74,222,128,.08);
+  --accent-border: rgba(74,222,128,.22);
+  --red:     #f87171;
+  --red-dim: rgba(248,113,113,.08);
+  --purple:  #a855f7;
+  --coral:   #fb923c;
+  --teal:    #2dd4bf;
+  --sky:     #38bdf8;
+  --lime:    #a3e635;
+  --white:   #e8f0f8;
+  --silver:  #c8d4e0;
+  --silver2: #8fa3b8;
+  --dim:     #4a6080;
+  --border:  rgba(200,212,224,.08);
+  --border2: rgba(200,212,224,.14);
+  --font-display: 'Cinzel', serif;
+  --font-body:    'Crimson Pro', serif;
+  --font-mono:    'JetBrains Mono', monospace;
+  --topbar-h: 52px;
+  --sidebar-w: 228px;
+  --r: 10px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font-body);
+  background: var(--navy);
+  color: var(--white);
+  min-height: 100vh;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+}
+body::before {
+  content: '';
+  position: fixed; inset: 0; pointer-events: none; z-index: 0;
+  background-image:
+    linear-gradient(rgba(74,222,128,.012) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(74,222,128,.012) 1px, transparent 1px);
+  background-size: 60px 60px;
+}
+body::after {
+  content: '';
+  position: fixed; inset: 0; pointer-events: none; z-index: 0;
+  background: radial-gradient(ellipse 90% 60% at 50% -5%, rgba(74,222,128,.04) 0%, transparent 65%);
+}
+
+#stars { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
+.star { position: absolute; border-radius: 50%; background: #4ade80; animation: twinkle var(--d,4s) infinite var(--delay,0s); }
+@keyframes twinkle { 0%,100%{opacity:.015} 50%{opacity:var(--op,.12)} }
+@keyframes fadeUp { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:none} }
+@keyframes slideIn { from{opacity:0;transform:translateX(-10px)} to{opacity:1;transform:none} }
+@keyframes pulse { 0%,100%{box-shadow:0 0 0 0 rgba(74,222,128,.25)} 50%{box-shadow:0 0 0 6px transparent} }
+@keyframes glow { 0%,100%{text-shadow:0 0 12px rgba(74,222,128,.3)} 50%{text-shadow:0 0 24px rgba(74,222,128,.6)} }
+
+/* ── TOPBAR ── */
+#topbar {
+  position: fixed; top: 0; left: 0; right: 0; height: var(--topbar-h);
+  background: rgba(8,17,30,.92); backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 14px;
+  padding: 0 20px; z-index: 100;
+}
+.tb-logo { display: flex; align-items: center; gap: 8px; text-decoration: none; flex-shrink: 0; }
+.tb-logo svg { flex-shrink: 0; }
+.tb-brand { font-family: var(--font-mono); font-size: 12px; font-weight: 600; letter-spacing: .04em; }
+.tb-brain { color: var(--accent); }
+.tb-spring { color: var(--silver2); }
+.tb-sep { color: var(--dim); font-size: 12px; }
+.tb-course { font-family: var(--font-mono); font-size: 10px; letter-spacing: .06em; color: var(--amber); text-transform: uppercase; }
+.tb-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); animation: pulse 2.5s infinite; flex-shrink: 0; margin-left: 2px; }
+.tb-hall-badge { font-family: var(--font-mono); font-size: 9.5px; letter-spacing: .06em; color: var(--silver2); text-transform: uppercase; margin-left: auto; }
+.tb-hamburger { display: none; background: none; border: none; cursor: pointer; padding: 6px; color: var(--silver2); }
+.tb-nav-right { display: flex; align-items: center; gap: 4px; margin-left: 16px; overflow-x: auto; scrollbar-width: none; }
+.tb-nav-right::-webkit-scrollbar { display: none; }
+.tb-link {
+  font-family: var(--font-mono); font-size: 9px; letter-spacing: .07em; text-transform: uppercase;
+  color: var(--dim); text-decoration: none; padding: 5px 10px; border-radius: 5px;
+  transition: color .15s, background .15s; white-space: nowrap;
+}
+.tb-link:hover { color: var(--silver); background: rgba(255,255,255,.05); }
+.tb-link.current { color: var(--accent); background: var(--accent-dim); }
+
+/* ── SIDEBAR ── */
+.sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.5); z-index: 89; }
+.sidebar-overlay.open { display: block; }
+.sidebar {
+  width: var(--sidebar-w); flex-shrink: 0;
+  position: sticky; top: var(--topbar-h);
+  height: calc(100vh - var(--topbar-h));
+  overflow-y: auto; overflow-x: hidden;
+  background: rgba(8,17,30,.7);
+  border-right: 1px solid var(--border);
+  padding: 24px 0 40px;
+  scrollbar-width: thin; scrollbar-color: var(--navy3) transparent;
+}
+.sidebar::-webkit-scrollbar { width: 3px; }
+.sidebar::-webkit-scrollbar-thumb { background: var(--navy3); }
+.sb-label {
+  font-family: var(--font-mono); font-size: 8px; letter-spacing: .14em;
+  color: var(--dim); text-transform: uppercase;
+  padding: 0 18px; margin: 20px 0 8px;
+}
+.sb-label:first-child { margin-top: 0; }
+.sb-hall {
+  display: flex; align-items: center; gap: 10px;
+  padding: 8px 18px; text-decoration: none;
+  transition: background .15s; position: relative;
+}
+.sb-hall:hover { background: rgba(255,255,255,.03); }
+.sb-hall.current { background: var(--accent-dim); }
+.sb-hall.current::before {
+  content: ''; position: absolute; left: 0; top: 0; bottom: 0;
+  width: 2px; background: var(--accent);
+}
+.sb-hall-num {
+  width: 22px; height: 22px; border-radius: 6px; flex-shrink: 0;
+  border: 1px solid var(--border2);
+  font-family: var(--font-mono); font-size: 10px; font-weight: 600;
+  color: var(--dim); display: flex; align-items: center; justify-content: center;
+}
+.sb-hall.current .sb-hall-num { border-color: var(--accent-border); color: var(--accent); background: var(--accent-dim); }
+.sb-hall-info { flex: 1; min-width: 0; }
+.sb-hall-name { font-family: var(--font-mono); font-size: 10px; font-weight: 500; color: var(--silver2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sb-hall.current .sb-hall-name { color: var(--accent); }
+.sb-hall-title { font-size: 10px; color: var(--dim); margin-top: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sb-status { width: 5px; height: 5px; border-radius: 50%; background: var(--dim); flex-shrink: 0; }
+.sb-status.current { background: var(--accent); animation: pulse 2s infinite; }
+.sb-status.locked { background: transparent; border: 1px solid var(--dim); }
+.sb-toc-item {
+  display: block; padding: 5px 18px 5px 26px;
+  font-size: 11.5px; color: var(--dim); text-decoration: none;
+  border-left: 1px solid transparent; margin-left: 10px;
+  transition: color .15s, border-color .15s; line-height: 1.4;
+}
+.sb-toc-item:hover { color: var(--silver2); border-left-color: var(--border2); }
+
+/* Dean Eliot sidebar */
+.sb-eliot {
+  margin: 16px 12px 0;
+  background: var(--accent-dim);
+  border: 1px solid var(--accent-border);
+  border-radius: var(--r); overflow: hidden;
+}
+.sb-eliot-header {
+  display: flex; align-items: center; gap: 8px;
+  padding: 10px 12px; border-bottom: 1px solid var(--accent-border);
+}
+.sb-eliot-avatar {
+  width: 28px; height: 28px; border-radius: 8px;
+  background: rgba(74,222,128,.1); border: 1px solid var(--accent-border);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; flex-shrink: 0;
+}
+.sb-eliot-name { font-family: var(--font-mono); font-size: 9.5px; font-weight: 600; letter-spacing: .06em; color: var(--accent); }
+.sb-eliot-role { font-size: 9px; color: var(--silver2); margin-top: 1px; }
+.sb-chips { padding: 8px 10px; display: flex; flex-direction: column; gap: 5px; }
+.sb-chip {
+  font-size: 10.5px; color: var(--silver2); padding: 5px 8px;
+  background: rgba(255,255,255,.03); border: 1px solid var(--border);
+  border-radius: 6px; cursor: pointer; line-height: 1.4;
+  transition: background .15s, border-color .15s, color .15s;
+}
+.sb-chip:hover { background: var(--accent-dim); border-color: var(--accent-border); color: var(--white); }
+.sb-eliot-input-row { display: flex; gap: 6px; padding: 8px 10px; border-top: 1px solid var(--border); }
+.sb-eliot-input {
+  flex: 1; background: rgba(255,255,255,.04); border: 1px solid var(--border);
+  border-radius: 6px; padding: 5px 8px; font-size: 11px;
+  font-family: var(--font-body); color: var(--white); outline: none;
+}
+.sb-eliot-input:focus { border-color: var(--accent-border); }
+.sb-eliot-input::placeholder { color: var(--dim); }
+.sb-eliot-send {
+  width: 28px; height: 28px; border-radius: 6px;
+  background: var(--accent-dim); border: 1px solid var(--accent-border);
+  color: var(--accent); cursor: pointer; font-size: 13px;
+  display: flex; align-items: center; justify-content: center;
+  transition: background .15s;
+}
+.sb-eliot-send:hover { background: rgba(74,222,128,.2); }
+.sb-eliot-msgs { max-height: 160px; overflow-y: auto; padding: 8px 10px; display: flex; flex-direction: column; gap: 6px; scrollbar-width: thin; }
+.sb-eliot-msgs:empty { display: none; }
+.sb-msg { font-size: 11px; line-height: 1.55; padding: 6px 8px; border-radius: 6px; }
+.sb-msg.user { background: rgba(74,222,128,.08); color: var(--silver); text-align: right; }
+.sb-msg.guide { background: rgba(245,158,11,.06); color: var(--silver); }
+.sb-msg.typing { opacity: .5; }
+
+.sb-company {
+  margin: 12px 12px 0;
+  background: rgba(255,255,255,.02);
+  border: 1px solid var(--border);
+  border-radius: var(--r); padding: 12px;
+}
+.sb-company-label { font-family: var(--font-mono); font-size: 7.5px; letter-spacing: .1em; color: var(--dim); text-transform: uppercase; margin-bottom: 8px; }
+.sb-company-name { font-family: var(--font-display); font-size: 12px; color: var(--white); margin-bottom: 3px; }
+.sb-company-desc { font-size: 10.5px; color: var(--silver2); line-height: 1.5; }
+
+/* ── LAYOUT ── */
+#app { display: flex; flex-direction: column; min-height: 100vh; padding-top: var(--topbar-h); position: relative; z-index: 1; }
+#body { display: flex; flex: 1; }
+.main { flex: 1; min-width: 0; padding: 36px 52px 96px; animation: fadeUp .5s ease both; }
+
+/* ── CAMPUS MAP ── */
+.campus-map-wrap {
+  margin-bottom: 32px;
+  background: rgba(13,27,46,.6);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 16px 20px; overflow: hidden;
+}
+.campus-map-label {
+  font-family: var(--font-mono); font-size: 8.5px; letter-spacing: .14em;
+  color: var(--dim); text-transform: uppercase; margin-bottom: 12px;
+  display: flex; align-items: center; gap: 8px;
+}
+.campus-map-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+.campus-map-row { display: flex; align-items: center; gap: 0; overflow-x: auto; scrollbar-width: none; }
+.campus-map-row::-webkit-scrollbar { display: none; }
+.campus-stop { display: flex; flex-direction: column; align-items: center; gap: 5px; flex-shrink: 0; }
+.campus-building {
+  width: 40px; height: 40px; border-radius: 10px;
+  border: 1px solid var(--border2); background: var(--navy3);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-mono); font-size: 12px; font-weight: 600;
+  color: var(--dim); text-decoration: none; transition: all .2s; cursor: pointer;
+}
+.campus-building:hover { transform: translateY(-2px); border-color: var(--silver2); color: var(--silver2); }
+.campus-building.done { background: rgba(74,222,128,.06); border-color: rgba(74,222,128,.2); color: var(--accent2); }
+.campus-building.active { background: var(--accent-dim); border-color: var(--accent); color: var(--accent); box-shadow: 0 0 18px rgba(74,222,128,.18); }
+.campus-building.locked { opacity: .35; cursor: default; }
+.campus-building.locked:hover { transform: none; }
+.campus-stop-label { font-family: var(--font-mono); font-size: 8px; letter-spacing: .04em; color: var(--dim); text-align: center; max-width: 52px; line-height: 1.3; white-space: nowrap; }
+.campus-stop.active-stop .campus-stop-label { color: var(--accent); }
+.campus-stop.done-stop .campus-stop-label { color: var(--accent2); }
+.campus-connector { width: 24px; height: 1px; background: var(--border2); flex-shrink: 0; margin-bottom: 18px; position: relative; }
+.campus-connector::after { content: '›'; position: absolute; right: -5px; top: -9px; color: var(--dim); font-size: 10px; }
+
+/* ── HALL HERO ── */
+.hall-hero { margin-bottom: 32px; }
+.hall-eyebrow {
+  display: flex; align-items: center; gap: 8px;
+  font-family: var(--font-mono); font-size: 10px; letter-spacing: .1em;
+  color: var(--accent); text-transform: uppercase; margin-bottom: 10px;
+}
+.hall-eyebrow-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--accent); animation: pulse 2s infinite; }
+.hall-building-name {
+  font-family: var(--font-display); font-size: 11px; letter-spacing: .18em;
+  color: var(--accent2); text-transform: uppercase; margin-bottom: 6px;
+}
+.hall-title {
+  font-family: var(--font-display); font-size: 36px; font-weight: 600;
+  color: var(--white); line-height: 1.15; margin-bottom: 14px; letter-spacing: .02em;
+}
+.hall-title em { font-style: normal; color: var(--accent); animation: glow 4s infinite; }
+.hall-tagline { font-size: 16px; color: var(--silver2); line-height: 1.75; max-width: 700px; margin-bottom: 18px; font-style: italic; }
+.hall-tags { display: flex; gap: 7px; flex-wrap: wrap; }
+.htag {
+  font-family: var(--font-mono); font-size: 9px; letter-spacing: .08em;
+  text-transform: uppercase; padding: 4px 10px; border-radius: 5px;
+  border: 1px solid var(--border2); color: var(--silver2);
+}
+.htag.conceptual { border-color: rgba(56,189,248,.2); color: var(--sky); background: rgba(56,189,248,.05); }
+.htag.technical   { border-color: rgba(168,85,247,.2); color: var(--purple); background: rgba(168,85,247,.05); }
+.htag.lab         { border-color: rgba(74,222,128,.2); color: var(--accent); background: var(--accent-dim); }
+.htag.exam        { border-color: rgba(251,191,36,.2); color: var(--amber); background: var(--amber-dim); }
+.htag.interactive { border-color: rgba(45,212,191,.2); color: var(--teal); background: rgba(45,212,191,.05); }
+
+/* ── TABS ── */
+.tab-bar {
+  display: flex; gap: 2px; border-bottom: 1px solid var(--border);
+  margin-bottom: 32px;
+  position: sticky; top: var(--topbar-h);
+  background: rgba(8,17,30,.95); backdrop-filter: blur(12px);
+  z-index: 20; padding: 10px 0 0;
+  margin-left: -52px; margin-right: -52px;
+  padding-left: 52px; padding-right: 52px;
+}
+.tab-btn {
+  display: flex; align-items: center; gap: 7px;
+  padding: 9px 16px; border: none; background: none; cursor: pointer;
+  font-family: var(--font-mono); font-size: 10px; letter-spacing: .07em;
+  text-transform: uppercase; color: var(--dim);
+  border-bottom: 2px solid transparent; margin-bottom: -1px;
+  transition: color .15s, border-color .15s; white-space: nowrap;
+}
+.tab-btn:hover { color: var(--silver2); }
+.tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+.tab-icon { font-size: 13px; }
+.tab-panel { display: none; animation: fadeUp .25s ease; }
+.tab-panel.active { display: block; }
+
+/* ── SECTIONS ── */
+.section { margin-bottom: 48px; }
+.sec-type-bar { display: flex; align-items: center; gap: 8px; margin-bottom: 14px; }
+.sec-type-icon {
+  width: 28px; height: 28px; border-radius: 7px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center; font-size: 13px;
+}
+.sec-type-icon.conceptual { background: rgba(56,189,248,.08); border: 1px solid rgba(56,189,248,.18); }
+.sec-type-icon.technical   { background: rgba(168,85,247,.08); border: 1px solid rgba(168,85,247,.18); }
+.sec-type-icon.lab         { background: rgba(74,222,128,.08); border: 1px solid rgba(74,222,128,.18); }
+.sec-type-icon.exam        { background: rgba(251,191,36,.08); border: 1px solid rgba(251,191,36,.18); }
+.sec-type-icon.interactive { background: rgba(45,212,191,.08); border: 1px solid rgba(45,212,191,.18); }
+.sec-type-label { font-family: var(--font-mono); font-size: 9px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; }
+.sec-type-label.conceptual { color: var(--sky); }
+.sec-type-label.technical   { color: var(--purple); }
+.sec-type-label.lab         { color: var(--accent); }
+.sec-type-label.exam        { color: var(--amber); }
+.sec-type-label.interactive { color: var(--teal); }
+.sec-h { font-family: var(--font-display); font-size: 22px; font-weight: 600; color: var(--white); margin-bottom: 6px; letter-spacing: .02em; }
+.sec-div { width: 40px; height: 2px; background: linear-gradient(to right, var(--accent), transparent); margin-bottom: 14px; }
+.sec-sub { font-size: 14px; color: var(--silver2); margin-bottom: 20px; font-style: italic; line-height: 1.6; }
+.prose { font-size: 15px; color: var(--silver); line-height: 1.78; margin-bottom: 14px; }
+.prose strong { color: var(--white); font-weight: 500; }
+.prose code { font-family: var(--font-mono); font-size: 12px; background: rgba(255,255,255,.06); border: 1px solid var(--border2); border-radius: 4px; padding: 1px 6px; color: var(--accent); }
+
+/* ── INFOBOXES ── */
+.infobox { display: flex; gap: 12px; border-radius: 10px; padding: 14px 16px; margin: 18px 0; line-height: 1.65; }
+.infobox-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+.infobox-body { font-size: 13.5px; }
+.infobox-body strong { font-weight: 500; }
+.infobox.note { background: rgba(56,189,248,.06); border: 1px solid rgba(56,189,248,.15); color: var(--silver2); }
+.infobox.note .infobox-body strong { color: var(--sky); }
+.infobox.trap { background: rgba(248,113,113,.06); border: 1px solid rgba(248,113,113,.15); color: var(--silver2); }
+.infobox.trap .infobox-body strong { color: var(--red); }
+.infobox.tip { background: var(--accent-dim); border: 1px solid var(--accent-border); color: var(--silver2); }
+.infobox.tip .infobox-body strong { color: var(--accent); }
+.infobox.warn { background: var(--amber-dim); border: 1px solid var(--amber-border); color: var(--silver2); }
+.infobox.warn .infobox-body strong { color: var(--amber); }
+
+/* ── TABLE ── */
+.tbl-wrap { overflow-x: auto; margin: 18px 0; border-radius: 10px; border: 1px solid var(--border); }
+.tbl { width: 100%; border-collapse: collapse; font-size: 13px; }
+.tbl th {
+  font-family: var(--font-mono); font-size: 8.5px; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--accent);
+  padding: 10px 14px; text-align: left;
+  border-bottom: 1px solid var(--border2); white-space: nowrap;
+  background: rgba(74,222,128,.04);
+}
+.tbl td { padding: 10px 14px; border-bottom: 1px solid var(--border); color: var(--silver2); vertical-align: top; line-height: 1.5; }
+.tbl tr:last-child td { border-bottom: none; }
+.tbl tr:hover td { background: rgba(255,255,255,.02); }
+.badge { font-family: var(--font-mono); font-size: 9px; letter-spacing: .06em; text-transform: uppercase; padding: 3px 8px; border-radius: 4px; }
+.badge.green { background: rgba(74,222,128,.1); color: var(--accent); border: 1px solid rgba(74,222,128,.2); }
+.badge.amber { background: var(--amber-dim); color: var(--amber); border: 1px solid var(--amber-border); }
+.badge.sky   { background: rgba(56,189,248,.1); color: var(--sky); border: 1px solid rgba(56,189,248,.2); }
+.badge.purple{ background: rgba(168,85,247,.1); color: var(--purple); border: 1px solid rgba(168,85,247,.2); }
+
+/* ── MODEL CARDS ── */
+.model-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px,1fr)); gap: 14px; margin: 20px 0; }
+.model-card {
+  background: var(--navy3); border: 1px solid var(--border);
+  border-radius: 12px; overflow: hidden; transition: transform .2s, box-shadow .2s;
+}
+.model-card:hover { transform: translateY(-2px); box-shadow: 0 10px 32px rgba(0,0,0,.35); }
+.mc-top { padding: 14px 16px 10px; }
+.mc-id { font-family: var(--font-mono); font-size: 9px; letter-spacing: .1em; color: var(--dim); text-transform: uppercase; margin-bottom: 3px; }
+.mc-name { font-family: var(--font-display); font-size: 14px; color: var(--white); margin-bottom: 8px; line-height: 1.3; }
+.mc-body { padding: 10px 16px 14px; border-top: 1px solid var(--border); display: flex; flex-direction: column; gap: 5px; }
+.mc-row { display: flex; justify-content: space-between; align-items: baseline; }
+.mc-row-label { font-size: 11.5px; color: var(--dim); }
+.mc-row-val { font-family: var(--font-mono); font-size: 11px; font-weight: 500; }
+.mc-desc { font-size: 11.5px; color: var(--dim); margin-top: 4px; font-style: italic; }
+.model-card.m01 { border-top: 3px solid var(--sky); }
+.model-card.m02 { border-top: 3px solid var(--amber); }
+.model-card.m03 { border-top: 3px solid var(--purple); }
+.model-card.m04 { border-top: 3px solid var(--coral); }
+
+/* ── POV SELECTOR VISUALISER ── */
+.pov-wrap {
+  background: var(--navy3); border: 1px solid var(--border);
+  border-radius: 14px; overflow: hidden; margin: 18px 0;
+}
+.pov-header {
+  padding: 14px 18px; border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;
+}
+.pov-title { font-family: var(--font-mono); font-size: 9px; letter-spacing: .1em; text-transform: uppercase; color: var(--accent); }
+.pov-body { padding: 20px; }
+.pov-axes { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px,1fr)); gap: 12px; margin-bottom: 16px; }
+.pov-axis { }
+.pov-axis-label { font-family: var(--font-mono); font-size: 8px; letter-spacing: .1em; color: var(--dim); text-transform: uppercase; margin-bottom: 6px; }
+.pov-select {
+  width: 100%; background: var(--navy2); border: 1px solid var(--border2);
+  border-radius: 7px; padding: 8px 12px; font-size: 13px;
+  font-family: var(--font-body); color: var(--white); outline: none; cursor: pointer;
+  transition: border-color .15s;
+}
+.pov-select:focus { border-color: var(--accent-border); }
+.pov-result {
+  background: rgba(74,222,128,.04); border: 1px solid var(--accent-border);
+  border-radius: 10px; padding: 16px 18px;
+  font-family: var(--font-mono); font-size: 12px; color: var(--silver2); line-height: 1.8;
+}
+.pov-result-label { font-size: 8.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--dim); margin-bottom: 8px; }
+.pov-result-line { color: var(--white); }
+.pov-result-line span { color: var(--accent); }
+.pov-hint { font-size: 11px; color: var(--dim); margin-top: 10px; font-style: italic; }
+
+/* ── SCENARIO / VERSION MATRIX ── */
+.matrix-wrap {
+  background: var(--navy3); border: 1px solid var(--border);
+  border-radius: 12px; overflow: hidden; margin: 18px 0;
+}
+.matrix-header { padding: 12px 16px; border-bottom: 1px solid var(--border); font-family: var(--font-mono); font-size: 9px; letter-spacing: .1em; text-transform: uppercase; color: var(--accent); }
+.matrix-grid { display: grid; grid-template-columns: auto repeat(4,1fr); }
+.matrix-cell {
+  padding: 10px 12px; border-bottom: 1px solid var(--border); border-right: 1px solid var(--border);
+  font-size: 12px; line-height: 1.4;
+}
+.matrix-cell:nth-child(5n) { border-right: none; }
+.matrix-cell.header { font-family: var(--font-mono); font-size: 9px; letter-spacing: .08em; text-transform: uppercase; color: var(--dim); background: rgba(255,255,255,.02); }
+.matrix-cell.row-header { font-family: var(--font-mono); font-size: 10px; font-weight: 600; color: var(--white); background: rgba(255,255,255,.02); }
+.matrix-cell.used { background: rgba(74,222,128,.06); color: var(--accent); }
+.matrix-cell.unused { color: var(--dim); font-style: italic; }
+.matrix-cell.primary { background: rgba(74,222,128,.12); border: 1px solid var(--accent-border) !important; color: var(--accent); font-weight: 600; }
+
+/* ── LAB ── */
+.lab-box {
+  background: rgba(74,222,128,.03); border: 1px solid rgba(74,222,128,.12);
+  border-radius: 12px; padding: 22px 24px; margin: 18px 0;
+}
+.lab-header {
+  font-family: var(--font-mono); font-size: 9.5px; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--accent);
+  margin-bottom: 16px; display: flex; align-items: center; gap: 8px;
+}
+.lab-header::before { content: ''; width: 3px; height: 14px; background: var(--accent); border-radius: 2px; }
+.lab-scenario {
+  background: rgba(255,255,255,.02); border: 1px solid var(--border);
+  border-radius: 8px; padding: 14px 16px;
+  font-size: 13.5px; color: rgba(232,240,248,.65);
+  line-height: 1.72; margin-bottom: 18px;
+}
+.lab-scenario strong { color: var(--white); font-weight: 500; }
+.lab-checklist { display: flex; flex-direction: column; gap: 10px; }
+.lab-check-item { display: flex; gap: 12px; align-items: flex-start; cursor: pointer; }
+.lab-check-box {
+  width: 20px; height: 20px; border-radius: 5px; flex-shrink: 0;
+  border: 1px solid rgba(74,222,128,.3); background: rgba(74,222,128,.04);
+  display: flex; align-items: center; justify-content: center;
+  transition: all .15s; margin-top: 2px;
+}
+.lab-check-box:hover { border-color: var(--accent); background: rgba(74,222,128,.1); }
+.lab-check-box.checked { background: var(--accent); border-color: var(--accent); }
+.lab-check-box.checked::after { content: '✓'; font-size: 11px; color: var(--navy); font-weight: 700; }
+.lab-check-text { font-size: 13.5px; color: rgba(232,240,248,.7); line-height: 1.65; flex: 1; }
+.lab-check-text strong { color: var(--white); font-weight: 500; }
+.lab-check-item.checked .lab-check-text { color: var(--dim); text-decoration: line-through; text-decoration-color: rgba(255,255,255,.2); }
+.lab-progress { margin-top: 14px; }
+.lab-progress-bar { height: 3px; background: var(--border); border-radius: 2px; overflow: hidden; margin-top: 6px; }
+.lab-progress-fill { height: 100%; background: var(--accent); border-radius: 2px; transition: width .3s ease; }
+.lab-progress-label { font-family: var(--font-mono); font-size: 9px; color: var(--dim); }
+
+/* ── EXAM ── */
+.exam-box { background: rgba(245,158,11,.04); border: 1px solid rgba(245,158,11,.15); border-radius: 12px; overflow: hidden; margin: 16px 0; }
+.exam-box-header {
+  font-family: var(--font-mono); font-size: 9px; letter-spacing: .09em;
+  text-transform: uppercase; color: var(--amber);
+  padding: 11px 16px; border-bottom: 1px solid rgba(245,158,11,.12);
+  background: rgba(245,158,11,.04);
+}
+.exam-box-body { padding: 16px; font-size: 13.5px; color: var(--silver2); line-height: 1.72; }
+.exam-box-body strong { color: var(--white); font-weight: 500; }
+
+/* Quiz */
+.quiz-q { margin-bottom: 28px; }
+.quiz-stem { font-size: 14.5px; color: var(--white); line-height: 1.7; margin-bottom: 14px; padding: 14px 16px; background: rgba(255,255,255,.02); border: 1px solid var(--border); border-radius: 8px; }
+.quiz-options { display: flex; flex-direction: column; gap: 7px; }
+.quiz-opt {
+  padding: 10px 14px; border-radius: 8px;
+  border: 1px solid var(--border); background: rgba(255,255,255,.02);
+  font-size: 13.5px; color: var(--silver2); cursor: pointer;
+  transition: all .15s; text-align: left; line-height: 1.5;
+}
+.quiz-opt:hover:not(.revealed) { border-color: var(--accent-border); color: var(--white); background: var(--accent-dim); }
+.quiz-opt.correct { background: rgba(74,222,128,.08); border-color: rgba(74,222,128,.25); color: var(--accent); pointer-events: none; }
+.quiz-opt.wrong { background: rgba(248,113,113,.08); border-color: rgba(248,113,113,.2); color: var(--red); pointer-events: none; }
+.quiz-opt.revealed { pointer-events: none; }
+.quiz-explanation { margin-top: 10px; padding: 12px 14px; background: var(--accent-dim); border: 1px solid var(--accent-border); border-radius: 8px; font-size: 13px; color: var(--silver2); line-height: 1.65; display: none; }
+.quiz-explanation.show { display: block; animation: fadeUp .2s ease; }
+.quiz-explanation strong { color: var(--accent); }
+.quiz-meta { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+.quiz-diff { font-family: var(--font-mono); font-size: 8.5px; letter-spacing: .08em; text-transform: uppercase; padding: 2px 8px; border-radius: 4px; }
+.quiz-diff.foundation { background: rgba(74,222,128,.08); color: var(--accent); border: 1px solid rgba(74,222,128,.15); }
+.quiz-diff.practitioner { background: var(--amber-dim); color: var(--amber); border: 1px solid var(--amber-border); }
+.quiz-diff.expert { background: rgba(248,113,113,.08); color: var(--red); border: 1px solid rgba(248,113,113,.15); }
+.quiz-qnum { font-family: var(--font-mono); font-size: 9px; color: var(--dim); }
+.quiz-score { margin-top: 24px; padding: 18px; background: var(--navy3); border: 1px solid var(--border); border-radius: 12px; display: none; text-align: center; }
+.quiz-score.show { display: block; animation: fadeUp .3s ease; }
+.quiz-score-num { font-family: var(--font-display); font-size: 36px; color: var(--accent); }
+.quiz-score-label { font-family: var(--font-mono); font-size: 10px; color: var(--dim); letter-spacing: .1em; text-transform: uppercase; margin-top: 4px; }
+.quiz-score-msg { font-size: 14px; color: var(--silver2); margin-top: 10px; }
+
+/* ── HALL NAV FOOTER ── */
+.hall-nav-footer {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-top: 64px; padding-top: 28px; border-top: 1px solid var(--border);
+}
+.hnf-prev, .hnf-next {
+  display: flex; align-items: center; gap: 10px;
+  text-decoration: none; padding: 12px 16px; border-radius: 10px;
+  border: 1px solid var(--border); background: var(--navy3); transition: all .2s;
+}
+.hnf-prev:hover, .hnf-next:hover { border-color: var(--accent-border); background: var(--accent-dim); }
+.hnf-dir { font-family: var(--font-mono); font-size: 8.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--dim); }
+.hnf-name { font-size: 14px; color: var(--white); margin-top: 2px; }
+.hnf-next { flex-direction: row-reverse; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 900px) {
+  .sidebar { display: none; position: fixed; left: 0; top: var(--topbar-h); height: calc(100vh - var(--topbar-h)); z-index: 90; transform: translateX(-100%); transition: transform .25s ease; }
+  .sidebar.open { display: flex; flex-direction: column; transform: translateX(0); }
+  .sidebar-overlay { display: none; }
+  .sidebar-overlay.open { display: block; }
+  .tb-hamburger { display: flex; }
+  .main { padding: 20px 18px 80px; }
+  .tab-bar { margin-left: -18px; margin-right: -18px; padding-left: 18px; padding-right: 18px; overflow-x: auto; scrollbar-width: none; }
+  .tab-bar::-webkit-scrollbar { display: none; }
+  .hall-title { font-size: 26px; }
+  .pov-axes { grid-template-columns: 1fr 1fr; }
+}
+</style>
+</head>
+<body>
+
+<div id="stars"></div>
+<div class="sidebar-overlay" id="overlay" onclick="closeSidebar()"></div>
+
+<div id="app">
+
+  <!-- ── TOPBAR ── -->
+  <header id="topbar">
+    <a href="https://brainspring.ai" class="tb-logo" target="_blank" rel="noopener">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 36" width="18" height="20">
+        <path d="M16 2L3 9v18l13 7 13-7V9L16 2z" fill="none" stroke="#4ade80" stroke-width="2"/>
+        <path d="M16 8l7 4v8l-7 4-7-4v-8l7-4z" fill="#4ade80" opacity=".3"/>
+      </svg>
+      <span class="tb-brand"><span class="tb-brain">Brain</span><span class="tb-spring">Spring</span></span>
+    </a>
+    <span class="tb-sep">›</span>
+    <span class="tb-course">Academy of Profit Center</span>
+    <div class="tb-dot"></div>
+    <nav class="tb-nav-right">
+      <a href="hall-1.html" class="tb-link">Foundations</a>
+      <a href="hall-2.html" class="tb-link">Dimensions</a>
+      <a href="hall-3.html" class="tb-link current">Models</a>
+      <a href="hall-4.html" class="tb-link">Hall of Logic</a>
+      <a href="hall-9.html" class="tb-link">Exam Hall</a>
+    </nav>
+    <span class="tb-hall-badge">Hall 3 of 9 · Models Pavilion</span>
+    <button class="tb-hamburger" onclick="toggleSidebar()" aria-label="Menu">
+      <svg width="18" height="14" viewBox="0 0 18 14" fill="none"><rect width="18" height="2" rx="1" fill="currentColor"/><rect y="6" width="18" height="2" rx="1" fill="currentColor"/><rect y="12" width="18" height="2" rx="1" fill="currentColor"/></svg>
+    </button>
+  </header>
+
+  <div id="body">
+
+    <!-- ── SIDEBAR ── -->
+    <nav class="sidebar" id="sidebar">
+      <div class="sb-label">Academy Halls</div>
+      <a href="hall-1.html" class="sb-hall"><div class="sb-hall-num">1</div><div class="sb-hall-info"><div class="sb-hall-name">Foundations Hall</div><div class="sb-hall-title">Orientation</div></div><div class="sb-status"></div></a>
+      <a href="hall-2.html" class="sb-hall"><div class="sb-hall-num">2</div><div class="sb-hall-info"><div class="sb-hall-name">Dimensions Gallery</div><div class="sb-hall-title">Geometry of Profit Center</div></div><div class="sb-status"></div></a>
+      <a href="hall-3.html" class="sb-hall current"><div class="sb-hall-num">3</div><div class="sb-hall-info"><div class="sb-hall-name">Models Pavilion</div><div class="sb-hall-title">Perspective Gallery</div></div><div class="sb-status current"></div></a>
+      <a href="hall-4.html" class="sb-hall"><div class="sb-hall-num">4</div><div class="sb-hall-info"><div class="sb-hall-name">Hall of Logic</div><div class="sb-hall-title">Rule Sets &amp; Sequences</div></div><div class="sb-status locked"></div></a>
+      <a href="hall-5.html" class="sb-hall"><div class="sb-hall-num">5</div><div class="sb-hall-info"><div class="sb-hall-name">Workshop of Precision</div><div class="sb-hall-title">Custom Calculations</div></div><div class="sb-status locked"></div></a>
+      <a href="hall-6.html" class="sb-hall"><div class="sb-hall-num">6</div><div class="sb-hall-info"><div class="sb-hall-name">Control Tower</div><div class="sb-hall-title">Calc Analysis Chamber</div></div><div class="sb-status locked"></div></a>
+      <a href="hall-7.html" class="sb-hall"><div class="sb-hall-num">7</div><div class="sb-hall-info"><div class="sb-hall-name">Profit Curve Observatory</div><div class="sb-hall-title">Rule Balancing</div></div><div class="sb-status locked"></div></a>
+      <a href="hall-8.html" class="sb-hall"><div class="sb-hall-num">8</div><div class="sb-hall-info"><div class="sb-hall-name">Pipeline Lab</div><div class="sb-hall-title">Data Integration Workshop</div></div><div class="sb-status locked"></div></a>
+      <a href="hall-9.html" class="sb-hall"><div class="sb-hall-num">9</div><div class="sb-hall-info"><div class="sb-hall-name">Examination Hall</div><div class="sb-hall-title">Graduation</div></div><div class="sb-status locked"></div></a>
+
+      <div class="sb-label">This Hall</div>
+      <div id="sb-toc"></div>
+
+      <div class="sb-label">Dean's Office</div>
+      <div class="sb-eliot">
+        <div class="sb-eliot-header">
+          <div class="sb-eliot-avatar">🎓</div>
+          <div>
+            <div class="sb-eliot-name">Dean Eliot</div>
+            <div class="sb-eliot-role">Senior Oracle EPM Practitioner</div>
+          </div>
+        </div>
+        <div class="sb-chips">
+          <span class="sb-chip" onclick="chipAsk(this)">What exactly is a model in EPCM?</span>
+          <span class="sb-chip" onclick="chipAsk(this)">How does POV differ from a dimension?</span>
+          <span class="sb-chip" onclick="chipAsk(this)">Why does NovaPrism need four models?</span>
+          <span class="sb-chip" onclick="chipAsk(this)">What is Copy POV and when do I use it?</span>
+        </div>
+        <div class="sb-eliot-msgs" id="sb-msgs"></div>
+        <div class="sb-eliot-input-row">
+          <input class="sb-eliot-input" id="sb-input" type="text" placeholder="Ask the Dean anything…" onkeydown="if(event.key==='Enter')sbSend()">
+          <button class="sb-eliot-send" onclick="sbSend()">↑</button>
+        </div>
+      </div>
+
+      <div class="sb-company">
+        <div class="sb-company-label">Case Company</div>
+        <div class="sb-company-name" id="sb-company-name">NovaPrism Group</div>
+        <div class="sb-company-desc" id="sb-company-desc">Loading…</div>
+      </div>
+    </nav>
+
+    <!-- ── MAIN ── -->
+    <main class="main">
+
+      <!-- Campus Map -->
+      <div class="campus-map-wrap">
+        <div class="campus-map-label">Academy of Profit Center — Your Journey</div>
+        <div class="campus-map-row" id="campus-map"></div>
+      </div>
+
+      <!-- Hall Hero -->
+      <header class="hall-hero">
+        <div class="hall-building-name">Models Pavilion</div>
+        <div class="hall-eyebrow">
+          <span class="hall-eyebrow-dot"></span>
+          Hall 3 of 9 · Academy of Profit Center · EPCM Study Tour
+        </div>
+        <h1 class="hall-title">The <em>perspective</em> machine</h1>
+        <p class="hall-tagline">Every calculation in EPCM runs inside a model. A model is not a cube or a report — it is a named configuration that fixes which Scenario, Version, and calculation logic applies to a given run. NovaPrism has four models. Understanding why — and how the POV selector controls which one you are working in — is the foundation of everything that follows.</p>
+        <div class="hall-tags">
+          <span class="htag conceptual">Conceptual</span>
+          <span class="htag technical">Technical</span>
+          <span class="htag interactive">Interactive</span>
+          <span class="htag lab">Lab</span>
+          <span class="htag exam">Exam: 1Z0-1082-25</span>
+        </div>
+      </header>
+
+      <!-- TAB BAR -->
+      <div class="tab-bar" role="tablist">
+        <button class="tab-btn active" role="tab" onclick="switchTab('conceptual',this)"><span class="tab-icon">📐</span> Conceptual</button>
+        <button class="tab-btn" role="tab" onclick="switchTab('technical',this)"><span class="tab-icon">⚙️</span> Technical</button>
+        <button class="tab-btn" role="tab" onclick="switchTab('interactive',this)"><span class="tab-icon">🧭</span> POV Simulator</button>
+        <button class="tab-btn" role="tab" onclick="switchTab('lab',this)"><span class="tab-icon">🔬</span> Lab</button>
+        <button class="tab-btn" role="tab" onclick="switchTab('exam',this)"><span class="tab-icon">📝</span> Exam Prep</button>
+      </div>
+
+      <!-- ═══════ TAB 1: CONCEPTUAL ═══════ -->
+      <div class="tab-panel active" id="tab-conceptual">
+
+        <section class="section" id="what-is-a-model">
+          <div class="sec-type-bar"><div class="sec-type-icon conceptual">📐</div><span class="sec-type-label conceptual">Conceptual</span></div>
+          <h2 class="sec-h">What a model actually is</h2>
+          <div class="sec-div"></div>
+          <p class="sec-sub">Not a cube. Not a report. Not a dimension. A model is a named, reusable calculation context — the container that tells EPCM which POV to operate on, which rules apply, and what the output represents.</p>
+          <p class="prose">In EPCM, a <strong>model</strong> is a named configuration that ties together a Scenario, a Version, and a set of rule sets into a single runnable object. When you run a model, EPCM executes every rule set assigned to it against the POV defined by that model's Scenario × Version intersection. The results land in PCM_CLC — in those specific Scenario and Version cells.</p>
+          <p class="prose">This matters because NovaPrism needs to run the same allocation logic against <strong>four completely different business questions</strong> simultaneously. What did we actually spend in Q1 Actual? What does Q2 look like in Forecast? What does the CFO's restructure scenario show? Each question needs its own model — not its own rule set, not its own cube, but its own named context that directs the same rules to a different part of the Scenario × Version address space.</p>
+
+          <div class="infobox tip">
+            <div class="infobox-icon">💡</div>
+            <div class="infobox-body"><strong>The key insight:</strong> NovaPrism writes one set of allocation rules — once, in Hall 4. Those same rules run across all four models by simply changing the POV context. The IT pool allocation logic for IS ($33.09M of $52M) is the same arithmetic whether you are calculating Actual, Forecast, or What-If. The model determines which cells that arithmetic writes into. This is why models are a design decision, not a technical detail.</div>
+          </div>
+
+          <h3 style="font-family:var(--font-display);font-size:18px;color:var(--white);margin:28px 0 14px;letter-spacing:.02em">NovaPrism's four models</h3>
+          <p class="prose">NovaPrism's four models are defined in <code>constants.js</code> and cover every business use case the CFO needs to answer. Each model is independent — running M04 What-If does not affect M01 Actual results.</p>
+
+          <div class="model-grid" id="model-cards">
+            <!-- Rendered by JS from NP.models -->
+          </div>
+
+          <div class="infobox note">
+            <div class="infobox-icon">📋</div>
+            <div class="infobox-body"><strong>M04 — the CFO's restructure model:</strong> NovaPrism's CFO wants to model a scenario where Infrastructure Solutions headcount drops by 800 (from 4,200 to 3,400) and its square footage is reduced by 30,000 sq ft. The What-If model runs the same allocation rules against modified driver values — the Finance and HR pool allocation to IS shrinks, the Facilities pool allocation shrinks. The model produces a "what would IS margin be if we restructured?" answer without touching any Actual or Forecast data. This is what M04 exists for.</div>
+          </div>
+        </section>
+
+        <section class="section" id="pov-concept">
+          <div class="sec-type-bar"><div class="sec-type-icon conceptual">🎯</div><span class="sec-type-label conceptual">Conceptual</span></div>
+          <h2 class="sec-h">The POV selector — your address in the cube</h2>
+          <div class="sec-div"></div>
+          <p class="sec-sub">POV stands for Point of View. It is not a dimension — it is the intersection of dimension members that defines which slice of the cube you are currently working in.</p>
+          <p class="prose">Think of the PCM_CLC cube as a multi-dimensional address space. NovaPrism's cube has 11 dimensions. Any specific cell in that cube has an address with one coordinate on each dimension — Account × Entity × Region × Function × Product × Customer × PCM_Balance × Period × Scenario × Version × View. The <strong>POV selector</strong> is the EPCM UI control that fixes the values of the dimensions that are not on rows or columns of your current form or report.</p>
+          <p class="prose">In practice: when NovaPrism's Finance Controller opens a data form to review Q1 allocations, the form shows Entity on rows and Account on columns. The POV selector sits at the top of the form and fixes Period = Q1, Scenario = Actual, Version = Working, PCM_Balance = PCM_Output, and View = Periodic. Change Period to Q2 in the POV selector — every number on the form refreshes to show Q2 data. The form design has not changed. The data has not changed. The POV has changed.</p>
+
+          <div class="infobox warn">
+            <div class="infobox-icon">⚠️</div>
+            <div class="infobox-body"><strong>POV vs dimension members — the critical distinction:</strong> A dimension member (like "Actual") is a permanent part of the cube outline. The POV selector is a runtime control that picks which member you are looking at. You cannot save the POV into the cube. You can save a <em>named POV</em> as a shortcut so you can recall it — but the data is always addressed by the member, not by the POV selector position. Exam questions test whether you know the POV selector is a navigation tool, not a data storage concept.</div>
+          </div>
+        </section>
+
+        <section class="section" id="scenario-version">
+          <div class="sec-type-bar"><div class="sec-type-icon conceptual">🎭</div><span class="sec-type-label conceptual">Conceptual</span></div>
+          <h2 class="sec-h">Scenario × Version — the two-axis address</h2>
+          <div class="sec-div"></div>
+          <p class="sec-sub">Every cell in NovaPrism's model lives at a Scenario × Version intersection. Understanding which combinations are valid — and which model controls which — is essential before you run a single calculation.</p>
+          <p class="prose">The <strong>Scenario dimension</strong> answers: what is the business context of this data? Actual means it happened. Forecast means it is expected. Budget means it was planned. What-If means it is hypothetical. The <strong>Version dimension</strong> answers: what stage of the process is this? Working means it is in progress. Final means it has been signed off. Pass1 and Pass2 support multi-pass allocation sequences where preliminary results feed into a second calculation pass.</p>
+          <p class="prose">NovaPrism's four models each own a specific Scenario × Version cell in this space. M01 writes Actual/Working results. M02 writes Forecast/Working results. M03 writes Budget/Working results. M04 writes Actual/WhatIf results — using Actual as the base Scenario but a separate Version so the restructure numbers never contaminate the real Actual data.</p>
+
+          <div class="matrix-wrap">
+            <div class="matrix-header">NovaPrism — Scenario × Version ownership matrix</div>
+            <div class="matrix-grid">
+              <div class="matrix-cell header"></div>
+              <div class="matrix-cell header">Working</div>
+              <div class="matrix-cell header">Final</div>
+              <div class="matrix-cell header">WhatIf</div>
+              <div class="matrix-cell header">Pass1</div>
+              <div class="matrix-cell row-header">Actual</div>
+              <div class="matrix-cell primary">M01 — Actuals<br>Allocation Process</div>
+              <div class="matrix-cell used">Promoted from Working after CFO sign-off</div>
+              <div class="matrix-cell primary">M04 — What-If<br>Scenario Analysis</div>
+              <div class="matrix-cell unused">Not used</div>
+              <div class="matrix-cell row-header">Forecast</div>
+              <div class="matrix-cell primary">M02 — Forecast<br>Allocation Process</div>
+              <div class="matrix-cell used">Promoted from Working at quarter lock</div>
+              <div class="matrix-cell unused">Not used</div>
+              <div class="matrix-cell unused">Not used</div>
+              <div class="matrix-cell row-header">Budget</div>
+              <div class="matrix-cell primary">M03 — Budget<br>Allocation Process</div>
+              <div class="matrix-cell used">Promoted at budget sign-off</div>
+              <div class="matrix-cell unused">Not used</div>
+              <div class="matrix-cell unused">Not used</div>
+              <div class="matrix-cell row-header">What-If</div>
+              <div class="matrix-cell unused">Not used</div>
+              <div class="matrix-cell unused">Not used</div>
+              <div class="matrix-cell unused">Not used</div>
+              <div class="matrix-cell unused">Not used</div>
+            </div>
+          </div>
+
+          <div class="infobox tip">
+            <div class="infobox-icon">✓</div>
+            <div class="infobox-body"><strong>Why M04 uses Actual/WhatIf and not What-If/Working:</strong> The CFO's restructure model needs to start from real Q1 Actual data and apply hypothetical driver changes. By using Actual as the Scenario and WhatIf as the Version, M04 can read from M01's Actual/Working results as the base, then write restructured allocation results into Actual/WhatIf — completely separate. If M04 used What-If/Working, it would need its own base data load from the GL. The Actual/WhatIf design reuses real data as the starting point.</div>
+          </div>
+        </section>
+
+      </div><!-- /conceptual -->
+
+      <!-- ═══════ TAB 2: TECHNICAL ═══════ -->
+      <div class="tab-panel" id="tab-technical">
+
+        <section class="section" id="model-properties">
+          <div class="sec-type-bar"><div class="sec-type-icon technical">⚙️</div><span class="sec-type-label technical">Technical</span></div>
+          <h2 class="sec-h">Model properties — what you configure at creation</h2>
+          <div class="sec-div"></div>
+          <p class="sec-sub">When you create a model in EPCM, you set five properties. Three of them cannot be changed after the model is used in a calculation run. This makes model design a one-shot decision.</p>
+
+          <div class="tbl-wrap">
+            <table class="tbl">
+              <thead><tr><th>Property</th><th>What it controls</th><th>Changeable after creation?</th><th>NovaPrism M01 value</th></tr></thead>
+              <tbody>
+                <tr><td>Model Name</td><td>Display name used across the UI, in logs, and in EPMAutomate commands</td><td><span class="badge green">Yes</span></td><td>Actuals Allocation Process</td></tr>
+                <tr><td>Model ID</td><td>Internal identifier used in API calls and EPMAutomate</td><td><span class="badge amber">No — locked on first calc run</span></td><td>M01</td></tr>
+                <tr><td>Scenario</td><td>Which Scenario dimension member this model writes to</td><td><span class="badge amber">No</span></td><td>Actual</td></tr>
+                <tr><td>Version</td><td>Which Version dimension member this model writes to</td><td><span class="badge amber">No</span></td><td>Working</td></tr>
+                <tr><td>Rule Sets assigned</td><td>Which rule sets execute when this model runs — and in what sequence</td><td><span class="badge green">Yes</span></td><td>All 5 rulesets (seq 10–50)</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="infobox trap">
+            <div class="infobox-icon">⚠️</div>
+            <div class="infobox-body"><strong>The exam trap on model properties:</strong> "After creating model M01 with Scenario = Actual and running the first calculation, the Finance team wants to change the Scenario to Forecast to save time. This is possible by editing the model properties." — <strong>FALSE.</strong> Scenario and Version are locked after the first calculation run. You must create a new model. The exam will offer this as a plausible answer. It is wrong.</div>
+          </div>
+        </section>
+
+        <section class="section" id="copy-pov">
+          <div class="sec-type-bar"><div class="sec-type-icon technical">📋</div><span class="sec-type-label technical">Technical</span></div>
+          <h2 class="sec-h">Copy POV — publishing results from PCM_CLC to PCM_REP</h2>
+          <div class="sec-div"></div>
+          <p class="sec-sub">Running a model writes results to PCM_CLC. The CFO does not read from PCM_CLC. Copy POV is the explicit operation that publishes a specific Scenario × Version × Period intersection from the calculation cube to the reporting cube.</p>
+          <p class="prose">After NovaPrism's M01 Actuals model runs for Q1, the Finance Controller reviews the results in PCM_CLC — checking balances, verifying IS's $80.82M allocation, confirming the 60 engagement totals reconcile. Once satisfied, she runs <strong>Copy POV</strong> to push Actual/Working/Q1 from PCM_CLC to PCM_REP. From that point, the CFO's Smart View reports and dashboards — which read from PCM_REP — show the Q1 results.</p>
+          <p class="prose">The architectural significance: while the Q1 Copy POV is running, or while Q2 M01 is calculating in PCM_CLC, the CFO can continue reading Q1 results from PCM_REP without interruption. PCM_REP is only updated when Copy POV explicitly runs — it is never updated mid-calculation.</p>
+
+          <div class="tbl-wrap">
+            <table class="tbl">
+              <thead><tr><th>Step</th><th>Action</th><th>Cube affected</th><th>Who runs it</th></tr></thead>
+              <tbody>
+                <tr><td>1. Load</td><td>GL actuals loaded into PCM_CLC for Actual/Working/Q1</td><td>PCM_CLC</td><td>Data Integration (Hall 8)</td></tr>
+                <tr><td>2. Calculate</td><td>M01 model runs — all 5 rulesets execute, allocating $134M</td><td>PCM_CLC</td><td>Finance Controller</td></tr>
+                <tr><td>3. Review</td><td>Finance Controller inspects PCM_CLC — balances, rule balancing checks</td><td>PCM_CLC</td><td>Finance Controller</td></tr>
+                <tr><td>4. Copy POV</td><td>Actual/Working/Q1 pushed from PCM_CLC to PCM_REP</td><td>PCM_REP updated</td><td>Finance Controller</td></tr>
+                <tr><td>5. Report</td><td>CFO, division heads, auditors read from PCM_REP via Smart View</td><td>PCM_REP</td><td>Read-only consumers</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="infobox note">
+            <div class="infobox-icon">📋</div>
+            <div class="infobox-body"><strong>Named POVs vs Copy POV:</strong> These are two completely different concepts with confusingly similar names. A <em>Named POV</em> is a saved shortcut in the POV selector — it remembers your preferred Scenario/Version/Period combination so you do not have to reset it every session. <em>Copy POV</em> is an administrative operation that transfers data between cubes. One is a navigation shortcut. The other is a data publication workflow. The exam tests that you know the difference.</div>
+          </div>
+        </section>
+
+        <section class="section" id="model-calculation">
+          <div class="sec-type-bar"><div class="sec-type-icon technical">🔄</div><span class="sec-type-label technical">Technical</span></div>
+          <h2 class="sec-h">Running a model — what actually happens</h2>
+          <div class="sec-div"></div>
+          <p class="sec-sub">When you click Calculate on a model in EPCM, the system does not just run rules. It executes a precise sequence — clear, load drivers, execute rule sets in sequence order, verify balance.</p>
+
+          <div class="tbl-wrap">
+            <table class="tbl">
+              <thead><tr><th>Phase</th><th>What EPCM does</th><th>NovaPrism detail</th></tr></thead>
+              <tbody>
+                <tr><td>Clear</td><td>Clears the target POV in PCM_CLC before writing new results. Default clear type: Logical (not Physical).</td><td>Clears Actual/Working/Q1 data in PCM_CLC. Logical Clear removes data from the model's POV without touching other POVs or PCM_REP.</td></tr>
+                <tr><td>Driver load</td><td>Refreshes any driver members with current source values if driver staging rules are included.</td><td>IT ticket counts (DS: 1,240, IS: 2,890, CL: 410) confirmed. Headcount and sqft driver values verified from constants.</td></tr>
+                <tr><td>Ruleset seq:10</td><td>IT Cost Pool Formation — Serial. Pools IT GL accounts into a single stageable member.</td><td>$52M IT pool formed from 1,200 GL accounts via Account alt hierarchy. Serial: must complete before seq:40.</td></tr>
+                <tr><td>Rulesets seq:20–30</td><td>Facilities and Finance/HR Allocation — Parallel. Both can run simultaneously.</td><td>$38M by sqft + $28M+$16M by headcount. IS receives $24.16M + $15M + $8.57M = $47.73M from these pools.</td></tr>
+                <tr><td>Ruleset seq:40</td><td>IT Allocation — Serial. Depends on seq:10 having completed.</td><td>$52M allocated by ticket count. IS: $33.09M. DS: $14.19M. CL: $4.70M.</td></tr>
+                <tr><td>Ruleset seq:50</td><td>Engagement Contribution — Parallel. Pushes division costs to 60 engagement codes.</td><td>IS's $80.82M allocated cost distributed across its engagement portfolio. 17 engagements revealed as loss-making.</td></tr>
+                <tr><td>Balance check</td><td>System verifies PCM_Input = PCM_Allocated_Out for cost centres. ES must net to zero.</td><td>ES: $134M in, $134M out. Difference = $0. Model is balanced.</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="infobox warn">
+            <div class="infobox-icon">⚠️</div>
+            <div class="infobox-body"><strong>Logical Clear vs Physical Clear — the default that trips people up:</strong> EPCM defaults to <strong>Logical Clear</strong>. Logical Clear removes data only from the stored cells that are part of the current model's POV. Physical Clear removes all data from the entire ASO database slice — including data that was not written by this model. For NovaPrism: running a Physical Clear before M01 would wipe Forecast and Budget data from the same Period slice. Never use Physical Clear in a multi-model environment unless you know exactly what you are doing. The exam tests this default.</div>
+          </div>
+        </section>
+
+      </div><!-- /technical -->
+
+      <!-- ═══════ TAB 3: INTERACTIVE ═══════ -->
+      <div class="tab-panel" id="tab-interactive">
+
+        <section class="section" id="pov-simulator">
+          <div class="sec-type-bar"><div class="sec-type-icon interactive">🧭</div><span class="sec-type-label interactive">Interactive</span></div>
+          <h2 class="sec-h">POV Simulator</h2>
+          <div class="sec-div"></div>
+          <p class="sec-sub">Select any combination of Scenario, Version, Period, and Entity below. The simulator shows you which model owns that POV, which cube to read from, and what NovaPrism data you would see.</p>
+
+          <div class="pov-wrap">
+            <div class="pov-header">
+              <span class="pov-title">NovaPrism_EPCM_PROD — POV Selector</span>
+              <span style="font-size:11px;color:var(--dim);font-style:italic">Simulating the EPCM UI POV control</span>
+            </div>
+            <div class="pov-body">
+              <div class="pov-axes">
+                <div class="pov-axis">
+                  <div class="pov-axis-label">Scenario</div>
+                  <select class="pov-select" id="pov-scenario" onchange="updatePOV()">
+                    <option value="Actual">Actual</option>
+                    <option value="Forecast">Forecast</option>
+                    <option value="Budget">Budget</option>
+                    <option value="What-If">What-If</option>
+                  </select>
+                </div>
+                <div class="pov-axis">
+                  <div class="pov-axis-label">Version</div>
+                  <select class="pov-select" id="pov-version" onchange="updatePOV()">
+                    <option value="Working">Working</option>
+                    <option value="Final">Final</option>
+                    <option value="WhatIf">WhatIf</option>
+                    <option value="Pass1">Pass1</option>
+                  </select>
+                </div>
+                <div class="pov-axis">
+                  <div class="pov-axis-label">Period</div>
+                  <select class="pov-select" id="pov-period" onchange="updatePOV()">
+                    <option value="FY24 Q1">FY24 Q1</option>
+                    <option value="FY24 Q2">FY24 Q2</option>
+                    <option value="FY24 Q3">FY24 Q3</option>
+                    <option value="FY24 Q4">FY24 Q4</option>
+                    <option value="FY24 YTD">FY24 YTD</option>
+                  </select>
+                </div>
+                <div class="pov-axis">
+                  <div class="pov-axis-label">Entity</div>
+                  <select class="pov-select" id="pov-entity" onchange="updatePOV()">
+                    <option value="IS">IS — Infrastructure Solutions</option>
+                    <option value="DS">DS — Digital Services</option>
+                    <option value="CL">CL — Cloud Licensing</option>
+                    <option value="ES">ES — Enterprise Support</option>
+                  </select>
+                </div>
+              </div>
+              <div class="pov-result" id="pov-result">
+                <div class="pov-result-label">POV Resolution</div>
+                <div id="pov-output"></div>
+              </div>
+              <div class="pov-hint">Change any dimension above to see how EPCM resolves the POV to a model, a cube, and a data state.</div>
+            </div>
+          </div>
+        </section>
+
+      </div><!-- /interactive -->
+
+      <!-- ═══════ TAB 4: LAB ═══════ -->
+      <div class="tab-panel" id="tab-lab">
+
+        <section class="section" id="lab-model-design">
+          <div class="sec-type-bar"><div class="sec-type-icon lab">🔬</div><span class="sec-type-label lab">Lab Scenario</span></div>
+          <h2 class="sec-h">Design and validate NovaPrism's four models</h2>
+          <div class="sec-div"></div>
+          <p class="sec-sub">The Finance Director has approved the EPCM build. Before rule sets can be assigned in Hall 4, the four models must be created with the correct Scenario and Version properties — and justified to the CFO.</p>
+
+          <div class="lab-box">
+            <div class="lab-header">Mission Brief — Model Configuration Sign-off</div>
+            <div class="lab-scenario">
+              <strong>Situation:</strong> NovaPrism's Oracle implementation partner has provisioned the application. You must configure all four models before the Hall 4 rule set build begins — because rule sets cannot be assigned to a model that does not exist. The CFO also wants a one-page brief explaining why four models are needed rather than one, and what the WhatIf Version is for. You have two hours before the project governance review.
+            </div>
+            <div class="lab-checklist" id="lab-checklist">
+              <div class="lab-check-item" onclick="toggleCheck(this)">
+                <div class="lab-check-box"></div>
+                <div class="lab-check-text"><strong>Create all four models with correct Scenario and Version.</strong> Using NP.models from constants.js, specify the exact Scenario and Version for M01, M02, M03, and M04. For each, state the business process it supports and why those specific dimension members were chosen — not alternatives.</div>
+              </div>
+              <div class="lab-check-item" onclick="toggleCheck(this)">
+                <div class="lab-check-box"></div>
+                <div class="lab-check-text"><strong>Explain why M04 uses Actual/WhatIf rather than What-If/Working.</strong> Write the two-sentence rationale the CFO needs. The answer must explain what base data M04 reads from, why a separate Version is required rather than a separate Scenario, and what would break if you used What-If/Working instead.</div>
+              </div>
+              <div class="lab-check-item" onclick="toggleCheck(this)">
+                <div class="lab-check-box"></div>
+                <div class="lab-check-text"><strong>Map the Copy POV workflow for M01 Q1 close.</strong> Describe the exact five-step sequence from GL data load through to CFO-readable results in PCM_REP. Name which cube holds data at each step, who performs each action, and what the Finance Controller verifies before running Copy POV.</div>
+              </div>
+              <div class="lab-check-item" onclick="toggleCheck(this)">
+                <div class="lab-check-box"></div>
+                <div class="lab-check-text"><strong>Identify what happens if Clear Type is set to Physical before running M01.</strong> State what data would be wiped beyond M01's intended scope, which other models would be affected, and whether the data could be recovered without a full reload. This is the governance risk brief for the IT team.</div>
+              </div>
+              <div class="lab-check-item" onclick="toggleCheck(this)">
+                <div class="lab-check-box"></div>
+                <div class="lab-check-text"><strong>Write the CFO brief on why four models instead of one.</strong> The CFO's question: "Why can't we just run one model and change the Scenario filter in the report?" Answer this directly — what would break, what would be lost, and what does model isolation give us that a single model cannot. Maximum three sentences.</div>
+              </div>
+            </div>
+            <div class="lab-progress">
+              <div class="lab-progress-label" id="lab-progress-label">0 of 5 tasks completed</div>
+              <div class="lab-progress-bar"><div class="lab-progress-fill" id="lab-progress-fill" style="width:0%"></div></div>
+            </div>
+          </div>
+
+          <div class="infobox tip" style="margin-top:20px">
+            <div class="infobox-icon">🎓</div>
+            <div class="infobox-body"><strong>Dean's hint on task 5:</strong> The CFO's question reveals a common confusion between dimensions and models. One model with Scenario changed in the report filter would work for reporting — but it would not work for calculation isolation. When M01 runs its Clear phase, it clears its own Scenario/Version/Period slice. If M02 Forecast were running in the same model, the Clear would hit Forecast data too. Four separate models means four completely independent calculation lifecycles — independent Clear, independent run schedule, independent rule set assignment. They share cubes, but they never interfere with each other's data.</div>
+          </div>
+        </section>
+
+      </div><!-- /lab -->
+
+      <!-- ═══════ TAB 5: EXAM PREP ═══════ -->
+      <div class="tab-panel" id="tab-exam">
+
+        <section class="section" id="exam-alignment">
+          <div class="sec-type-bar"><div class="sec-type-icon exam">📝</div><span class="sec-type-label exam">Exam Alignment · 1Z0-1082-25</span></div>
+          <h2 class="sec-h">What Models Pavilion covers on the exam</h2>
+          <div class="sec-div"></div>
+          <p class="sec-sub">Hall 3 maps to the third syllabus topic: Working with POVs and Models. Expect 4–6 questions across the 50-question exam. The POV/Copy POV distinction and the Logical vs Physical Clear trap are the two highest-probability questions in this topic.</p>
+
+          <div class="exam-box">
+            <div class="exam-box-header">📝 Syllabus — Working with POVs and Models</div>
+            <div class="exam-box-body">
+              <strong>Sub-bullet 1: Describe POVs and models in EPCM.</strong><br>
+              Know what a model is (a named calculation context tied to Scenario × Version). Know what a POV is (a runtime intersection of dimension members). Know that Named POV ≠ Copy POV.<br><br>
+              <strong>Sub-bullet 2: Manage POVs and models.</strong><br>
+              Know the five model properties. Know which are locked after the first calculation run (Scenario, Version, ID). Know the Copy POV workflow — PCM_CLC to PCM_REP. Know that Logical Clear is the EPCM default and what Physical Clear does differently.
+            </div>
+          </div>
+
+          <div class="exam-box">
+            <div class="exam-box-header">⚠️ The three most-tested traps in this section</div>
+            <div class="exam-box-body">
+              <strong>Trap 1: "You can change a model's Scenario after it has been used in a calculation."</strong><br>
+              FALSE. Scenario and Version are locked after the first run. Create a new model.<br><br>
+              <strong>Trap 2: "Copy POV copies data from PCM_REP to PCM_CLC so analysts can work on published results."</strong><br>
+              FALSE. Copy POV goes from PCM_CLC (calculation) to PCM_REP (reporting) — not the other way. The direction matters on the exam.<br><br>
+              <strong>Trap 3: "Physical Clear is the EPCM default and is preferred for multi-model environments."</strong><br>
+              FALSE on both counts. Logical Clear is the default. Physical Clear is dangerous in multi-model environments because it clears beyond the model's POV scope.
+            </div>
+          </div>
+
+          <div id="quiz-container"></div>
+          <div class="quiz-score" id="quiz-score">
+            <div class="quiz-score-num" id="quiz-score-num">0/5</div>
+            <div class="quiz-score-label">Hall 3 Exam Score</div>
+            <div class="quiz-score-msg" id="quiz-score-msg"></div>
+          </div>
+
+          <div class="tbl-wrap" style="margin-top:28px">
+            <table class="tbl">
+              <thead><tr><th>Concept</th><th>Exam answer</th><th>Implementation reality</th></tr></thead>
+              <tbody>
+                <tr><td>What is a model</td><td>A named calculation context tied to a specific Scenario × Version</td><td>The model is also the object you reference in EPMAutomate scripts — every automated close schedule calls a model by name</td></tr>
+                <tr><td>Default Clear Type</td><td>Logical Clear</td><td>Always verify this is set before a production run — Physical Clear in the wrong hands clears data across all POVs in the slice</td></tr>
+                <tr><td>Copy POV direction</td><td>PCM_CLC → PCM_REP</td><td>The direction is enforced by the system — you cannot accidentally copy the wrong way, but you must explicitly trigger it after each calculation</td></tr>
+                <tr><td>Named POV</td><td>A saved shortcut in the POV selector for navigation — not data</td><td>Most NovaPrism users save Named POVs for Actual/Working/Q1, Forecast/Working/Q2, etc. — so they do not have to reset the selector each session</td></tr>
+                <tr><td>Properties locked after first run</td><td>Scenario, Version, Model ID</td><td>Model Name and Rule Set assignments remain editable — so you can rename a model or reassign rule sets without recreating it</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+      </div><!-- /exam -->
+
+      <!-- Hall Nav Footer -->
+      <div class="hall-nav-footer">
+        <a href="hall-2.html" class="hnf-prev">
+          <span style="font-size:14px">←</span>
+          <div><div class="hnf-dir">Previous Hall</div><div class="hnf-name">Dimensions Gallery</div></div>
+        </a>
+        <a href="hall-4.html" class="hnf-next">
+          <div><div class="hnf-dir">Next Hall</div><div class="hnf-name">Hall of Logic</div></div>
+          <span style="font-size:14px">→</span>
+        </a>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<!-- ══ SCRIPTS ══ -->
+<script src="./constants.js"></script>
+<script>
+
+/* ── Stars ── */
+(function(){
+  var s=document.getElementById('stars');
+  for(var i=0;i<50;i++){
+    var d=document.createElement('div');d.className='star';
+    var sz=Math.random()*1.2+0.3;
+    d.style.cssText='width:'+sz+'px;height:'+sz+'px;top:'+Math.random()*100+'%;left:'+Math.random()*100+'%;--d:'+(3+Math.random()*6)+'s;--delay:'+Math.random()*8+'s;--op:'+(0.04+Math.random()*0.12);
+    s.appendChild(d);
+  }
+})();
+
+/* ── Sidebar ── */
+function toggleSidebar(){ document.getElementById('sidebar').classList.toggle('open'); document.getElementById('overlay').classList.toggle('open'); }
+function closeSidebar(){ document.getElementById('sidebar').classList.remove('open'); document.getElementById('overlay').classList.remove('open'); }
+
+/* ── Campus map ── */
+(function(){
+  var halls=[
+    {n:1,name:'Foundations',url:'hall-1.html',done:true},
+    {n:2,name:'Dimensions',url:'hall-2.html',done:true},
+    {n:3,name:'Models',url:'hall-3.html',active:true},
+    {n:4,name:'Logic',url:'hall-4.html'},
+    {n:5,name:'Workshop',url:'hall-5.html'},
+    {n:6,name:'Control',url:'hall-6.html'},
+    {n:7,name:'Observatory',url:'hall-7.html'},
+    {n:8,name:'Pipeline',url:'hall-8.html'},
+    {n:9,name:'Exam Hall',url:'hall-9.html'},
+  ];
+  var map=document.getElementById('campus-map');
+  var html='';
+  halls.forEach(function(h,i){
+    var cls=h.active?'campus-building active':h.done?'campus-building done':'campus-building locked';
+    var stopCls=h.active?'campus-stop active-stop':h.done?'campus-stop done-stop':'campus-stop';
+    html+='<div class="'+stopCls+'"><a href="'+h.url+'" class="'+cls+'">'+h.n+'</a><div class="campus-stop-label">'+h.name+'</div></div>';
+    if(i<halls.length-1) html+='<div class="campus-connector"></div>';
+  });
+  map.innerHTML=html;
+})();
+
+/* ── Company sidebar ── */
+(function(){
+  if(typeof NP==='undefined') return;
+  var c=NP.company;
+  var el=document.getElementById('sb-company-desc');
+  if(el) el.textContent='$'+(c.revenue/1000).toFixed(1)+'B · 3 divisions · 1 cost centre · '+c.employees.toLocaleString()+' staff';
+})();
+
+/* ── Model cards from NP.models ── */
+(function(){
+  if(typeof NP==='undefined') return;
+  var colors={M01:'m01',M02:'m02',M03:'m03',M04:'m04'};
+  var scenarioColors={Actual:'sky',Forecast:'amber',Budget:'purple',WhatIf:'amber'};
+  var versionColors={Working:'green',Final:'green',WhatIf:'sky',Pass1:'amber'};
+  var container=document.getElementById('model-cards');
+  if(!container) return;
+  var html='';
+  NP.models.forEach(function(m){
+    var scScenario = m.scenario==='Actual'?'var(--sky)':m.scenario==='Forecast'?'var(--amber)':m.scenario==='Budget'?'var(--purple)':'var(--coral)';
+    html+='<div class="model-card '+colors[m.id]+'">';
+    html+='<div class="mc-top">';
+    html+='<div class="mc-id">'+m.id+' · Models Pavilion</div>';
+    html+='<div class="mc-name">'+m.name+'</div>';
+    html+='</div>';
+    html+='<div class="mc-body">';
+    html+='<div class="mc-row"><span class="mc-row-label">Scenario</span><span class="mc-row-val" style="color:'+scScenario+'">'+m.scenario+'</span></div>';
+    html+='<div class="mc-row"><span class="mc-row-label">Version</span><span class="mc-row-val" style="color:var(--accent)">'+m.version+'</span></div>';
+    html+='<div class="mc-desc">'+m.desc+'</div>';
+    html+='</div></div>';
+  });
+  container.innerHTML=html;
+})();
+
+/* ── Tabs ── */
+function switchTab(name,btn){
+  document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.remove('active');});
+  document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('active');});
+  document.getElementById('tab-'+name).classList.add('active');
+  btn.classList.add('active');
+  buildTOC();
+}
+
+/* ── TOC ── */
+function buildTOC(){
+  var toc=document.getElementById('sb-toc');
+  if(!toc) return;
+  toc.innerHTML='';
+  var panel=document.querySelector('.tab-panel.active');
+  if(!panel) return;
+  panel.querySelectorAll('h2.sec-h').forEach(function(h){
+    if(!h.id) h.id='toc-'+h.textContent.trim().toLowerCase().replace(/[^a-z0-9]+/g,'-').slice(0,40);
+    var a=document.createElement('a');
+    a.href='#'+h.id; a.className='sb-toc-item';
+    a.textContent=h.textContent;
+    toc.appendChild(a);
+  });
+}
+setTimeout(buildTOC,100);
+
+/* ── POV Simulator ── */
+function updatePOV(){
+  var scenario=document.getElementById('pov-scenario').value;
+  var version=document.getElementById('pov-version').value;
+  var period=document.getElementById('pov-period').value;
+  var entity=document.getElementById('pov-entity').value;
+
+  var model='No model owns this POV — no data will be found here.';
+  var cube='PCM_CLC (if calculation in progress) or PCM_REP (if published)';
+  var dataState='';
+  var colour='var(--dim)';
+
+  if(scenario==='Actual'&&version==='Working'){
+    model='M01 — Actuals Allocation Process'; colour='var(--sky)';
+    dataState=period==='FY24 Q1'?'Q1 data loaded and calculated. Ready for Copy POV to PCM_REP.':'Awaiting data load and M01 calculation run for '+period+'.';
+  } else if(scenario==='Forecast'&&version==='Working'){
+    model='M02 — Forecast Allocation Process'; colour='var(--amber)';
+    dataState='Rolling 4-quarter forecast data. M02 re-runs monthly as actuals are finalised.';
+  } else if(scenario==='Budget'&&version==='Working'){
+    model='M03 — Budget Allocation Process'; colour='var(--purple)';
+    dataState='Annual budget data. M03 runs once per budget cycle, promoted to Final at sign-off.';
+  } else if(scenario==='Actual'&&version==='WhatIf'){
+    model='M04 — What-If Scenario Analysis (CFO restructure)'; colour='var(--coral)';
+    dataState='Reads Actual base data, applies restructured IS headcount (-800) and sqft (-30,000). Results isolated in WhatIf version.';
+  } else if(version==='Final'){
+    model='No model writes to Final directly — data promoted via Copy POV from Working to Final after sign-off.'; colour='var(--green)';
+    dataState='Read-only. Contains last signed-off results for '+scenario+'.';
+  } else {
+    dataState='This Scenario × Version combination is not assigned to any NovaPrism model. Cells will be empty unless manually loaded.';
+  }
+
+  var pa=(typeof NP!=='undefined')?NP.postAllocation:null;
+  var entityDetail='';
+  if(pa&&(scenario==='Actual'||scenario==='Forecast')&&version==='Working'){
+    var d=pa[entity];
+    if(d&&d.marginPct!==null){
+      entityDetail=' For '+entity+': fully-loaded margin = '+d.marginPct+'% ($'+d.netMargin+'M net on $'+d.revenue+'M revenue).';
+    }
+  }
+
+  var html='<div class="pov-result-line">Model: <span style="color:'+colour+'">'+model+'</span></div>';
+  html+='<div class="pov-result-line" style="margin-top:6px">POV: <span>'+scenario+' / '+version+' / '+period+' / '+entity+'</span></div>';
+  html+='<div class="pov-result-line" style="margin-top:6px;color:var(--silver2);font-family:var(--font-body);font-size:13px">'+dataState+entityDetail+'</div>';
+  document.getElementById('pov-output').innerHTML=html;
+}
+updatePOV();
+
+/* ── Lab checklist ── */
+function toggleCheck(item){
+  var box=item.querySelector('.lab-check-box');
+  box.classList.toggle('checked');
+  item.classList.toggle('checked');
+  updateLabProgress();
+}
+function updateLabProgress(){
+  var done=document.querySelectorAll('.lab-check-box.checked').length;
+  var total=document.querySelectorAll('.lab-check-item').length;
+  document.getElementById('lab-progress-label').textContent=done+' of '+total+' tasks completed';
+  document.getElementById('lab-progress-fill').style.width=(done/total*100)+'%';
+}
+
+/* ── Quiz ── */
+var quizData=[
+  {
+    diff:'foundation',qnum:'Q1',
+    stem:'NovaPrism\'s Finance Controller runs the M01 Actuals model for Q1. After reviewing the results in PCM_CLC, she wants the CFO to see the Q1 allocation results in Smart View. What operation must she perform next?',
+    options:[
+      'Run the model a second time with "Publish to REP" selected in the model settings',
+      'Run Copy POV to transfer the Actual/Working/Q1 data from PCM_CLC to PCM_REP',
+      'Export the PCM_CLC data to Excel and reload it into PCM_REP via Data Management',
+      'Set the POV selector to PCM_REP in the UI — this automatically repoints Smart View'
+    ],
+    correct:1,
+    explanation:'Copy POV is the explicit operation that transfers a specific POV\'s data from PCM_CLC to PCM_REP. Until Copy POV runs, PCM_REP contains the previous period\'s published data. Smart View reads from PCM_REP — so without Copy POV, the CFO sees stale results. Running the model a second time, exporting to Excel, or changing the POV selector have no effect on what is published to PCM_REP.'
+  },
+  {
+    diff:'foundation',qnum:'Q2',
+    stem:'Which of the following correctly describes what a model is in EPCM?',
+    options:[
+      'A model is an ASO database that stores allocation results for a specific time period',
+      'A model is a named configuration that ties a Scenario and Version to a set of rule sets, defining a calculation context',
+      'A model is a report layout that displays PCM_Output values across Entity and Account dimensions',
+      'A model is a dimension member that represents a specific business planning cycle'
+    ],
+    correct:1,
+    explanation:'A model in EPCM is a named calculation context — it combines a Scenario, a Version, and a set of assigned rule sets into a single runnable object. It is not a cube, a report, or a dimension member. When you run a model, EPCM executes the assigned rule sets against the PCM_CLC cube at the Scenario × Version intersection defined by the model.'
+  },
+  {
+    diff:'practitioner',qnum:'Q3',
+    stem:'After creating model M01 with Scenario = Actual and Version = Working, and running the first calculation, NovaPrism\'s Finance Director decides the model should have been configured with Scenario = Forecast to test forecast allocations. What is the correct action?',
+    options:[
+      'Edit M01\'s properties and change the Scenario to Forecast — this is allowed at any time',
+      'Delete all data from PCM_CLC, then edit M01\'s Scenario property to Forecast',
+      'Create a new model M02 with Scenario = Forecast — M01\'s Scenario is locked after the first calculation run',
+      'Change the Scenario in the POV selector before the next M01 run — this overrides the model\'s Scenario setting'
+    ],
+    correct:2,
+    explanation:'Scenario and Version are model properties that are locked after the first calculation run. They cannot be edited regardless of whether you clear the data first or change the POV selector. The correct action is to create a new model — which is exactly what NovaPrism\'s design does: M01 for Actual/Working, M02 for Forecast/Working. The POV selector does not override model properties — it is a navigation tool, not a configuration override.'
+  },
+  {
+    diff:'practitioner',qnum:'Q4',
+    stem:'NovaPrism\'s IT team asks whether they should set the Clear Type to Physical before running M01 for the Q1 close, to ensure a clean calculation environment. What is the correct advice?',
+    options:[
+      'Yes — Physical Clear is the EPCM default and is always the safest option before a production run',
+      'No — Physical Clear removes data across all POVs in the ASO slice, which would wipe M02 Forecast and M03 Budget data for Q1',
+      'Yes — Physical Clear only affects the model\'s own Scenario and Version, so it is equivalent to Logical Clear',
+      'No — Clear Type does not affect multi-model environments because each model writes to a separate cube'
+    ],
+    correct:1,
+    explanation:'Logical Clear (the EPCM default) removes only the stored cells in the current model\'s Scenario × Version × Period slice. Physical Clear removes all data from the corresponding ASO database block — which includes other models\' data at the same Period intersection. For NovaPrism, a Physical Clear before M01 Q1 would erase Q1 Forecast (M02) and Q1 Budget (M03) data. All four models share the same PCM_CLC cube, not separate cubes.'
+  },
+  {
+    diff:'expert',qnum:'Q5',
+    stem:'NovaPrism\'s CFO asks why M04 What-If is configured as Actual/WhatIf rather than What-If/Working. The implementation lead explains the design rationale. Which answer correctly captures the key reason?',
+    options:[
+      'What-If is not a valid Scenario in EPCM Standard — only Actual, Forecast, and Budget are supported',
+      'Using Actual/WhatIf allows M04 to read M01\'s real Actual base data as its starting point, while the WhatIf Version isolates restructure results from the real Actual/Working data',
+      'The WhatIf Version forces all rule sets to run in serial mode, which is required for the restructure scenario\'s sequentially dependent calculations',
+      'Copy POV only works between Actual Scenario members — using What-If Scenario would prevent publishing results to PCM_REP'
+    ],
+    correct:1,
+    explanation:'The key design advantage of Actual/WhatIf is that M04 can reference real Q1 Actual data from M01 as its base — without loading a separate dataset. The WhatIf Version keeps restructure results completely isolated from Actual/Working, so the CFO\'s real Q1 actuals are never contaminated by the hypothetical restructure numbers. If M04 used What-If/Working instead, it would need its own independent data load from the GL. All Scenarios including What-If are valid in EPCM Standard, and Version has no effect on rule set execution mode.'
+  }
+];
+
+var quizAnswers={};
+(function renderQuiz(){
+  var container=document.getElementById('quiz-container');
+  if(!container) return;
+  var html='';
+  quizData.forEach(function(q,i){
+    html+='<div class="quiz-q" id="qq-'+i+'">';
+    html+='<div class="quiz-meta"><span class="quiz-diff '+q.diff+'">'+q.diff+'</span><span class="quiz-qnum">'+q.qnum+'</span></div>';
+    html+='<div class="quiz-stem">'+q.stem+'</div>';
+    html+='<div class="quiz-options">';
+    q.options.forEach(function(opt,j){
+      html+='<button class="quiz-opt" onclick="answerQ('+i+','+j+')">'+String.fromCharCode(65+j)+'. '+opt+'</button>';
+    });
+    html+='</div>';
+    html+='<div class="quiz-explanation" id="qexp-'+i+'"></div>';
+    html+='</div>';
+  });
+  container.innerHTML=html;
+})();
+
+function answerQ(qi,oi){
+  if(quizAnswers[qi]!==undefined) return;
+  quizAnswers[qi]=oi;
+  var q=quizData[qi];
+  document.querySelectorAll('#qq-'+qi+' .quiz-opt').forEach(function(o,j){
+    o.classList.add('revealed');
+    if(j===q.correct) o.classList.add('correct');
+    else if(j===oi&&oi!==q.correct) o.classList.add('wrong');
+  });
+  var exp=document.getElementById('qexp-'+qi);
+  exp.innerHTML='<strong>'+(oi===q.correct?'✓ Correct':'✗ Incorrect')+'</strong> — '+q.explanation;
+  exp.classList.add('show');
+  if(Object.keys(quizAnswers).length===quizData.length) showScore();
+}
+function showScore(){
+  var correct=0;
+  quizData.forEach(function(q,i){if(quizAnswers[i]===q.correct)correct++;});
+  var total=quizData.length;
+  var pct=Math.round(correct/total*100);
+  document.getElementById('quiz-score-num').textContent=correct+'/'+total;
+  document.getElementById('quiz-score-msg').textContent=pct<60?'Review the Models Pavilion before moving on.':pct<100?'Solid model knowledge — proceed to the Hall of Logic.':'Perfect. Your models are locked and ready.';
+  document.getElementById('quiz-score').classList.add('show');
+}
+
+/* ── Dean Eliot ── */
+var HALL_SYSTEM_EXTENSION=[
+  'CURRENT HALL: Hall 3 — Models Pavilion (Academy of Profit Center)',
+  'HALL SCOPE: What a model is in EPCM. The POV selector and how it differs from a dimension.',
+  'Scenario × Version address space. NovaPrism\'s four models. Copy POV workflow. Logical vs Physical Clear.',
+  '',
+  'KEY CONCEPTS IN THIS HALL:',
+  '- Model: a named calculation context tying Scenario × Version to a set of rule sets. Not a cube, not a report.',
+  '- POV selector: a runtime navigation control that fixes dimension member values for a form or report. Not data storage.',
+  '- Named POV: a saved POV selector shortcut. Not related to Copy POV.',
+  '- Copy POV: the operation that transfers data from PCM_CLC (calculation) to PCM_REP (reporting). One direction only.',
+  '- Logical Clear (default): clears only the current model\'s Scenario × Version × Period cells. Physical Clear wipes the entire ASO block.',
+  '- M01 = Actual/Working. M02 = Forecast/Working. M03 = Budget/Working. M04 = Actual/WhatIf.',
+  '- Scenario and Version are locked after the first calculation run. Model Name and rule set assignments remain editable.',
+  '',
+  'NOVAPRISM IN THIS HALL:',
+  'M01 runs the full 5-ruleset allocation for Actual/Working. After Q1 Close, Copy POV publishes to PCM_REP.',
+  'M04 uses Actual/WhatIf — reads M01 real data as base, models IS headcount -800 / sqft -30,000 restructure.',
+  'The matrix shows 4 primary cells (M01-M04) + Final versions promoted after sign-off.',
+  '',
+  'EXAM TOPICS: Working with POVs and models — describe POVs and models, manage POVs and models.',
+  '',
+  'COMMON MISCONCEPTIONS:',
+  '- Copy POV goes REP→CLC: FALSE. It always goes CLC→REP.',
+  '- Physical Clear is the EPCM default: FALSE. Logical Clear is the default.',
+  '- You can change Scenario after first run: FALSE. Create a new model.',
+  '- POV selector = dimension: FALSE. POV is a runtime navigation control.',
+  '',
+  'OUT OF SCOPE: Rule set types and sequences → Hall of Logic (Hall 4). Calc performance → Control Tower (Hall 6).'
+].join('\n');
+
+function buildSystemPrompt(){
+  var pa=(typeof NP!=='undefined')?NP.postAllocation:null;
+  return [
+    'You are Dean Eliot, the AI practitioner-guide for the BrainSpring EPCM Study Tour — Academy of Profit Center.',
+    'You are a senior Oracle EPM practitioner who has implemented EPCM at 40+ enterprises.',
+    'Voice: direct (no hedging), practitioner-honest, concise (3–5 sentences target), never sycophantic.',
+    '',
+    'CASE COMPANY: NovaPrism Group — $2.1B professional services conglomerate. 8,400 employees. 4 divisions.',
+    pa?('IS: $'+pa.IS.revenue+'M revenue | '+pa.IS.directPct+'% direct → '+pa.IS.marginPct+'% fully-loaded | $'+pa.IS.allocatedIn+'M allocated in.'):'',
+    'Enterprise Support: $134M costs across IT $52M, Facilities $38M, Finance $28M, HR $16M.',
+    'Four models: M01 Actual/Working, M02 Forecast/Working, M03 Budget/Working, M04 Actual/WhatIf.',
+    '',
+    'RULES: Connect every answer to NovaPrism. Name exam answer AND implementation reality when they differ.',
+    'Never invent product behaviour. For out-of-scope topics, name the hall that covers them.',
+    '',
+    HALL_SYSTEM_EXTENSION
+  ].filter(Boolean).join('\n');
+}
+
+var sbHistory=[];
+function sbSend(){
+  var inp=document.getElementById('sb-input');
+  var txt=inp.value.trim(); if(!txt) return;
+  inp.value='';
+  sbAddMsg('user',txt);
+  sbHistory.push({role:'user',content:txt});
+  var typing=sbAddMsg('guide','…');
+  typing.classList.add('typing');
+  sbCall(typing);
+}
+function chipAsk(chip){
+  document.getElementById('sb-input').value=chip.textContent;
+  sbSend();
+}
+function sbAddMsg(role,text){
+  var msgs=document.getElementById('sb-msgs');
+  var div=document.createElement('div');
+  div.className='sb-msg '+role;
+  div.textContent=text;
+  msgs.appendChild(div);
+  msgs.scrollTop=msgs.scrollHeight;
+  return div;
+}
+async function sbCall(typingEl){
+  try{
+    var resp=await fetch('https://epbcs-tutor.fancy-brook-fc0d.workers.dev',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        model:'claude-sonnet-4-20250514',
+        max_tokens:500,
+        system:buildSystemPrompt(),
+        messages:sbHistory
+      })
+    });
+    var data=await resp.json();
+    var reply=(data.content&&data.content[0]&&data.content[0].text)||'Try rephrasing — I had trouble with that one.';
+    typingEl.textContent=reply;
+    typingEl.classList.remove('typing');
+    sbHistory.push({role:'assistant',content:reply});
+  }catch(e){
+    typingEl.textContent='Connection issue — please try again.';
+    typingEl.classList.remove('typing');
+  }
+}
+
+document.querySelectorAll('a[href^="#"]').forEach(function(a){
+  a.addEventListener('click',function(e){
+    var id=this.getAttribute('href').slice(1);
+    var el=document.getElementById(id);
+    if(el){e.preventDefault();el.scrollIntoView({behavior:'smooth',block:'start'});}
+  });
+});
+</script>
+</body>
+</html>
