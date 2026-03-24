@@ -1,0 +1,1028 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!--
+  EPCM STUDY TOUR — SHARED SHELL  (P0-2)
+  BrainSpring · epm.brainspring.ai/epcm/
+
+  HOW TO USE THIS SHELL:
+  1. Copy this file to halls/hall-N.html
+  2. Replace every <!--HALL:*--> placeholder with hall-specific content
+  3. Never modify the shell's CSS variables, topbar, or sidebar structure
+  4. Add hall CSS inside the <!--HALL:CSS--> block only
+  5. Import constants.js before any hall JS: <script src="./constants.js"></script>
+
+  PLACEHOLDERS IN THIS FILE:
+  <!--HALL:NUMBER-->     e.g. 1
+  <!--HALL:TITLE-->      e.g. Orientation
+  <!--HALL:SUBTITLE-->   e.g. The profitability blind spot
+  <!--HALL:COLOR-->      e.g. #38bdf8  (one accent per hall — see palette below)
+  <!--HALL:TAGLINE-->    e.g. Why NovaPrism's CFO can't tell the board which divisions make money
+  <!--HALL:TAGS-->       e.g. <span class="htag">Conceptual</span><span class="htag">Foundation</span>
+  <!--HALL:CONTENT-->    All section HTML goes here
+  <!--HALL:CSS-->        Hall-specific CSS only
+  <!--HALL:JS-->         Hall-specific JS only (constants.js already loaded)
+
+  HALL ACCENT PALETTE (one per hall, never reuse):
+  H1 · Orientation         --sky:    #38bdf8
+  H2 · Dimensions          --teal:   #2dd4bf
+  H3 · Models & POVs       --green:  #4ade80
+  H4 · Rule Sets & Rules   --purple: #a855f7
+  H5 · Custom Calc Rules   --coral:  #fb923c
+  H6 · Calculation Control --amber:  #fbbf24
+  H7 · Rule Balancing      --lime:   #a3e635
+  H8 · Data Integration    --rose:   #f472b6
+  H9 · Exam Prep           --red:    #f87171
+-->
+<title>Hall <!--HALL:NUMBER--> — <!--HALL:TITLE--> · EPCM Study Tour · BrainSpring</title>
+<meta name="description" content="<!--HALL:TAGLINE--> — Free Oracle EPCM Cloud study tour by BrainSpring. No registration required.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Crimson+Pro:ital,wght@0,400;0,500;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+/* ══════════════════════════════════════════
+   EPCM SHELL · BASE DESIGN SYSTEM
+   Do not edit. Hall CSS goes in HALL:CSS.
+══════════════════════════════════════════ */
+:root{
+  /* Brand palette — matches brainspring.ai */
+  --navy:#0d1b2e;--navy2:#112240;--navy3:#16304f;--navy4:#1e3f64;
+  --silver:#c8d4e0;--silver2:#8fa3b8;
+  --green:#4ade80;--green2:#22c55e;--green3:#16a34a;
+  --purple:#a855f7;--teal:#2dd4bf;--amber:#fbbf24;--red:#f87171;
+  --sky:#38bdf8;--coral:#fb923c;--rose:#f472b6;--lime:#a3e635;
+  --white:#e8f0f8;--dim:#4a6080;
+  --border:rgba(200,212,224,.1);--border2:rgba(74,222,128,.14);
+
+  /* Hall accent — overridden per-hall */
+  --accent:<!--HALL:COLOR-->;
+  --accent-dim:color-mix(in srgb,var(--accent) 12%,transparent);
+  --accent-border:color-mix(in srgb,var(--accent) 28%,transparent);
+
+  /* Section type colours */
+  --c-conceptual:#38bdf8;
+  --c-technical:#a855f7;
+  --c-lab:#4ade80;
+  --c-exam:#fbbf24;
+  --c-ai:#fb923c;
+
+  --r:10px;
+  --sidebar-w:220px;
+  --topbar-h:54px;
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Crimson Pro',serif;
+  background:var(--navy);
+  color:var(--white);
+  min-height:100vh;
+  overflow-x:hidden;
+  display:flex;
+  flex-direction:column;
+}
+
+/* Subtle grid overlay */
+body::before{
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background-image:
+    linear-gradient(rgba(74,222,128,.018) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(74,222,128,.018) 1px,transparent 1px);
+  background-size:56px 56px;
+}
+/* Radial glow */
+body::after{
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:radial-gradient(ellipse 80% 50% at 50% -10%,rgba(74,222,128,.06) 0%,transparent 70%);
+}
+
+/* Stars */
+#stars{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+.star{position:absolute;border-radius:50%;background:#4ade80;animation:twinkle var(--d,4s) infinite var(--delay,0s)}
+
+/* ── Animations ── */
+@keyframes twinkle{0%,100%{opacity:.02}50%{opacity:var(--op,.16)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(74,222,128,.22)}50%{box-shadow:0 0 0 5px rgba(74,222,128,0)}}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+@keyframes accentPulse{0%,100%{box-shadow:0 0 0 0 color-mix(in srgb,var(--accent) 22%,transparent)}50%{box-shadow:0 0 0 5px transparent}}
+
+/* ══════════════════════════════════════════
+   TOPBAR
+══════════════════════════════════════════ */
+#topbar{
+  position:fixed;top:0;left:0;right:0;
+  height:var(--topbar-h);
+  background:rgba(13,27,46,.97);
+  backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border2);
+  display:flex;align-items:center;
+  padding:0 20px;gap:12px;
+  z-index:200;
+}
+.tb-logo{display:flex;align-items:center;gap:8px;text-decoration:none;flex-shrink:0}
+.tb-brand{font-family:'Rajdhani',sans-serif;font-size:15px;font-weight:700;letter-spacing:.03em}
+.tb-brain{color:var(--white)}.tb-spring{color:var(--green)}
+.tb-sep{color:var(--dim);font-size:12px}
+.tb-course{font-family:'Rajdhani',sans-serif;font-size:11px;font-weight:600;
+  color:var(--accent);letter-spacing:.07em;text-transform:uppercase}
+.tb-dot{width:6px;height:6px;border-radius:50%;background:var(--accent);
+  animation:accentPulse 2.5s infinite;flex-shrink:0}
+.tb-hall-badge{
+  font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:600;
+  letter-spacing:.1em;text-transform:uppercase;
+  padding:3px 9px;border-radius:10px;
+  background:var(--accent-dim);border:1px solid var(--accent-border);
+  color:var(--accent);white-space:nowrap;
+}
+.tb-nav-right{display:flex;gap:5px;margin-left:auto;align-items:center;overflow-x:auto}
+.tb-nav-right::-webkit-scrollbar{display:none}
+.tb-link{
+  padding:4px 9px;border-radius:6px;border:1px solid var(--border);
+  color:var(--dim);font-family:'Rajdhani',sans-serif;font-size:10px;
+  font-weight:600;letter-spacing:.06em;text-transform:uppercase;
+  text-decoration:none;white-space:nowrap;transition:all .15s;
+}
+.tb-link:hover{border-color:var(--accent);color:var(--accent)}
+.tb-link.current{border-color:var(--accent-border);color:var(--accent)}
+.tb-hamburger{display:none;background:none;border:none;cursor:pointer;padding:6px;flex-shrink:0;margin-left:auto}
+.tb-hamburger span{display:block;width:16px;height:1.5px;background:var(--silver2);margin:3.5px 0;border-radius:1px;transition:all .2s}
+
+/* ══════════════════════════════════════════
+   LAYOUT — Sidebar + Main
+══════════════════════════════════════════ */
+.layout{
+  display:flex;
+  margin-top:var(--topbar-h);
+  flex:1;
+  position:relative;
+  z-index:1;
+}
+
+/* ── SIDEBAR ── */
+.sidebar{
+  width:var(--sidebar-w);
+  flex-shrink:0;
+  position:sticky;
+  top:var(--topbar-h);
+  height:calc(100vh - var(--topbar-h));
+  overflow-y:auto;overflow-x:hidden;
+  background:rgba(13,27,46,.6);
+  border-right:1px solid var(--border);
+  padding:20px 0 32px;
+  scrollbar-width:thin;scrollbar-color:var(--navy3) transparent;
+}
+.sidebar::-webkit-scrollbar{width:3px}
+.sidebar::-webkit-scrollbar-thumb{background:var(--navy3)}
+
+.sb-label{
+  font-family:'JetBrains Mono',monospace;font-size:8.5px;
+  letter-spacing:.12em;color:var(--dim);text-transform:uppercase;
+  padding:0 16px;margin-bottom:8px;margin-top:4px;
+}
+.sb-halls{display:flex;flex-direction:column;gap:2px;padding:0 10px}
+.sb-hall{
+  display:flex;align-items:center;gap:9px;
+  padding:8px 10px;border-radius:7px;
+  text-decoration:none;
+  font-family:'Rajdhani',sans-serif;font-size:12px;font-weight:600;
+  color:var(--dim);transition:all .15s;
+}
+.sb-hall:hover{background:rgba(255,255,255,.04);color:var(--silver)}
+.sb-hall.current{background:var(--accent-dim);color:var(--accent)}
+.sb-hall.locked{opacity:.4;cursor:default;pointer-events:none}
+.sb-num{
+  width:22px;height:22px;border-radius:5px;
+  font-size:10px;font-weight:700;
+  display:flex;align-items:center;justify-content:center;
+  background:rgba(255,255,255,.05);color:var(--dim);
+  flex-shrink:0;transition:all .15s;border:1px solid transparent;
+}
+.sb-hall.current .sb-num{
+  background:var(--accent-dim);
+  border-color:var(--accent-border);
+  color:var(--accent);
+}
+.sb-hall-name{line-height:1.3;flex:1;font-size:11.5px}
+.sb-status{width:5px;height:5px;border-radius:50%;flex-shrink:0}
+.sb-status.live{background:var(--green);animation:pulse 2s infinite}
+.sb-status.current{background:var(--accent)}
+.sb-status.locked{background:rgba(255,255,255,.12)}
+
+.sb-divider{height:1px;background:var(--border);margin:14px 16px}
+.sb-section-title{
+  font-family:'JetBrains Mono',monospace;font-size:8px;
+  letter-spacing:.12em;color:var(--dim);text-transform:uppercase;
+  padding:0 20px;margin-bottom:6px;
+}
+.sb-toc{display:flex;flex-direction:column;gap:1px;padding:0 10px}
+.sb-toc-item{
+  display:flex;align-items:center;gap:8px;
+  padding:5px 10px;border-radius:5px;
+  text-decoration:none;font-size:11px;color:var(--dim);
+  transition:color .12s;font-family:'Crimson Pro',serif;
+}
+.sb-toc-item:hover{color:var(--silver2)}
+.sb-toc-item::before{
+  content:'';width:3px;height:3px;border-radius:50%;
+  background:currentColor;flex-shrink:0;opacity:.5;
+}
+
+.sb-company{
+  margin:16px 10px 0;padding:10px 12px;
+  background:rgba(255,255,255,.03);border:1px solid var(--border);
+  border-radius:8px;
+}
+.sb-company-label{
+  font-family:'JetBrains Mono',monospace;font-size:7.5px;
+  letter-spacing:.1em;color:var(--dim);text-transform:uppercase;margin-bottom:5px;
+}
+.sb-company-name{
+  font-family:'Rajdhani',sans-serif;font-size:13px;font-weight:700;
+  color:var(--accent);margin-bottom:3px;
+}
+.sb-company-desc{font-size:10.5px;color:var(--dim);line-height:1.4}
+
+/* ── MAIN CONTENT ── */
+.main{
+  flex:1;min-width:0;
+  padding:48px 52px 96px;
+  animation:fadeUp .5s ease both;
+}
+@media(max-width:1024px){.main{padding:36px 32px 80px}}
+
+/* ══════════════════════════════════════════
+   HALL HERO
+══════════════════════════════════════════ */
+.hall-hero{margin-bottom:52px}
+.hall-eyebrow{
+  display:inline-flex;align-items:center;gap:7px;
+  font-family:'JetBrains Mono',monospace;font-size:9px;
+  letter-spacing:.14em;color:var(--accent);text-transform:uppercase;
+  border:1px solid var(--accent-border);border-radius:20px;
+  padding:4px 14px;margin-bottom:20px;
+  background:var(--accent-dim);
+}
+.hall-number{
+  font-family:'Rajdhani',sans-serif;font-size:11px;font-weight:700;
+  letter-spacing:.08em;color:var(--dim);text-transform:uppercase;
+  margin-bottom:6px;
+}
+.hall-title{
+  font-family:'Rajdhani',sans-serif;
+  font-size:clamp(32px,4.5vw,52px);
+  font-weight:700;line-height:1.06;
+  color:var(--white);margin-bottom:10px;
+}
+.hall-title em{color:var(--accent);font-style:normal}
+.hall-tagline{
+  font-size:17px;color:rgba(232,240,248,.45);
+  font-style:italic;line-height:1.8;max-width:640px;
+  margin-bottom:22px;
+}
+.hall-tags{display:flex;gap:7px;flex-wrap:wrap}
+.htag{
+  font-family:'JetBrains Mono',monospace;font-size:8.5px;
+  font-weight:700;letter-spacing:.09em;text-transform:uppercase;
+  padding:3px 10px;border-radius:10px;
+  border:1px solid rgba(255,255,255,.08);color:var(--dim);
+}
+.htag.conceptual{border-color:rgba(56,189,248,.25);color:var(--c-conceptual);background:rgba(56,189,248,.06)}
+.htag.technical  {border-color:rgba(168,85,247,.25);color:var(--c-technical);background:rgba(168,85,247,.06)}
+.htag.lab        {border-color:rgba(74,222,128,.22);color:var(--c-lab);background:rgba(74,222,128,.05)}
+.htag.exam       {border-color:rgba(251,191,36,.22);color:var(--c-exam);background:rgba(251,191,36,.05)}
+.htag.ai         {border-color:rgba(251,146,60,.22);color:var(--c-ai);background:rgba(251,146,60,.06)}
+
+/* ══════════════════════════════════════════
+   SECTIONS
+══════════════════════════════════════════ */
+.section{margin-bottom:56px}
+.sec-type-bar{
+  display:flex;align-items:center;gap:10px;margin-bottom:18px;
+}
+.sec-type-icon{
+  width:28px;height:28px;border-radius:7px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:13px;flex-shrink:0;
+}
+.sec-type-icon.conceptual{background:rgba(56,189,248,.1);border:1px solid rgba(56,189,248,.2)}
+.sec-type-icon.technical  {background:rgba(168,85,247,.1);border:1px solid rgba(168,85,247,.2)}
+.sec-type-icon.lab        {background:rgba(74,222,128,.08);border:1px solid rgba(74,222,128,.18)}
+.sec-type-icon.exam       {background:rgba(251,191,36,.08);border:1px solid rgba(251,191,36,.18)}
+.sec-type-icon.ai         {background:rgba(251,146,60,.09);border:1px solid rgba(251,146,60,.2)}
+.sec-type-label{
+  font-family:'JetBrains Mono',monospace;font-size:9px;
+  font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+  flex:1;
+}
+.sec-type-label.conceptual{color:var(--c-conceptual)}
+.sec-type-label.technical  {color:var(--c-technical)}
+.sec-type-label.lab        {color:var(--c-lab)}
+.sec-type-label.exam       {color:var(--c-exam)}
+.sec-type-label.ai         {color:var(--c-ai)}
+
+.sec-h{
+  font-family:'Rajdhani',sans-serif;
+  font-size:clamp(20px,2.8vw,28px);
+  font-weight:700;color:var(--white);margin-bottom:6px;
+}
+.sec-sub{
+  font-size:14.5px;color:rgba(232,240,248,.42);
+  font-style:italic;line-height:1.75;max-width:620px;margin-bottom:28px;
+}
+.sec-div{
+  width:40px;height:2px;margin:8px 0 22px;
+  background:linear-gradient(90deg,var(--accent),transparent);
+}
+
+/* Body prose */
+.prose{font-size:15.5px;color:rgba(232,240,248,.7);line-height:1.9;margin-bottom:14px}
+.prose:last-child{margin-bottom:0}
+.prose strong{color:var(--white);font-weight:500}
+.prose em{color:var(--accent);font-style:italic}
+.prose code{
+  font-family:'JetBrains Mono',monospace;font-size:12.5px;
+  background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);
+  border-radius:4px;padding:1px 6px;color:var(--silver);
+}
+
+/* ── Info boxes ── */
+.infobox{
+  border-radius:10px;padding:18px 22px;margin:20px 0;
+  display:flex;gap:14px;align-items:flex-start;
+}
+.infobox.note  {background:rgba(56,189,248,.05);border:1px solid rgba(56,189,248,.15)}
+.infobox.warn  {background:rgba(251,191,36,.05);border:1px solid rgba(251,191,36,.15)}
+.infobox.trap  {background:rgba(248,113,113,.05);border:1px solid rgba(248,113,113,.15)}
+.infobox.tip   {background:rgba(74,222,128,.04);border:1px solid rgba(74,222,128,.13)}
+.infobox.ai    {background:rgba(251,146,60,.05);border:1px solid rgba(251,146,60,.15)}
+.infobox-icon  {font-size:16px;flex-shrink:0;margin-top:1px}
+.infobox-body  {font-size:13.5px;color:rgba(232,240,248,.65);line-height:1.75}
+.infobox-body strong{color:var(--white);font-weight:500}
+.infobox.note  .infobox-body strong{color:var(--sky)}
+.infobox.warn  .infobox-body strong{color:var(--amber)}
+.infobox.trap  .infobox-body strong{color:var(--red)}
+.infobox.tip   .infobox-body strong{color:var(--green)}
+.infobox.ai    .infobox-body strong{color:var(--coral)}
+
+/* ── Tables ── */
+.tbl-wrap{overflow-x:auto;border-radius:10px;border:1px solid var(--border);margin:20px 0}
+.tbl{width:100%;border-collapse:collapse;font-size:12.5px;min-width:500px}
+.tbl th{
+  background:rgba(255,255,255,.03);padding:9px 14px;text-align:left;
+  font-family:'Rajdhani',sans-serif;font-size:10.5px;font-weight:700;
+  letter-spacing:.07em;text-transform:uppercase;color:var(--accent);
+  border-bottom:1px solid rgba(255,255,255,.06);
+}
+.tbl td{
+  padding:9px 14px;border-bottom:1px solid rgba(255,255,255,.03);
+  color:rgba(232,240,248,.58);vertical-align:top;line-height:1.55;
+}
+.tbl tr:last-child td{border-bottom:none}
+.tbl tr:hover td{background:rgba(255,255,255,.014)}
+.tbl td:first-child{
+  font-family:'Rajdhani',sans-serif;font-weight:700;
+  font-size:13px;color:var(--white);white-space:nowrap;letter-spacing:.02em;
+}
+.tbl-tag{
+  display:inline-block;padding:2px 7px;border-radius:4px;
+  font-family:'JetBrains Mono',monospace;font-size:8px;font-weight:700;
+  border:1px solid;white-space:nowrap;
+}
+.tbl-tag.green{color:var(--green);border-color:rgba(74,222,128,.25);background:rgba(74,222,128,.07)}
+.tbl-tag.amber{color:var(--amber);border-color:rgba(251,191,36,.22);background:rgba(251,191,36,.06)}
+.tbl-tag.dim  {color:var(--dim);border-color:rgba(74,96,128,.2);background:rgba(74,96,128,.07)}
+.tbl-tag.sky  {color:var(--sky);border-color:rgba(56,189,248,.22);background:rgba(56,189,248,.06)}
+.tbl-tag.red  {color:var(--red);border-color:rgba(248,113,113,.22);background:rgba(248,113,113,.06)}
+
+/* ── Cards ── */
+.card-grid{display:grid;gap:12px;margin:20px 0}
+.card-grid.cols-2{grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
+.card-grid.cols-3{grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+.card{
+  background:var(--navy2);border:1px solid var(--border);
+  border-radius:12px;padding:18px 20px;transition:all .18s;
+}
+.card:hover{transform:translateY(-2px);box-shadow:0 10px 36px rgba(0,0,0,.35)}
+.card-accent{height:2px;width:32px;border-radius:1px;margin-bottom:12px}
+.card-title{
+  font-family:'Rajdhani',sans-serif;font-size:15px;font-weight:700;
+  color:var(--white);margin-bottom:5px;
+}
+.card-body{font-size:13px;color:rgba(232,240,248,.5);line-height:1.65}
+.card-value{
+  font-family:'Rajdhani',sans-serif;font-size:28px;font-weight:700;
+  margin-bottom:2px;display:block;
+}
+.card-label{
+  font-family:'JetBrains Mono',monospace;font-size:8.5px;
+  color:var(--dim);letter-spacing:.1em;text-transform:uppercase;
+}
+
+/* ── Lab scenario boxes ── */
+.lab-box{
+  background:rgba(74,222,128,.04);border:1px solid rgba(74,222,128,.14);
+  border-radius:12px;padding:22px 26px;margin:20px 0;
+}
+.lab-header{
+  display:flex;align-items:center;gap:10px;
+  font-family:'JetBrains Mono',monospace;font-size:9px;
+  font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--green);margin-bottom:14px;
+}
+.lab-step{
+  display:flex;gap:14px;margin-bottom:16px;
+  padding-bottom:16px;border-bottom:1px solid rgba(74,222,128,.08);
+}
+.lab-step:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
+.lab-step-num{
+  width:24px;height:24px;border-radius:6px;flex-shrink:0;
+  background:rgba(74,222,128,.1);border:1px solid rgba(74,222,128,.2);
+  font-family:'Rajdhani',sans-serif;font-size:12px;font-weight:700;
+  color:var(--green);display:flex;align-items:center;justify-content:center;
+}
+.lab-step-body{font-size:13.5px;color:rgba(232,240,248,.65);line-height:1.7}
+.lab-step-body strong{color:var(--white);font-weight:500}
+
+/* ── Exam trap / exam prep boxes ── */
+.exam-box{
+  background:rgba(251,191,36,.04);border:1px solid rgba(251,191,36,.15);
+  border-radius:10px;padding:18px 22px;margin:20px 0;
+}
+.exam-box-header{
+  font-family:'Rajdhani',sans-serif;font-size:13px;font-weight:700;
+  color:var(--amber);margin-bottom:10px;
+  display:flex;align-items:center;gap:8px;
+}
+.exam-box-body{font-size:13px;color:rgba(232,240,248,.6);line-height:1.7}
+.exam-box-body strong{color:var(--white);font-weight:500}
+
+/* ── AI insight boxes ── */
+.ai-box{
+  background:rgba(251,146,60,.04);border:1px solid rgba(251,146,60,.15);
+  border-left:3px solid rgba(251,146,60,.4);
+  border-radius:0 10px 10px 0;padding:16px 20px;margin:20px 0;
+}
+.ai-box-label{
+  font-family:'JetBrains Mono',monospace;font-size:8.5px;
+  font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--coral);margin-bottom:8px;display:flex;align-items:center;gap:6px;
+}
+.ai-box-body{font-size:13.5px;color:rgba(232,240,248,.6);line-height:1.72;font-style:italic}
+
+/* ── Code blocks ── */
+.code-block{
+  background:rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.07);
+  border-radius:8px;padding:16px 18px;margin:16px 0;overflow-x:auto;
+}
+.code-block pre{
+  font-family:'JetBrains Mono',monospace;font-size:11.5px;
+  color:rgba(232,240,248,.7);line-height:1.65;margin:0;white-space:pre;
+}
+.code-label{
+  font-family:'JetBrains Mono',monospace;font-size:8.5px;
+  letter-spacing:.1em;color:var(--dim);text-transform:uppercase;
+  margin-bottom:8px;display:block;
+}
+
+/* ── Breadcrumb / progress strip ── */
+.hall-progress{
+  display:flex;gap:6px;align-items:center;
+  margin-bottom:36px;flex-wrap:wrap;
+}
+.hp-dot{
+  width:28px;height:28px;border-radius:7px;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Rajdhani',sans-serif;font-size:11px;font-weight:700;
+  border:1px solid var(--border);color:var(--dim);
+  text-decoration:none;transition:all .15s;
+}
+.hp-dot:hover{border-color:var(--accent);color:var(--accent)}
+.hp-dot.done{background:rgba(74,222,128,.08);border-color:rgba(74,222,128,.2);color:var(--green)}
+.hp-dot.current{background:var(--accent-dim);border-color:var(--accent-border);color:var(--accent)}
+.hp-dot.locked{opacity:.3;cursor:default;pointer-events:none}
+.hp-arr{color:var(--dim);font-size:10px;opacity:.5}
+
+/* ══════════════════════════════════════════
+   AI GUIDE WIDGET
+══════════════════════════════════════════ */
+.ai-guide-btn{
+  position:fixed;bottom:28px;right:28px;
+  width:52px;height:52px;border-radius:50%;
+  background:var(--accent);border:none;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  font-size:20px;z-index:300;
+  box-shadow:0 4px 20px color-mix(in srgb,var(--accent) 35%,transparent);
+  transition:transform .18s,box-shadow .18s;
+}
+.ai-guide-btn:hover{transform:scale(1.07)}
+.ai-guide-btn .notch{
+  position:absolute;top:-2px;right:-2px;
+  width:12px;height:12px;border-radius:50%;
+  background:var(--green);border:2px solid var(--navy);
+  animation:pulse 2s infinite;
+}
+.ai-guide-panel{
+  position:fixed;bottom:92px;right:28px;
+  width:340px;max-height:480px;
+  background:var(--navy2);border:1px solid var(--accent-border);
+  border-radius:14px;display:none;flex-direction:column;z-index:300;
+  overflow:hidden;
+  box-shadow:0 16px 48px rgba(0,0,0,.5);
+}
+.ai-guide-panel.open{display:flex}
+.agp-header{
+  padding:14px 16px;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:10px;
+}
+.agp-avatar{
+  width:32px;height:32px;border-radius:50%;
+  background:var(--accent-dim);border:1px solid var(--accent-border);
+  display:flex;align-items:center;justify-content:center;font-size:14px;
+}
+.agp-name{font-family:'Rajdhani',sans-serif;font-size:13px;font-weight:700;color:var(--white)}
+.agp-status{font-size:10.5px;color:var(--dim)}
+.agp-close{margin-left:auto;background:none;border:none;color:var(--dim);cursor:pointer;font-size:16px;padding:2px 6px}
+.agp-messages{flex:1;overflow-y:auto;padding:14px 14px 8px;display:flex;flex-direction:column;gap:10px;
+  scrollbar-width:thin;scrollbar-color:var(--navy3) transparent}
+.msg{max-width:85%;font-size:12.5px;line-height:1.6;padding:9px 12px;border-radius:10px}
+.msg.guide{
+  background:rgba(255,255,255,.05);border:1px solid var(--border);
+  color:rgba(232,240,248,.75);border-radius:10px 10px 10px 2px;
+  align-self:flex-start;
+}
+.msg.user{
+  background:var(--accent-dim);border:1px solid var(--accent-border);
+  color:var(--accent);border-radius:10px 10px 2px 10px;
+  align-self:flex-end;
+}
+.msg.typing{opacity:.6}
+.agp-input-row{
+  display:flex;gap:8px;padding:10px 12px;
+  border-top:1px solid var(--border);
+}
+.agp-input{
+  flex:1;background:rgba(255,255,255,.05);border:1px solid var(--border);
+  border-radius:8px;padding:8px 12px;font-size:12px;color:var(--white);
+  font-family:'Crimson Pro',serif;outline:none;
+}
+.agp-input:focus{border-color:var(--accent-border)}
+.agp-input::placeholder{color:var(--dim)}
+.agp-send{
+  width:32px;height:32px;border-radius:8px;
+  background:var(--accent);border:none;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;font-size:13px;
+  flex-shrink:0;transition:transform .15s;
+}
+.agp-send:hover{transform:scale(1.05)}
+
+/* ══════════════════════════════════════════
+   HALL NAV FOOTER
+══════════════════════════════════════════ */
+.hall-nav-footer{
+  display:flex;justify-content:space-between;align-items:center;
+  margin-top:64px;padding-top:32px;border-top:1px solid var(--border);
+  flex-wrap:wrap;gap:12px;
+}
+.hnf-prev,.hnf-next{
+  display:flex;align-items:center;gap:10px;
+  text-decoration:none;padding:12px 18px;border-radius:9px;
+  border:1px solid var(--border);transition:all .18s;
+  font-family:'Rajdhani',sans-serif;
+}
+.hnf-prev:hover,.hnf-next:hover{border-color:var(--accent);background:var(--accent-dim)}
+.hnf-dir{font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--dim)}
+.hnf-name{font-size:14px;font-weight:700;color:var(--white)}
+.hnf-next{text-align:right;margin-left:auto}
+.hnf-locked{opacity:.35;cursor:default;pointer-events:none}
+
+/* ══════════════════════════════════════════
+   RESPONSIVE
+══════════════════════════════════════════ */
+@media(max-width:900px){
+  :root{--sidebar-w:0px}
+  .sidebar{
+    position:fixed;left:-240px;top:var(--topbar-h);
+    width:240px;height:calc(100vh - var(--topbar-h));
+    z-index:150;transition:left .25s ease;
+  }
+  .sidebar.open{left:0}
+  .sidebar-overlay{
+    display:none;position:fixed;inset:0;
+    background:rgba(0,0,0,.55);z-index:140;
+  }
+  .sidebar-overlay.open{display:block}
+  .tb-hamburger{display:flex;flex-direction:column;justify-content:center}
+  .main{padding:28px 20px 72px}
+}
+
+/* ══════════════════════════════════════════
+   HALL-SPECIFIC CSS SLOT
+══════════════════════════════════════════ */
+<!--HALL:CSS-->
+</style>
+</head>
+
+<body>
+<div id="stars"></div>
+<div class="sidebar-overlay" id="overlay" onclick="closeSidebar()"></div>
+
+<!-- ══ TOPBAR ══ -->
+<header id="topbar">
+  <a href="https://brainspring.ai" class="tb-logo" target="_blank" rel="noopener">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 36" width="18" height="20">
+      <path d="M16 1L2 7v12c0 8.3 6 16 14 18 8-2 14-9.7 14-18V7L16 1z" fill="#0d1b2e" stroke="#4ade80" stroke-width="1.5"/>
+      <path d="M10 14c0-2 1.5-3.5 3-3.5s2.5 1 2.5 1V10h3v5c.4-.4 1-.7 1.5-.7 1.8 0 3 1.5 3 3.5s-1.2 3.5-3 3.5c-.5 0-1.1-.3-1.5-.7V23h-3v-.7s-1 .7-2.5.7-3-1.5-3-3.5z" fill="none" stroke="#4ade80" stroke-width="1.1" opacity=".9"/>
+    </svg>
+    <span class="tb-brand"><span class="tb-brain">Brain</span><span class="tb-spring">Spring</span></span>
+  </a>
+  <span style="color:var(--dim);font-size:11px">›</span>
+  <span class="tb-course">EPCM Study Tour</span>
+  <div class="tb-dot"></div>
+  <span class="tb-hall-badge">Hall <!--HALL:NUMBER--> of 9 · <!--HALL:TITLE--></span>
+  <nav class="tb-nav-right">
+    <a href="../index.html" class="tb-link">EPM Hub</a>
+    <a href="hall-1.html" class="tb-link" id="nav-h1">Orientation</a>
+    <a href="hall-2.html" class="tb-link" id="nav-h2">Dimensions</a>
+    <a href="hall-4.html" class="tb-link" id="nav-h4">Rules</a>
+    <a href="hall-7.html" class="tb-link" id="nav-h7">Analytics</a>
+    <a href="hall-9.html" class="tb-link" id="nav-h9">Exam Prep</a>
+  </nav>
+  <button class="tb-hamburger" id="hamburger" onclick="toggleSidebar()" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</header>
+
+<!-- ══ LAYOUT ══ -->
+<div class="layout">
+
+  <!-- ── SIDEBAR ── -->
+  <nav class="sidebar" id="sidebar">
+    <div class="sb-label">Study Tour</div>
+    <div class="sb-halls">
+      <a href="hall-1.html" class="sb-hall" id="sb-h1">
+        <div class="sb-num">1</div>
+        <div class="sb-hall-name">Orientation</div>
+        <div class="sb-status live"></div>
+      </a>
+      <a href="hall-2.html" class="sb-hall" id="sb-h2">
+        <div class="sb-num">2</div>
+        <div class="sb-hall-name">Dimension Design</div>
+        <div class="sb-status live"></div>
+      </a>
+      <a href="hall-3.html" class="sb-hall" id="sb-h3">
+        <div class="sb-num">3</div>
+        <div class="sb-hall-name">Models &amp; POVs</div>
+        <div class="sb-status live"></div>
+      </a>
+      <a href="hall-4.html" class="sb-hall" id="sb-h4">
+        <div class="sb-num">4</div>
+        <div class="sb-hall-name">Rule Sets &amp; Rules</div>
+        <div class="sb-status live"></div>
+      </a>
+      <a href="hall-5.html" class="sb-hall" id="sb-h5">
+        <div class="sb-num">5</div>
+        <div class="sb-hall-name">Custom Calc Rules</div>
+        <div class="sb-status live"></div>
+      </a>
+      <a href="hall-6.html" class="sb-hall" id="sb-h6">
+        <div class="sb-num">6</div>
+        <div class="sb-hall-name">Calculation Control</div>
+        <div class="sb-status live"></div>
+      </a>
+      <a href="hall-7.html" class="sb-hall" id="sb-h7">
+        <div class="sb-num">7</div>
+        <div class="sb-hall-name">Rule Balancing</div>
+        <div class="sb-status live"></div>
+      </a>
+      <a href="hall-8.html" class="sb-hall" id="sb-h8">
+        <div class="sb-num">8</div>
+        <div class="sb-hall-name">Data Integration</div>
+        <div class="sb-status live"></div>
+      </a>
+      <a href="hall-9.html" class="sb-hall" id="sb-h9">
+        <div class="sb-num">9</div>
+        <div class="sb-hall-name">Exam Prep</div>
+        <div class="sb-status live"></div>
+      </a>
+    </div>
+
+    <div class="sb-divider"></div>
+
+    <!-- In-hall TOC — populated by hall JS -->
+    <div class="sb-section-title">This Hall</div>
+    <div class="sb-toc" id="sb-toc"></div>
+
+    <div class="sb-company">
+      <div class="sb-company-label">Case Company</div>
+      <div class="sb-company-name" id="sb-company-name">NovaPrism Group</div>
+      <div class="sb-company-desc" id="sb-company-desc">$2.1B · 3 divisions · 1 cost centre · 8,400 staff</div>
+    </div>
+  </nav>
+
+  <!-- ── MAIN ── -->
+  <main class="main" id="main">
+
+    <!-- Hall progress dots -->
+    <div class="hall-progress" id="hall-progress"></div>
+
+    <!-- Hall hero -->
+    <header class="hall-hero">
+      <div class="hall-eyebrow">
+        <span style="width:5px;height:5px;border-radius:50%;background:var(--accent);display:inline-block"></span>
+        EPCM Study Tour · Hall <!--HALL:NUMBER--> of 9
+      </div>
+      <div class="hall-number">Hall <!--HALL:NUMBER--> — <!--HALL:TITLE--></div>
+      <h1 class="hall-title"><!--HALL:SUBTITLE--></h1>
+      <p class="hall-tagline"><!--HALL:TAGLINE--></p>
+      <div class="hall-tags"><!--HALL:TAGS--></div>
+    </header>
+
+    <!-- ══ HALL CONTENT ══ -->
+    <!--HALL:CONTENT-->
+    <!-- ══ END HALL CONTENT ══ -->
+
+    <!-- Hall nav footer — prev/next populated by JS -->
+    <div class="hall-nav-footer" id="hall-nav-footer"></div>
+
+  </main>
+</div>
+
+<!-- ══ AI GUIDE WIDGET ══ -->
+<button class="ai-guide-btn" id="ai-btn" onclick="toggleGuide()" aria-label="Ask the AI guide">
+  🤖<div class="notch"></div>
+</button>
+<div class="ai-guide-panel" id="ai-panel">
+  <div class="agp-header">
+    <div class="agp-avatar">🤖</div>
+    <div>
+      <div class="agp-name">Eliot · EPCM Guide</div>
+      <div class="agp-status">Knows NovaPrism Group's model</div>
+    </div>
+    <button class="agp-close" onclick="toggleGuide()">✕</button>
+  </div>
+  <div class="agp-messages" id="agp-msgs">
+    <div class="msg guide" id="welcome-msg"><!-- Set by hall JS --></div>
+  </div>
+  <div class="agp-input-row">
+    <input class="agp-input" id="agp-input" type="text"
+      placeholder="Ask about this hall…" onkeydown="if(event.key==='Enter')sendMsg()">
+    <button class="agp-send" onclick="sendMsg()">↑</button>
+  </div>
+</div>
+
+<!-- ══ SCRIPTS ══ -->
+<!--
+  API ARCHITECTURE (P0 — LOCKED):
+  Cloudflare Worker: https://epbcs-tutor.fancy-brook-fc0d.workers.dev
+
+  
+
+  Key lives in the Worker. Never expose to browser. Shared across all halls.
+  
+-->
+<script>
+var EPCM_API_ENDPOINT = 'https://epbcs-tutor.fancy-brook-fc0d.workers.dev';
+</script>
+<!-- P0-1: Master constants — single source of truth for all NovaPrism numbers -->
+<script src="./constants.js"></script>
+<script>
+/* ── Stars ── */
+(function(){
+  var s=document.getElementById('stars');
+  for(var i=0;i<48;i++){
+    var d=document.createElement('div');d.className='star';
+    var sz=Math.random()*1.3+0.3;
+    d.style.cssText='width:'+sz+'px;height:'+sz+'px;top:'+Math.random()*100+'%;left:'+Math.random()*100+'%;--d:'+(3+Math.random()*5)+'s;--delay:'+Math.random()*6+'s;--op:'+(0.05+Math.random()*0.14);
+    s.appendChild(d);
+  }
+})();
+
+/* ── Sidebar ── */
+function toggleSidebar(){
+  document.getElementById('sidebar').classList.toggle('open');
+  document.getElementById('overlay').classList.toggle('open');
+}
+function closeSidebar(){
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('overlay').classList.remove('open');
+}
+
+/* ── Hall config (overridden per hall) ── */
+var HALL_CFG = {
+  number: <!--HALL:NUMBER-->,
+  prev: { n: <!--HALL:NUMBER-->-1, name:'', url:'' },
+  next: { n: <!--HALL:NUMBER-->+1, name:'', url:'' },
+  welcomeMsg: 'Hi — I\'m Eliot, your guide for this hall. Ask me anything about the content, NovaPrism\'s model, or the exam.',
+};
+
+/*
+ * HALL_SYSTEM_EXTENSION — defined in each hall's JS slot (<!--HALL:JS-->)
+ * Template (copy into each hall's JS slot):
+ *
+ * var HALL_SYSTEM_EXTENSION = [
+ *   'CURRENT HALL: Hall N — [Title]',
+ *   'HALL SCOPE: [2-sentence description]',
+ *   '',
+ *   'KEY CONCEPTS IN THIS HALL:',
+ *   '- [Concept]: [one-line explanation]',
+ *   '',
+ *   'NOVAPRISM IN THIS HALL:',
+ *   '[Specific NovaPrism scenario, numbers, decision in play]',
+ *   '',
+ *   'EXAM TOPICS: [exact syllabus topics]',
+ *   '',
+ *   'COMMON MISCONCEPTIONS:',
+ *   '- [Wrong belief]: [Correct understanding]',
+ *   '',
+ *   'OUT OF SCOPE: [Topic] → Hall N'
+ * ].join('\n');
+ */
+
+/* ── buildSystemPrompt — assembles Eliot's full system prompt from constants + hall extension ── */
+function buildSystemPrompt(){
+  var pa = (typeof NP !== 'undefined') ? NP.postAllocation : null;
+  var lines = [
+    'You are Eliot, the AI practitioner-guide for the BrainSpring EPCM Study Tour.',
+    'You are a senior Oracle EPM practitioner — direct, honest, always connected to real consequences.',
+    'Voice: direct (no hedging), practitioner-honest, concise (3–5 sentences target), never sycophantic.',
+    'Never say "great question." Just answer it.',
+    '',
+    'CASE COMPANY: NovaPrism Group — $2.1B professional services & infrastructure conglomerate. 8,400 employees.',
+    'Four divisions across two regions (Americas, APAC).',
+    pa ? ('Digital Services (DS): $'+pa.DS.revenue+'M revenue | '+pa.DS.directPct+'% direct margin → '+pa.DS.marginPct+'% fully-loaded | $'+pa.DS.allocatedIn+'M allocated in') : '',
+    pa ? ('Infrastructure Solutions (IS): $'+pa.IS.revenue+'M revenue | '+pa.IS.directPct+'% direct margin → '+pa.IS.marginPct+'% fully-loaded | $'+pa.IS.allocatedIn+'M allocated in — THE BLIND SPOT') : '',
+    pa ? ('Cloud Licensing (CL): $'+pa.CL.revenue+'M revenue | '+pa.CL.directPct+'% direct margin → '+pa.CL.marginPct+'% fully-loaded | $'+pa.CL.allocatedIn+'M allocated in') : '',
+    pa ? ('Enterprise Support (ES): $'+pa.ES.directCosts+'M costs, must allocate to zero.') : '',
+    'Cost pools: IT $52M (ticket driver), Facilities $38M (sqft), Finance $28M (headcount), HR $16M (headcount).',
+    '17 of 60 client engagements are loss-making on fully-loaded basis — invisible without the model.',
+    '',
+    'WHAT ELIOT ANSWERS:',
+    '- Any concept in the current hall (see HALL_SYSTEM_EXTENSION below)',
+    '- EPCM product behaviour — what it does, what it doesn\'t, why',
+    '- 1Z0-1082-25 exam — what it tests, how to answer it, which distractors to watch for',
+    '- NovaPrism numbers — any ratio, allocation calculation, margin figure',
+    '- Practitioner reality vs exam answer — name both, clearly distinguish them',
+    '',
+    'WHAT ELIOT DOES NOT DO:',
+    '- Answer questions outside Oracle EPM Cloud / EPCM scope',
+    '- Give generic EPM waffle disconnected from EPCM specifics',
+    '- Invent product behaviour. If unsure: say so and point to docs.oracle.com',
+    '- Be a therapist or career counsellor',
+    '',
+    'EXAM: 1Z0-1082-25 · 50 questions · 90 minutes · 68% to pass',
+    'THREE MOST DANGEROUS DISTRACTORS (always correct if raised):',
+    '1. "EPMAutomate can run Quick Mode exports" — FALSE. Requires REST API.',
+    '2. "Dynamic dimensions are fine for driver members" — FALSE. Use Stored.',
+    '3. "Physical Clear is the EPCM default" — FALSE. EPCM defaults to Logical Clear.',
+    '',
+    typeof HALL_SYSTEM_EXTENSION !== 'undefined' ? HALL_SYSTEM_EXTENSION : ''
+  ].filter(function(l){ return l !== undefined && l !== null; });
+  return lines.join('\n');
+}
+
+/* ── Sidebar company desc — reads from NP constants ── */
+(function(){
+  if(typeof NP === 'undefined') return;
+  var c = NP.company;
+  var nameEl = document.getElementById('sb-company-name');
+  var descEl = document.getElementById('sb-company-desc');
+  if(nameEl) nameEl.textContent = c.name;
+  if(descEl) descEl.textContent = '$' + (c.revenue/1000).toFixed(1) + 'B · ' +
+    (Object.keys(NP.divisions).length - 1) + ' divisions · 1 cost centre · ' +
+    c.employees.toLocaleString() + ' staff';
+})();
+
+/* ── Hall progress dots ── */
+(function buildProgress(){
+  var halls=['Orientation','Dimensions','Models','Rules','Custom Calc','Calc Control','Balancing','Integration','Exam Prep'];
+  var urls=['hall-1.html','hall-2.html','hall-3.html','hall-4.html','hall-5.html','hall-6.html','hall-7.html','hall-8.html','hall-9.html'];
+  var cur=HALL_CFG.number;
+  var hp=document.getElementById('hall-progress');
+  var html='';
+  for(var i=0;i<9;i++){
+    var n=i+1;
+    var cls=n<cur?'done':n===cur?'current':'locked';
+    html+='<a href="'+urls[i]+'" class="hp-dot '+cls+'" title="Hall '+n+': '+halls[i]+'">'+n+'</a>';
+    if(i<8)html+='<span class="hp-arr">›</span>';
+  }
+  hp.innerHTML=html;
+})();
+
+/* ── Active sidebar + topbar item ── */
+(function(){
+  var el=document.getElementById('sb-h'+HALL_CFG.number);
+  if(el){el.classList.add('current');var dot=el.querySelector('.sb-status');if(dot){dot.className='sb-status current';}}
+  var navEl=document.getElementById('nav-h'+HALL_CFG.number);
+  if(navEl)navEl.classList.add('current');
+})();
+
+/* ── Hall nav footer ── */
+(function(){
+  var cfg=HALL_CFG;
+  var f=document.getElementById('hall-nav-footer');
+  var html='';
+  if(cfg.prev&&cfg.prev.url){
+    html+='<a href="'+cfg.prev.url+'" class="hnf-prev"><span style="font-size:14px">←</span><div><div class="hnf-dir">Previous Hall</div><div class="hnf-name">'+cfg.prev.name+'</div></div></a>';
+  } else {
+    html+='<a href="../index.html" class="hnf-prev"><span style="font-size:14px">←</span><div><div class="hnf-dir">Back to</div><div class="hnf-name">EPM Hub</div></div></a>';
+  }
+  if(cfg.next&&cfg.next.url){
+    html+='<a href="'+cfg.next.url+'" class="hnf-next"><div><div class="hnf-dir">Next Hall</div><div class="hnf-name">'+cfg.next.name+'</div></div><span style="font-size:14px">→</span></a>';
+  }
+  f.innerHTML=html;
+})();
+
+/* ── Sidebar TOC (auto-built from h2.sec-h in .main) ── */
+(function(){
+  setTimeout(function(){
+    var toc=document.getElementById('sb-toc');
+    if(!toc)return;
+    var headings=document.querySelectorAll('.main h2.sec-h');
+    headings.forEach(function(h){
+      if(!h.id)h.id='toc-'+h.textContent.trim().toLowerCase().replace(/[^a-z0-9]+/g,'-').slice(0,40);
+      var a=document.createElement('a');
+      a.href='#'+h.id;a.className='sb-toc-item';
+      a.textContent=h.textContent;
+      toc.appendChild(a);
+    });
+  },100);
+})();
+
+/* ── Welcome message ── */
+document.getElementById('welcome-msg').textContent=HALL_CFG.welcomeMsg;
+
+/* ── AI Guide toggle ── */
+function toggleGuide(){
+  document.getElementById('ai-panel').classList.toggle('open');
+  if(document.getElementById('ai-panel').classList.contains('open')){
+    setTimeout(function(){document.getElementById('agp-input').focus();},50);
+  }
+}
+
+/* ── AI Guide — shared across all halls ── */
+var agpHistory=[];
+function sendMsg(){
+  var inp=document.getElementById('agp-input');
+  var txt=inp.value.trim();if(!txt)return;
+  inp.value='';
+  addMsg('user',txt);
+  agpHistory.push({role:'user',content:txt});
+  addMsg('guide','…',true);
+  callGuide(txt);
+}
+function addMsg(role,text,typing){
+  var msgs=document.getElementById('agp-msgs');
+  var div=document.createElement('div');
+  div.className='msg '+role+(typing?' typing':'');
+  div.textContent=text;
+  if(typing)div.style.opacity='0.5';
+  msgs.appendChild(div);
+  msgs.scrollTop=msgs.scrollHeight;
+  return div;
+}
+async function callGuide(userText){
+  var msgs=document.getElementById('agp-msgs');
+  var typing=msgs.lastElementChild;
+  try{
+    var resp=await fetch(EPCM_API_ENDPOINT,{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        model:'claude-sonnet-4-20250514',
+        max_tokens:500,
+        system:buildSystemPrompt(),
+        messages:agpHistory
+      })
+    });
+    var data=await resp.json();
+    var reply=(data.content&&data.content[0]&&data.content[0].text)||'I had trouble with that — try rephrasing.';
+    typing.textContent=reply;
+    typing.style.opacity='1';
+    typing.classList.remove('typing');
+    agpHistory.push({role:'assistant',content:reply});
+  }catch(e){
+    typing.textContent='Connection issue — please try again.';
+    typing.style.opacity='1';
+    typing.classList.remove('typing');
+  }
+}
+
+/* ── Smooth scroll for anchor links ── */
+document.querySelectorAll('a[href^="#"]').forEach(function(a){
+  a.addEventListener('click',function(e){
+    var id=this.getAttribute('href').slice(1);
+    var el=document.getElementById(id);
+    if(el){e.preventDefault();el.scrollIntoView({behavior:'smooth',block:'start'});}
+  });
+});
+</script>
+
+<!-- Hall-specific JS slot — define HALL_CFG overrides and HALL_SYSTEM_EXTENSION here -->
+<!--HALL:JS-->
+
+</body>
+</html>

@@ -1,0 +1,1649 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Foundations Hall — Academy of Profit Center · EPCM Study Tour · BrainSpring</title>
+<meta name="description" content="The $134M blind spot. NovaPrism Group's CFO cannot tell the board which divisions make money. This is where you learn why — and how EPCM fixes it.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Pro:ital,wght@0,300;0,400;0,500;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+/* ══════════════════════════════════════════
+   ACADEMY OF PROFIT CENTER — DESIGN SYSTEM
+   Hall 1: Foundations Hall
+   BrainSpring · epm.brainspring.ai/epcm/
+══════════════════════════════════════════ */
+:root {
+  /* Core palette */
+  --navy:    #08111e;
+  --navy2:   #0d1b2e;
+  --navy3:   #112240;
+  --navy4:   #172d47;
+  --navy5:   #1e3855;
+
+  /* Academy accent — amber torch */
+  --amber:   #f59e0b;
+  --amber2:  #d97706;
+  --amber-dim: rgba(245,158,11,.12);
+  --amber-border: rgba(245,158,11,.25);
+
+  /* Hall 1 accent — sky */
+  --accent:  #38bdf8;
+  --accent2: #0ea5e9;
+  --accent-dim: rgba(56,189,248,.08);
+  --accent-border: rgba(56,189,248,.22);
+
+  /* Supporting */
+  --green:   #4ade80;
+  --green-dim: rgba(74,222,128,.08);
+  --red:     #f87171;
+  --red-dim: rgba(248,113,113,.08);
+  --purple:  #a855f7;
+  --coral:   #fb923c;
+  --teal:    #2dd4bf;
+  --lime:    #a3e635;
+
+  /* Text */
+  --white:   #e8f0f8;
+  --silver:  #c8d4e0;
+  --silver2: #8fa3b8;
+  --dim:     #4a6080;
+  --border:  rgba(200,212,224,.08);
+  --border2: rgba(200,212,224,.14);
+
+  /* Type */
+  --font-display: 'Cinzel', serif;
+  --font-body:    'Crimson Pro', serif;
+  --font-mono:    'JetBrains Mono', monospace;
+
+  /* Layout */
+  --topbar-h: 52px;
+  --sidebar-w: 228px;
+  --r: 10px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font-body);
+  background: var(--navy);
+  color: var(--white);
+  min-height: 100vh;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Grid texture */
+body::before {
+  content: '';
+  position: fixed; inset: 0; pointer-events: none; z-index: 0;
+  background-image:
+    linear-gradient(rgba(74,222,128,.012) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(74,222,128,.012) 1px, transparent 1px);
+  background-size: 60px 60px;
+}
+
+/* Vignette radial */
+body::after {
+  content: '';
+  position: fixed; inset: 0; pointer-events: none; z-index: 0;
+  background: radial-gradient(ellipse 90% 60% at 50% -5%, rgba(245,158,11,.04) 0%, transparent 65%);
+}
+
+/* Stars */
+#stars { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
+.star { position: absolute; border-radius: 50%; background: #f59e0b; animation: twinkle var(--d,4s) infinite var(--delay,0s); }
+@keyframes twinkle { 0%,100%{opacity:.015} 50%{opacity:var(--op,.12)} }
+@keyframes fadeUp { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:none} }
+@keyframes slideIn { from{opacity:0;transform:translateX(-10px)} to{opacity:1;transform:none} }
+@keyframes pulse { 0%,100%{box-shadow:0 0 0 0 rgba(245,158,11,.25)} 50%{box-shadow:0 0 0 6px transparent} }
+@keyframes glow { 0%,100%{text-shadow:0 0 12px rgba(245,158,11,.3)} 50%{text-shadow:0 0 24px rgba(245,158,11,.6)} }
+@keyframes torchFlicker { 0%,100%{opacity:1} 45%{opacity:.88} 55%{opacity:.95} }
+
+/* ── TOPBAR ── */
+#topbar {
+  position: fixed; top: 0; left: 0; right: 0; height: var(--topbar-h);
+  background: rgba(8,17,30,.92); backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 14px;
+  padding: 0 20px; z-index: 100;
+}
+.tb-logo { display: flex; align-items: center; gap: 8px; text-decoration: none; flex-shrink: 0; }
+.tb-logo svg { flex-shrink: 0; }
+.tb-brand { font-family: var(--font-mono); font-size: 12px; font-weight: 600; letter-spacing: .04em; }
+.tb-brain { color: var(--accent); }
+.tb-spring { color: var(--silver2); }
+.tb-sep { color: var(--dim); font-size: 12px; }
+.tb-course { font-family: var(--font-mono); font-size: 10px; letter-spacing: .06em; color: var(--amber); text-transform: uppercase; }
+.tb-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--amber); animation: pulse 2.5s infinite; flex-shrink: 0; margin-left: 2px; }
+.tb-hall-badge {
+  font-family: var(--font-mono); font-size: 9.5px; letter-spacing: .06em;
+  color: var(--silver2); text-transform: uppercase; margin-left: auto;
+}
+.tb-hamburger { display: none; background: none; border: none; cursor: pointer; padding: 6px; color: var(--silver2); }
+.tb-nav-right { display: flex; align-items: center; gap: 4px; margin-left: 16px; overflow-x: auto; scrollbar-width: none; }
+.tb-nav-right::-webkit-scrollbar { display: none; }
+.tb-link {
+  font-family: var(--font-mono); font-size: 9px; letter-spacing: .07em; text-transform: uppercase;
+  color: var(--dim); text-decoration: none; padding: 5px 10px; border-radius: 5px;
+  transition: color .15s, background .15s; white-space: nowrap;
+}
+.tb-link:hover { color: var(--silver); background: rgba(255,255,255,.05); }
+.tb-link.current { color: var(--amber); background: var(--amber-dim); }
+
+/* ── SIDEBAR ── */
+.sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.5); z-index: 89; }
+.sidebar-overlay.open { display: block; }
+
+.sidebar {
+  width: var(--sidebar-w); flex-shrink: 0;
+  position: sticky; top: var(--topbar-h);
+  height: calc(100vh - var(--topbar-h));
+  overflow-y: auto; overflow-x: hidden;
+  background: rgba(8,17,30,.7);
+  border-right: 1px solid var(--border);
+  padding: 24px 0 40px;
+  scrollbar-width: thin; scrollbar-color: var(--navy3) transparent;
+}
+.sidebar::-webkit-scrollbar { width: 3px; }
+.sidebar::-webkit-scrollbar-thumb { background: var(--navy3); }
+
+.sb-label {
+  font-family: var(--font-mono); font-size: 8px; letter-spacing: .14em;
+  color: var(--dim); text-transform: uppercase;
+  padding: 0 18px; margin: 20px 0 8px;
+}
+.sb-label:first-child { margin-top: 0; }
+
+/* Academy hall links */
+.sb-hall {
+  display: flex; align-items: center; gap: 10px;
+  padding: 8px 18px; text-decoration: none;
+  transition: background .15s;
+  position: relative;
+}
+.sb-hall:hover { background: rgba(255,255,255,.03); }
+.sb-hall.current { background: var(--amber-dim); }
+.sb-hall.current::before {
+  content: ''; position: absolute; left: 0; top: 0; bottom: 0;
+  width: 2px; background: var(--amber);
+}
+.sb-hall-num {
+  width: 22px; height: 22px; border-radius: 6px; flex-shrink: 0;
+  border: 1px solid var(--border2);
+  font-family: var(--font-mono); font-size: 10px; font-weight: 600;
+  color: var(--dim); display: flex; align-items: center; justify-content: center;
+}
+.sb-hall.current .sb-hall-num { border-color: var(--amber-border); color: var(--amber); background: var(--amber-dim); }
+.sb-hall-info { flex: 1; min-width: 0; }
+.sb-hall-name { font-family: var(--font-mono); font-size: 10px; font-weight: 500; color: var(--silver2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sb-hall.current .sb-hall-name { color: var(--amber); }
+.sb-hall-title { font-size: 10px; color: var(--dim); margin-top: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sb-status { width: 5px; height: 5px; border-radius: 50%; background: var(--dim); flex-shrink: 0; }
+.sb-status.current { background: var(--amber); animation: pulse 2s infinite; }
+.sb-status.locked { background: transparent; border: 1px solid var(--dim); }
+
+/* Sidebar TOC */
+.sb-toc-item {
+  display: block; padding: 5px 18px 5px 26px;
+  font-size: 11.5px; color: var(--dim); text-decoration: none;
+  border-left: 1px solid transparent; margin-left: 10px;
+  transition: color .15s, border-color .15s;
+  font-family: var(--font-body); line-height: 1.4;
+}
+.sb-toc-item:hover { color: var(--silver2); border-left-color: var(--border2); }
+
+/* Eliot sidebar panel */
+.sb-eliot {
+  margin: 16px 12px 0;
+  background: rgba(245,158,11,.04);
+  border: 1px solid var(--amber-border);
+  border-radius: var(--r);
+  overflow: hidden;
+}
+.sb-eliot-header {
+  display: flex; align-items: center; gap: 8px;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--amber-border);
+}
+.sb-eliot-avatar {
+  width: 28px; height: 28px; border-radius: 8px;
+  background: var(--amber-dim); border: 1px solid var(--amber-border);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; flex-shrink: 0;
+}
+.sb-eliot-name { font-family: var(--font-mono); font-size: 9.5px; font-weight: 600; letter-spacing: .06em; color: var(--amber); }
+.sb-eliot-role { font-size: 9px; color: var(--silver2); margin-top: 1px; }
+.sb-chips { padding: 8px 10px; display: flex; flex-direction: column; gap: 5px; }
+.sb-chip {
+  font-size: 10.5px; color: var(--silver2); padding: 5px 8px;
+  background: rgba(255,255,255,.03); border: 1px solid var(--border);
+  border-radius: 6px; cursor: pointer; line-height: 1.4;
+  transition: background .15s, border-color .15s, color .15s;
+  font-family: var(--font-body);
+}
+.sb-chip:hover { background: var(--amber-dim); border-color: var(--amber-border); color: var(--white); }
+.sb-eliot-input-row { display: flex; gap: 6px; padding: 8px 10px; border-top: 1px solid var(--border); }
+.sb-eliot-input {
+  flex: 1; background: rgba(255,255,255,.04); border: 1px solid var(--border);
+  border-radius: 6px; padding: 5px 8px; font-size: 11px;
+  font-family: var(--font-body); color: var(--white); outline: none;
+}
+.sb-eliot-input:focus { border-color: var(--amber-border); }
+.sb-eliot-input::placeholder { color: var(--dim); }
+.sb-eliot-send {
+  width: 28px; height: 28px; border-radius: 6px;
+  background: var(--amber-dim); border: 1px solid var(--amber-border);
+  color: var(--amber); cursor: pointer; font-size: 13px;
+  display: flex; align-items: center; justify-content: center;
+  transition: background .15s;
+}
+.sb-eliot-send:hover { background: rgba(245,158,11,.2); }
+.sb-eliot-msgs { max-height: 160px; overflow-y: auto; padding: 8px 10px; display: flex; flex-direction: column; gap: 6px; scrollbar-width: thin; }
+.sb-eliot-msgs:empty { display: none; }
+.sb-msg { font-size: 11px; line-height: 1.55; padding: 6px 8px; border-radius: 6px; }
+.sb-msg.user { background: rgba(56,189,248,.08); color: var(--silver); text-align: right; }
+.sb-msg.guide { background: rgba(245,158,11,.06); color: var(--silver); }
+.sb-msg.typing { opacity: .5; }
+
+/* Company quick ref */
+.sb-company {
+  margin: 12px 12px 0;
+  background: rgba(255,255,255,.02);
+  border: 1px solid var(--border);
+  border-radius: var(--r); padding: 12px;
+}
+.sb-company-label { font-family: var(--font-mono); font-size: 7.5px; letter-spacing: .1em; color: var(--dim); text-transform: uppercase; margin-bottom: 8px; }
+.sb-company-name { font-family: var(--font-display); font-size: 12px; color: var(--white); margin-bottom: 3px; }
+.sb-company-desc { font-size: 10.5px; color: var(--silver2); line-height: 1.5; }
+
+/* ── LAYOUT ── */
+#app { display: flex; flex-direction: column; min-height: 100vh; padding-top: var(--topbar-h); position: relative; z-index: 1; }
+#body { display: flex; flex: 1; }
+.main { flex: 1; min-width: 0; padding: 44px 52px 96px; animation: fadeUp .5s ease both; }
+
+/* ── CAMPUS MAP ── */
+.campus-map-wrap {
+  margin-bottom: 40px;
+  background: rgba(13,27,46,.6);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 20px 24px;
+  position: relative;
+  overflow: hidden;
+}
+.campus-map-wrap::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(245,158,11,.04) 0%, transparent 70%);
+  pointer-events: none;
+}
+.campus-map-label {
+  font-family: var(--font-mono); font-size: 8.5px; letter-spacing: .14em;
+  color: var(--dim); text-transform: uppercase; margin-bottom: 14px;
+  display: flex; align-items: center; gap: 8px;
+}
+.campus-map-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+.campus-map-row { display: flex; align-items: center; gap: 0; overflow-x: auto; scrollbar-width: none; }
+.campus-map-row::-webkit-scrollbar { display: none; }
+.campus-stop { display: flex; flex-direction: column; align-items: center; gap: 5px; flex-shrink: 0; }
+.campus-building {
+  width: 42px; height: 42px; border-radius: 10px;
+  border: 1px solid var(--border2);
+  background: var(--navy3);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-mono); font-size: 13px; font-weight: 600;
+  color: var(--dim); text-decoration: none;
+  transition: all .2s; position: relative;
+  cursor: pointer;
+}
+.campus-building:hover { transform: translateY(-2px); border-color: var(--silver2); color: var(--silver2); }
+.campus-building.active {
+  background: var(--amber-dim);
+  border-color: var(--amber);
+  color: var(--amber);
+  box-shadow: 0 0 20px rgba(245,158,11,.2);
+  animation: torchFlicker 3s infinite;
+}
+.campus-building.locked { opacity: .45; cursor: default; }
+.campus-building.locked:hover { transform: none; }
+.campus-stop-label {
+  font-family: var(--font-mono); font-size: 8px; letter-spacing: .04em;
+  color: var(--dim); text-align: center; max-width: 58px;
+  line-height: 1.3; white-space: nowrap;
+}
+.campus-stop.active-stop .campus-stop-label { color: var(--amber); }
+.campus-connector {
+  width: 28px; height: 1px; background: var(--border2);
+  flex-shrink: 0; margin-bottom: 18px;
+  position: relative;
+}
+.campus-connector::after {
+  content: '›'; position: absolute; right: -5px; top: -9px;
+  color: var(--dim); font-size: 10px;
+}
+
+/* ── HALL HERO ── */
+.hall-hero { margin-bottom: 40px; }
+.hall-eyebrow {
+  display: flex; align-items: center; gap: 8px;
+  font-family: var(--font-mono); font-size: 10px; letter-spacing: .1em;
+  color: var(--amber); text-transform: uppercase;
+  margin-bottom: 12px;
+}
+.hall-eyebrow-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--amber); animation: pulse 2s infinite; }
+.hall-building-name {
+  font-family: var(--font-display); font-size: 11px; letter-spacing: .18em;
+  color: var(--amber2); text-transform: uppercase; margin-bottom: 6px;
+}
+.hall-title {
+  font-family: var(--font-display); font-size: 38px; font-weight: 600;
+  color: var(--white); line-height: 1.15; margin-bottom: 16px;
+  letter-spacing: .02em;
+}
+.hall-title em { font-style: normal; color: var(--amber); animation: glow 4s infinite; }
+.hall-tagline {
+  font-size: 17px; color: var(--silver2); line-height: 1.75;
+  max-width: 720px; margin-bottom: 20px;
+  font-style: italic;
+}
+.hall-tags { display: flex; gap: 7px; flex-wrap: wrap; }
+.htag {
+  font-family: var(--font-mono); font-size: 9px; letter-spacing: .08em;
+  text-transform: uppercase; padding: 4px 10px; border-radius: 5px;
+  border: 1px solid var(--border2); color: var(--silver2);
+}
+.htag.conceptual { border-color: rgba(56,189,248,.2); color: var(--accent); background: rgba(56,189,248,.05); }
+.htag.technical   { border-color: rgba(168,85,247,.2); color: var(--purple); background: rgba(168,85,247,.05); }
+.htag.lab         { border-color: rgba(74,222,128,.2); color: var(--green); background: rgba(74,222,128,.05); }
+.htag.exam        { border-color: rgba(251,191,36,.2); color: var(--amber); background: var(--amber-dim); }
+.htag.ai          { border-color: rgba(251,146,60,.2); color: var(--coral); background: rgba(251,146,60,.05); }
+
+/* ── NOVAPRISM BANNER ── */
+.np-banner {
+  background: rgba(13,27,46,.8);
+  border: 1px solid var(--border2);
+  border-radius: 12px; padding: 18px 22px;
+  margin-bottom: 32px;
+  position: relative; overflow: hidden;
+}
+.np-banner::before {
+  content: ''; position: absolute; left: 0; top: 0; bottom: 0;
+  width: 3px; background: linear-gradient(to bottom, var(--amber), var(--accent));
+}
+.np-banner-title {
+  font-family: var(--font-mono); font-size: 8.5px; letter-spacing: .12em;
+  text-transform: uppercase; color: var(--dim); margin-bottom: 12px;
+}
+.np-divisions { display: flex; gap: 10px; flex-wrap: wrap; }
+.np-div {
+  flex: 1; min-width: 140px;
+  background: rgba(255,255,255,.02);
+  border: 1px solid var(--border);
+  border-radius: 8px; padding: 10px 12px;
+}
+.np-div-code { font-family: var(--font-mono); font-size: 10px; font-weight: 600; color: var(--accent); margin-bottom: 2px; }
+.np-div-name { font-size: 11px; color: var(--silver2); margin-bottom: 6px; }
+.np-div-rev { font-family: var(--font-mono); font-size: 13px; font-weight: 600; color: var(--white); }
+.np-div-margin { font-size: 10px; color: var(--dim); margin-top: 2px; }
+.np-div.cost-centre .np-div-code { color: var(--dim); }
+.np-div.cost-centre .np-div-rev { color: var(--red); }
+
+/* ── TABS ── */
+.tab-bar {
+  display: flex; gap: 2px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 32px;
+  position: sticky; top: var(--topbar-h);
+  background: rgba(8,17,30,.95); backdrop-filter: blur(12px);
+  z-index: 20; padding: 10px 0 0;
+  margin-left: -52px; margin-right: -52px;
+  padding-left: 52px; padding-right: 52px;
+}
+.tab-btn {
+  display: flex; align-items: center; gap: 7px;
+  padding: 9px 16px; border: none; background: none; cursor: pointer;
+  font-family: var(--font-mono); font-size: 10px; letter-spacing: .07em;
+  text-transform: uppercase; color: var(--dim);
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  transition: color .15s, border-color .15s;
+  white-space: nowrap;
+}
+.tab-btn:hover { color: var(--silver2); }
+.tab-btn.active { color: var(--amber); border-bottom-color: var(--amber); }
+.tab-icon { font-size: 13px; }
+
+.tab-panel { display: none; animation: fadeUp .25s ease; }
+.tab-panel.active { display: block; }
+
+/* ── SECTION STRUCTURE ── */
+.section { margin-bottom: 48px; }
+.sec-type-bar {
+  display: flex; align-items: center; gap: 8px;
+  margin-bottom: 14px;
+}
+.sec-type-icon {
+  width: 28px; height: 28px; border-radius: 7px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center; font-size: 13px;
+}
+.sec-type-icon.conceptual { background: rgba(56,189,248,.08); border: 1px solid rgba(56,189,248,.18); }
+.sec-type-icon.technical   { background: rgba(168,85,247,.08); border: 1px solid rgba(168,85,247,.18); }
+.sec-type-icon.lab         { background: rgba(74,222,128,.08); border: 1px solid rgba(74,222,128,.18); }
+.sec-type-icon.exam        { background: rgba(251,191,36,.08); border: 1px solid rgba(251,191,36,.18); }
+
+.sec-type-label {
+  font-family: var(--font-mono); font-size: 9px; font-weight: 600;
+  letter-spacing: .12em; text-transform: uppercase;
+}
+.sec-type-label.conceptual { color: var(--accent); }
+.sec-type-label.technical   { color: var(--purple); }
+.sec-type-label.lab         { color: var(--green); }
+.sec-type-label.exam        { color: var(--amber); }
+
+.sec-h {
+  font-family: var(--font-display); font-size: 22px; font-weight: 600;
+  color: var(--white); margin-bottom: 6px; letter-spacing: .02em;
+}
+.sec-div { width: 40px; height: 2px; background: linear-gradient(to right, var(--amber), transparent); margin-bottom: 14px; }
+.sec-sub { font-size: 14px; color: var(--silver2); margin-bottom: 20px; font-style: italic; line-height: 1.6; }
+.prose { font-size: 15px; color: var(--silver); line-height: 1.78; margin-bottom: 14px; }
+.prose strong { color: var(--white); font-weight: 500; }
+
+/* ── REVEAL CARDS ── */
+.reveal-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px,1fr)); gap: 12px; margin: 22px 0; }
+.reveal-card {
+  background: var(--navy3); border: 1px solid var(--border);
+  border-radius: 12px; overflow: hidden;
+  transition: transform .2s, box-shadow .2s;
+}
+.reveal-card:hover { transform: translateY(-2px); box-shadow: 0 10px 32px rgba(0,0,0,.35); }
+.rc-top { padding: 14px 16px 10px; }
+.rc-division { font-family: var(--font-mono); font-size: 9px; letter-spacing: .1em; color: var(--dim); text-transform: uppercase; margin-bottom: 3px; }
+.rc-name { font-family: var(--font-display); font-size: 14px; color: var(--white); margin-bottom: 4px; }
+.rc-revenue { font-size: 11px; color: var(--silver2); }
+.rc-body { padding: 10px 16px 14px; border-top: 1px solid var(--border); display: flex; flex-direction: column; gap: 6px; }
+.rc-row { display: flex; justify-content: space-between; align-items: baseline; }
+.rc-row-label { font-size: 12px; color: rgba(232,240,248,.5); font-family: var(--font-body); }
+.rc-row.after .rc-row-label { color: rgba(232,240,248,.75); }
+.rc-row-val { font-family: var(--font-mono); font-size: 13px; font-weight: 500; }
+.rc-delta { font-size: 10px; margin-left: 4px; }
+.rc-delta.down { color: var(--red); }
+.rc-delta.flat { color: var(--silver2); }
+.rc-cost-centre .rc-top { background: rgba(255,255,255,.01); }
+
+/* ── VERB CARDS ── */
+.verbs-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px,1fr)); gap: 12px; margin: 20px 0; }
+.verb-card {
+  background: var(--navy3); border: 1px solid var(--border);
+  border-radius: 12px; padding: 18px; position: relative;
+  overflow: hidden;
+}
+.verb-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+}
+.verb-1::before { background: var(--green); }
+.verb-2::before { background: var(--accent); }
+.verb-3::before { background: var(--amber); }
+.verb-4::before { background: var(--dim); }
+.verb-word {
+  font-family: var(--font-display); font-size: 18px; font-weight: 600;
+  color: var(--white); margin-bottom: 8px; letter-spacing: .04em;
+}
+.verb-1 .verb-word { color: var(--green); }
+.verb-2 .verb-word { color: var(--accent); }
+.verb-3 .verb-word { color: var(--amber); }
+.verb-4 .verb-word { color: var(--silver2); }
+.verb-def { font-size: 13px; color: var(--silver2); line-height: 1.65; margin-bottom: 10px; }
+.verb-example { font-size: 12px; color: var(--dim); line-height: 1.6; margin-bottom: 10px; border-left: 2px solid var(--border2); padding-left: 10px; }
+.verb-action { font-family: var(--font-mono); font-size: 9px; letter-spacing: .08em; text-transform: uppercase; }
+.verb-1 .verb-action { color: var(--green); }
+.verb-2 .verb-action { color: var(--accent); }
+.verb-3 .verb-action { color: var(--amber); }
+.verb-4 .verb-action { color: var(--dim); }
+
+/* ── TABLE ── */
+.tbl-wrap { overflow-x: auto; margin: 18px 0; }
+.tbl { width: 100%; border-collapse: collapse; font-size: 13px; }
+.tbl th {
+  font-family: var(--font-mono); font-size: 8.5px; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--dim);
+  padding: 10px 12px; text-align: left;
+  border-bottom: 1px solid var(--border2); white-space: nowrap;
+}
+.tbl td { padding: 10px 12px; border-bottom: 1px solid var(--border); color: var(--silver2); vertical-align: top; line-height: 1.5; }
+.tbl tr:last-child td { border-bottom: none; }
+.tbl tr:hover td { background: rgba(255,255,255,.02); }
+.badge { font-family: var(--font-mono); font-size: 9px; letter-spacing: .06em; text-transform: uppercase; padding: 3px 8px; border-radius: 4px; }
+.badge.green { background: rgba(74,222,128,.1); color: var(--green); border: 1px solid rgba(74,222,128,.2); }
+.badge.sky { background: rgba(56,189,248,.1); color: var(--accent); border: 1px solid rgba(56,189,248,.2); }
+.badge.amber { background: var(--amber-dim); color: var(--amber); border: 1px solid var(--amber-border); }
+
+/* ── INFOBOXES ── */
+.infobox {
+  display: flex; gap: 12px;
+  border-radius: 10px; padding: 14px 16px;
+  margin: 18px 0; line-height: 1.65;
+}
+.infobox-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+.infobox-body { font-size: 13.5px; }
+.infobox-body strong { font-weight: 500; }
+.infobox.note { background: rgba(56,189,248,.06); border: 1px solid rgba(56,189,248,.15); color: var(--silver2); }
+.infobox.note .infobox-body strong { color: var(--accent); }
+.infobox.trap { background: rgba(248,113,113,.06); border: 1px solid rgba(248,113,113,.15); color: var(--silver2); }
+.infobox.trap .infobox-body strong { color: var(--red); }
+.infobox.tip { background: rgba(74,222,128,.05); border: 1px solid rgba(74,222,128,.14); color: var(--silver2); }
+.infobox.tip .infobox-body strong { color: var(--green); }
+.infobox.warn { background: var(--amber-dim); border: 1px solid var(--amber-border); color: var(--silver2); }
+.infobox.warn .infobox-body strong { color: var(--amber); }
+.infobox.ai { background: rgba(251,146,60,.05); border: 1px solid rgba(251,146,60,.15); color: var(--silver2); }
+.infobox.ai .infobox-body strong { color: var(--coral); }
+
+/* ── ARCHITECTURE STACK ── */
+.arch-stack { display: flex; flex-direction: column; gap: 0; margin: 20px 0; }
+.arch-layer {
+  border-radius: 10px; padding: 16px 20px;
+  border: 1px solid var(--border);
+}
+.arch-arrow { text-align: center; font-family: var(--font-mono); font-size: 16px; color: var(--dim); padding: 4px 0; }
+.arch-layer-label { font-family: var(--font-mono); font-size: 8.5px; letter-spacing: .1em; text-transform: uppercase; margin-bottom: 4px; }
+.arch-layer-name { font-family: var(--font-display); font-size: 16px; font-weight: 600; color: var(--white); margin-bottom: 6px; }
+.arch-layer-desc { font-size: 13px; color: var(--silver2); line-height: 1.65; }
+.al-pcm { background: rgba(56,189,248,.05); border-color: rgba(56,189,248,.15); }
+.al-pcm .arch-layer-label { color: var(--accent); }
+.al-platform { background: rgba(45,212,191,.05); border-color: rgba(45,212,191,.15); }
+.al-platform .arch-layer-label { color: var(--teal); }
+.al-arch { background: rgba(168,85,247,.05); border-color: rgba(168,85,247,.15); }
+.al-arch .arch-layer-label { color: var(--purple); }
+.al-result { background: rgba(74,222,128,.05); border-color: rgba(74,222,128,.18); }
+.al-result .arch-layer-label { color: var(--green); }
+
+/* ── CUBE PAIR ── */
+.cube-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 18px 0; }
+.cube-card { background: var(--navy3); border: 1px solid var(--border); border-radius: 12px; padding: 18px; }
+.cube-badge { font-family: var(--font-mono); font-size: 10px; font-weight: 600; padding: 3px 9px; border-radius: 5px; }
+.cube-calc .cube-badge { background: rgba(56,189,248,.1); color: var(--accent); border: 1px solid rgba(56,189,248,.2); }
+.cube-rep .cube-badge  { background: rgba(74,222,128,.08); color: var(--green); border: 1px solid rgba(74,222,128,.18); }
+.cube-name { font-family: var(--font-display); font-size: 15px; color: var(--white); margin: 8px 0 5px; }
+.cube-purpose { font-size: 12px; color: var(--silver2); margin-bottom: 12px; font-style: italic; }
+.cube-bullets { list-style: none; display: flex; flex-direction: column; gap: 5px; }
+.cube-bullets li { font-size: 12px; color: var(--dim); padding-left: 14px; position: relative; line-height: 1.5; }
+.cube-bullets li::before { content: '›'; position: absolute; left: 0; color: var(--dim); }
+
+/* ── AI BOX ── */
+.ai-box {
+  background: rgba(251,146,60,.04); border: 1px solid rgba(251,146,60,.15);
+  border-radius: 12px; padding: 18px 20px; margin: 18px 0;
+}
+.ai-box-label { font-family: var(--font-mono); font-size: 9px; letter-spacing: .09em; text-transform: uppercase; color: var(--coral); margin-bottom: 10px; display: flex; align-items: center; gap: 7px; }
+.ai-box-body { font-size: 14px; color: var(--silver2); line-height: 1.7; font-style: italic; }
+
+/* ── LAB ── */
+.lab-box {
+  background: rgba(74,222,128,.03);
+  border: 1px solid rgba(74,222,128,.12);
+  border-radius: 12px; padding: 22px 24px; margin: 18px 0;
+}
+.lab-header {
+  font-family: var(--font-mono); font-size: 9.5px; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--green);
+  margin-bottom: 16px; display: flex; align-items: center; gap: 8px;
+}
+.lab-header::before { content: ''; width: 3px; height: 14px; background: var(--green); border-radius: 2px; }
+.lab-scenario {
+  background: rgba(255,255,255,.02); border: 1px solid var(--border);
+  border-radius: 8px; padding: 14px 16px;
+  font-size: 13.5px; color: rgba(232,240,248,.65);
+  line-height: 1.72; margin-bottom: 18px;
+}
+.lab-scenario strong { color: var(--white); font-weight: 500; }
+.lab-checklist { display: flex; flex-direction: column; gap: 10px; }
+.lab-check-item { display: flex; gap: 12px; align-items: flex-start; }
+.lab-check-box {
+  width: 20px; height: 20px; border-radius: 5px; flex-shrink: 0;
+  border: 1px solid rgba(74,222,128,.3); background: rgba(74,222,128,.04);
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  transition: all .15s; margin-top: 1px;
+}
+.lab-check-box:hover { border-color: var(--green); background: rgba(74,222,128,.1); }
+.lab-check-box.checked { background: var(--green); border-color: var(--green); }
+.lab-check-box.checked::after { content: '✓'; font-size: 11px; color: var(--navy); font-weight: 700; }
+.lab-check-text { font-size: 13.5px; color: rgba(232,240,248,.7); line-height: 1.65; flex: 1; }
+.lab-check-text strong { color: var(--white); font-weight: 500; }
+.lab-check-item.checked .lab-check-text { color: var(--dim); text-decoration: line-through; text-decoration-color: rgba(255,255,255,.2); }
+.lab-progress { margin-top: 14px; }
+.lab-progress-bar { height: 3px; background: var(--border); border-radius: 2px; overflow: hidden; margin-top: 6px; }
+.lab-progress-fill { height: 100%; background: var(--green); border-radius: 2px; transition: width .3s ease; }
+.lab-progress-label { font-family: var(--font-mono); font-size: 9px; color: var(--dim); }
+
+.lab-steps { display: flex; flex-direction: column; gap: 14px; }
+.lab-step { display: flex; gap: 14px; }
+.lab-step-num {
+  width: 28px; height: 28px; border-radius: 8px; flex-shrink: 0;
+  background: rgba(74,222,128,.08); border: 1px solid rgba(74,222,128,.2);
+  font-family: var(--font-mono); font-size: 12px; font-weight: 600;
+  color: var(--green); display: flex; align-items: center; justify-content: center;
+}
+.lab-step-body { font-size: 13.5px; color: rgba(232,240,248,.65); line-height: 1.7; padding-top: 3px; }
+.lab-step-body strong { color: var(--white); font-weight: 500; }
+.lab-step-body code { font-family: var(--font-mono); font-size: 12px; background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.08); border-radius: 4px; padding: 1px 6px; color: var(--silver); }
+
+/* ── EXAM BOX ── */
+.exam-box {
+  background: rgba(251,191,36,.04); border: 1px solid rgba(251,191,36,.15);
+  border-radius: 12px; overflow: hidden; margin: 16px 0;
+}
+.exam-box-header {
+  font-family: var(--font-mono); font-size: 9px; letter-spacing: .09em;
+  text-transform: uppercase; color: var(--amber);
+  padding: 11px 16px; border-bottom: 1px solid rgba(251,191,36,.12);
+  background: rgba(251,191,36,.04);
+}
+.exam-box-body { padding: 16px; font-size: 13.5px; color: var(--silver2); line-height: 1.72; }
+.exam-box-body strong { color: var(--white); font-weight: 500; }
+
+/* Quiz */
+.quiz-q { margin-bottom: 28px; }
+.quiz-stem {
+  font-size: 14.5px; color: var(--white); line-height: 1.7;
+  margin-bottom: 14px; padding: 14px 16px;
+  background: rgba(255,255,255,.02); border: 1px solid var(--border);
+  border-radius: 8px;
+}
+.quiz-stem em { font-style: italic; color: var(--silver2); }
+.quiz-options { display: flex; flex-direction: column; gap: 7px; }
+.quiz-opt {
+  padding: 10px 14px; border-radius: 8px;
+  border: 1px solid var(--border); background: rgba(255,255,255,.02);
+  font-size: 13.5px; color: var(--silver2); cursor: pointer;
+  transition: all .15s; text-align: left; line-height: 1.5;
+}
+.quiz-opt:hover:not(.revealed) { border-color: var(--amber-border); color: var(--white); background: var(--amber-dim); }
+.quiz-opt.correct { background: rgba(74,222,128,.08); border-color: rgba(74,222,128,.25); color: var(--green); pointer-events: none; }
+.quiz-opt.wrong { background: rgba(248,113,113,.08); border-color: rgba(248,113,113,.2); color: var(--red); pointer-events: none; }
+.quiz-opt.revealed { pointer-events: none; }
+.quiz-explanation {
+  margin-top: 10px; padding: 12px 14px;
+  background: rgba(56,189,248,.05); border: 1px solid rgba(56,189,248,.14);
+  border-radius: 8px; font-size: 13px; color: var(--silver2); line-height: 1.65;
+  display: none;
+}
+.quiz-explanation.show { display: block; animation: fadeUp .2s ease; }
+.quiz-explanation strong { color: var(--accent); }
+.quiz-meta { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+.quiz-diff {
+  font-family: var(--font-mono); font-size: 8.5px; letter-spacing: .08em;
+  text-transform: uppercase; padding: 2px 8px; border-radius: 4px;
+}
+.quiz-diff.foundation { background: rgba(74,222,128,.08); color: var(--green); border: 1px solid rgba(74,222,128,.15); }
+.quiz-diff.practitioner { background: var(--amber-dim); color: var(--amber); border: 1px solid var(--amber-border); }
+.quiz-diff.expert { background: rgba(248,113,113,.08); color: var(--red); border: 1px solid rgba(248,113,113,.15); }
+.quiz-qnum { font-family: var(--font-mono); font-size: 9px; color: var(--dim); }
+.quiz-score {
+  margin-top: 24px; padding: 18px;
+  background: var(--navy3); border: 1px solid var(--border); border-radius: 12px;
+  display: none; text-align: center;
+}
+.quiz-score.show { display: block; animation: fadeUp .3s ease; }
+.quiz-score-num { font-family: var(--font-display); font-size: 36px; color: var(--amber); }
+.quiz-score-label { font-family: var(--font-mono); font-size: 10px; color: var(--dim); letter-spacing: .1em; text-transform: uppercase; margin-top: 4px; }
+.quiz-score-msg { font-size: 14px; color: var(--silver2); margin-top: 10px; }
+
+/* ── HALL NAV FOOTER ── */
+.hall-nav-footer {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-top: 64px; padding-top: 28px;
+  border-top: 1px solid var(--border);
+}
+.hnf-prev, .hnf-next {
+  display: flex; align-items: center; gap: 10px;
+  text-decoration: none; padding: 12px 16px; border-radius: 10px;
+  border: 1px solid var(--border); background: var(--navy3);
+  transition: all .2s;
+}
+.hnf-prev:hover, .hnf-next:hover { border-color: var(--amber-border); background: var(--amber-dim); }
+.hnf-dir { font-family: var(--font-mono); font-size: 8.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--dim); }
+.hnf-name { font-size: 14px; color: var(--white); margin-top: 2px; }
+.hnf-next { flex-direction: row-reverse; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 900px) {
+  .sidebar { display: none; position: fixed; left: 0; top: var(--topbar-h); height: calc(100vh - var(--topbar-h)); z-index: 90; transform: translateX(-100%); transition: transform .25s ease; }
+  .sidebar.open { display: flex; flex-direction: column; transform: translateX(0); }
+  .sidebar-overlay { display: none; }
+  .sidebar-overlay.open { display: block; }
+  .tb-hamburger { display: flex; }
+  .main { padding: 24px 20px 80px; }
+  .tab-bar { margin-left: -20px; margin-right: -20px; padding-left: 20px; padding-right: 20px; overflow-x: auto; scrollbar-width: none; }
+  .tab-bar::-webkit-scrollbar { display: none; }
+  .cube-pair { grid-template-columns: 1fr; }
+  .hall-title { font-size: 28px; }
+  .verbs-row { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<div id="stars"></div>
+<div class="sidebar-overlay" id="overlay" onclick="closeSidebar()"></div>
+
+<div id="app">
+
+  <!-- ── TOPBAR ── -->
+  <header id="topbar">
+    <a href="https://brainspring.ai" class="tb-logo" target="_blank" rel="noopener">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 36" width="18" height="20">
+        <path d="M16 2L3 9v18l13 7 13-7V9L16 2z" fill="none" stroke="#38bdf8" stroke-width="2"/>
+        <path d="M16 8l7 4v8l-7 4-7-4v-8l7-4z" fill="#38bdf8" opacity=".3"/>
+      </svg>
+      <span class="tb-brand"><span class="tb-brain">Brain</span><span class="tb-spring">Spring</span></span>
+    </a>
+    <span class="tb-sep">›</span>
+    <span class="tb-course">Academy of Profit Center</span>
+    <div class="tb-dot"></div>
+    <nav class="tb-nav-right">
+      <a href="hall-1.html" class="tb-link current">Foundations</a>
+      <a href="hall-2.html" class="tb-link">Dimensions</a>
+      <a href="hall-4.html" class="tb-link">Hall of Logic</a>
+      <a href="hall-7.html" class="tb-link">Observatory</a>
+      <a href="hall-9.html" class="tb-link">Exam Hall</a>
+    </nav>
+    <span class="tb-hall-badge">Hall 1 of 9 · Foundations Hall</span>
+    <button class="tb-hamburger" onclick="toggleSidebar()" aria-label="Menu">
+      <svg width="18" height="14" viewBox="0 0 18 14" fill="none"><rect width="18" height="2" rx="1" fill="currentColor"/><rect y="6" width="18" height="2" rx="1" fill="currentColor"/><rect y="12" width="18" height="2" rx="1" fill="currentColor"/></svg>
+    </button>
+  </header>
+
+  <div id="body">
+
+    <!-- ── SIDEBAR ── -->
+    <nav class="sidebar" id="sidebar">
+      <div class="sb-label">Academy Halls</div>
+
+      <a href="hall-1.html" class="sb-hall current" id="sb-h1">
+        <div class="sb-hall-num">1</div>
+        <div class="sb-hall-info">
+          <div class="sb-hall-name">Foundations Hall</div>
+          <div class="sb-hall-title">Orientation</div>
+        </div>
+        <div class="sb-status current"></div>
+      </a>
+      <a href="hall-2.html" class="sb-hall" id="sb-h2">
+        <div class="sb-hall-num">2</div>
+        <div class="sb-hall-info">
+          <div class="sb-hall-name">Dimensions Gallery</div>
+          <div class="sb-hall-title">Geometry of Profit Center</div>
+        </div>
+        <div class="sb-status locked"></div>
+      </a>
+      <a href="hall-3.html" class="sb-hall" id="sb-h3">
+        <div class="sb-hall-num">3</div>
+        <div class="sb-hall-info">
+          <div class="sb-hall-name">Models Pavilion</div>
+          <div class="sb-hall-title">Perspective Gallery</div>
+        </div>
+        <div class="sb-status locked"></div>
+      </a>
+      <a href="hall-4.html" class="sb-hall" id="sb-h4">
+        <div class="sb-hall-num">4</div>
+        <div class="sb-hall-info">
+          <div class="sb-hall-name">Hall of Logic</div>
+          <div class="sb-hall-title">Rule Sets &amp; Sequences</div>
+        </div>
+        <div class="sb-status locked"></div>
+      </a>
+      <a href="hall-5.html" class="sb-hall" id="sb-h5">
+        <div class="sb-hall-num">5</div>
+        <div class="sb-hall-info">
+          <div class="sb-hall-name">Workshop of Precision</div>
+          <div class="sb-hall-title">Custom Calculations</div>
+        </div>
+        <div class="sb-status locked"></div>
+      </a>
+      <a href="hall-6.html" class="sb-hall" id="sb-h6">
+        <div class="sb-hall-num">6</div>
+        <div class="sb-hall-info">
+          <div class="sb-hall-name">Control Tower</div>
+          <div class="sb-hall-title">Calc Analysis Chamber</div>
+        </div>
+        <div class="sb-status locked"></div>
+      </a>
+      <a href="hall-7.html" class="sb-hall" id="sb-h7">
+        <div class="sb-hall-num">7</div>
+        <div class="sb-hall-info">
+          <div class="sb-hall-name">Profit Curve Observatory</div>
+          <div class="sb-hall-title">Rule Balancing</div>
+        </div>
+        <div class="sb-status locked"></div>
+      </a>
+      <a href="hall-8.html" class="sb-hall" id="sb-h8">
+        <div class="sb-hall-num">8</div>
+        <div class="sb-hall-info">
+          <div class="sb-hall-name">Pipeline Lab</div>
+          <div class="sb-hall-title">Data Integration Workshop</div>
+        </div>
+        <div class="sb-status locked"></div>
+      </a>
+      <a href="hall-9.html" class="sb-hall" id="sb-h9">
+        <div class="sb-hall-num">9</div>
+        <div class="sb-hall-info">
+          <div class="sb-hall-name">Examination Hall</div>
+          <div class="sb-hall-title">Graduation</div>
+        </div>
+        <div class="sb-status locked"></div>
+      </a>
+
+      <div class="sb-label">This Hall</div>
+      <div id="sb-toc"></div>
+
+      <div class="sb-label">Dean's Office</div>
+      <!-- Eliot sidebar panel -->
+      <div class="sb-eliot">
+        <div class="sb-eliot-header">
+          <div class="sb-eliot-avatar">🎓</div>
+          <div>
+            <div class="sb-eliot-name">Dean Eliot</div>
+            <div class="sb-eliot-role">Senior Oracle EPM Practitioner</div>
+          </div>
+        </div>
+        <div class="sb-chips" id="sb-chips">
+          <span class="sb-chip" onclick="chipAsk(this)">Why does IS margin collapse from 11.2% to 3.0%?</span>
+          <span class="sb-chip" onclick="chipAsk(this)">When should I use Assign vs Allocate?</span>
+          <span class="sb-chip" onclick="chipAsk(this)">What makes the dual-cube design different from legacy PCM?</span>
+          <span class="sb-chip" onclick="chipAsk(this)">Is EPCM the right tool or should we use the GL?</span>
+        </div>
+        <div class="sb-eliot-msgs" id="sb-msgs"></div>
+        <div class="sb-eliot-input-row">
+          <input class="sb-eliot-input" id="sb-input" type="text" placeholder="Ask the Dean anything…" onkeydown="if(event.key==='Enter')sbSend()">
+          <button class="sb-eliot-send" onclick="sbSend()">↑</button>
+        </div>
+      </div>
+
+      <div class="sb-company" id="sb-company-card">
+        <div class="sb-company-label">Case Company</div>
+        <div class="sb-company-name" id="sb-company-name">NovaPrism Group</div>
+        <div class="sb-company-desc" id="sb-company-desc">Loading…</div>
+      </div>
+    </nav>
+
+    <!-- ── MAIN ── -->
+    <main class="main">
+
+      <!-- Campus Map -->
+      <div class="campus-map-wrap">
+        <div class="campus-map-label">Academy of Profit Center — Your Journey</div>
+        <div class="campus-map-row" id="campus-map"></div>
+      </div>
+
+      <!-- Hall Hero -->
+      <header class="hall-hero">
+        <div class="hall-building-name">Foundations Hall</div>
+        <div class="hall-eyebrow">
+          <span class="hall-eyebrow-dot"></span>
+          Hall 1 of 9 · Academy of Profit Center · EPCM Study Tour
+        </div>
+        <h1 class="hall-title">The <em>$134M</em> blind spot</h1>
+        <p class="hall-tagline">NovaPrism Group's CFO cannot tell the board which divisions make money. Not because the data is wrong — because the costs have never been properly allocated. This hall is your first day at the Academy: why this problem exists, how EPCM solves it, and what you must know before entering any other hall.</p>
+        <div class="hall-tags">
+          <span class="htag conceptual">Conceptual</span>
+          <span class="htag technical">Technical</span>
+          <span class="htag lab">Lab</span>
+          <span class="htag exam">Exam: 1Z0-1082-25</span>
+          <span class="htag ai">AI-First</span>
+        </div>
+      </header>
+
+      <!-- NovaPrism Banner — live from constants.js -->
+      <div class="np-banner" id="np-banner">
+        <div class="np-banner-title">NovaPrism Group — your case company across all 9 halls · $2.1B · 8,400 staff</div>
+        <div class="np-divisions" id="np-divisions">
+          <!-- Rendered by JS from NP constants -->
+          <div class="np-div"><div class="np-div-code">DS</div><div class="np-div-name">Digital Services</div><div class="np-div-rev">$780M</div><div class="np-div-margin">Direct margin: 25.6% → fully-loaded: 20.5%</div></div>
+          <div class="np-div"><div class="np-div-code" style="color:var(--amber)">IS</div><div class="np-div-name">Infrastructure Solutions</div><div class="np-div-rev" style="color:var(--amber)">$980M</div><div class="np-div-margin" style="color:var(--red)">Direct margin: 11.2% → fully-loaded: 3.0% ⚠</div></div>
+          <div class="np-div"><div class="np-div-code" style="color:var(--green)">CL</div><div class="np-div-name">Cloud Licensing</div><div class="np-div-rev">$340M</div><div class="np-div-margin">Direct margin: 44.1% → fully-loaded: 40.3%</div></div>
+          <div class="np-div cost-centre"><div class="np-div-code">ES</div><div class="np-div-name">Enterprise Support</div><div class="np-div-rev">$0 revenue</div><div class="np-div-margin" style="color:var(--red)">$134M cost — the blind spot</div></div>
+        </div>
+      </div>
+
+      <!-- TAB BAR -->
+      <div class="tab-bar" role="tablist">
+        <button class="tab-btn active" role="tab" data-tab="conceptual" onclick="switchTab('conceptual',this)">
+          <span class="tab-icon">📐</span> Conceptual
+        </button>
+        <button class="tab-btn" role="tab" data-tab="technical" onclick="switchTab('technical',this)">
+          <span class="tab-icon">⚙️</span> Technical
+        </button>
+        <button class="tab-btn" role="tab" data-tab="lab" onclick="switchTab('lab',this)">
+          <span class="tab-icon">🔬</span> Lab
+        </button>
+        <button class="tab-btn" role="tab" data-tab="exam" onclick="switchTab('exam',this)">
+          <span class="tab-icon">📝</span> Exam Prep
+        </button>
+      </div>
+
+      <!-- ═══════ TAB 1: CONCEPTUAL ═══════ -->
+      <div class="tab-panel active" id="tab-conceptual">
+
+        <!-- Section 1: The Blind Spot -->
+        <section class="section" id="blind-spot">
+          <div class="sec-type-bar">
+            <div class="sec-type-icon conceptual">📊</div>
+            <span class="sec-type-label conceptual">Conceptual</span>
+          </div>
+          <h2 class="sec-h">The profitability blind spot</h2>
+          <div class="sec-div"></div>
+          <p class="sec-sub">What NovaPrism's P&L looks like before allocation — and what it looks like after.</p>
+
+          <p class="prose">NovaPrism Group runs three revenue-generating divisions and one internal cost centre. On paper, Infrastructure Solutions is the largest division by revenue at <strong>$980M</strong> and appears to earn an <strong>11.2% margin</strong>. The finance team reports this to the board. Capital allocation decisions are made on this basis.</p>
+          <p class="prose">The problem: <strong>Enterprise Support costs $134M per year</strong> and that cost has never been allocated anywhere. IT infrastructure, Finance operations, HR — all consumed by the three operating divisions in very different proportions, all sitting in a cost centre that reports zero revenue and zero allocated cost.</p>
+          <p class="prose">When you allocate that $134M using principled, driver-based methods — headcount for Finance and HR, square footage for Facilities, IT support tickets for IT — the picture changes completely.</p>
+
+          <div class="reveal-grid" id="reveal-cards"></div>
+
+          <div class="infobox note">
+            <div class="infobox-icon">💡</div>
+            <div class="infobox-body"><strong>The real decision impact:</strong> NovaPrism's CFO is considering a $200M capital investment to expand Infrastructure Solutions — its "highest-revenue" division. After proper allocation, IS margin is 3.0%. Cloud Licensing, at 40.3% margin, is the division that actually deserves capital. The blind spot doesn't just distort reporting — it misdirects investment.</div>
+          </div>
+
+          <p class="prose">Additionally, <strong>17 of NovaPrism's 60 client engagements are loss-making</strong> on a fully-loaded basis. On direct costs alone, none appear to lose money. The pricing team has been renewing these contracts without knowing they destroy value every quarter.</p>
+
+          <div class="infobox trap">
+            <div class="infobox-icon">⚠️</div>
+            <div class="infobox-body"><strong>Why spreadsheets fail here:</strong> The allocation logic is not complex — it is the governance that fails. Different analysts use different headcount figures. The square footage data lives in Facilities' own spreadsheet. IT ticket counts are pulled manually from the helpdesk system. Every quarter the numbers are slightly different. Nobody can audit the prior quarter's allocation because the file has been overwritten. EPCM solves the governance problem, not just the calculation problem.</div>
+          </div>
+        </section>
+
+        <!-- Section 2: The Four Verbs -->
+        <section class="section" id="four-verbs">
+          <div class="sec-type-bar">
+            <div class="sec-type-icon conceptual">🔤</div>
+            <span class="sec-type-label conceptual">Conceptual</span>
+          </div>
+          <h2 class="sec-h">The four costing verbs</h2>
+          <div class="sec-div"></div>
+          <p class="sec-sub">The word "allocate" is used for everything. It shouldn't be. The verb you choose determines the methodology — and the degree of actionability the result provides.</p>
+
+          <div class="verbs-row">
+            <div class="verb-card verb-1">
+              <div class="verb-word">Direct</div>
+              <div class="verb-def">The cost is directly traceable to a cost object from the source system. No calculation required — the data arrives assigned.</div>
+              <div class="verb-example">NovaPrism: Digital Services consultant salary costs. Each consultant's time is billed to a specific engagement. The cost lands on the right engagement automatically.</div>
+              <span class="verb-action">Highest actionability</span>
+            </div>
+            <div class="verb-card verb-2">
+              <div class="verb-word">Assign</div>
+              <div class="verb-def">A causal driver exists. Costs are assigned using a driver that has a clear cause-and-effect relationship with consumption.</div>
+              <div class="verb-example">NovaPrism: IT support costs assigned by IT ticket count. Infrastructure Solutions raises 2,890 tickets vs Digital Services' 1,240. IS consumes more IT — the driver reflects that.</div>
+              <span class="verb-action">Causal relationship</span>
+            </div>
+            <div class="verb-card verb-3">
+              <div class="verb-word">Attribute</div>
+              <div class="verb-def">An indirect cause-and-effect relationship exists. The recipient has some degree of control, but the link is less direct.</div>
+              <div class="verb-example">NovaPrism: Facilities costs attributed by square footage. IS occupies 98,000 sq ft vs DS's 42,000. The link is reasonable but IS cannot reduce the cost tomorrow by shrinking its footprint.</div>
+              <span class="verb-action">Indirect relationship</span>
+            </div>
+            <div class="verb-card verb-4">
+              <div class="verb-word">Allocate</div>
+              <div class="verb-def">No cause-and-effect relationship exists. Costs are spread using a simple metric where the recipient has no control over the cost.</div>
+              <div class="verb-example">Corporate tax provision allocated by revenue percentage. IS cannot do anything to reduce its share of the tax bill. The allocation is informational only — it describes a burden, not a cause.</div>
+              <span class="verb-action">No actionability</span>
+            </div>
+          </div>
+
+          <div class="infobox tip">
+            <div class="infobox-icon">✓</div>
+            <div class="infobox-body"><strong>Design principle:</strong> Start with Direct. Where Direct is not possible, look for a causal driver and Assign. Where Assign is too granular, Attribute. Reserve pure Allocate for costs where the recipient genuinely has no control — corporate overheads, regulatory levies. Most shared services costs have a driver if you look for one. NovaPrism uses Assign for IT and Finance/HR. Nothing uses pure Allocate if a driver exists.</div>
+          </div>
+        </section>
+
+      </div><!-- /conceptual -->
+
+      <!-- ═══════ TAB 2: TECHNICAL ═══════ -->
+      <div class="tab-panel" id="tab-technical">
+
+        <!-- Where to allocate -->
+        <section class="section" id="where-to-allocate">
+          <div class="sec-type-bar">
+            <div class="sec-type-icon technical">🛠</div>
+            <span class="sec-type-label technical">Technical</span>
+          </div>
+          <h2 class="sec-h">Where should allocations live?</h2>
+          <div class="sec-div"></div>
+          <p class="sec-sub">The GL, Planning, and EPCM all support some form of allocation. Choosing the wrong tool creates a maintenance problem that grows with every business change.</p>
+
+          <div class="tbl-wrap">
+            <table class="tbl">
+              <thead>
+                <tr><th>Requirement</th><th>General Ledger</th><th>Planning</th><th>EPCM</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>Time-sensitive statutory close</td><td><span class="badge green">Best fit</span></td><td></td><td></td></tr>
+                <tr><td>Simple, single-step allocations</td><td><span class="badge green">OK</span></td><td><span class="badge green">OK</span></td><td></td></tr>
+                <tr><td>Extend dimensionality beyond GL segments</td><td></td><td><span class="badge sky">Possible</span></td><td><span class="badge green">Best fit</span></td></tr>
+                <tr><td>What-if scenario analysis</td><td></td><td><span class="badge sky">Possible</span></td><td><span class="badge green">Best fit</span></td></tr>
+                <tr><td>Business analyst–controlled logic</td><td></td><td><span class="badge sky">Possible</span></td><td><span class="badge green">Best fit</span></td></tr>
+                <tr><td>100+ unique allocation rules</td><td></td><td><span class="badge amber">Difficult</span></td><td><span class="badge green">Best fit</span></td></tr>
+                <tr><td>Waterfall / sequentially dependent rules</td><td></td><td></td><td><span class="badge green">Best fit</span></td></tr>
+                <tr><td>Complex logic / reciprocal relationships</td><td></td><td></td><td><span class="badge green">Best fit</span></td></tr>
+                <tr><td>Critical audit trail &amp; traceability</td><td></td><td></td><td><span class="badge green">Best fit</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <p class="prose">NovaPrism's statutory close allocations stay in the GL. The management profitability model — four cost pools, five driver types, 60 engagement dimensions, four scenario models — lives in EPCM. These are not competing tools. They serve different purposes in the same finance architecture.</p>
+
+          <div class="infobox note">
+            <div class="infobox-icon">📋</div>
+            <div class="infobox-body"><strong>EPCM licensing:</strong> EPCM is included in Oracle's Enterprise EPM bundle — not a separate licence add-on. If NovaPrism already runs Planning or FCCS on Oracle EPM Cloud, EPCM is available at no additional licence cost. This changes the build-vs-buy calculation significantly.</div>
+          </div>
+        </section>
+
+        <!-- EPCM Architecture -->
+        <section class="section" id="epcm-architecture">
+          <div class="sec-type-bar">
+            <div class="sec-type-icon technical">⚙️</div>
+            <span class="sec-type-label technical">Technical</span>
+          </div>
+          <h2 class="sec-h">What EPCM is, architecturally</h2>
+          <div class="sec-div"></div>
+          <p class="sec-sub">EPCM is not a renamed version of the on-premise predecessor. It is a new product — built by combining three components that did not exist together before June 2022.</p>
+
+          <div class="arch-stack">
+            <div class="arch-layer al-pcm">
+              <div class="arch-layer-label">Layer 1 — Allocation Engine</div>
+              <div class="arch-layer-name">PCM Modeling Capabilities</div>
+              <div class="arch-layer-desc">Waterfall allocation logic, rule sets, allocation and custom calculation rules, parallel / serial / iterative execution, model documentation, rule balancing. The core allocation engine — now rebuilt on ASO.</div>
+            </div>
+            <div class="arch-arrow">+</div>
+            <div class="arch-layer al-platform">
+              <div class="arch-layer-label">Layer 2 — Shared Infrastructure</div>
+              <div class="arch-layer-name">EPM Platform</div>
+              <div class="arch-layer-desc">Metadata Management, Data Forms, Dashboards, Navigation Flows, Roles &amp; Security, Audit Logs, Data Exchange, EPM Integration Agent, Data Maps, Connections, Oracle Analytics Cloud integration. The same platform shared by Planning, FCCS, and every Oracle EPM Cloud application.</div>
+            </div>
+            <div class="arch-arrow">+</div>
+            <div class="arch-layer al-arch">
+              <div class="arch-layer-label">Layer 3 — Architecture Enhancements</div>
+              <div class="arch-layer-name">Dual-Cube Design</div>
+              <div class="arch-layer-desc">Two prebuilt ASO cubes replace the single-cube legacy architecture. Up to three additional ASO cubes can be added for driver staging, historical archiving, or reporting extensions. Released June 2022.</div>
+            </div>
+            <div class="arch-arrow">↓</div>
+            <div class="arch-layer al-result">
+              <div class="arch-layer-label">Result</div>
+              <div class="arch-layer-name">EPCM — Enterprise Profitability and Cost Management</div>
+              <div class="arch-layer-desc">A governed, auditable, business-user-managed platform for multi-dimensional profitability and cost allocation. Not a spreadsheet replacement — an enterprise allocation engine with a full platform beneath it.</div>
+            </div>
+          </div>
+
+          <h3 style="font-family:var(--font-display);font-size:18px;color:var(--white);margin:32px 0 14px;letter-spacing:.02em">The two prebuilt cubes</h3>
+          <p class="prose">The most important architectural fact about EPCM is the separation of the calculation environment from the reporting environment. This is not just a performance choice — it is a governance choice.</p>
+
+          <div class="cube-pair">
+            <div class="cube-card cube-calc">
+              <span class="cube-badge">PCM_CLC</span>
+              <div class="cube-name">Calculation Cube</div>
+              <div class="cube-purpose">Where allocations run. Active calculation environment. Business users doing what-if analysis work here.</div>
+              <ul class="cube-bullets">
+                <li>Allocation rules execute against this cube</li>
+                <li>Working and Final versions live here</li>
+                <li>Rule Balancing reads from here</li>
+                <li>Not exposed to reporting users during active calculation</li>
+                <li>Can be cleared and recalculated without touching PCM_REP</li>
+              </ul>
+            </div>
+            <div class="cube-card cube-rep">
+              <span class="cube-badge">PCM_REP</span>
+              <div class="cube-name">Reporting Cube</div>
+              <div class="cube-purpose">Where results are published. The CFO, division heads, auditors — read from here.</div>
+              <ul class="cube-bullets">
+                <li>Populated via Copy POV from PCM_CLC after calculation</li>
+                <li>Read-only for reporting users</li>
+                <li>Historical POVs archived here</li>
+                <li>Smart View connects to this cube for ad hoc</li>
+                <li>Stable while the next period's allocation is being calculated</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="infobox warn">
+            <div class="infobox-icon">⚠️</div>
+            <div class="infobox-body"><strong>The legacy PCM architecture for comparison:</strong> The on-premise predecessor used a single ASO database. Calculation and reporting happened in the same cube. When the allocation recalculated, reporting users saw incomplete or intermediate results. EPCM's dual-cube design eliminates this. The two cubes are the architectural upgrade that makes EPCM production-grade for monthly close.</div>
+          </div>
+        </section>
+
+        <!-- AI-First -->
+        <section class="section" id="ai-first">
+          <div class="sec-type-bar">
+            <div class="sec-type-icon" style="background:rgba(251,146,60,.08);border:1px solid rgba(251,146,60,.18)">🤖</div>
+            <span class="sec-type-label" style="color:var(--coral)">AI-First</span>
+          </div>
+          <h2 class="sec-h">AI-first by design</h2>
+          <div class="sec-div"></div>
+          <p class="sec-sub">EPCM is not a reporting tool that happens to have an AI button. The AI capability is meaningful only when the underlying model is correct — and building that model is what this tour is about.</p>
+
+          <div class="ai-box">
+            <div class="ai-box-label">🤖 What the AI layer can answer — once the model is built</div>
+            <div class="ai-box-body">"Which of NovaPrism's 60 client engagements lost money in Q1 FY24 on a fully-loaded basis?" — The AI queries PCM_REP, filters engagements where PCM_Output exceeds revenue, returns a ranked list with margin percentages. No form design needed. No Smart View layout needed. The question is answered in natural language against the calculated model.</div>
+          </div>
+
+          <p class="prose">The important caveat: the AI layer is only as good as the model beneath it. If NovaPrism's IT cost pool is allocated by revenue percentage instead of by ticket count, the answers will be confidently wrong. <strong>A poorly designed model produces wrong answers faster.</strong> This is why every hall in this tour is about model design first, AI consumption second.</p>
+
+          <div class="infobox ai">
+            <div class="infobox-icon">🎓</div>
+            <div class="infobox-body"><strong>The Academy principle:</strong> Every design decision in Halls 2–8 will be framed against the question "does this make the model's output trustworthy enough for an AI agent to reason against?" Trustworthy output requires correct driver design, proper PCM_Balance management, and a model that balances. Dean Eliot in the sidebar can be asked anything about NovaPrism's model at any time.</div>
+          </div>
+        </section>
+
+      </div><!-- /technical -->
+
+      <!-- ═══════ TAB 3: LAB ═══════ -->
+      <div class="tab-panel" id="tab-lab">
+
+        <section class="section" id="lab-scenario">
+          <div class="sec-type-bar">
+            <div class="sec-type-icon lab">🔬</div>
+            <span class="sec-type-label lab">Lab Scenario</span>
+          </div>
+          <h2 class="sec-h">Day one at NovaPrism — the before state</h2>
+          <div class="sec-div"></div>
+          <p class="sec-sub">You have just joined NovaPrism Group as the EPCM implementation lead. Your first task: document exactly what exists today and what is broken.</p>
+
+          <div class="lab-box">
+            <div class="lab-header">Mission Brief — Document the pre-EPCM allocation state</div>
+            <div class="lab-scenario">
+              <strong>Situation:</strong> NovaPrism's Finance team has been running Q1 profitability using a shared Excel workbook maintained by one senior analyst. The workbook imports trial balances from four source systems, manually applies allocation percentages that were last formally reviewed 18 months ago, and produces a divisional P&L. Nobody else fully understands the logic. The analyst is leaving next month.
+            </div>
+
+            <div class="lab-checklist" id="lab-checklist">
+              <div class="lab-check-item" onclick="toggleCheck(this)">
+                <div class="lab-check-box"></div>
+                <div class="lab-check-text"><strong>Identify the four cost pools.</strong> From NovaPrism's Enterprise Support cost centre — list the four pools (IT $52M, Facilities $38M, Finance $28M, HR $16M), their amounts, and the driver currently being used for each. Note whether each current driver reflects a cause-and-effect relationship or a simple spread.</div>
+              </div>
+              <div class="lab-check-item" onclick="toggleCheck(this)">
+                <div class="lab-check-box"></div>
+                <div class="lab-check-text"><strong>Calculate the current misallocation.</strong> If Finance currently allocates all $134M by revenue percentage (DS 37.1%, IS 46.7%, CL 16.2%), compute the resulting allocated amount per division. Compare to the correct driver-based allocation. Which division is over-charged? Which is under-charged? By how much?</div>
+              </div>
+              <div class="lab-check-item" onclick="toggleCheck(this)">
+                <div class="lab-check-box"></div>
+                <div class="lab-check-text"><strong>State the governance failures.</strong> List the specific governance problems the current Excel approach creates — auditability, version control, driver maintenance, what-if capability. For each, state what EPCM provides instead. This becomes the business case document for the implementation project.</div>
+              </div>
+              <div class="lab-check-item" onclick="toggleCheck(this)">
+                <div class="lab-check-box"></div>
+                <div class="lab-check-text"><strong>Apply the four costing verbs.</strong> For each of NovaPrism's four cost pools, assign the correct costing verb: Direct, Assign, Attribute, or Allocate. Justify each choice. If a better driver than the current one exists, name it. This document is the design brief for Hall 4.</div>
+              </div>
+              <div class="lab-check-item" onclick="toggleCheck(this)">
+                <div class="lab-check-box"></div>
+                <div class="lab-check-text"><strong>Write the CFO brief.</strong> One paragraph. What is the current reported margin for Infrastructure Solutions? What is the correctly-allocated margin? What capital allocation decision is currently being made incorrectly as a result? What is the risk if the decision is not corrected? This is the document that justifies the EPCM implementation to the executive sponsor.</div>
+              </div>
+            </div>
+
+            <div class="lab-progress">
+              <div class="lab-progress-label" id="lab-progress-label">0 of 5 tasks completed</div>
+              <div class="lab-progress-bar"><div class="lab-progress-fill" id="lab-progress-fill" style="width:0%"></div></div>
+            </div>
+          </div>
+
+          <div class="infobox tip" style="margin-top:20px">
+            <div class="infobox-icon">🎓</div>
+            <div class="infobox-body"><strong>Dean's hint:</strong> For task 2, the correct driver-based allocation produces DS: $40.26M, IS: $80.82M, CL: $12.86M. If Finance allocated by revenue percentage instead, IS would receive $62.6M — undercharged by $18.2M. DS would receive $49.7M — overcharged by $9.5M. Cloud Licensing would receive $21.7M — overcharged by $8.9M. These errors compound every quarter.</div>
+          </div>
+        </section>
+
+      </div><!-- /lab -->
+
+      <!-- ═══════ TAB 4: EXAM PREP ═══════ -->
+      <div class="tab-panel" id="tab-exam">
+
+        <section class="section" id="exam-alignment">
+          <div class="sec-type-bar">
+            <div class="sec-type-icon exam">📝</div>
+            <span class="sec-type-label exam">Exam Alignment · 1Z0-1082-25</span>
+          </div>
+          <h2 class="sec-h">What Foundations Hall covers on the exam</h2>
+          <div class="sec-div"></div>
+          <p class="sec-sub">Hall 1 maps to the first syllabus topic: Setting Up Profitability and Cost Management. Two sub-bullets. Expect 4–6 questions in this area across the 50-question exam.</p>
+
+          <div class="exam-box">
+            <div class="exam-box-header">📝 Syllabus — Setting Up Profitability and Cost Management</div>
+            <div class="exam-box-body">
+              <strong>Sub-bullet 1: Describe Enterprise Profitability and Cost Management applications.</strong><br>
+              Know the three-component architecture (PCM + EPM Platform + Architecture Enhancements). Know the two prebuilt cubes and what each does. Know that EPCM Standard uses ASO — not BSO. Know that EPCM was released June 2022.<br><br>
+              <strong>Sub-bullet 2: Create an application.</strong><br>
+              Know the application types available (Standard vs Custom). Know what is configured at creation and what cannot be changed later. Know who can create an application (Service Administrator only).
+            </div>
+          </div>
+
+          <div class="exam-box">
+            <div class="exam-box-header">⚠️ Exam trap — the most common wrong answer in this section</div>
+            <div class="exam-box-body">
+              <strong>"EPCM Standard uses BSO (Block Storage) for its calculation engine."</strong><br><br>
+              This is wrong. EPCM Standard uses <strong>ASO (Aggregate Storage)</strong>. This matters because ASO and BSO have fundamentally different dimension design rules, calculation methods, and performance characteristics. Every dimension design decision in Hall 2 flows from the fact that it is ASO. The exam will test this. Do not confuse EPCM with Planning (which uses BSO for its calculation cube).
+            </div>
+          </div>
+
+          <!-- Quiz -->
+          <div id="quiz-container"></div>
+          <div class="quiz-score" id="quiz-score">
+            <div class="quiz-score-num" id="quiz-score-num">0/5</div>
+            <div class="quiz-score-label">Hall 1 Exam Score</div>
+            <div class="quiz-score-msg" id="quiz-score-msg"></div>
+          </div>
+
+          <div class="tbl-wrap" style="margin-top:28px">
+            <table class="tbl">
+              <thead><tr><th>Concept</th><th>Exam answer</th><th>Implementation reality</th></tr></thead>
+              <tbody>
+                <tr><td>Storage engine</td><td>ASO (Aggregate Storage)</td><td>Architecturally significant — drives all dimension design decisions in Hall 2</td></tr>
+                <tr><td>Prebuilt cubes</td><td>PCM_CLC (calculation) + PCM_REP (reporting)</td><td>You reference these cube names in every data integration and export task</td></tr>
+                <tr><td>Additional cubes</td><td>Up to 3 additional ASO cubes</td><td>Most implementations use 1 — for driver staging. 3 is the ceiling, not the default</td></tr>
+                <tr><td>EPCM release</td><td>June 2022</td><td>Relevant for migration questions — anything built before June 2022 is legacy PCM</td></tr>
+                <tr><td>Who creates an application</td><td>Service Administrator</td><td>In practice, the implementation consultant creates in Sandbox first, then promotes to PROD</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+      </div><!-- /exam -->
+
+      <!-- Hall Nav Footer -->
+      <div class="hall-nav-footer">
+        <a href="../index.html" class="hnf-prev">
+          <span style="font-size:14px">←</span>
+          <div>
+            <div class="hnf-dir">Back to</div>
+            <div class="hnf-name">EPM Hub</div>
+          </div>
+        </a>
+        <a href="hall-2.html" class="hnf-next">
+          <div>
+            <div class="hnf-dir">Next Hall</div>
+            <div class="hnf-name">Dimensions Gallery</div>
+          </div>
+          <span style="font-size:14px">→</span>
+        </a>
+      </div>
+
+    </main>
+  </div><!-- /body -->
+</div><!-- /app -->
+
+<!-- ══ SCRIPTS ══ -->
+<!-- P0-1: Master constants — single source of truth for all NovaPrism numbers -->
+<script src="./constants.js"></script>
+<script>
+
+/* ── Stars ── */
+(function(){
+  var s = document.getElementById('stars');
+  for(var i=0;i<52;i++){
+    var d = document.createElement('div'); d.className='star';
+    var sz = Math.random()*1.2+0.3;
+    d.style.cssText = 'width:'+sz+'px;height:'+sz+'px;top:'+Math.random()*100+'%;left:'+Math.random()*100+'%;--d:'+(3+Math.random()*6)+'s;--delay:'+Math.random()*8+'s;--op:'+(0.04+Math.random()*0.12);
+    s.appendChild(d);
+  }
+})();
+
+/* ── Sidebar toggle ── */
+function toggleSidebar(){ document.getElementById('sidebar').classList.toggle('open'); document.getElementById('overlay').classList.toggle('open'); }
+function closeSidebar(){ document.getElementById('sidebar').classList.remove('open'); document.getElementById('overlay').classList.remove('open'); }
+
+/* ── Campus map ── */
+(function(){
+  var halls = [
+    {n:1,name:'Foundations',url:'hall-1.html',active:true},
+    {n:2,name:'Dimensions',url:'hall-2.html'},
+    {n:3,name:'Models',url:'hall-3.html'},
+    {n:4,name:'Logic',url:'hall-4.html'},
+    {n:5,name:'Workshop',url:'hall-5.html'},
+    {n:6,name:'Control',url:'hall-6.html'},
+    {n:7,name:'Observatory',url:'hall-7.html'},
+    {n:8,name:'Pipeline',url:'hall-8.html'},
+    {n:9,name:'Exam Hall',url:'hall-9.html'},
+  ];
+  var map = document.getElementById('campus-map');
+  var html = '';
+  halls.forEach(function(h,i){
+    var cls = h.active ? 'campus-building active' : 'campus-building locked';
+    var stopCls = h.active ? 'campus-stop active-stop' : 'campus-stop';
+    html += '<div class="'+stopCls+'">';
+    html += '<a href="'+h.url+'" class="'+cls+'">'+h.n+'</a>';
+    html += '<div class="campus-stop-label">'+h.name+'</div></div>';
+    if(i < halls.length-1) html += '<div class="campus-connector"></div>';
+  });
+  map.innerHTML = html;
+})();
+
+/* ── NovaPrism banner — live from constants.js ── */
+(function(){
+  if(typeof NP === 'undefined') return;
+  var c = NP.company;
+  var el = document.getElementById('sb-company-desc');
+  if(el) el.textContent = '$'+(c.revenue/1000).toFixed(1)+'B · 3 divisions · 1 cost centre · '+c.employees.toLocaleString()+' staff';
+
+  var pa = NP.postAllocation;
+  var html = '';
+  var defs = [
+    {code:'DS', color:'var(--accent)'},
+    {code:'IS', color:'var(--amber)'},
+    {code:'CL', color:'var(--green)'},
+  ];
+  defs.forEach(function(def){
+    var d = pa[def.code];
+    var marginColor = d.marginPct < 5 ? 'var(--red)' : d.marginPct > 35 ? 'var(--green)' : 'var(--white)';
+    var warn = d.marginPct < 5 ? ' ⚠' : '';
+    html += '<div class="np-div">';
+    html += '<div class="np-div-code" style="color:'+def.color+'">'+d.code+'</div>';
+    html += '<div class="np-div-name">'+d.name+'</div>';
+    html += '<div class="np-div-rev">$'+d.revenue+'M</div>';
+    html += '<div class="np-div-margin" style="color:'+(d.marginPct<5?'var(--red)':'var(--silver2)')+'">Direct: '+d.directPct+'% → loaded: <strong style="color:'+marginColor+'">'+d.marginPct+'%</strong>'+warn+'</div>';
+    html += '</div>';
+  });
+  var es = NP.divisions.ES;
+  html += '<div class="np-div cost-centre"><div class="np-div-code">ES</div><div class="np-div-name">Enterprise Support</div><div class="np-div-rev" style="color:var(--red)">$0 revenue</div><div class="np-div-margin" style="color:var(--red)">$'+es.directCosts+'M cost — the blind spot</div></div>';
+  document.getElementById('np-divisions').innerHTML = html;
+})();
+
+/* ── P&L Reveal cards — from NP.postAllocation ── */
+(function(){
+  var container = document.getElementById('reveal-cards');
+  if(!container || typeof NP === 'undefined') return;
+  var pa = NP.postAllocation;
+  var divs = [pa.DS, pa.IS, pa.CL];
+  var colors = {DS:'var(--accent)', IS:'var(--amber)', CL:'var(--green)'};
+  var html = '';
+  divs.forEach(function(d){
+    var marginColor = d.marginPct < 5 ? 'var(--red)' : d.marginPct > 35 ? 'var(--green)' : 'var(--white)';
+    var deltaClass = d.marginDelta < -3 ? 'down' : 'flat';
+    html += '<div class="reveal-card" style="border-top:3px solid '+colors[d.code]+'">';
+    html += '<div class="rc-top">';
+    html += '<div class="rc-division">'+d.code+' · '+d.name+'</div>';
+    html += '<div class="rc-name">'+d.name+'</div>';
+    html += '<div class="rc-revenue">Revenue: $'+d.revenue+'M</div>';
+    html += '</div><div class="rc-body">';
+    html += '<div class="rc-row before"><span class="rc-row-label">Direct costs</span><span class="rc-row-val" style="color:var(--silver2)">$'+d.directCosts+'M</span></div>';
+    html += '<div class="rc-row before"><span class="rc-row-label">Direct margin</span><span class="rc-row-val" style="color:var(--silver2)">'+d.directPct+'%</span></div>';
+    html += '<div class="rc-row" style="padding:4px 0;font-size:11px;color:var(--dim)"><span>+ ES allocation</span><span style="color:var(--coral);font-family:var(--font-mono);font-weight:600">+$'+d.allocatedIn+'M</span></div>';
+    html += '<div class="rc-row after"><span class="rc-row-label">Fully-loaded margin</span><span class="rc-row-val" style="color:'+marginColor+'">'+d.marginPct+'% <span class="rc-delta '+deltaClass+'">'+d.marginDelta+'pp</span></span></div>';
+    html += '</div></div>';
+  });
+  var es = NP.postAllocation.ES;
+  html += '<div class="reveal-card rc-cost-centre" style="border-top:3px solid var(--dim)">';
+  html += '<div class="rc-top"><div class="rc-division">ES · Enterprise Support</div><div class="rc-name">Enterprise Support</div><div class="rc-revenue">Cost centre — no revenue</div></div>';
+  html += '<div class="rc-body"><div class="rc-row before"><span class="rc-row-label">Total cost</span><span class="rc-row-val" style="color:var(--silver2)">$'+es.directCosts+'M</span></div>';
+  html += '<div class="rc-row before"><span class="rc-row-label">Currently allocated</span><span class="rc-row-val" style="color:var(--red)">$0M</span></div>';
+  html += '<div class="rc-row after"><span class="rc-row-label">After EPCM</span><span class="rc-row-val" style="color:var(--green)">$0M remaining ✓</span></div>';
+  html += '</div></div>';
+  container.innerHTML = html;
+})();
+
+/* ── Tabs ── */
+function switchTab(name, btn){
+  document.querySelectorAll('.tab-panel').forEach(function(p){ p.classList.remove('active'); });
+  document.querySelectorAll('.tab-btn').forEach(function(b){ b.classList.remove('active'); });
+  document.getElementById('tab-'+name).classList.add('active');
+  btn.classList.add('active');
+  // rebuild TOC for active tab
+  buildTOC();
+}
+
+/* ── TOC ── */
+function buildTOC(){
+  var toc = document.getElementById('sb-toc');
+  if(!toc) return;
+  toc.innerHTML = '';
+  var panel = document.querySelector('.tab-panel.active');
+  if(!panel) return;
+  panel.querySelectorAll('h2.sec-h').forEach(function(h){
+    if(!h.id) h.id = 'toc-'+h.textContent.trim().toLowerCase().replace(/[^a-z0-9]+/g,'-').slice(0,40);
+    var a = document.createElement('a');
+    a.href = '#'+h.id; a.className = 'sb-toc-item';
+    a.textContent = h.textContent;
+    toc.appendChild(a);
+  });
+}
+setTimeout(buildTOC, 100);
+
+/* ── Lab checklist ── */
+function toggleCheck(item){
+  var box = item.querySelector('.lab-check-box');
+  box.classList.toggle('checked');
+  item.classList.toggle('checked');
+  updateLabProgress();
+}
+function updateLabProgress(){
+  var items = document.querySelectorAll('.lab-check-item');
+  var done = document.querySelectorAll('.lab-check-box.checked').length;
+  var total = items.length;
+  document.getElementById('lab-progress-label').textContent = done+' of '+total+' tasks completed';
+  document.getElementById('lab-progress-fill').style.width = (done/total*100)+'%';
+}
+
+/* ── Quiz ── */
+var quizData = [
+  {
+    diff:'foundation', qnum:'Q1',
+    stem:'NovaPrism Group\'s Enterprise Support cost centre spends $134M per year. Currently, this amount is not allocated to any operating division. What is the primary consequence of this approach to profitability reporting?',
+    options:[
+      'Enterprise Support costs appear on the consolidated balance sheet instead of the P&L',
+      'Operating division margins are overstated because they exclude their share of shared service costs',
+      'The GL trial balance fails to reconcile at period end',
+      'IT ticket costs are double-counted across divisions'
+    ],
+    correct:1,
+    explanation:'When shared service costs are not allocated, each operating division\'s margin is calculated against its direct costs only — ignoring the shared resources it consumes. IS appears to earn 11.2% margin; after proper allocation it earns 3.0%. The blind spot is entirely in the P&L, not the balance sheet or GL reconciliation.'
+  },
+  {
+    diff:'foundation', qnum:'Q2',
+    stem:'Which statement about EPCM\'s storage engine is correct for the exam 1Z0-1082-25?',
+    options:[
+      'EPCM Standard uses BSO (Block Storage Option) for its primary calculation cube',
+      'EPCM Standard uses ASO (Aggregate Storage Option) for both prebuilt cubes',
+      'EPCM uses a hybrid BSO/ASO architecture — BSO for PCM_CLC, ASO for PCM_REP',
+      'EPCM uses a relational database engine, not Essbase'
+    ],
+    correct:1,
+    explanation:'EPCM Standard uses ASO for both PCM_CLC (calculation) and PCM_REP (reporting). This is architecturally significant — it determines dimension design rules, aggregation behaviour, and calculation methodology. The BSO answer is a common distractor because Planning uses BSO for its calculation cube. Do not confuse the two products.'
+  },
+  {
+    diff:'practitioner', qnum:'Q3',
+    stem:'NovaPrism\'s IT Director wants to understand why Infrastructure Solutions is being charged $33.09M of the $52M IT pool, while Digital Services is charged $14.19M. The EPCM implementation lead explains the allocation was performed using the Assign costing verb. Which driver makes this correct?',
+    options:[
+      'IS has higher revenue ($980M) than DS ($780M) so it bears a proportionally higher IT cost',
+      'IS has more employees (4,200) than DS (2,800) so headcount drives the IT allocation',
+      'IS raises 2,890 IT support tickets vs DS\'s 1,240 — ticket count is the causal driver for IT consumption',
+      'IS occupies more square footage (98,000 sq ft) so facilities cost is the IT proxy'
+    ],
+    correct:2,
+    explanation:'The Assign verb requires a causal driver — a measure that reflects actual consumption. IT support ticket count directly reflects how much IT support each division consumed. IS generated 2,890 of 4,540 total tickets (63.6%) and receives $33.09M (63.6% of $52M). Revenue, headcount, and square footage have no cause-and-effect relationship with IT support consumption.'
+  },
+  {
+    diff:'practitioner', qnum:'Q4',
+    stem:'A consultant is advising NovaPrism on whether to run their profitability model in the GL or in EPCM. NovaPrism has 60 client engagement dimensions, four operating models (Actual, Forecast, Budget, What-If), and wants business analysts to maintain the allocation logic without IT involvement. Which recommendation is correct?',
+    options:[
+      'Use the GL — it handles all allocation scenarios and is already implemented',
+      'Use Planning — it supports extended dimensions and business user control',
+      'Use EPCM — extended dimensionality, business analyst control, scenario analysis, and waterfall rules are all best fit',
+      'Use a custom data warehouse — neither Oracle tool handles 60 engagement dimensions efficiently'
+    ],
+    correct:2,
+    explanation:'EPCM is best fit for exactly this combination of requirements: extended dimensionality beyond GL segments (60 engagement codes), multiple scenario models, business-analyst-controlled logic without IT, and waterfall rules (IT pool formation must run before IT allocation). The GL handles simple statutory allocations. Planning can do some of this but struggles with 100+ unique allocation rules and sequentially dependent waterfalls.'
+  },
+  {
+    diff:'expert', qnum:'Q5',
+    stem:'EPCM\'s dual-cube architecture separates PCM_CLC from PCM_REP. During NovaPrism\'s Q1 close, the What-If scenario model is being recalculated in PCM_CLC while the CFO is reviewing Actual results in PCM_REP. Which statement correctly describes the behaviour?',
+    options:[
+      'The recalculation in PCM_CLC overwrites PCM_REP in real time, so the CFO sees updated What-If data immediately',
+      'PCM_REP is locked during any active calculation in PCM_CLC, preventing the CFO from accessing it',
+      'PCM_REP remains stable with the last published data while PCM_CLC processes the What-If recalculation independently',
+      'Both cubes must be cleared before a new calculation can run, so the CFO must wait'
+    ],
+    correct:2,
+    explanation:'This is the core value proposition of the dual-cube design. PCM_REP contains the last published results and is not touched during a PCM_CLC recalculation. The CFO can review Actual results in PCM_REP while a What-If scenario runs in PCM_CLC. PCM_REP is only updated when a Copy POV operation explicitly pushes results from PCM_CLC to PCM_REP. The legacy single-cube architecture had exactly the problem described in options A and D.'
+  }
+];
+
+var quizAnswers = {};
+(function renderQuiz(){
+  var container = document.getElementById('quiz-container');
+  var html = '';
+  quizData.forEach(function(q,i){
+    html += '<div class="quiz-q" id="qq-'+i+'">';
+    html += '<div class="quiz-meta">';
+    html += '<span class="quiz-diff '+q.diff+'">'+q.diff+'</span>';
+    html += '<span class="quiz-qnum">'+q.qnum+'</span>';
+    html += '</div>';
+    html += '<div class="quiz-stem">'+q.stem+'</div>';
+    html += '<div class="quiz-options">';
+    q.options.forEach(function(opt,j){
+      html += '<button class="quiz-opt" onclick="answerQ('+i+','+j+')">'+String.fromCharCode(65+j)+'. '+opt+'</button>';
+    });
+    html += '</div>';
+    html += '<div class="quiz-explanation" id="qexp-'+i+'"></div>';
+    html += '</div>';
+  });
+  container.innerHTML = html;
+})();
+
+function answerQ(qi,oi){
+  if(quizAnswers[qi] !== undefined) return;
+  quizAnswers[qi] = oi;
+  var q = quizData[qi];
+  var opts = document.querySelectorAll('#qq-'+qi+' .quiz-opt');
+  opts.forEach(function(o,j){
+    o.classList.add('revealed');
+    if(j === q.correct) o.classList.add('correct');
+    else if(j === oi && oi !== q.correct) o.classList.add('wrong');
+  });
+  var exp = document.getElementById('qexp-'+qi);
+  exp.innerHTML = '<strong>'+(oi===q.correct?'✓ Correct':'✗ Incorrect')+'</strong> — '+q.explanation;
+  exp.classList.add('show');
+  if(Object.keys(quizAnswers).length === quizData.length) showScore();
+}
+
+function showScore(){
+  var correct = 0;
+  quizData.forEach(function(q,i){ if(quizAnswers[i]===q.correct) correct++; });
+  var total = quizData.length;
+  var pct = Math.round(correct/total*100);
+  var scoreEl = document.getElementById('quiz-score');
+  document.getElementById('quiz-score-num').textContent = correct+'/'+total;
+  var msgs = ['Review the Foundations Hall before moving on.','Solid foundation — proceed to the Dimensions Gallery.','Excellent. You are ready to enter the Academy.'];
+  document.getElementById('quiz-score-msg').textContent = pct < 60 ? msgs[0] : pct < 100 ? msgs[1] : msgs[2];
+  scoreEl.classList.add('show');
+}
+
+/* ── Dean Eliot AI Guide ── */
+var HALL_SYSTEM_EXTENSION = [
+  'CURRENT HALL: Hall 1 — Foundations Hall (Academy of Profit Center)',
+  'HALL SCOPE: Business case for EPCM. The four costing verbs (Direct/Assign/Attribute/Allocate).',
+  'Where allocations should live (GL vs EPCM). EPCM architecture: PCM + EPM Platform + dual-cube design. AI-first framing.',
+  '',
+  'KEY CONCEPTS IN THIS HALL:',
+  '- Four costing verbs: Direct (traceable), Assign (causal driver), Attribute (indirect cause-effect), Allocate (no cause-effect). Actionability decreases left to right.',
+  '- GL vs EPCM: GL for simple statutory allocations. EPCM for complexity, extended dimensionality, auditability, scenario analysis, business-user control.',
+  '- EPCM = PCM + EPM Platform + Architecture Enhancements. Released June 2022.',
+  '- Two prebuilt cubes: PCM_CLC (calculation engine) and PCM_REP (reporting and archiving).',
+  '- Up to 3 additional ASO cubes for driver staging, historical data, reporting extensions.',
+  '',
+  'NOVAPRISM IN THIS HALL:',
+  'IS margin drops from 11.2% direct to 3.0% fully-loaded after the $80.82M ES allocation.',
+  'DS drops from 25.6% to 20.5%. CL remains strong at 40.3%.',
+  '17 of 60 client engagements are loss-making — invisible without the model.',
+  '',
+  'EXAM TOPICS: Setting up the application — describe EPCM applications, create an application.',
+  '',
+  'COMMON MISCONCEPTIONS:',
+  '- EPCM is just PCM renamed: FALSE. Dual-cube architecture and EPM Platform are new.',
+  '- EPCM Standard uses BSO: FALSE. It uses ASO.',
+  '- Allocate is always the right verb: Only when no cause-effect exists. Prefer Assign or Attribute first.',
+  '',
+  'PERSONA: You are Dean Eliot — senior Oracle EPM practitioner and Dean of the Academy of Profit Center.',
+  'Address learners as if they have just arrived at the Foundations Hall. Be direct, concise, practitioner-honest.',
+  '',
+  'OUT OF SCOPE: ASO dimension design → Dimensions Gallery. Rule types → Hall of Logic. Calc Control → Control Tower.'
+].join('\n');
+
+function buildSystemPrompt(){
+  var pa = (typeof NP !== 'undefined') ? NP.postAllocation : null;
+  var base = [
+    'You are Dean Eliot, the AI practitioner-guide for the BrainSpring EPCM Study Tour — Academy of Profit Center.',
+    'You are a senior Oracle EPM practitioner who has implemented EPCM at 40+ enterprises.',
+    'Voice: direct (no hedging), practitioner-honest, concise (3–5 sentences target), never sycophantic.',
+    'You are speaking to a learner who has just entered the Foundations Hall.',
+    '',
+    'CASE COMPANY: NovaPrism Group — $2.1B professional services conglomerate. 8,400 employees.',
+    pa ? ('DS: $'+pa.DS.revenue+'M revenue, '+pa.DS.directPct+'% direct margin → '+pa.DS.marginPct+'% fully-loaded.') : '',
+    pa ? ('IS: $'+pa.IS.revenue+'M revenue, '+pa.IS.directPct+'% direct margin → '+pa.IS.marginPct+'% fully-loaded. The blind spot.') : '',
+    pa ? ('CL: $'+pa.CL.revenue+'M revenue, '+pa.CL.directPct+'% direct margin → '+pa.CL.marginPct+'% fully-loaded.') : '',
+    'Enterprise Support: $134M costs, must allocate to zero across DS/IS/CL.',
+    'Cost pools: IT $52M (ticket driver), Facilities $38M (sqft), Finance $28M (headcount), HR $16M (headcount).',
+    '',
+    'RULES: Connect every answer to NovaPrism. Name exam answer AND implementation reality when they differ.',
+    'Never invent product behaviour. For out-of-scope topics, name the hall that covers them.',
+    '',
+    HALL_SYSTEM_EXTENSION
+  ].filter(Boolean).join('\n');
+  return base;
+}
+
+var sbHistory = [];
+function sbSend(){
+  var inp = document.getElementById('sb-input');
+  var txt = inp.value.trim(); if(!txt) return;
+  inp.value = '';
+  sbAddMsg('user', txt);
+  sbHistory.push({role:'user',content:txt});
+  var typing = sbAddMsg('guide','…');
+  typing.classList.add('typing');
+  sbCall(typing);
+}
+function chipAsk(chip){
+  var txt = chip.textContent;
+  document.getElementById('sb-input').value = txt;
+  sbSend();
+}
+function sbAddMsg(role,text){
+  var msgs = document.getElementById('sb-msgs');
+  var div = document.createElement('div');
+  div.className = 'sb-msg '+role;
+  div.textContent = text;
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+  return div;
+}
+async function sbCall(typingEl){
+  try{
+    var resp = await fetch('https://epbcs-tutor.fancy-brook-fc0d.workers.dev',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        model:'claude-sonnet-4-20250514',
+        max_tokens:500,
+        system: buildSystemPrompt(),
+        messages: sbHistory
+      })
+    });
+    var data = await resp.json();
+    var reply = (data.content&&data.content[0]&&data.content[0].text)||'Try rephrasing — I had trouble with that one.';
+    typingEl.textContent = reply;
+    typingEl.classList.remove('typing');
+    sbHistory.push({role:'assistant',content:reply});
+  }catch(e){
+    typingEl.textContent = 'Connection issue — please try again.';
+    typingEl.classList.remove('typing');
+  }
+}
+
+/* ── Smooth scroll ── */
+document.querySelectorAll('a[href^="#"]').forEach(function(a){
+  a.addEventListener('click',function(e){
+    var id = this.getAttribute('href').slice(1);
+    var el = document.getElementById(id);
+    if(el){e.preventDefault();el.scrollIntoView({behavior:'smooth',block:'start'});}
+  });
+});
+</script>
+</body>
+</html>
