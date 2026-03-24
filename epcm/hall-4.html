@@ -1,0 +1,1745 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hall of Logic — Academy of Profit Center · EPCM Study Tour · BrainSpring</title>
+<meta name="description" content="Rule sets, rule types, and execution sequences. NovaPrism's 5 rulesets allocate $134M in precise order. Hall 4 of the EPCM Study Tour — the engine room of the allocation model.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Pro:ital,wght@0,300;0,400;0,500;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+/* ══════════════════════════════════════════
+   ACADEMY OF PROFIT CENTER — DESIGN SYSTEM
+   Hall 4: Hall of Logic
+   Accent: purple #a855f7
+══════════════════════════════════════════ */
+:root {
+  --navy:    #08111e;
+  --navy2:   #0d1b2e;
+  --navy3:   #112240;
+  --navy4:   #172d47;
+  --navy5:   #1e3855;
+  --amber:   #f59e0b;
+  --amber2:  #d97706;
+  --amber-dim: rgba(245,158,11,.12);
+  --amber-border: rgba(245,158,11,.25);
+  /* Hall 4 accent — purple */
+  --accent:  #a855f7;
+  --accent2: #9333ea;
+  --accent-dim: rgba(168,85,247,.08);
+  --accent-border: rgba(168,85,247,.25);
+  --green:   #4ade80;
+  --green-dim: rgba(74,222,128,.08);
+  --red:     #f87171;
+  --red-dim: rgba(248,113,113,.08);
+  --coral:   #fb923c;
+  --teal:    #2dd4bf;
+  --sky:     #38bdf8;
+  --lime:    #a3e635;
+  --white:   #e8f0f8;
+  --silver:  #c8d4e0;
+  --silver2: #8fa3b8;
+  --dim:     #4a6080;
+  --border:  rgba(200,212,224,.08);
+  --border2: rgba(200,212,224,.14);
+  --font-display: 'Cinzel', serif;
+  --font-body:    'Crimson Pro', serif;
+  --font-mono:    'JetBrains Mono', monospace;
+  --topbar-h: 52px;
+  --sidebar-w: 228px;
+  --r: 10px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--font-body);
+  background: var(--navy);
+  color: var(--white);
+  min-height: 100vh;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+}
+body::before {
+  content: '';
+  position: fixed; inset: 0; pointer-events: none; z-index: 0;
+  background-image:
+    linear-gradient(rgba(168,85,247,.012) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(168,85,247,.012) 1px, transparent 1px);
+  background-size: 60px 60px;
+}
+body::after {
+  content: '';
+  position: fixed; inset: 0; pointer-events: none; z-index: 0;
+  background: radial-gradient(ellipse 90% 60% at 50% -5%, rgba(168,85,247,.05) 0%, transparent 65%);
+}
+
+#stars { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
+.star { position: absolute; border-radius: 50%; background: #a855f7; animation: twinkle var(--d,4s) infinite var(--delay,0s); }
+@keyframes twinkle { 0%,100%{opacity:.015} 50%{opacity:var(--op,.12)} }
+@keyframes fadeUp { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:none} }
+@keyframes slideIn { from{opacity:0;transform:translateX(-10px)} to{opacity:1;transform:none} }
+@keyframes pulse { 0%,100%{box-shadow:0 0 0 0 rgba(168,85,247,.25)} 50%{box-shadow:0 0 0 6px transparent} }
+@keyframes glow { 0%,100%{text-shadow:0 0 12px rgba(168,85,247,.3)} 50%{text-shadow:0 0 28px rgba(168,85,247,.65)} }
+@keyframes flowPulse { 0%,100%{opacity:.3;transform:scaleX(1)} 50%{opacity:1;transform:scaleX(1.04)} }
+@keyframes ruleRun { from{width:0} to{width:100%} }
+
+/* ── TOPBAR ── */
+#topbar {
+  position: fixed; top: 0; left: 0; right: 0; height: var(--topbar-h);
+  background: rgba(8,17,30,.92); backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 14px;
+  padding: 0 20px; z-index: 100;
+}
+.tb-logo { display: flex; align-items: center; gap: 8px; text-decoration: none; flex-shrink: 0; }
+.tb-brand { font-family: var(--font-mono); font-size: 12px; font-weight: 600; letter-spacing: .04em; }
+.tb-brain { color: var(--accent); }
+.tb-spring { color: var(--silver2); }
+.tb-sep { color: var(--dim); font-size: 12px; }
+.tb-course { font-family: var(--font-mono); font-size: 10px; letter-spacing: .06em; color: var(--amber); text-transform: uppercase; }
+.tb-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); animation: pulse 2.5s infinite; flex-shrink: 0; margin-left: 2px; }
+.tb-hall-badge { font-family: var(--font-mono); font-size: 9.5px; letter-spacing: .06em; color: var(--silver2); text-transform: uppercase; margin-left: auto; }
+.tb-hamburger { display: none; background: none; border: none; cursor: pointer; padding: 6px; color: var(--silver2); }
+.tb-nav-right { display: flex; align-items: center; gap: 4px; margin-left: 16px; overflow-x: auto; scrollbar-width: none; }
+.tb-nav-right::-webkit-scrollbar { display: none; }
+.tb-link {
+  font-family: var(--font-mono); font-size: 9px; letter-spacing: .07em; text-transform: uppercase;
+  color: var(--dim); text-decoration: none; padding: 5px 10px; border-radius: 5px;
+  transition: color .15s, background .15s; white-space: nowrap;
+}
+.tb-link:hover { color: var(--silver); background: rgba(255,255,255,.05); }
+.tb-link.current { color: var(--accent); background: var(--accent-dim); }
+
+/* ── SIDEBAR ── */
+.sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.5); z-index: 89; }
+.sidebar-overlay.open { display: block; }
+.sidebar {
+  width: var(--sidebar-w); flex-shrink: 0;
+  position: sticky; top: var(--topbar-h);
+  height: calc(100vh - var(--topbar-h));
+  overflow-y: auto; overflow-x: hidden;
+  background: rgba(8,17,30,.7);
+  border-right: 1px solid var(--border);
+  padding: 24px 0 40px;
+  scrollbar-width: thin; scrollbar-color: var(--navy3) transparent;
+}
+.sidebar::-webkit-scrollbar { width: 3px; }
+.sidebar::-webkit-scrollbar-thumb { background: var(--navy3); }
+.sb-label {
+  font-family: var(--font-mono); font-size: 8px; letter-spacing: .14em;
+  color: var(--dim); text-transform: uppercase;
+  padding: 0 18px; margin: 20px 0 8px;
+}
+.sb-label:first-child { margin-top: 0; }
+.sb-hall {
+  display: flex; align-items: center; gap: 10px;
+  padding: 8px 18px; text-decoration: none;
+  transition: background .15s; position: relative;
+}
+.sb-hall:hover { background: rgba(255,255,255,.03); }
+.sb-hall.current { background: var(--accent-dim); }
+.sb-hall.current::before {
+  content: ''; position: absolute; left: 0; top: 0; bottom: 0;
+  width: 2px; background: var(--accent);
+}
+.sb-hall-num {
+  width: 22px; height: 22px; border-radius: 6px; flex-shrink: 0;
+  border: 1px solid var(--border2);
+  font-family: var(--font-mono); font-size: 10px; font-weight: 600;
+  color: var(--dim); display: flex; align-items: center; justify-content: center;
+}
+.sb-hall.current .sb-hall-num { border-color: var(--accent-border); color: var(--accent); background: var(--accent-dim); }
+.sb-hall-info { flex: 1; min-width: 0; }
+.sb-hall-name { font-family: var(--font-mono); font-size: 10px; font-weight: 500; color: var(--silver2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sb-hall.current .sb-hall-name { color: var(--accent); }
+.sb-hall-title { font-size: 10px; color: var(--dim); margin-top: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sb-status { width: 5px; height: 5px; border-radius: 50%; background: var(--dim); flex-shrink: 0; }
+.sb-status.current { background: var(--accent); animation: pulse 2s infinite; }
+.sb-status.locked { background: transparent; border: 1px solid var(--dim); }
+.sb-toc-item {
+  display: block; padding: 5px 18px 5px 26px;
+  font-size: 11.5px; color: var(--dim); text-decoration: none;
+  border-left: 1px solid transparent; margin-left: 10px;
+  transition: color .15s, border-color .15s; line-height: 1.4;
+}
+.sb-toc-item:hover { color: var(--silver2); border-left-color: var(--border2); }
+
+/* Dean Eliot sidebar */
+.sb-eliot {
+  margin: 16px 12px 0;
+  background: var(--accent-dim);
+  border: 1px solid var(--accent-border);
+  border-radius: var(--r); overflow: hidden;
+}
+.sb-eliot-header {
+  display: flex; align-items: center; gap: 8px;
+  padding: 10px 12px; border-bottom: 1px solid var(--accent-border);
+}
+.sb-eliot-avatar {
+  width: 28px; height: 28px; border-radius: 8px;
+  background: rgba(168,85,247,.12); border: 1px solid var(--accent-border);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; flex-shrink: 0;
+}
+.sb-eliot-name { font-family: var(--font-mono); font-size: 9.5px; font-weight: 600; letter-spacing: .06em; color: var(--accent); }
+.sb-eliot-role { font-size: 9px; color: var(--silver2); margin-top: 1px; }
+.sb-chips { padding: 8px 10px; display: flex; flex-direction: column; gap: 5px; }
+.sb-chip {
+  font-size: 10.5px; color: var(--silver2); padding: 5px 8px;
+  background: rgba(255,255,255,.03); border: 1px solid var(--border);
+  border-radius: 6px; cursor: pointer; line-height: 1.4;
+  transition: background .15s, border-color .15s, color .15s;
+}
+.sb-chip:hover { background: var(--accent-dim); border-color: var(--accent-border); color: var(--white); }
+.sb-eliot-input-row { display: flex; gap: 6px; padding: 8px 10px; border-top: 1px solid var(--border); }
+.sb-eliot-input {
+  flex: 1; background: rgba(255,255,255,.04); border: 1px solid var(--border);
+  border-radius: 6px; padding: 5px 8px; font-size: 11px;
+  font-family: var(--font-body); color: var(--white); outline: none;
+}
+.sb-eliot-input:focus { border-color: var(--accent-border); }
+.sb-eliot-input::placeholder { color: var(--dim); }
+.sb-eliot-send {
+  width: 28px; height: 28px; border-radius: 6px;
+  background: var(--accent-dim); border: 1px solid var(--accent-border);
+  color: var(--accent); cursor: pointer; font-size: 13px;
+  display: flex; align-items: center; justify-content: center;
+  transition: background .15s;
+}
+.sb-eliot-send:hover { background: rgba(168,85,247,.2); }
+.sb-eliot-msgs { max-height: 160px; overflow-y: auto; padding: 8px 10px; display: flex; flex-direction: column; gap: 6px; scrollbar-width: thin; }
+.sb-eliot-msgs:empty { display: none; }
+.sb-msg { font-size: 11px; line-height: 1.55; padding: 6px 8px; border-radius: 6px; }
+.sb-msg.user { background: rgba(168,85,247,.08); color: var(--silver); text-align: right; }
+.sb-msg.guide { background: rgba(245,158,11,.06); color: var(--silver); }
+.sb-msg.typing { opacity: .5; }
+
+.sb-company {
+  margin: 12px 12px 0;
+  background: rgba(255,255,255,.02);
+  border: 1px solid var(--border);
+  border-radius: var(--r); padding: 12px;
+}
+.sb-company-label { font-family: var(--font-mono); font-size: 7.5px; letter-spacing: .1em; color: var(--dim); text-transform: uppercase; margin-bottom: 8px; }
+.sb-company-name { font-family: var(--font-display); font-size: 12px; color: var(--white); margin-bottom: 3px; }
+.sb-company-desc { font-size: 10.5px; color: var(--silver2); line-height: 1.5; }
+
+/* ── LAYOUT ── */
+#app { display: flex; flex-direction: column; min-height: 100vh; padding-top: var(--topbar-h); position: relative; z-index: 1; }
+#body { display: flex; flex: 1; }
+.main { flex: 1; min-width: 0; padding: 36px 52px 96px; animation: fadeUp .5s ease both; }
+
+/* ── CAMPUS MAP ── */
+.campus-map-wrap {
+  margin-bottom: 32px;
+  background: rgba(13,27,46,.6);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 16px 20px; overflow: hidden;
+}
+.campus-map-label {
+  font-family: var(--font-mono); font-size: 8.5px; letter-spacing: .14em;
+  color: var(--dim); text-transform: uppercase; margin-bottom: 12px;
+  display: flex; align-items: center; gap: 8px;
+}
+.campus-map-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+.campus-map-row { display: flex; align-items: center; gap: 0; overflow-x: auto; scrollbar-width: none; }
+.campus-map-row::-webkit-scrollbar { display: none; }
+.campus-stop { display: flex; flex-direction: column; align-items: center; gap: 5px; flex-shrink: 0; }
+.campus-building {
+  width: 40px; height: 40px; border-radius: 10px;
+  border: 1px solid var(--border2); background: var(--navy3);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-mono); font-size: 12px; font-weight: 600;
+  color: var(--dim); text-decoration: none; transition: all .2s; cursor: pointer;
+}
+.campus-building:hover { transform: translateY(-2px); border-color: var(--silver2); color: var(--silver2); }
+.campus-building.done { background: rgba(74,222,128,.06); border-color: rgba(74,222,128,.2); color: var(--green); }
+.campus-building.active { background: var(--accent-dim); border-color: var(--accent); color: var(--accent); box-shadow: 0 0 18px rgba(168,85,247,.22); }
+.campus-building.locked { opacity: .35; cursor: default; }
+.campus-building.locked:hover { transform: none; }
+.campus-stop-label { font-family: var(--font-mono); font-size: 8px; letter-spacing: .04em; color: var(--dim); text-align: center; max-width: 52px; line-height: 1.3; white-space: nowrap; }
+.campus-stop.active-stop .campus-stop-label { color: var(--accent); }
+.campus-stop.done-stop .campus-stop-label { color: var(--green); }
+.campus-connector { width: 24px; height: 1px; background: var(--border2); flex-shrink: 0; margin-bottom: 18px; position: relative; }
+.campus-connector::after { content: '›'; position: absolute; right: -5px; top: -9px; color: var(--dim); font-size: 10px; }
+
+/* ── HALL HERO ── */
+.hall-hero { margin-bottom: 32px; }
+.hall-eyebrow {
+  display: flex; align-items: center; gap: 8px;
+  font-family: var(--font-mono); font-size: 10px; letter-spacing: .1em;
+  color: var(--accent); text-transform: uppercase; margin-bottom: 10px;
+}
+.hall-eyebrow-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--accent); animation: pulse 2s infinite; }
+.hall-building-name {
+  font-family: var(--font-display); font-size: 11px; letter-spacing: .18em;
+  color: var(--accent2); text-transform: uppercase; margin-bottom: 6px;
+}
+.hall-title {
+  font-family: var(--font-display); font-size: 36px; font-weight: 600;
+  color: var(--white); line-height: 1.15; margin-bottom: 14px; letter-spacing: .02em;
+}
+.hall-title em { font-style: normal; color: var(--accent); animation: glow 4s infinite; }
+.hall-tagline { font-size: 16px; color: var(--silver2); line-height: 1.75; max-width: 700px; margin-bottom: 18px; font-style: italic; }
+.hall-tags { display: flex; gap: 7px; flex-wrap: wrap; }
+.htag {
+  font-family: var(--font-mono); font-size: 9px; letter-spacing: .08em;
+  text-transform: uppercase; padding: 4px 10px; border-radius: 5px;
+  border: 1px solid var(--border2); color: var(--silver2);
+}
+.htag.conceptual { border-color: rgba(56,189,248,.2); color: var(--sky); background: rgba(56,189,248,.05); }
+.htag.technical   { border-color: rgba(168,85,247,.2); color: var(--accent); background: var(--accent-dim); }
+.htag.lab         { border-color: rgba(74,222,128,.2); color: var(--green); background: var(--green-dim); }
+.htag.exam        { border-color: rgba(251,191,36,.2); color: var(--amber); background: var(--amber-dim); }
+.htag.interactive { border-color: rgba(45,212,191,.2); color: var(--teal); background: rgba(45,212,191,.05); }
+
+/* ── TABS ── */
+.tab-bar {
+  display: flex; gap: 2px; border-bottom: 1px solid var(--border);
+  margin-bottom: 32px;
+  position: sticky; top: var(--topbar-h);
+  background: rgba(8,17,30,.95); backdrop-filter: blur(12px);
+  z-index: 20; padding: 10px 0 0;
+  margin-left: -52px; margin-right: -52px;
+  padding-left: 52px; padding-right: 52px;
+}
+.tab-btn {
+  display: flex; align-items: center; gap: 7px;
+  padding: 9px 16px; border: none; background: none; cursor: pointer;
+  font-family: var(--font-mono); font-size: 10px; letter-spacing: .07em;
+  text-transform: uppercase; color: var(--dim);
+  border-bottom: 2px solid transparent; margin-bottom: -1px;
+  transition: color .15s, border-color .15s; white-space: nowrap;
+}
+.tab-btn:hover { color: var(--silver2); }
+.tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+.tab-icon { font-size: 13px; }
+.tab-panel { display: none; animation: fadeUp .25s ease; }
+.tab-panel.active { display: block; }
+
+/* ── SECTIONS ── */
+.section { margin-bottom: 48px; }
+.sec-type-bar { display: flex; align-items: center; gap: 8px; margin-bottom: 14px; }
+.sec-type-icon {
+  width: 28px; height: 28px; border-radius: 7px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center; font-size: 13px;
+}
+.sec-type-icon.conceptual { background: rgba(56,189,248,.08); border: 1px solid rgba(56,189,248,.18); }
+.sec-type-icon.technical   { background: rgba(168,85,247,.08); border: 1px solid rgba(168,85,247,.18); }
+.sec-type-icon.lab         { background: rgba(74,222,128,.08); border: 1px solid rgba(74,222,128,.18); }
+.sec-type-icon.exam        { background: rgba(251,191,36,.08); border: 1px solid rgba(251,191,36,.18); }
+.sec-type-icon.interactive { background: rgba(45,212,191,.08); border: 1px solid rgba(45,212,191,.18); }
+.sec-type-label { font-family: var(--font-mono); font-size: 9px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; }
+.sec-type-label.conceptual { color: var(--sky); }
+.sec-type-label.technical   { color: var(--accent); }
+.sec-type-label.lab         { color: var(--green); }
+.sec-type-label.exam        { color: var(--amber); }
+.sec-type-label.interactive { color: var(--teal); }
+.sec-h { font-family: var(--font-display); font-size: 22px; font-weight: 600; color: var(--white); margin-bottom: 6px; letter-spacing: .02em; }
+.sec-div { width: 40px; height: 2px; background: linear-gradient(to right, var(--accent), transparent); margin-bottom: 14px; }
+.sec-sub { font-size: 14px; color: var(--silver2); margin-bottom: 20px; font-style: italic; line-height: 1.6; }
+.prose { font-size: 15px; color: var(--silver); line-height: 1.78; margin-bottom: 14px; }
+.prose strong { color: var(--white); font-weight: 500; }
+.prose code { font-family: var(--font-mono); font-size: 12px; background: rgba(255,255,255,.06); border: 1px solid var(--border2); border-radius: 4px; padding: 1px 6px; color: var(--accent); }
+
+/* ── INFOBOXES ── */
+.infobox { display: flex; gap: 12px; border-radius: 10px; padding: 14px 16px; margin: 18px 0; line-height: 1.65; }
+.infobox-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+.infobox-body { font-size: 13.5px; }
+.infobox-body strong { font-weight: 500; }
+.infobox.note { background: rgba(56,189,248,.06); border: 1px solid rgba(56,189,248,.15); color: var(--silver2); }
+.infobox.note .infobox-body strong { color: var(--sky); }
+.infobox.trap { background: rgba(248,113,113,.06); border: 1px solid rgba(248,113,113,.15); color: var(--silver2); }
+.infobox.trap .infobox-body strong { color: var(--red); }
+.infobox.tip { background: var(--green-dim); border: 1px solid rgba(74,222,128,.18); color: var(--silver2); }
+.infobox.tip .infobox-body strong { color: var(--green); }
+.infobox.warn { background: var(--amber-dim); border: 1px solid var(--amber-border); color: var(--silver2); }
+.infobox.warn .infobox-body strong { color: var(--amber); }
+.infobox.purple { background: var(--accent-dim); border: 1px solid var(--accent-border); color: var(--silver2); }
+.infobox.purple .infobox-body strong { color: var(--accent); }
+
+/* ── TABLE ── */
+.tbl-wrap { overflow-x: auto; margin: 18px 0; border-radius: 10px; border: 1px solid var(--border); }
+.tbl { width: 100%; border-collapse: collapse; font-size: 13px; }
+.tbl th {
+  font-family: var(--font-mono); font-size: 8.5px; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--accent);
+  padding: 10px 14px; text-align: left;
+  border-bottom: 1px solid var(--border2); white-space: nowrap;
+  background: rgba(168,85,247,.04);
+}
+.tbl td { padding: 10px 14px; border-bottom: 1px solid var(--border); color: var(--silver2); vertical-align: top; line-height: 1.5; }
+.tbl tr:last-child td { border-bottom: none; }
+.tbl tr:hover td { background: rgba(255,255,255,.02); }
+.badge { font-family: var(--font-mono); font-size: 9px; letter-spacing: .06em; text-transform: uppercase; padding: 3px 8px; border-radius: 4px; white-space: nowrap; }
+.badge.green { background: var(--green-dim); color: var(--green); border: 1px solid rgba(74,222,128,.2); }
+.badge.amber { background: var(--amber-dim); color: var(--amber); border: 1px solid var(--amber-border); }
+.badge.purple { background: var(--accent-dim); color: var(--accent); border: 1px solid var(--accent-border); }
+.badge.sky   { background: rgba(56,189,248,.1); color: var(--sky); border: 1px solid rgba(56,189,248,.2); }
+.badge.red   { background: var(--red-dim); color: var(--red); border: 1px solid rgba(248,113,113,.2); }
+
+/* ── RULESET SEQUENCE DIAGRAM ── */
+.seq-diagram {
+  background: var(--navy3);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  overflow: hidden; margin: 18px 0;
+}
+.seq-header {
+  padding: 14px 18px; border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;
+}
+.seq-title { font-family: var(--font-mono); font-size: 9px; letter-spacing: .1em; text-transform: uppercase; color: var(--accent); }
+.seq-legend { display: flex; gap: 14px; }
+.seq-legend-item { display: flex; align-items: center; gap: 5px; font-family: var(--font-mono); font-size: 8.5px; color: var(--dim); letter-spacing: .06em; text-transform: uppercase; }
+.seq-legend-dot { width: 8px; height: 8px; border-radius: 2px; }
+.seq-body { padding: 20px; }
+.seq-track { display: flex; flex-direction: column; gap: 8px; }
+.seq-row { display: flex; align-items: center; gap: 0; position: relative; }
+.seq-label-col { width: 130px; flex-shrink: 0; }
+.seq-label {
+  font-family: var(--font-mono); font-size: 8.5px; letter-spacing: .06em;
+  text-transform: uppercase; color: var(--dim); text-align: right;
+  padding-right: 14px; line-height: 1.3;
+}
+.seq-timeline { flex: 1; position: relative; height: 36px; display: flex; align-items: center; }
+.seq-block {
+  position: absolute; height: 28px; border-radius: 6px;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-mono); font-size: 9px; font-weight: 600;
+  letter-spacing: .05em; text-transform: uppercase; cursor: pointer;
+  transition: filter .15s, transform .15s;
+  overflow: hidden; white-space: nowrap; padding: 0 8px;
+}
+.seq-block:hover { filter: brightness(1.15); transform: translateY(-1px); }
+.seq-block.serial { background: rgba(168,85,247,.2); border: 1px solid rgba(168,85,247,.4); color: var(--accent); }
+.seq-block.parallel { background: rgba(74,222,128,.12); border: 1px solid rgba(74,222,128,.28); color: var(--green); }
+.seq-connector {
+  position: absolute; top: 50%; height: 1px;
+  background: rgba(255,255,255,.08);
+  transform: translateY(-50%);
+}
+.seq-dep-arrow {
+  position: absolute;
+  font-family: var(--font-mono); font-size: 8.5px; color: var(--accent);
+  white-space: nowrap;
+}
+.seq-time-axis {
+  display: flex; margin-top: 6px; padding-left: 130px;
+  border-top: 1px solid var(--border);
+  padding-top: 4px;
+}
+.seq-time-tick {
+  font-family: var(--font-mono); font-size: 7.5px; color: var(--dim);
+  text-align: center;
+}
+
+/* ── RULE TYPE CARDS ── */
+.rule-type-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px,1fr)); gap: 12px; margin: 20px 0; }
+.rule-type-card {
+  background: var(--navy3); border: 1px solid var(--border);
+  border-radius: 12px; padding: 18px; position: relative; overflow: hidden;
+  transition: transform .2s, box-shadow .2s;
+}
+.rule-type-card:hover { transform: translateY(-2px); box-shadow: 0 10px 32px rgba(0,0,0,.35); }
+.rule-type-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+}
+.rt-allocation::before { background: var(--accent); }
+.rt-custom::before     { background: var(--sky); }
+.rt-offset::before     { background: var(--amber); }
+.rt-badge {
+  font-family: var(--font-mono); font-size: 9px; font-weight: 600;
+  letter-spacing: .08em; text-transform: uppercase; padding: 3px 9px;
+  border-radius: 5px; display: inline-flex; margin-bottom: 10px;
+}
+.rt-allocation .rt-badge { background: var(--accent-dim); color: var(--accent); border: 1px solid var(--accent-border); }
+.rt-custom .rt-badge     { background: rgba(56,189,248,.1); color: var(--sky); border: 1px solid rgba(56,189,248,.2); }
+.rt-offset .rt-badge     { background: var(--amber-dim); color: var(--amber); border: 1px solid var(--amber-border); }
+.rt-name { font-family: var(--font-display); font-size: 16px; font-weight: 600; color: var(--white); margin-bottom: 6px; }
+.rt-desc { font-size: 12.5px; color: var(--silver2); line-height: 1.65; margin-bottom: 10px; }
+.rt-example { font-size: 11.5px; color: var(--dim); border-left: 2px solid var(--border2); padding-left: 8px; line-height: 1.6; }
+
+/* ── RULESET DETAIL CARDS ── */
+.ruleset-grid { display: flex; flex-direction: column; gap: 10px; margin: 18px 0; }
+.ruleset-card {
+  background: var(--navy3); border: 1px solid var(--border);
+  border-radius: 12px; overflow: hidden;
+}
+.ruleset-card-header {
+  display: flex; align-items: center; gap: 12px;
+  padding: 14px 18px; cursor: pointer;
+  transition: background .15s;
+}
+.ruleset-card-header:hover { background: rgba(255,255,255,.02); }
+.ruleset-seq {
+  width: 36px; height: 36px; border-radius: 9px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-mono); font-size: 11px; font-weight: 600;
+}
+.seq-10 { background: var(--accent-dim); border: 1px solid var(--accent-border); color: var(--accent); }
+.seq-20 { background: var(--green-dim); border: 1px solid rgba(74,222,128,.2); color: var(--green); }
+.seq-30 { background: var(--green-dim); border: 1px solid rgba(74,222,128,.2); color: var(--green); }
+.seq-40 { background: var(--accent-dim); border: 1px solid var(--accent-border); color: var(--accent); }
+.seq-50 { background: var(--green-dim); border: 1px solid rgba(74,222,128,.2); color: var(--green); }
+.ruleset-meta { flex: 1; min-width: 0; }
+.ruleset-name { font-family: var(--font-display); font-size: 14px; color: var(--white); margin-bottom: 3px; }
+.ruleset-desc { font-size: 12px; color: var(--dim); }
+.ruleset-badges { display: flex; gap: 6px; flex-shrink: 0; flex-wrap: wrap; }
+.ruleset-expand { color: var(--dim); font-family: var(--font-mono); font-size: 12px; flex-shrink: 0; transition: transform .2s; }
+.ruleset-card.open .ruleset-expand { transform: rotate(90deg); }
+.ruleset-body {
+  display: none; padding: 0 18px 16px;
+  border-top: 1px solid var(--border);
+}
+.ruleset-card.open .ruleset-body { display: block; animation: fadeUp .2s ease; }
+.ruleset-rules { display: flex; flex-direction: column; gap: 8px; margin-top: 14px; }
+.rule-item {
+  display: flex; gap: 10px; align-items: flex-start;
+  padding: 10px 12px; border-radius: 8px;
+  background: rgba(255,255,255,.02); border: 1px solid var(--border);
+  font-size: 13px;
+}
+.rule-num {
+  font-family: var(--font-mono); font-size: 9px; font-weight: 600;
+  color: var(--dim); flex-shrink: 0; margin-top: 2px;
+}
+.rule-text { color: var(--silver2); line-height: 1.6; }
+.rule-text strong { color: var(--white); font-weight: 500; }
+.rule-type-tag {
+  font-family: var(--font-mono); font-size: 8px; letter-spacing: .06em;
+  text-transform: uppercase; padding: 2px 6px; border-radius: 3px;
+  flex-shrink: 0; margin-top: 2px;
+}
+.rtt-alloc { background: var(--accent-dim); color: var(--accent); border: 1px solid var(--accent-border); }
+.rtt-custom { background: rgba(56,189,248,.1); color: var(--sky); border: 1px solid rgba(56,189,248,.2); }
+.rtt-offset { background: var(--amber-dim); color: var(--amber); border: 1px solid var(--amber-border); }
+
+/* ── EXECUTION MODE TOGGLE ── */
+.exec-compare {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 18px 0;
+}
+.exec-card {
+  background: var(--navy3); border: 1px solid var(--border);
+  border-radius: 12px; padding: 18px; overflow: hidden;
+}
+.exec-card.serial-card { border-top: 3px solid var(--accent); }
+.exec-card.parallel-card { border-top: 3px solid var(--green); }
+.exec-mode-name {
+  font-family: var(--font-display); font-size: 16px; font-weight: 600;
+  margin-bottom: 6px;
+}
+.serial-card .exec-mode-name { color: var(--accent); }
+.parallel-card .exec-mode-name { color: var(--green); }
+.exec-mode-def { font-size: 12.5px; color: var(--silver2); line-height: 1.65; margin-bottom: 12px; }
+.exec-when { font-family: var(--font-mono); font-size: 8.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--dim); margin-bottom: 6px; }
+.exec-rules { display: flex; flex-direction: column; gap: 4px; }
+.exec-rule {
+  font-size: 12px; color: var(--silver2); padding: 6px 10px;
+  background: rgba(255,255,255,.02); border-radius: 5px; border: 1px solid var(--border);
+  line-height: 1.4;
+}
+.exec-rule strong { color: var(--white); font-weight: 500; }
+
+/* ── INTERACTIVE SEQUENCE SIMULATOR ── */
+.sim-wrap {
+  background: var(--navy3); border: 1px solid var(--border);
+  border-radius: 14px; overflow: hidden; margin: 18px 0;
+}
+.sim-header {
+  padding: 14px 18px; border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;
+}
+.sim-title { font-family: var(--font-mono); font-size: 9px; letter-spacing: .1em; text-transform: uppercase; color: var(--accent); }
+.sim-body { padding: 20px; }
+.sim-controls { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
+.sim-btn {
+  padding: 8px 18px; border-radius: 7px;
+  border: 1px solid var(--border); background: var(--navy2);
+  font-family: var(--font-mono); font-size: 9px; letter-spacing: .07em;
+  text-transform: uppercase; color: var(--dim); cursor: pointer;
+  transition: all .15s;
+}
+.sim-btn:hover { border-color: var(--accent-border); color: var(--accent); }
+.sim-btn.active { background: var(--accent-dim); border-color: var(--accent); color: var(--accent); }
+.sim-btn.run-btn { background: var(--accent-dim); border-color: var(--accent); color: var(--accent); }
+.sim-btn.run-btn:hover { background: rgba(168,85,247,.2); }
+.sim-btn.reset-btn { border-color: var(--border2); color: var(--dim); }
+.sim-pipeline { display: flex; flex-direction: column; gap: 8px; }
+.sim-step {
+  display: flex; align-items: center; gap: 12px;
+  padding: 12px 14px; border-radius: 9px;
+  border: 1px solid var(--border); background: rgba(255,255,255,.02);
+  transition: all .25s;
+}
+.sim-step.running { background: var(--accent-dim); border-color: var(--accent-border); }
+.sim-step.done { background: var(--green-dim); border-color: rgba(74,222,128,.2); }
+.sim-step.waiting { opacity: .45; }
+.sim-step-seq {
+  width: 32px; height: 32px; border-radius: 8px; flex-shrink: 0;
+  font-family: var(--font-mono); font-size: 10px; font-weight: 600;
+  display: flex; align-items: center; justify-content: center;
+  border: 1px solid var(--border); color: var(--dim);
+  transition: all .25s;
+}
+.sim-step.running .sim-step-seq { background: var(--accent-dim); border-color: var(--accent); color: var(--accent); }
+.sim-step.done .sim-step-seq { background: var(--green-dim); border-color: rgba(74,222,128,.3); color: var(--green); }
+.sim-step-info { flex: 1; }
+.sim-step-name { font-family: var(--font-display); font-size: 13px; color: var(--silver2); margin-bottom: 2px; transition: color .25s; }
+.sim-step.running .sim-step-name { color: var(--white); }
+.sim-step.done .sim-step-name { color: var(--silver2); }
+.sim-step-status { font-family: var(--font-mono); font-size: 9px; color: var(--dim); transition: color .25s; }
+.sim-step.running .sim-step-status { color: var(--accent); }
+.sim-step.done .sim-step-status { color: var(--green); }
+.sim-step-result { font-family: var(--font-mono); font-size: 10px; color: var(--dim); text-align: right; transition: color .25s; }
+.sim-step.done .sim-step-result { color: var(--green); }
+.sim-progress-bar { height: 3px; background: var(--border); border-radius: 2px; overflow: hidden; margin-top: 4px; }
+.sim-progress-fill { height: 100%; background: var(--accent); border-radius: 2px; transition: width .4s ease; }
+.sim-step.done .sim-progress-fill { background: var(--green); width: 100% !important; }
+.sim-log {
+  margin-top: 14px; padding: 12px 14px;
+  background: rgba(0,0,0,.25); border: 1px solid var(--border);
+  border-radius: 8px; font-family: var(--font-mono); font-size: 11px;
+  color: var(--dim); max-height: 140px; overflow-y: auto;
+  line-height: 1.8; scrollbar-width: thin;
+}
+.sim-log .log-line { margin: 0; }
+.sim-log .log-line.info { color: var(--accent); }
+.sim-log .log-line.done { color: var(--green); }
+.sim-log .log-line.error { color: var(--red); }
+
+/* ── LAB ── */
+.lab-box {
+  background: var(--green-dim); border: 1px solid rgba(74,222,128,.12);
+  border-radius: 12px; padding: 22px 24px; margin: 18px 0;
+}
+.lab-header {
+  font-family: var(--font-mono); font-size: 9.5px; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--green);
+  margin-bottom: 16px; display: flex; align-items: center; gap: 8px;
+}
+.lab-header::before { content: ''; width: 3px; height: 14px; background: var(--green); border-radius: 2px; }
+.lab-scenario {
+  background: rgba(255,255,255,.02); border: 1px solid var(--border);
+  border-radius: 8px; padding: 14px 16px;
+  font-size: 13.5px; color: rgba(232,240,248,.65);
+  line-height: 1.72; margin-bottom: 18px;
+}
+.lab-scenario strong { color: var(--white); font-weight: 500; }
+.lab-checklist { display: flex; flex-direction: column; gap: 10px; }
+.lab-check-item { display: flex; gap: 12px; align-items: flex-start; cursor: pointer; }
+.lab-check-box {
+  width: 20px; height: 20px; border-radius: 5px; flex-shrink: 0;
+  border: 1px solid rgba(74,222,128,.3); background: rgba(74,222,128,.04);
+  display: flex; align-items: center; justify-content: center;
+  transition: all .15s; margin-top: 2px;
+}
+.lab-check-box:hover { border-color: var(--green); background: rgba(74,222,128,.1); }
+.lab-check-box.checked { background: var(--green); border-color: var(--green); }
+.lab-check-box.checked::after { content: '✓'; font-size: 11px; color: var(--navy); font-weight: 700; }
+.lab-check-text { font-size: 13.5px; color: rgba(232,240,248,.7); line-height: 1.65; flex: 1; }
+.lab-check-text strong { color: var(--white); font-weight: 500; }
+.lab-check-item.checked .lab-check-text { color: var(--dim); text-decoration: line-through; text-decoration-color: rgba(255,255,255,.2); }
+.lab-progress { margin-top: 14px; }
+.lab-progress-bar { height: 3px; background: var(--border); border-radius: 2px; overflow: hidden; margin-top: 6px; }
+.lab-progress-fill { height: 100%; background: var(--green); border-radius: 2px; transition: width .3s ease; }
+.lab-progress-label { font-family: var(--font-mono); font-size: 9px; color: var(--dim); }
+
+/* ── EXAM ── */
+.exam-box { background: var(--amber-dim); border: 1px solid rgba(245,158,11,.15); border-radius: 12px; overflow: hidden; margin: 16px 0; }
+.exam-box-header {
+  font-family: var(--font-mono); font-size: 9px; letter-spacing: .09em;
+  text-transform: uppercase; color: var(--amber);
+  padding: 11px 16px; border-bottom: 1px solid rgba(245,158,11,.12);
+  background: rgba(245,158,11,.04);
+}
+.exam-box-body { padding: 16px; font-size: 13.5px; color: var(--silver2); line-height: 1.72; }
+.exam-box-body strong { color: var(--white); font-weight: 500; }
+
+/* Quiz */
+.quiz-q { margin-bottom: 28px; }
+.quiz-stem { font-size: 14.5px; color: var(--white); line-height: 1.7; margin-bottom: 14px; padding: 14px 16px; background: rgba(255,255,255,.02); border: 1px solid var(--border); border-radius: 8px; }
+.quiz-options { display: flex; flex-direction: column; gap: 7px; }
+.quiz-opt {
+  padding: 10px 14px; border-radius: 8px;
+  border: 1px solid var(--border); background: rgba(255,255,255,.02);
+  font-size: 13.5px; color: var(--silver2); cursor: pointer;
+  transition: all .15s; text-align: left; line-height: 1.5;
+}
+.quiz-opt:hover:not(.revealed) { border-color: var(--accent-border); color: var(--white); background: var(--accent-dim); }
+.quiz-opt.correct { background: var(--green-dim); border-color: rgba(74,222,128,.25); color: var(--green); pointer-events: none; }
+.quiz-opt.wrong { background: var(--red-dim); border-color: rgba(248,113,113,.2); color: var(--red); pointer-events: none; }
+.quiz-opt.revealed { pointer-events: none; }
+.quiz-explanation { margin-top: 10px; padding: 12px 14px; background: var(--accent-dim); border: 1px solid var(--accent-border); border-radius: 8px; font-size: 13px; color: var(--silver2); line-height: 1.65; display: none; }
+.quiz-explanation.show { display: block; animation: fadeUp .2s ease; }
+.quiz-explanation strong { color: var(--accent); }
+.quiz-meta { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+.quiz-diff { font-family: var(--font-mono); font-size: 8.5px; letter-spacing: .08em; text-transform: uppercase; padding: 2px 8px; border-radius: 4px; }
+.quiz-diff.foundation { background: var(--green-dim); color: var(--green); border: 1px solid rgba(74,222,128,.15); }
+.quiz-diff.practitioner { background: var(--amber-dim); color: var(--amber); border: 1px solid var(--amber-border); }
+.quiz-diff.expert { background: var(--red-dim); color: var(--red); border: 1px solid rgba(248,113,113,.15); }
+.quiz-qnum { font-family: var(--font-mono); font-size: 9px; color: var(--dim); }
+.quiz-score { margin-top: 24px; padding: 18px; background: var(--navy3); border: 1px solid var(--border); border-radius: 12px; display: none; text-align: center; }
+.quiz-score.show { display: block; animation: fadeUp .3s ease; }
+.quiz-score-num { font-family: var(--font-display); font-size: 36px; color: var(--accent); }
+.quiz-score-label { font-family: var(--font-mono); font-size: 10px; color: var(--dim); letter-spacing: .1em; text-transform: uppercase; margin-top: 4px; }
+.quiz-score-msg { font-size: 14px; color: var(--silver2); margin-top: 10px; }
+
+/* ── HALL NAV FOOTER ── */
+.hall-nav-footer {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-top: 64px; padding-top: 28px; border-top: 1px solid var(--border);
+}
+.hnf-prev, .hnf-next {
+  display: flex; align-items: center; gap: 10px;
+  text-decoration: none; padding: 12px 16px; border-radius: 10px;
+  border: 1px solid var(--border); background: var(--navy3); transition: all .2s;
+}
+.hnf-prev:hover, .hnf-next:hover { border-color: var(--accent-border); background: var(--accent-dim); }
+.hnf-dir { font-family: var(--font-mono); font-size: 8.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--dim); }
+.hnf-name { font-size: 14px; color: var(--white); margin-top: 2px; }
+.hnf-next { flex-direction: row-reverse; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 900px) {
+  .sidebar { display: none; position: fixed; left: 0; top: var(--topbar-h); height: calc(100vh - var(--topbar-h)); z-index: 90; transform: translateX(-100%); transition: transform .25s ease; }
+  .sidebar.open { display: flex; flex-direction: column; transform: translateX(0); }
+  .sidebar-overlay { display: none; }
+  .sidebar-overlay.open { display: block; }
+  .tb-hamburger { display: flex; }
+  .main { padding: 20px 18px 80px; }
+  .tab-bar { margin-left: -18px; margin-right: -18px; padding-left: 18px; padding-right: 18px; overflow-x: auto; scrollbar-width: none; }
+  .tab-bar::-webkit-scrollbar { display: none; }
+  .hall-title { font-size: 26px; }
+  .exec-compare { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<div id="stars"></div>
+<div class="sidebar-overlay" id="overlay" onclick="closeSidebar()"></div>
+
+<div id="app">
+
+  <!-- ── TOPBAR ── -->
+  <header id="topbar">
+    <a href="https://brainspring.ai" class="tb-logo" target="_blank" rel="noopener">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 36" width="18" height="20">
+        <path d="M16 2L3 9v18l13 7 13-7V9L16 2z" fill="none" stroke="#a855f7" stroke-width="2"/>
+        <path d="M16 8l7 4v8l-7 4-7-4v-8l7-4z" fill="#a855f7" opacity=".3"/>
+      </svg>
+      <span class="tb-brand"><span class="tb-brain">Brain</span><span class="tb-spring">Spring</span></span>
+    </a>
+    <span class="tb-sep">›</span>
+    <span class="tb-course">Academy of Profit Center</span>
+    <div class="tb-dot"></div>
+    <nav class="tb-nav-right">
+      <a href="hall-1.html" class="tb-link">Foundations</a>
+      <a href="hall-2.html" class="tb-link">Dimensions</a>
+      <a href="hall-3.html" class="tb-link">Models</a>
+      <a href="hall-4.html" class="tb-link current">Hall of Logic</a>
+      <a href="hall-9.html" class="tb-link">Exam Hall</a>
+    </nav>
+    <span class="tb-hall-badge">Hall 4 of 9 · Hall of Logic</span>
+    <button class="tb-hamburger" onclick="toggleSidebar()" aria-label="Menu">
+      <svg width="18" height="14" viewBox="0 0 18 14" fill="none"><rect width="18" height="2" rx="1" fill="currentColor"/><rect y="6" width="18" height="2" rx="1" fill="currentColor"/><rect y="12" width="18" height="2" rx="1" fill="currentColor"/></svg>
+    </button>
+  </header>
+
+  <div id="body">
+
+    <!-- ── SIDEBAR ── -->
+    <nav class="sidebar" id="sidebar">
+      <div class="sb-label">Academy Halls</div>
+      <a href="hall-1.html" class="sb-hall"><div class="sb-hall-num">1</div><div class="sb-hall-info"><div class="sb-hall-name">Foundations Hall</div><div class="sb-hall-title">Orientation</div></div><div class="sb-status"></div></a>
+      <a href="hall-2.html" class="sb-hall"><div class="sb-hall-num">2</div><div class="sb-hall-info"><div class="sb-hall-name">Dimensions Gallery</div><div class="sb-hall-title">Geometry of Profit Center</div></div><div class="sb-status"></div></a>
+      <a href="hall-3.html" class="sb-hall"><div class="sb-hall-num">3</div><div class="sb-hall-info"><div class="sb-hall-name">Models Pavilion</div><div class="sb-hall-title">Perspective Gallery</div></div><div class="sb-status"></div></a>
+      <a href="hall-4.html" class="sb-hall current"><div class="sb-hall-num">4</div><div class="sb-hall-info"><div class="sb-hall-name">Hall of Logic</div><div class="sb-hall-title">Rule Sets &amp; Sequences</div></div><div class="sb-status current"></div></a>
+      <a href="hall-5.html" class="sb-hall"><div class="sb-hall-num">5</div><div class="sb-hall-info"><div class="sb-hall-name">Workshop of Precision</div><div class="sb-hall-title">Custom Calculations</div></div><div class="sb-status locked"></div></a>
+      <a href="hall-6.html" class="sb-hall"><div class="sb-hall-num">6</div><div class="sb-hall-info"><div class="sb-hall-name">Control Tower</div><div class="sb-hall-title">Calc Analysis Chamber</div></div><div class="sb-status locked"></div></a>
+      <a href="hall-7.html" class="sb-hall"><div class="sb-hall-num">7</div><div class="sb-hall-info"><div class="sb-hall-name">Profit Curve Observatory</div><div class="sb-hall-title">Rule Balancing</div></div><div class="sb-status locked"></div></a>
+      <a href="hall-8.html" class="sb-hall"><div class="sb-hall-num">8</div><div class="sb-hall-info"><div class="sb-hall-name">Pipeline Lab</div><div class="sb-hall-title">Data Integration Workshop</div></div><div class="sb-status locked"></div></a>
+      <a href="hall-9.html" class="sb-hall"><div class="sb-hall-num">9</div><div class="sb-hall-info"><div class="sb-hall-name">Examination Hall</div><div class="sb-hall-title">Graduation</div></div><div class="sb-status locked"></div></a>
+
+      <div class="sb-label">This Hall</div>
+      <div id="sb-toc"></div>
+
+      <div class="sb-label">Dean's Office</div>
+      <div class="sb-eliot">
+        <div class="sb-eliot-header">
+          <div class="sb-eliot-avatar">🎓</div>
+          <div>
+            <div class="sb-eliot-name">Dean Eliot</div>
+            <div class="sb-eliot-role">Senior Oracle EPM Practitioner</div>
+          </div>
+        </div>
+        <div class="sb-chips">
+          <span class="sb-chip" onclick="chipAsk(this)">Why must seq:10 run before seq:40?</span>
+          <span class="sb-chip" onclick="chipAsk(this)">What is the difference between Serial and Parallel execution?</span>
+          <span class="sb-chip" onclick="chipAsk(this)">What are the three rule types in EPCM?</span>
+          <span class="sb-chip" onclick="chipAsk(this)">Why does NovaPrism need 5 rulesets and not just 1?</span>
+        </div>
+        <div class="sb-eliot-msgs" id="sb-msgs"></div>
+        <div class="sb-eliot-input-row">
+          <input class="sb-eliot-input" id="sb-input" type="text" placeholder="Ask the Dean anything…" onkeydown="if(event.key==='Enter')sbSend()">
+          <button class="sb-eliot-send" onclick="sbSend()">↑</button>
+        </div>
+      </div>
+
+      <div class="sb-company">
+        <div class="sb-company-label">Case Company</div>
+        <div class="sb-company-name" id="sb-company-name">NovaPrism Group</div>
+        <div class="sb-company-desc" id="sb-company-desc">Loading…</div>
+      </div>
+    </nav>
+
+    <!-- ── MAIN ── -->
+    <main class="main">
+
+      <!-- Campus Map -->
+      <div class="campus-map-wrap">
+        <div class="campus-map-label">Academy of Profit Center — Your Journey</div>
+        <div class="campus-map-row" id="campus-map"></div>
+      </div>
+
+      <!-- Hall Hero -->
+      <header class="hall-hero">
+        <div class="hall-building-name">Hall of Logic</div>
+        <div class="hall-eyebrow">
+          <span class="hall-eyebrow-dot"></span>
+          Hall 4 of 9 · Academy of Profit Center · EPCM Study Tour
+        </div>
+        <h1 class="hall-title">The <em>engine room</em> of allocation</h1>
+        <p class="hall-tagline">Five rule sets. Eighteen rules. One precise execution order. Dimensions gave the model its axes. Models gave it a context. Rule sets give it its logic — the step-by-step instructions that move NovaPrism's $134M from Enterprise Support into every corner of the three operating divisions.</p>
+        <div class="hall-tags">
+          <span class="htag conceptual">Conceptual</span>
+          <span class="htag technical">Technical</span>
+          <span class="htag interactive">Interactive</span>
+          <span class="htag lab">Lab</span>
+          <span class="htag exam">Exam: 1Z0-1082-25</span>
+        </div>
+      </header>
+
+      <!-- TAB BAR -->
+      <div class="tab-bar" role="tablist">
+        <button class="tab-btn active" role="tab" onclick="switchTab('conceptual',this)"><span class="tab-icon">📐</span> Conceptual</button>
+        <button class="tab-btn" role="tab" onclick="switchTab('technical',this)"><span class="tab-icon">⚙️</span> Technical</button>
+        <button class="tab-btn" role="tab" onclick="switchTab('interactive',this)"><span class="tab-icon">▶️</span> Simulator</button>
+        <button class="tab-btn" role="tab" onclick="switchTab('lab',this)"><span class="tab-icon">🔬</span> Lab</button>
+        <button class="tab-btn" role="tab" onclick="switchTab('exam',this)"><span class="tab-icon">📝</span> Exam Prep</button>
+      </div>
+
+      <!-- ═══════ TAB 1: CONCEPTUAL ═══════ -->
+      <div class="tab-panel active" id="tab-conceptual">
+
+        <section class="section" id="what-is-a-ruleset">
+          <div class="sec-type-bar"><div class="sec-type-icon conceptual">📐</div><span class="sec-type-label conceptual">Conceptual</span></div>
+          <h2 class="sec-h">What a rule set is — and why the sequence matters</h2>
+          <div class="sec-div"></div>
+          <p class="sec-sub">A rule set is a named, ordered container of rules. The container has an execution mode (Serial or Parallel) and a sequence number. The sequence number is not cosmetic — it is the execution order contract.</p>
+          <p class="prose">In EPCM, a <strong>rule set</strong> is the fundamental unit of allocation logic. Each rule set contains one or more rules — specific instructions that move money between PCM_Balance members across dimension intersections. When a model runs, it executes all assigned rule sets in ascending sequence order, respecting the execution mode of each.</p>
+          <p class="prose">The reason NovaPrism cannot collapse its five rule sets into one is dependency. The IT Allocation (seq:40) depends on the IT Cost Pool Formation (seq:10) having already staged the pool total into an intermediate member. If they ran in a single rule set without sequence enforcement, seq:40 might read a zero or stale IT pool value — producing a wrong allocation silently. The sequence number is the mechanism that prevents this.</p>
+
+          <div class="infobox purple">
+            <div class="infobox-icon">⚙️</div>
+            <div class="infobox-body"><strong>The design principle:</strong> Every rule set should do exactly one coherent business thing. Seq:10 forms the IT pool. Seq:20 allocates facilities. Seq:30 allocates Finance and HR. Seq:40 allocates IT. Seq:50 pushes to engagements. Each is independently auditable, independently runnable for testing, and independently refactorable if the business logic changes. A monolithic single rule set combining all five would be impossible to debug when one pool misbehaves.</div>
+          </div>
+        </section>
+
+        <section class="section" id="execution-modes">
+          <div class="sec-type-bar"><div class="sec-type-icon conceptual">🔀</div><span class="sec-type-label conceptual">Conceptual</span></div>
+          <h2 class="sec-h">Serial vs Parallel execution — when order matters</h2>
+          <div class="sec-div"></div>
+          <p class="sec-sub">Serial execution runs rules one at a time, in rule order within the set. Parallel execution runs all rules simultaneously. The choice is not a performance preference — it is determined by whether later rules in the set depend on earlier ones having written their values first.</p>
+
+          <div class="exec-compare">
+            <div class="exec-card serial-card">
+              <div class="exec-mode-name">Serial</div>
+              <div class="exec-mode-def">Rules execute one at a time, in the order they are numbered within the rule set. Rule N+1 only begins after Rule N has fully completed and committed its values to the cube.</div>
+              <div class="exec-when">Use when</div>
+              <div class="exec-rules">
+                <div class="exec-rule">A downstream rule reads values written by an upstream rule in the same set</div>
+                <div class="exec-rule">A pool formation step must complete before the allocation step can read the pool</div>
+                <div class="exec-rule">The rule set depends on seq:10 having completed (enforced by the sequence number)</div>
+                <div class="exec-rule"><strong>NovaPrism: seq:10 (IT pool formation) and seq:40 (IT allocation) — both Serial</strong></div>
+              </div>
+            </div>
+            <div class="exec-card parallel-card">
+              <div class="exec-mode-name">Parallel</div>
+              <div class="exec-mode-def">All rules in the set execute simultaneously. No rule can read a value written by another rule in the same parallel set — because they run at the same time.</div>
+              <div class="exec-when">Use when</div>
+              <div class="exec-rules">
+                <div class="exec-rule">All rules read from the same source data and write to different targets</div>
+                <div class="exec-rule">No rule's output is an input to another rule in the same set</div>
+                <div class="exec-rule">Performance matters — parallel sets complete in the time of the slowest single rule</div>
+                <div class="exec-rule"><strong>NovaPrism: seq:20 (Facilities), seq:30 (Finance+HR), seq:50 (Engagements) — all Parallel</strong></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="infobox trap">
+            <div class="infobox-icon">⚠️</div>
+            <div class="infobox-body"><strong>The exam trap on Parallel:</strong> "A Parallel rule set can be used when performance is the priority, even if later rules read values from earlier rules in the same set." — <strong>FALSE.</strong> If any rule in a Parallel set reads a value that another rule in the same set writes, the read will get the <em>pre-execution</em> value (typically zero or last period's data), not the freshly written value. The data corruption is silent — EPCM will not error. This is the most dangerous misconfiguration in rule set design.</div>
+          </div>
+        </section>
+
+        <section class="section" id="three-rule-types">
+          <div class="sec-type-bar"><div class="sec-type-icon conceptual">🔤</div><span class="sec-type-label conceptual">Conceptual</span></div>
+          <h2 class="sec-h">The three rule types</h2>
+          <div class="sec-div"></div>
+          <p class="sec-sub">Every rule in EPCM is one of three types. The type determines how the rule calculates its output — not what it allocates, but the mathematical method it uses.</p>
+
+          <div class="rule-type-grid">
+            <div class="rule-type-card rt-allocation">
+              <span class="rt-badge">Allocation Rule</span>
+              <div class="rt-name">Allocation</div>
+              <div class="rt-desc">Distributes a source pool to one or more target cost objects using a driver ratio. The rule reads the source pool total, reads the driver values for each target, computes each target's proportional share, and writes PCM_Allocated_In and PCM_Allocated_Out.</div>
+              <div class="rt-example">NovaPrism IT pool: $52M × (IS tickets 2,890 / total 4,540) = $33.09M to IS. The rule reads the pool, reads the ticket counts, writes $33.09M to IS PCM_Allocated_In and $33.09M to ES PCM_Allocated_Out.</div>
+            </div>
+            <div class="rule-type-card rt-custom">
+              <span class="rt-badge">Custom Calculation</span>
+              <div class="rt-name">Custom Calc</div>
+              <div class="rt-desc">An Essbase-style calculation script that performs any arithmetic, conditional logic, or member formula. Uses a subset of Essbase calc language. No automatic PCM_Balance management — the implementer writes the PCM_Balance member targets explicitly.</div>
+              <div class="rt-example">NovaPrism IT pool formation (seq:10): a Custom Calc rule that reads 120+ GL accounts tagged as IT-related and sums them into the <code>IT_Pool_Staged</code> member, ready for the Allocation rule in seq:40 to read. Not an Allocation rule — it sets up the source.</div>
+            </div>
+            <div class="rule-type-card rt-offset">
+              <span class="rt-badge">Offset Rule</span>
+              <div class="rt-name">Offset</div>
+              <div class="rt-desc">Creates a balancing contra-entry to zero out a cost centre after all its costs have been allocated out. Used to confirm that the cost centre's PCM_Output nets to zero — a balance verification, not a new allocation.</div>
+              <div class="rt-example">NovaPrism Enterprise Support: after all four pools allocate out, an Offset rule confirms ES's PCM_Output = PCM_Input − PCM_Allocated_Out = $134M − $134M = $0. If this rule fails to zero, the model is unbalanced and Rule Balancing (Hall 7) will flag it.</div>
+            </div>
+          </div>
+
+          <div class="infobox note">
+            <div class="infobox-icon">📋</div>
+            <div class="infobox-body"><strong>Rule count in NovaPrism's model:</strong> Seq:10 has 3 rules (1 Custom Calc per IT sub-pool group + 1 aggregation). Seq:20 has 3 rules (1 Allocation per receiving division). Seq:30 has 4 rules (2 Finance Allocation + 2 HR Allocation). Seq:40 has 2 rules (1 IT Allocation + 1 Offset to zero ES IT sub-pool). Seq:50 has 6 rules (1 Engagement Contribution rule per Division × 3 divisions + 3 customer-level detail rules). Total: 18 rules across 5 rule sets — from constants.js.</div>
+          </div>
+        </section>
+
+      </div><!-- /conceptual -->
+
+      <!-- ═══════ TAB 2: TECHNICAL ═══════ -->
+      <div class="tab-panel" id="tab-technical">
+
+        <section class="section" id="novaprism-rulesets">
+          <div class="sec-type-bar"><div class="sec-type-icon technical">⚙️</div><span class="sec-type-label technical">Technical</span></div>
+          <h2 class="sec-h">NovaPrism's 5 rule sets — full technical specification</h2>
+          <div class="sec-div"></div>
+          <p class="sec-sub">Each rule set below is exactly as defined in constants.js. Click any rule set to expand its full rule list, execution notes, and the specific PCM_Balance members it reads from and writes to.</p>
+
+          <div class="ruleset-grid" id="ruleset-cards"></div>
+
+          <div class="infobox purple">
+            <div class="infobox-icon">💡</div>
+            <div class="infobox-body"><strong>Why the sequence gap between 10 and 20?</strong> NovaPrism's sequence numbers jump by 10 (10, 20, 30, 40, 50), not 1. This is a governance convention, not a product requirement. The gap allows new rule sets to be inserted between existing ones without renumbering everything. If a future audit requires a separate Tax Gross-Up rule set between IT formation and Facilities, it can be numbered 15 — without touching the existing 20, 30, 40, or 50 numbering. Always leave room between sequence numbers.</div>
+          </div>
+        </section>
+
+        <section class="section" id="sequence-diagram">
+          <div class="sec-type-bar"><div class="sec-type-icon technical">📊</div><span class="sec-type-label technical">Technical</span></div>
+          <h2 class="sec-h">Execution sequence diagram</h2>
+          <div class="sec-div"></div>
+          <p class="sec-sub">How the five rule sets flow in time. Serial rule sets must complete before dependent serial rule sets begin. Parallel rule sets run concurrently with no dependencies between their rules.</p>
+
+          <div class="seq-diagram">
+            <div class="seq-header">
+              <span class="seq-title">NovaPrism M01 Execution Timeline</span>
+              <div class="seq-legend">
+                <div class="seq-legend-item"><div class="seq-legend-dot" style="background:rgba(168,85,247,.4);border-radius:2px"></div>Serial</div>
+                <div class="seq-legend-item"><div class="seq-legend-dot" style="background:rgba(74,222,128,.3);border-radius:2px"></div>Parallel</div>
+              </div>
+            </div>
+            <div class="seq-body">
+              <!-- SVG-based timeline -->
+              <svg viewBox="0 0 700 220" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:700px;display:block;margin:0 auto">
+                <!-- Grid lines -->
+                <line x1="140" y1="20" x2="140" y2="200" stroke="rgba(200,212,224,.06)" stroke-width="1"/>
+                <line x1="280" y1="20" x2="280" y2="200" stroke="rgba(200,212,224,.06)" stroke-width="1"/>
+                <line x1="420" y1="20" x2="420" y2="200" stroke="rgba(200,212,224,.06)" stroke-width="1"/>
+                <line x1="560" y1="20" x2="560" y2="200" stroke="rgba(200,212,224,.06)" stroke-width="1"/>
+                <line x1="700" y1="20" x2="700" y2="200" stroke="rgba(200,212,224,.06)" stroke-width="1"/>
+
+                <!-- Time axis labels -->
+                <text x="140" y="210" fill="rgba(74,96,128,.5)" font-size="9" text-anchor="middle" font-family="JetBrains Mono, monospace">T+1</text>
+                <text x="280" y="210" fill="rgba(74,96,128,.5)" font-size="9" text-anchor="middle" font-family="JetBrains Mono, monospace">T+2</text>
+                <text x="420" y="210" fill="rgba(74,96,128,.5)" font-size="9" text-anchor="middle" font-family="JetBrains Mono, monospace">T+3</text>
+                <text x="560" y="210" fill="rgba(74,96,128,.5)" font-size="9" text-anchor="middle" font-family="JetBrains Mono, monospace">T+4</text>
+
+                <!-- Row labels -->
+                <text x="5" y="48" fill="rgba(74,96,128,.7)" font-size="8.5" font-family="JetBrains Mono, monospace">seq:10</text>
+                <text x="5" y="90" fill="rgba(74,96,128,.7)" font-size="8.5" font-family="JetBrains Mono, monospace">seq:20</text>
+                <text x="5" y="110" fill="rgba(74,96,128,.7)" font-size="8.5" font-family="JetBrains Mono, monospace">seq:30</text>
+                <text x="5" y="155" fill="rgba(74,96,128,.7)" font-size="8.5" font-family="JetBrains Mono, monospace">seq:40</text>
+                <text x="5" y="193" fill="rgba(74,96,128,.7)" font-size="8.5" font-family="JetBrains Mono, monospace">seq:50</text>
+
+                <!-- seq:10 SERIAL — runs first, T0→T1 -->
+                <rect x="140" y="26" width="130" height="28" rx="6" fill="rgba(168,85,247,.18)" stroke="rgba(168,85,247,.4)" stroke-width="1"/>
+                <text x="205" y="44" fill="#a855f7" font-size="9.5" text-anchor="middle" font-family="JetBrains Mono, monospace" font-weight="600">IT Pool Formation</text>
+
+                <!-- seq:20 PARALLEL — runs after T1, same time as seq:30 -->
+                <rect x="280" y="68" width="120" height="28" rx="6" fill="rgba(74,222,128,.1)" stroke="rgba(74,222,128,.28)" stroke-width="1"/>
+                <text x="340" y="86" fill="#4ade80" font-size="9.5" text-anchor="middle" font-family="JetBrains Mono, monospace" font-weight="600">Facilities Alloc</text>
+
+                <!-- seq:30 PARALLEL — same time as seq:20 -->
+                <rect x="280" y="96" width="120" height="28" rx="6" fill="rgba(74,222,128,.1)" stroke="rgba(74,222,128,.28)" stroke-width="1"/>
+                <text x="340" y="114" fill="#4ade80" font-size="9.5" text-anchor="middle" font-family="JetBrains Mono, monospace" font-weight="600">Finance+HR Alloc</text>
+
+                <!-- Parallel brace label -->
+                <text x="270" y="108" fill="rgba(74,222,128,.45)" font-size="11" text-anchor="middle">⎧</text>
+
+                <!-- seq:40 SERIAL — after seq:10 completes (T2 onward) -->
+                <rect x="420" y="130" width="130" height="28" rx="6" fill="rgba(168,85,247,.18)" stroke="rgba(168,85,247,.4)" stroke-width="1"/>
+                <text x="485" y="148" fill="#a855f7" font-size="9.5" text-anchor="middle" font-family="JetBrains Mono, monospace" font-weight="600">IT Allocation</text>
+
+                <!-- Dependency arrow seq:10 → seq:40 -->
+                <line x1="270" y1="40" x2="415" y2="144" stroke="rgba(168,85,247,.3)" stroke-width="1" stroke-dasharray="4,3"/>
+                <text x="320" y="98" fill="rgba(168,85,247,.5)" font-size="8" font-family="JetBrains Mono, monospace">depends on</text>
+
+                <!-- seq:50 PARALLEL — after all others -->
+                <rect x="560" y="168" width="130" height="28" rx="6" fill="rgba(74,222,128,.1)" stroke="rgba(74,222,128,.28)" stroke-width="1"/>
+                <text x="625" y="186" fill="#4ade80" font-size="9.5" text-anchor="middle" font-family="JetBrains Mono, monospace" font-weight="600">Engagement Contrib</text>
+
+                <!-- Connector lines -->
+                <line x1="270" y1="40" x2="279" y2="82" stroke="rgba(200,212,224,.12)" stroke-width="1"/>
+                <line x1="400" y1="82" x2="559" y2="182" stroke="rgba(200,212,224,.12)" stroke-width="1"/>
+                <line x1="550" y1="144" x2="559" y2="182" stroke="rgba(200,212,224,.12)" stroke-width="1"/>
+              </svg>
+
+              <p class="prose" style="margin-top:12px;font-size:13px">Seq:10 and seq:40 are Serial — seq:40 cannot start until seq:10 has committed the IT pool total. Seq:20 and seq:30 run in Parallel immediately after seq:10 — they share no data with each other. Seq:50 runs Parallel after all other pools have completed, ensuring fully-loaded costs are available at the Entity level before being pushed to engagement codes.</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="section" id="calc-threads">
+          <div class="sec-type-bar"><div class="sec-type-icon technical">🔧</div><span class="sec-type-label technical">Technical</span></div>
+          <h2 class="sec-h">Calculation threads and the <code>calcThreads</code> setting</h2>
+          <div class="sec-div"></div>
+          <p class="sec-sub">Parallel rule sets only deliver their performance benefit if EPCM has enough threads available to run them simultaneously. NovaPrism's application is configured for 5 calculation threads — a deliberate design decision.</p>
+          <p class="prose">The <code>calcThreads</code> property (set to <strong>5</strong> in NovaPrism's application, per constants.js) tells EPCM how many rules it can execute concurrently at any moment during a model run. For NovaPrism's parallel rule sets, this means seq:20 and seq:30 can each run their 3 and 4 rules respectively — all simultaneously, up to the thread limit — while the platform queues any excess.</p>
+          <p class="prose">In practice: seq:20 has 3 parallel rules (one per division), and seq:30 has 4 parallel rules (Finance × 3 divisions + HR weighted). With 5 threads, 5 of these 7 rules start immediately; the remaining 2 start as threads free. The net effect is that seq:20+seq:30 together complete in approximately the time of the 2 slowest rules, not the sum of all 7.</p>
+
+          <div class="tbl-wrap">
+            <table class="tbl">
+              <thead><tr><th>calcThreads setting</th><th>Effect on NovaPrism's parallel rule sets</th><th>Risk</th></tr></thead>
+              <tbody>
+                <tr><td>1 (minimum)</td><td>All rules run sequentially regardless of rule set type — parallel sets lose their performance advantage entirely</td><td><span class="badge red">Slowest</span></td></tr>
+                <tr><td>3</td><td>Most parallel rules in seq:20+seq:30 queue; 2 divisions always wait. Seq:50's 6 engagement rules run 3 at a time</td><td><span class="badge amber">Suboptimal</span></td></tr>
+                <tr><td>5 (NovaPrism default)</td><td>Seq:20+seq:30 complete in ≈2× single-rule time. Seq:50's 6 rules complete in 2 batches. Good throughput vs resource balance</td><td><span class="badge green">Balanced</span></td></tr>
+                <tr><td>10+</td><td>Minimal further gain for NovaPrism's 18-rule model — most threads idle. Could compete with other EPM processes on shared infrastructure</td><td><span class="badge amber">Diminishing returns</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="infobox warn">
+            <div class="infobox-icon">⚠️</div>
+            <div class="infobox-body"><strong>The exam answer on calcThreads:</strong> The exam will test that you know the maximum calcThreads is application-level, not rule-set-level. You set it once on the application, not per rule set or per model. NovaPrism's value of 5 is stored in <code>NP.app.calcThreads</code> in constants.js. The default if not set is typically 1 — meaning parallel rule sets would run sequentially unless you explicitly configure threads.</div>
+          </div>
+        </section>
+
+      </div><!-- /technical -->
+
+      <!-- ═══════ TAB 3: SIMULATOR ═══════ -->
+      <div class="tab-panel" id="tab-interactive">
+
+        <section class="section" id="sequence-simulator">
+          <div class="sec-type-bar"><div class="sec-type-icon interactive">▶️</div><span class="sec-type-label interactive">Interactive</span></div>
+          <h2 class="sec-h">Rule Set Execution Simulator</h2>
+          <div class="sec-div"></div>
+          <p class="sec-sub">Step through NovaPrism's M01 model execution one rule set at a time. Watch the $134M allocate in sequence — see which steps depend on which, and what happens at each stage.</p>
+
+          <div class="sim-wrap">
+            <div class="sim-header">
+              <span class="sim-title">M01 — Actuals Allocation Process · NovaPrism_EPCM_PROD</span>
+              <span style="font-size:11px;color:var(--dim);font-style:italic">Actual / Working / FY24 Q1</span>
+            </div>
+            <div class="sim-body">
+              <div class="sim-controls">
+                <button class="sim-btn run-btn" id="btn-step" onclick="simStep()">▶ Step Forward</button>
+                <button class="sim-btn" id="btn-run-all" onclick="simRunAll()">⚡ Run All</button>
+                <button class="sim-btn reset-btn" onclick="simReset()">↺ Reset</button>
+              </div>
+              <div class="sim-pipeline" id="sim-pipeline"></div>
+              <div class="sim-log" id="sim-log"><p class="log-line" style="color:var(--dim);font-style:italic">Simulation ready. Press Step Forward to begin.</p></div>
+            </div>
+          </div>
+        </section>
+
+      </div><!-- /interactive -->
+
+      <!-- ═══════ TAB 4: LAB ═══════ -->
+      <div class="tab-panel" id="tab-lab">
+
+        <section class="section" id="lab-build">
+          <div class="sec-type-bar"><div class="sec-type-icon lab">🔬</div><span class="sec-type-label lab">Lab Scenario</span></div>
+          <h2 class="sec-h">Build NovaPrism's rule set configuration</h2>
+          <div class="sec-div"></div>
+          <p class="sec-sub">The Models Pavilion has the four models approved and configured. Now you must design the rule sets that those models will execute. Nothing runs until the rule sets are defined.</p>
+
+          <div class="lab-box">
+            <div class="lab-header">Mission Brief — Rule Set Design Document</div>
+            <div class="lab-scenario">
+              <strong>Situation:</strong> NovaPrism's Oracle implementation partner is ready to build rule sets in the EPCM UI. Before any rule is created, you must produce a design document that specifies: (1) exactly which rule sets are needed, (2) the sequence number and execution mode for each, (3) the rules within each rule set and their types, and (4) the dependency chain that justifies the serial execution choices. This document is the source of truth — if it is wrong, the model will produce incorrect allocations silently.
+            </div>
+            <div class="lab-checklist" id="lab-checklist">
+              <div class="lab-check-item" onclick="toggleCheck(this)">
+                <div class="lab-check-box"></div>
+                <div class="lab-check-text"><strong>Define all five rule sets with sequence numbers and execution modes.</strong> For each: seq number, name, mode (Serial/Parallel), rule count, and a one-sentence justification of why that execution mode is correct. Use NP.rulesets from constants.js as your source. Pay special attention to why seq:10 and seq:40 must both be Serial.</div>
+              </div>
+              <div class="lab-check-item" onclick="toggleCheck(this)">
+                <div class="lab-check-box"></div>
+                <div class="lab-check-text"><strong>Map the dependency chain.</strong> Draw or describe the dependency graph: which rule sets can start immediately, which must wait for others, and why. The answer must explain the specific PCM_Balance member that seq:40 reads from, which seq:10 must have written first — and what value seq:40 would read if seq:10 had not yet run.</div>
+              </div>
+              <div class="lab-check-item" onclick="toggleCheck(this)">
+                <div class="lab-check-box"></div>
+                <div class="lab-check-text"><strong>Specify the rule types for each rule in seq:10 (IT Cost Pool Formation).</strong> Seq:10 contains 3 rules. For each rule: state the rule type (Allocation / Custom Calc / Offset), what it reads from (source PCM_Balance member and dimension intersection), and what it writes to. The IT pool must be correctly staged before seq:40 can allocate it — describe the exact staging mechanism.</div>
+              </div>
+              <div class="lab-check-item" onclick="toggleCheck(this)">
+                <div class="lab-check-box"></div>
+                <div class="lab-check-text"><strong>Specify the Allocation rule for seq:40 IT Allocation.</strong> Write the full rule specification: source pool member, driver dimension and members (DS: 1,240 tickets, IS: 2,890, CL: 410, total 4,540), target dimension intersections, and the exact dollar amounts each division receives ($14.19M DS, $33.09M IS, $4.70M CL from the $52M pool). Verify that the amounts sum correctly to the pool total within rounding tolerance.</div>
+              </div>
+              <div class="lab-check-item" onclick="toggleCheck(this)">
+                <div class="lab-check-box"></div>
+                <div class="lab-check-text"><strong>Write the governance brief on calcThreads.</strong> Why is NovaPrism's calcThreads set to 5? What would happen to the model run time if it were set to 1? What would happen if it were set to 20? What is the practical ceiling given NovaPrism's 18-rule model structure? Include a recommendation for whether 5 is the right value or whether it should be reviewed.</div>
+              </div>
+            </div>
+            <div class="lab-progress">
+              <div class="lab-progress-label" id="lab-progress-label">0 of 5 tasks completed</div>
+              <div class="lab-progress-bar"><div class="lab-progress-fill" id="lab-progress-fill" style="width:0%"></div></div>
+            </div>
+          </div>
+
+          <div class="infobox tip" style="margin-top:20px">
+            <div class="infobox-icon">🎓</div>
+            <div class="infobox-body"><strong>Dean's hint on task 3:</strong> Seq:10 uses a Custom Calculation rule (not an Allocation rule) to form the IT pool. This is because the pool formation step is not allocating costs — it is aggregating 120+ GL account members tagged as IT-related into a single stageable total. An Allocation rule requires a pre-defined source pool and a driver — the pool formation step creates the source pool. The Custom Calc rule writes the aggregate to <code>IT_Pool_Staged</code> at <code>PCM_Input</code>. Seq:40's Allocation rule then reads <code>IT_Pool_Staged</code> at <code>PCM_Input</code> as its source. If seq:10 hasn't run, <code>IT_Pool_Staged</code> is zero — and seq:40 allocates nothing, silently.</div>
+          </div>
+        </section>
+
+      </div><!-- /lab -->
+
+      <!-- ═══════ TAB 5: EXAM PREP ═══════ -->
+      <div class="tab-panel" id="tab-exam">
+
+        <section class="section" id="exam-alignment">
+          <div class="sec-type-bar"><div class="sec-type-icon exam">📝</div><span class="sec-type-label exam">Exam Alignment · 1Z0-1082-25</span></div>
+          <h2 class="sec-h">What Hall of Logic covers on the exam</h2>
+          <div class="sec-div"></div>
+          <p class="sec-sub">Hall 4 maps to the fourth syllabus topic: Managing Rule Sets and Rules. This is the highest-weighted topic on the exam — expect 8–10 questions across the 50-question paper.</p>
+
+          <div class="exam-box">
+            <div class="exam-box-header">📝 Syllabus — Managing Rule Sets and Rules</div>
+            <div class="exam-box-body">
+              <strong>Sub-bullet 1: Describe rule sets.</strong> Know execution modes (Serial vs Parallel), the sequence number contract, and when each mode is appropriate.<br><br>
+              <strong>Sub-bullet 2: Describe rules.</strong> Know all three rule types (Allocation, Custom Calculation, Offset). Know which PCM_Balance members each type reads from and writes to.<br><br>
+              <strong>Sub-bullet 3: Manage rule sets and rules.</strong> Know how to add, sequence, and configure rules in the EPCM UI. Know the calcThreads application setting and its effect on parallel execution. Know what happens when a Serial rule set has a dependency on a prior Serial rule set.<br><br>
+              <strong>Sub-bullet 4: Calculate models.</strong> Know the phases of model calculation (Clear → execute rule sets in sequence → balance check). Know that Logical Clear is the default.
+            </div>
+          </div>
+
+          <div class="exam-box">
+            <div class="exam-box-header">⚠️ The four most-tested traps in this section</div>
+            <div class="exam-box-body">
+              <strong>Trap 1: "A Parallel rule set is always faster than Serial."</strong><br>
+              FALSE when calcThreads = 1 (rules queue anyway). Only faster when threads are available AND rules have no intra-set dependencies.<br><br>
+              <strong>Trap 2: "In a Parallel rule set, later rules can read values written by earlier rules."</strong><br>
+              FALSE. Parallel rules run simultaneously — no rule can read another's freshly written value. Use Serial when intra-set read/write dependencies exist.<br><br>
+              <strong>Trap 3: "An Allocation rule can be used to form a cost pool from GL account members."</strong><br>
+              FALSE. Pool formation from multiple GL accounts requires a Custom Calculation rule. An Allocation rule requires a pre-existing source pool total. Use Custom Calc for aggregation; use Allocation for distributing the aggregated total.<br><br>
+              <strong>Trap 4: "calcThreads is set per rule set, not per application."</strong><br>
+              FALSE. calcThreads is an application-level property. It applies to all models and all rule sets in the application. You cannot set different thread counts per rule set.
+            </div>
+          </div>
+
+          <div id="quiz-container"></div>
+          <div class="quiz-score" id="quiz-score">
+            <div class="quiz-score-num" id="quiz-score-num">0/5</div>
+            <div class="quiz-score-label">Hall 4 Exam Score</div>
+            <div class="quiz-score-msg" id="quiz-score-msg"></div>
+          </div>
+
+          <div class="tbl-wrap" style="margin-top:28px">
+            <table class="tbl">
+              <thead><tr><th>Concept</th><th>Exam answer</th><th>Implementation reality</th></tr></thead>
+              <tbody>
+                <tr><td>Serial vs Parallel rule sets</td><td>Serial = sequential execution (later rules see earlier writes). Parallel = simultaneous (no intra-set read dependencies allowed)</td><td>Most real models mix both — pool formation serial, allocation parallel, pool-of-pools serial again</td></tr>
+                <tr><td>Three rule types</td><td>Allocation (driver-based distribution), Custom Calculation (Essbase calc script), Offset (zero-out balancing entry)</td><td>Allocation rules do the heavy lifting. Custom Calc handles aggregation, staging, and complex logic. Offset is the final audit step</td></tr>
+                <tr><td>calcThreads</td><td>Application-level property. Controls max concurrent rule execution. Default = 1 if not set</td><td>Most production EPCM implementations use 5–8 threads. More threads = more database server resource consumption</td></tr>
+                <tr><td>Sequence number gaps</td><td>Not required by the product — but best practice to leave gaps (10, 20, 30...) for future insertions</td><td>Every serious implementation uses gaps. It saves a painful renumbering exercise when business logic changes require a new intermediate step</td></tr>
+                <tr><td>Dependency enforcement</td><td>Enforced by sequence number — EPCM runs rulesets in ascending sequence order, never out of order</td><td>No additional configuration needed — the sequence number IS the dependency contract. seq:40 simply has a higher number than seq:10</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+      </div><!-- /exam -->
+
+      <!-- Hall Nav Footer -->
+      <div class="hall-nav-footer">
+        <a href="hall-3.html" class="hnf-prev">
+          <span style="font-size:14px">←</span>
+          <div><div class="hnf-dir">Previous Hall</div><div class="hnf-name">Models Pavilion</div></div>
+        </a>
+        <a href="hall-5.html" class="hnf-next">
+          <div><div class="hnf-dir">Next Hall</div><div class="hnf-name">Workshop of Precision</div></div>
+          <span style="font-size:14px">→</span>
+        </a>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<!-- ══ SCRIPTS ══ -->
+<script src="./constants.js"></script>
+<script>
+
+/* ── Stars ── */
+(function(){
+  var s=document.getElementById('stars');
+  for(var i=0;i<50;i++){
+    var d=document.createElement('div');d.className='star';
+    var sz=Math.random()*1.2+0.3;
+    d.style.cssText='width:'+sz+'px;height:'+sz+'px;top:'+Math.random()*100+'%;left:'+Math.random()*100+'%;--d:'+(3+Math.random()*6)+'s;--delay:'+Math.random()*8+'s;--op:'+(0.04+Math.random()*0.12);
+    s.appendChild(d);
+  }
+})();
+
+/* ── Sidebar ── */
+function toggleSidebar(){ document.getElementById('sidebar').classList.toggle('open'); document.getElementById('overlay').classList.toggle('open'); }
+function closeSidebar(){ document.getElementById('sidebar').classList.remove('open'); document.getElementById('overlay').classList.remove('open'); }
+
+/* ── Campus map ── */
+(function(){
+  var halls=[
+    {n:1,name:'Foundations',url:'hall-1.html',done:true},
+    {n:2,name:'Dimensions',url:'hall-2.html',done:true},
+    {n:3,name:'Models',url:'hall-3.html',done:true},
+    {n:4,name:'Logic',url:'hall-4.html',active:true},
+    {n:5,name:'Workshop',url:'hall-5.html'},
+    {n:6,name:'Control',url:'hall-6.html'},
+    {n:7,name:'Observatory',url:'hall-7.html'},
+    {n:8,name:'Pipeline',url:'hall-8.html'},
+    {n:9,name:'Exam Hall',url:'hall-9.html'},
+  ];
+  var map=document.getElementById('campus-map');
+  var html='';
+  halls.forEach(function(h,i){
+    var cls=h.active?'campus-building active':h.done?'campus-building done':'campus-building locked';
+    var stopCls=h.active?'campus-stop active-stop':h.done?'campus-stop done-stop':'campus-stop';
+    html+='<div class="'+stopCls+'"><a href="'+h.url+'" class="'+cls+'">'+h.n+'</a><div class="campus-stop-label">'+h.name+'</div></div>';
+    if(i<halls.length-1) html+='<div class="campus-connector"></div>';
+  });
+  map.innerHTML=html;
+})();
+
+/* ── Company sidebar ── */
+(function(){
+  if(typeof NP==='undefined') return;
+  var c=NP.company;
+  var el=document.getElementById('sb-company-desc');
+  if(el) el.textContent='$'+(c.revenue/1000).toFixed(1)+'B · 3 divisions · 1 cost centre · '+c.employees.toLocaleString()+' staff';
+})();
+
+/* ── Tabs ── */
+function switchTab(name,btn){
+  document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.remove('active');});
+  document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('active');});
+  document.getElementById('tab-'+name).classList.add('active');
+  btn.classList.add('active');
+  buildTOC();
+}
+
+/* ── TOC ── */
+function buildTOC(){
+  var toc=document.getElementById('sb-toc');
+  if(!toc) return;
+  toc.innerHTML='';
+  var panel=document.querySelector('.tab-panel.active');
+  if(!panel) return;
+  panel.querySelectorAll('h2.sec-h').forEach(function(h){
+    if(!h.id) h.id='toc-'+h.textContent.trim().toLowerCase().replace(/[^a-z0-9]+/g,'-').slice(0,40);
+    var a=document.createElement('a');
+    a.href='#'+h.id; a.className='sb-toc-item';
+    a.textContent=h.textContent;
+    toc.appendChild(a);
+  });
+}
+setTimeout(buildTOC,100);
+
+/* ── Ruleset cards (live from NP.rulesets) ── */
+(function buildRulesetCards(){
+  if(typeof NP==='undefined') return;
+  var container=document.getElementById('ruleset-cards');
+  if(!container) return;
+
+  var ruleDetails = {
+    10: {
+      mode: 'Serial',
+      why: 'Seq:10 uses Custom Calc rules to aggregate IT-related GL accounts. The pool total must be committed before seq:40 can read it as an Allocation source.',
+      rules: [
+        {type:'rtt-custom', typeLabel:'Custom Calc', text:'<strong>GL Account Aggregation:</strong> Read 120+ GL accounts in the IT account group (via Account alt hierarchy) and sum into <code>IT_Pool_Staged</code> member at PCM_Input × ES × Function:IT.'},
+        {type:'rtt-custom', typeLabel:'Custom Calc', text:'<strong>Sub-pool validation:</strong> Confirm IT_Pool_Staged = $52M (matches NP.costPools.IT.amount). Write a validation flag to a control member — used by Rule Balancing in Hall 7.'},
+        {type:'rtt-custom', typeLabel:'Custom Calc', text:'<strong>Driver ratio pre-computation:</strong> Stage ticket-count ratios per division (DS: 1240/4540, IS: 2890/4540, CL: 410/4540) into driver staging members. Used by seq:40 Allocation rule.'}
+      ]
+    },
+    20: {
+      mode: 'Parallel',
+      why: 'Each Facilities Allocation rule writes to a different Entity (DS, IS, CL). No rule reads another rule\'s output — safe to run in parallel.',
+      rules: [
+        {type:'rtt-alloc', typeLabel:'Allocation', text:'<strong>Facilities → DS:</strong> $38M × (42,000 sqft / 154,000 total) = <strong>$10.36M</strong> written to DS PCM_Allocated_In; ES PCM_Allocated_Out += $10.36M.'},
+        {type:'rtt-alloc', typeLabel:'Allocation', text:'<strong>Facilities → IS:</strong> $38M × (98,000 sqft / 154,000 total) = <strong>$24.16M</strong> written to IS PCM_Allocated_In; ES PCM_Allocated_Out += $24.16M.'},
+        {type:'rtt-alloc', typeLabel:'Allocation', text:'<strong>Facilities → CL:</strong> $38M × (14,000 sqft / 154,000 total) = <strong>$3.45M</strong> written to CL PCM_Allocated_In; ES PCM_Allocated_Out += $3.45M.'}
+      ]
+    },
+    30: {
+      mode: 'Parallel',
+      why: 'Finance and HR pools both use headcount as driver and write to the same divisions — but each rule writes to a distinct PCM_Allocated_In intersection (different Account or Function member). No intra-set dependency.',
+      rules: [
+        {type:'rtt-alloc', typeLabel:'Allocation', text:'<strong>Finance → DS:</strong> $28M × (2,800 / 7,840) = <strong>$10.00M</strong> to DS PCM_Allocated_In.'},
+        {type:'rtt-alloc', typeLabel:'Allocation', text:'<strong>Finance → IS+CL:</strong> $28M × (4,200+840)/7,840 = IS <strong>$15.00M</strong> + CL <strong>$3.00M</strong> to respective PCM_Allocated_In.'},
+        {type:'rtt-alloc', typeLabel:'Allocation', text:'<strong>HR → DS:</strong> $16M × (2,800 / 7,840) = <strong>$5.71M</strong> to DS PCM_Allocated_In.'},
+        {type:'rtt-alloc', typeLabel:'Allocation', text:'<strong>HR → IS+CL:</strong> $16M × (4,200+840)/7,840 = IS <strong>$8.57M</strong> + CL <strong>$1.71M</strong> to respective PCM_Allocated_In.'}
+      ]
+    },
+    40: {
+      mode: 'Serial',
+      why: 'MUST run after seq:10. Reads IT_Pool_Staged written by seq:10. If seq:10 has not completed, IT_Pool_Staged = 0 and no IT cost is allocated — silent failure.',
+      rules: [
+        {type:'rtt-alloc', typeLabel:'Allocation', text:'<strong>IT Allocation (driver: tickets):</strong> IT_Pool_Staged ($52M) distributed by ticket count. DS: 1,240/4,540 = <strong>$14.19M</strong>. IS: 2,890/4,540 = <strong>$33.09M</strong>. CL: 410/4,540 = <strong>$4.70M</strong>.'},
+        {type:'rtt-offset', typeLabel:'Offset', text:'<strong>ES IT sub-pool Offset:</strong> Zero out the IT_Pool_Staged member at ES. Confirms ES IT sub-pool PCM_Output = $0. Sets up ES for the final full-balance Offset check after seq:50.'}
+      ]
+    },
+    50: {
+      mode: 'Parallel',
+      why: 'Each rule pushes one division\'s fully-loaded costs to its engagement codes. DS engagements, IS engagements, and CL engagements are completely independent — safe to run in parallel.',
+      rules: [
+        {type:'rtt-alloc', typeLabel:'Allocation', text:'<strong>DS Engagement Contribution:</strong> DS\'s fully-loaded $620.26M distributed across DS engagement codes (ENG_001–ENG_020 range) using engagement-level revenue as allocation driver.'},
+        {type:'rtt-alloc', typeLabel:'Allocation', text:'<strong>IS Engagement Contribution:</strong> IS\'s fully-loaded $950.82M (leaving only $29.18M net margin) distributed across IS engagement codes — includes the 17 loss-making engagements.'},
+        {type:'rtt-alloc', typeLabel:'Allocation', text:'<strong>CL Engagement Contribution:</strong> CL\'s fully-loaded $202.86M distributed across CL engagement codes.'},
+        {type:'rtt-custom', typeLabel:'Custom Calc', text:'<strong>Customer rollup validation:</strong> Confirm All_Customers PCM_Output reconciles to Entity-level PCM_Output. Flags any gap to No_Customer holding member.'},
+        {type:'rtt-custom', typeLabel:'Custom Calc', text:'<strong>No_Customer cleanup:</strong> Any unattributed costs sitting in No_Customer are reported to the control log. Not zero\'d — they are left for analyst review.'},
+        {type:'rtt-offset', typeLabel:'Offset', text:'<strong>Final ES balance Offset:</strong> ES PCM_Output should = PCM_Input ($134M) − PCM_Allocated_Out ($134M) = $0. This Offset rule writes the balancing entry and is verified by Rule Balancing in Hall 7.'}
+      ]
+    }
+  };
+
+  var html='';
+  NP.rulesets.forEach(function(rs){
+    var detail=ruleDetails[rs.seq];
+    var seqCls='seq-'+rs.seq;
+    var modeBadge=rs.type==='Serial'?'<span class="badge purple">Serial</span>':'<span class="badge green">Parallel</span>';
+    html+='<div class="ruleset-card" id="rs-'+rs.seq+'">';
+    html+='<div class="ruleset-card-header" onclick="toggleRuleset('+rs.seq+')">';
+    html+='<div class="ruleset-seq '+seqCls+'">'+rs.seq+'</div>';
+    html+='<div class="ruleset-meta"><div class="ruleset-name">'+rs.name+'</div><div class="ruleset-desc">'+rs.desc+'</div></div>';
+    html+='<div class="ruleset-badges">'+modeBadge+'<span class="badge sky">'+rs.rules+' rules</span></div>';
+    html+='<div class="ruleset-expand">›</div>';
+    html+='</div>';
+    // body
+    html+='<div class="ruleset-body">';
+    if(detail){
+      html+='<p style="font-size:13px;color:var(--silver2);margin-top:12px;line-height:1.65;padding:10px 12px;background:rgba(168,85,247,.04);border:1px solid var(--accent-border);border-radius:8px"><strong style="color:var(--accent)">Why '+rs.type+'?</strong> '+detail.why+'</p>';
+      html+='<div class="ruleset-rules">';
+      detail.rules.forEach(function(r,i){
+        html+='<div class="rule-item">';
+        html+='<span class="rule-num">R'+(i+1)+'</span>';
+        html+='<div class="rule-text">'+r.text+'</div>';
+        html+='<span class="rule-type-tag '+r.type+'">'+r.typeLabel+'</span>';
+        html+='</div>';
+      });
+      html+='</div>';
+    }
+    html+='</div>';
+    html+='</div>';
+  });
+  container.innerHTML=html;
+})();
+
+function toggleRuleset(seq){
+  var card=document.getElementById('rs-'+seq);
+  if(card) card.classList.toggle('open');
+}
+
+/* ── Execution Simulator ── */
+var simSteps=[
+  {
+    seq:'10', name:'IT Cost Pool Formation', type:'serial',
+    status:'Waiting', progress:0,
+    result:'', resultFull:'IT_Pool_Staged = $52.00M ✓',
+    duration:2200,
+    logLines:['[seq:10] Scanning 120+ GL accounts tagged IT…','[seq:10] Aggregating to IT_Pool_Staged at ES × PCM_Input…','[seq:10] Staging driver ratios: DS 27.3%, IS 63.6%, CL 9.0%…','[seq:10] IT_Pool_Staged = $52.00M — committed to PCM_CLC ✓']
+  },
+  {
+    seq:'20', name:'Facilities Allocation', type:'parallel',
+    status:'Waiting', progress:0,
+    result:'', resultFull:'$38.00M allocated (Parallel ×3)',
+    duration:1400,
+    logLines:['[seq:20] Parallel — 3 rules dispatched simultaneously…','[seq:20/R1] DS: $38M × 42,000/154,000 = $10.36M → PCM_Allocated_In','[seq:20/R2] IS: $38M × 98,000/154,000 = $24.16M → PCM_Allocated_In','[seq:20/R3] CL: $38M × 14,000/154,000 = $3.45M → PCM_Allocated_In','[seq:20] Pool check: $10.36+$24.16+$3.45=$37.97M ≈ $38M (rounding ✓)']
+  },
+  {
+    seq:'30', name:'Finance & HR Allocation', type:'parallel',
+    status:'Waiting', progress:0,
+    result:'', resultFull:'$44.00M allocated (Parallel ×4)',
+    duration:1600,
+    logLines:['[seq:30] Parallel — 4 rules dispatched simultaneously…','[seq:30/R1] Finance → DS: $28M × 2800/7840 = $10.00M','[seq:30/R2] Finance → IS: $15.00M | CL: $3.00M','[seq:30/R3] HR → DS: $16M × 2800/7840 = $5.71M','[seq:30/R4] HR → IS: $8.57M | CL: $1.71M','[seq:30] Finance+HR total: $44.00M allocated ✓']
+  },
+  {
+    seq:'40', name:'IT Allocation', type:'serial',
+    status:'Waiting — awaiting seq:10', progress:0,
+    result:'', resultFull:'$52.00M allocated (Serial)',
+    duration:1800,
+    logLines:['[seq:40] Dependency check: seq:10 complete? ✓','[seq:40] Reading IT_Pool_Staged = $52.00M from PCM_CLC…','[seq:40/R1] IT → DS: $52M × 1240/4540 = $14.19M → PCM_Allocated_In','[seq:40/R1] IT → IS: $52M × 2890/4540 = $33.09M → PCM_Allocated_In','[seq:40/R1] IT → CL: $52M × 410/4540 = $4.70M → PCM_Allocated_In','[seq:40/R2] Offset: ES IT_Pool_Staged PCM_Output = $0 ✓','[seq:40] IT pool fully allocated — $51.98M (rounding ≤$0.02 ✓)']
+  },
+  {
+    seq:'50', name:'Engagement Contribution', type:'parallel',
+    status:'Waiting', progress:0,
+    result:'', resultFull:'60 engagements loaded (Parallel ×6)',
+    duration:2400,
+    logLines:['[seq:50] All pools allocated — pushing to engagement level…','[seq:50/R1] DS fully-loaded $620.26M → ENG_001–020 range','[seq:50/R2] IS fully-loaded $950.82M → IS engagement codes','[seq:50/R2] 17 of IS engagements flagged as loss-making after alloc','[seq:50/R3] CL fully-loaded $202.86M → CL engagement codes','[seq:50/R4] Customer reconciliation: All_Customers = Entity total ✓','[seq:50/R6] ES final Offset: PCM_Output = $134M - $134M = $0 ✓','[seq:50] Model balanced. Ready for Rule Balancing (Hall 7).']
+  }
+];
+var simCurrent=0;
+var simRunning=false;
+
+function simBuild(){
+  var pipeline=document.getElementById('sim-pipeline');
+  if(!pipeline) return;
+  var html='';
+  simSteps.forEach(function(s,i){
+    var typeCls=s.type==='serial'?'serial':'parallel';
+    var typeBadge=s.type==='serial'?'<span class="badge purple" style="font-size:8px;padding:2px 6px">Serial</span>':'<span class="badge green" style="font-size:8px;padding:2px 6px">Parallel</span>';
+    html+='<div class="sim-step waiting" id="sim-step-'+i+'">';
+    html+='<div class="sim-step-seq" id="sim-seq-'+i+'">'+s.seq+'</div>';
+    html+='<div class="sim-step-info">';
+    html+='<div class="sim-step-name">'+s.name+'</div>';
+    html+='<div style="display:flex;align-items:center;gap:8px;margin-top:3px">'+typeBadge+'<span class="sim-step-status" id="sim-status-'+i+'">'+s.status+'</span></div>';
+    html+='<div class="sim-progress-bar"><div class="sim-progress-fill" id="sim-progress-'+i+'" style="width:0%"></div></div>';
+    html+='</div>';
+    html+='<div class="sim-step-result" id="sim-result-'+i+'"></div>';
+    html+='</div>';
+  });
+  pipeline.innerHTML=html;
+}
+simBuild();
+
+function simLog(msg,cls){
+  var log=document.getElementById('sim-log');
+  if(!log) return;
+  var p=document.createElement('p');
+  p.className='log-line '+(cls||'');
+  p.textContent=msg;
+  log.appendChild(p);
+  log.scrollTop=log.scrollHeight;
+}
+
+async function simStep(){
+  if(simRunning||simCurrent>=simSteps.length) return;
+  simRunning=true;
+  var s=simSteps[simCurrent];
+  var i=simCurrent;
+  var stepEl=document.getElementById('sim-step-'+i);
+  var statusEl=document.getElementById('sim-status-'+i);
+  var progressEl=document.getElementById('sim-progress-'+i);
+  var resultEl=document.getElementById('sim-result-'+i);
+
+  // clear empty state
+  if(i===0){
+    document.getElementById('sim-log').innerHTML='';
+  }
+
+  // mark running
+  stepEl.className='sim-step running';
+  statusEl.textContent='Running…';
+  simLog('[model] Starting '+s.name+' (seq:'+s.seq+', '+s.type+')','info');
+
+  // animate progress
+  var start=performance.now();
+  var dur=s.duration;
+  function tick(now){
+    var pct=Math.min(100,((now-start)/dur)*100);
+    progressEl.style.width=pct+'%';
+    if(pct<100) requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+
+  // log lines staggered
+  var lines=s.logLines;
+  for(var l=0;l<lines.length;l++){
+    await delay((s.duration/(lines.length+1))*(l+1));
+    simLog(lines[l]);
+  }
+  await delay(s.duration);
+
+  // mark done
+  stepEl.className='sim-step done';
+  statusEl.textContent='Complete';
+  resultEl.textContent=s.resultFull;
+  simLog('[seq:'+s.seq+'] Done — '+s.resultFull,'done');
+
+  simCurrent++;
+  simRunning=false;
+
+  if(simCurrent>=simSteps.length){
+    simLog('[model] M01 Actuals Allocation Process complete. All 5 rulesets executed. $134M fully allocated.','done');
+    simLog('[balance] ES PCM_Output = $0 ✓ | DS fully-loaded: $620.26M | IS: $950.82M | CL: $202.86M','done');
+    document.getElementById('btn-step').disabled=true;
+    document.getElementById('btn-run-all').disabled=true;
+  }
+}
+
+async function simRunAll(){
+  while(simCurrent<simSteps.length&&!simRunning){
+    await simStep();
+    await delay(200);
+  }
+}
+
+function simReset(){
+  simCurrent=0;
+  simRunning=false;
+  simBuild();
+  var log=document.getElementById('sim-log');
+  log.innerHTML='<p class="log-line" style="color:var(--dim);font-style:italic">Simulation reset. Press Step Forward to begin.</p>';
+  var btnStep=document.getElementById('btn-step');
+  var btnAll=document.getElementById('btn-run-all');
+  if(btnStep) btnStep.disabled=false;
+  if(btnAll) btnAll.disabled=false;
+}
+
+function delay(ms){ return new Promise(function(r){setTimeout(r,ms);}); }
+
+/* ── Lab checklist ── */
+function toggleCheck(item){
+  var box=item.querySelector('.lab-check-box');
+  box.classList.toggle('checked');
+  item.classList.toggle('checked');
+  updateLabProgress();
+}
+function updateLabProgress(){
+  var done=document.querySelectorAll('.lab-check-box.checked').length;
+  var total=document.querySelectorAll('.lab-check-item').length;
+  document.getElementById('lab-progress-label').textContent=done+' of '+total+' tasks completed';
+  document.getElementById('lab-progress-fill').style.width=(done/total*100)+'%';
+}
+
+/* ── Quiz ── */
+var quizData=[
+  {
+    diff:'foundation',qnum:'Q1',
+    stem:'NovaPrism\'s IT Cost Pool Formation rule set (seq:10) and IT Allocation rule set (seq:40) are both configured as Serial. Seq:10 is numbered 10 and seq:40 is numbered 40. Why does this configuration guarantee that seq:40 only runs after seq:10 has completed?',
+    options:[
+      'Serial rule sets automatically detect dependencies by scanning which members they read, and wait for all writers to complete',
+      'EPCM executes rule sets in ascending sequence number order — seq:40 cannot begin until all rule sets with a lower sequence number have completed',
+      'The Serial execution mode locks the database after each rule set, preventing the next rule set from reading stale values',
+      'The Finance Controller must manually trigger each rule set in sequence — EPCM does not enforce the order automatically'
+    ],
+    correct:1,
+    explanation:'EPCM executes all rule sets assigned to a model in ascending sequence number order, without exception. Seq:10 runs before seq:20, seq:20 before seq:30, and so on. The sequence number is the dependency contract — seq:40 simply has a higher number than seq:10, which guarantees it runs after. No additional dependency configuration is needed. The Serial execution mode within a rule set controls whether rules inside that set run sequentially — it does not affect cross-rule-set ordering, which is always governed by the sequence number.'
+  },
+  {
+    diff:'foundation',qnum:'Q2',
+    stem:'NovaPrism\'s Facilities Allocation rule set (seq:20) is configured as Parallel with 3 rules — one rule per receiving division (DS, IS, CL). What is the primary reason Parallel is correct here?',
+    options:[
+      'Parallel is always faster than Serial, so it should be used for any rule set with more than one rule',
+      'Each rule writes to a different Entity dimension member, and no rule reads a value written by another rule in the same set — there are no intra-set read/write dependencies',
+      'The Facilities pool must be allocated before the Finance pool, and Parallel execution enforces this ordering',
+      'EPCM automatically detects that the three rules are independent and upgrades them from Serial to Parallel at runtime'
+    ],
+    correct:1,
+    explanation:'Parallel execution is correct when no rule in the set reads a value that another rule in the same set writes. In seq:20, Rule 1 writes $10.36M to DS PCM_Allocated_In, Rule 2 writes $24.16M to IS PCM_Allocated_In, and Rule 3 writes $3.45M to CL PCM_Allocated_In. These are completely independent writes to different Entity dimension members. No rule reads from another rule\'s output. Parallel is therefore safe and faster. If Rule 2 needed to read Rule 1\'s output (it does not), Serial would be required.'
+  },
+  {
+    diff:'practitioner',qnum:'Q3',
+    stem:'A junior consultant configures NovaPrism\'s IT Cost Pool Formation rule set (seq:10) as Parallel instead of Serial, and places the GL account aggregation rule and the driver ratio staging rule in the same parallel set. What is the most likely consequence?',
+    options:[
+      'EPCM raises a validation error at model save time, preventing the model from running with an incorrectly typed rule set',
+      'The model runs faster because both rules execute simultaneously, with no impact on the allocation results',
+      'The driver ratio staging rule may read IT_Pool_Staged before the aggregation rule has written the final value, producing zero or stale driver ratios — and therefore a zero or wrong IT allocation in seq:40',
+      'The Parallel execution mode is automatically overridden to Serial when EPCM detects that one rule reads a member written by another rule in the same set'
+    ],
+    correct:2,
+    explanation:'In a Parallel rule set, all rules start simultaneously — they read the values that exist in the cube at the moment the parallel set begins, before any rule in the set has written anything. If the driver ratio staging rule runs at the same time as the aggregation rule, it reads IT_Pool_Staged at its current value (zero or last period\'s stale data, not the value about to be written by the aggregation rule). The driver ratios are calculated against zero — and seq:40 subsequently allocates $0 of IT cost. EPCM does not validate for this condition at save time, and the error produces no explicit error message — just wrong output.'
+  },
+  {
+    diff:'practitioner',qnum:'Q4',
+    stem:'NovaPrism\'s implementation team is reviewing the calcThreads setting (currently 5). The CFO\'s What-If model (M04) needs to run faster during restructure scenario planning. A consultant suggests increasing calcThreads to 20. What is the most accurate assessment?',
+    options:[
+      'Increasing to 20 threads will make M04 run 4x faster because thread count scales linearly with performance',
+      'calcThreads has no effect on M04 because What-If models always run in Serial mode regardless of the thread setting',
+      'Increasing beyond 5 provides diminishing returns for NovaPrism\'s 18-rule model — most additional threads will be idle, while consuming more database server resources that may degrade other EPM processes',
+      'calcThreads must be set to at least 18 to match the rule count, otherwise rules will queue and the parallel benefit is lost entirely'
+    ],
+    correct:2,
+    explanation:'NovaPrism has 18 rules across 5 rule sets. The parallel rule sets (seq:20, seq:30, seq:50) have 3, 4, and 6 rules respectively. The maximum simultaneous rule execution at any point is 6 (when seq:50 runs). Setting calcThreads to 20 provides no additional benefit over 6 for these rule sets — the extra 14 threads sit idle. Meanwhile, high calcThreads values consume Oracle EPM Cloud infrastructure resources that may compete with Planning, FCCS, and other applications running concurrently. 5 threads is a reasonable balance for NovaPrism\'s model complexity.'
+  },
+  {
+    diff:'expert',qnum:'Q5',
+    stem:'NovaPrism\'s seq:50 (Engagement Contribution) is configured as Parallel with 6 rules. During a Rule Balancing check (Hall 7), the Finance Controller notices that the Customer dimension total for IS does not match the Entity dimension total for IS. Which design flaw is most likely responsible?',
+    options:[
+      'Seq:50 should be Serial, not Parallel — the customer-level contribution rules depend on each other\'s output',
+      'The No_Customer member is missing from the Customer dimension — costs that cannot be attributed to a specific engagement have no valid Customer target and the Customer subtotal is understated',
+      'The calcThreads setting is too low, causing some engagement contribution rules to queue and produce partial results',
+      'Seq:50 must run before seq:40 — the IT allocation must land at engagement level before the Entity-level rollup can reconcile'
+    ],
+    correct:1,
+    explanation:'When the Engagement Contribution ruleset pushes IS\'s fully-loaded costs to customer engagement codes, some costs may not have a clear engagement attribution at that point in the close cycle. Without a No_Customer member, those unattributed costs have no valid Customer dimension target — they effectively disappear from the Customer dimension subtotal. The Customer dimension total (sum of ENG_001 through ENG_060 + No_Customer) would then be less than the Entity dimension IS total. Adding No_Customer as a Stored member gives unattributed costs a valid landing place and restores the reconciliation. This is the exact design pattern covered in Hall 2.'
+  }
+];
+
+var quizAnswers={};
+(function renderQuiz(){
+  var container=document.getElementById('quiz-container');
+  if(!container) return;
+  var html='';
+  quizData.forEach(function(q,i){
+    html+='<div class="quiz-q" id="qq-'+i+'">';
+    html+='<div class="quiz-meta"><span class="quiz-diff '+q.diff+'">'+q.diff+'</span><span class="quiz-qnum">'+q.qnum+'</span></div>';
+    html+='<div class="quiz-stem">'+q.stem+'</div>';
+    html+='<div class="quiz-options">';
+    q.options.forEach(function(opt,j){
+      html+='<button class="quiz-opt" onclick="answerQ('+i+','+j+')">'+String.fromCharCode(65+j)+'. '+opt+'</button>';
+    });
+    html+='</div>';
+    html+='<div class="quiz-explanation" id="qexp-'+i+'"></div>';
+    html+='</div>';
+  });
+  container.innerHTML=html;
+})();
+
+function answerQ(qi,oi){
+  if(quizAnswers[qi]!==undefined) return;
+  quizAnswers[qi]=oi;
+  var q=quizData[qi];
+  document.querySelectorAll('#qq-'+qi+' .quiz-opt').forEach(function(o,j){
+    o.classList.add('revealed');
+    if(j===q.correct) o.classList.add('correct');
+    else if(j===oi&&oi!==q.correct) o.classList.add('wrong');
+  });
+  var exp=document.getElementById('qexp-'+qi);
+  exp.innerHTML='<strong>'+(oi===q.correct?'✓ Correct':'✗ Incorrect')+'</strong> — '+q.explanation;
+  exp.classList.add('show');
+  if(Object.keys(quizAnswers).length===quizData.length) showScore();
+}
+function showScore(){
+  var correct=0;
+  quizData.forEach(function(q,i){if(quizAnswers[i]===q.correct)correct++;});
+  var total=quizData.length;
+  var pct=Math.round(correct/total*100);
+  document.getElementById('quiz-score-num').textContent=correct+'/'+total;
+  document.getElementById('quiz-score-msg').textContent=pct<60?'Review the Hall of Logic before moving on.':pct<100?'Solid rule set knowledge — proceed to the Workshop of Precision.':'Perfect. Your rule sets are ready to execute.';
+  document.getElementById('quiz-score').classList.add('show');
+}
+
+/* ── Dean Eliot ── */
+var HALL_SYSTEM_EXTENSION=[
+  'CURRENT HALL: Hall 4 — Hall of Logic (Academy of Profit Center)',
+  'HALL SCOPE: Rule sets, rule types, execution modes. NovaPrism\'s 5 rulesets. Serial vs Parallel dependency chain.',
+  'calcThreads. The three rule types: Allocation, Custom Calculation, Offset.',
+  '',
+  'KEY CONCEPTS IN THIS HALL:',
+  '- Rule set: a named, ordered container of rules with an execution mode (Serial or Parallel) and a sequence number.',
+  '- Sequence number: the execution order contract. EPCM runs rule sets in ascending sequence order. No exceptions.',
+  '- Serial: rules run one at a time within the set. Later rules can read values written by earlier rules in the same set.',
+  '- Parallel: all rules run simultaneously. No intra-set read/write dependencies allowed. Silent failure if violated.',
+  '- Three rule types: Allocation (driver-based distribution), Custom Calculation (Essbase calc script), Offset (balance zero-out).',
+  '- calcThreads: application-level property (not per rule set). Controls max concurrent rule execution. NovaPrism = 5.',
+  '- Seq:10 (IT Pool Formation) is Serial because seq:40 depends on the IT_Pool_Staged value it writes.',
+  '- Seq:20, seq:30, seq:50 are Parallel — their rules write to independent targets.',
+  '',
+  'NOVAPRISM IN THIS HALL:',
+  '5 rule sets: seq:10 IT Pool Formation (Serial, 3 rules), seq:20 Facilities (Parallel, 3 rules),',
+  'seq:30 Finance+HR (Parallel, 4 rules), seq:40 IT Allocation (Serial, 2 rules), seq:50 Engagement Contribution (Parallel, 6 rules).',
+  'Total: 18 rules. calcThreads = 5.',
+  'Critical dependency: seq:40 reads IT_Pool_Staged written by seq:10. If seq:10 has not run, IT_Pool_Staged = 0 → silent zero allocation.',
+  '',
+  'EXAM TOPICS: Managing rule sets and rules — highest-weighted topic on 1Z0-1082-25 (8–10 questions expected).',
+  '',
+  'COMMON MISCONCEPTIONS:',
+  '- Parallel is always faster: FALSE when calcThreads=1, or when intra-set dependencies exist.',
+  '- Parallel sets auto-detect dependencies: FALSE. EPCM does not validate. Wrong mode = silent failure.',
+  '- Allocation rules can aggregate GL accounts into pools: FALSE. Use Custom Calc for aggregation.',
+  '- calcThreads is set per rule set: FALSE. Application-level only.',
+  '',
+  'OUT OF SCOPE: Custom Calc syntax → Workshop of Precision (Hall 5). Calc performance stats → Control Tower (Hall 6). Rule Balancing → Observatory (Hall 7).'
+].join('\n');
+
+function buildSystemPrompt(){
+  var pa=(typeof NP!=='undefined')?NP.postAllocation:null;
+  return [
+    'You are Dean Eliot, the AI practitioner-guide for the BrainSpring EPCM Study Tour — Academy of Profit Center.',
+    'You are a senior Oracle EPM practitioner who has implemented EPCM at 40+ enterprises.',
+    'Voice: direct (no hedging), practitioner-honest, concise (3–5 sentences target), never sycophantic.',
+    '',
+    'CASE COMPANY: NovaPrism Group — $2.1B professional services conglomerate. 8,400 employees. 4 divisions.',
+    pa?('IS: $'+pa.IS.revenue+'M revenue | '+pa.IS.directPct+'% direct → '+pa.IS.marginPct+'% fully-loaded | $'+pa.IS.allocatedIn+'M allocated in.'):'',
+    'Enterprise Support: $134M costs across IT $52M (tickets), Facilities $38M (sqft), Finance $28M (headcount), HR $16M (headcount).',
+    'Rule sets: seq:10 (IT Formation, Serial, 3 rules), seq:20 (Facilities, Parallel, 3), seq:30 (Finance+HR, Parallel, 4), seq:40 (IT Alloc, Serial, 2), seq:50 (Engagement Contrib, Parallel, 6). Total 18 rules, calcThreads=5.',
+    '',
+    'RULES: Connect every answer to NovaPrism. Name exam answer AND implementation reality when they differ.',
+    'Never invent product behaviour. For out-of-scope topics, name the hall that covers them.',
+    '',
+    HALL_SYSTEM_EXTENSION
+  ].filter(Boolean).join('\n');
+}
+
+var sbHistory=[];
+function sbSend(){
+  var inp=document.getElementById('sb-input');
+  var txt=inp.value.trim(); if(!txt) return;
+  inp.value='';
+  sbAddMsg('user',txt);
+  sbHistory.push({role:'user',content:txt});
+  var typing=sbAddMsg('guide','…');
+  typing.classList.add('typing');
+  sbCall(typing);
+}
+function chipAsk(chip){
+  document.getElementById('sb-input').value=chip.textContent;
+  sbSend();
+}
+function sbAddMsg(role,text){
+  var msgs=document.getElementById('sb-msgs');
+  var div=document.createElement('div');
+  div.className='sb-msg '+role;
+  div.textContent=text;
+  msgs.appendChild(div);
+  msgs.scrollTop=msgs.scrollHeight;
+  return div;
+}
+async function sbCall(typingEl){
+  try{
+    var resp=await fetch('https://epbcs-tutor.fancy-brook-fc0d.workers.dev',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        model:'claude-sonnet-4-20250514',
+        max_tokens:500,
+        system:buildSystemPrompt(),
+        messages:sbHistory
+      })
+    });
+    var data=await resp.json();
+    var reply=(data.content&&data.content[0]&&data.content[0].text)||'Try rephrasing — I had trouble with that one.';
+    typingEl.textContent=reply;
+    typingEl.classList.remove('typing');
+    sbHistory.push({role:'assistant',content:reply});
+  }catch(e){
+    typingEl.textContent='Connection issue — please try again.';
+    typingEl.classList.remove('typing');
+  }
+}
+
+document.querySelectorAll('a[href^="#"]').forEach(function(a){
+  a.addEventListener('click',function(e){
+    var id=this.getAttribute('href').slice(1);
+    var el=document.getElementById(id);
+    if(el){e.preventDefault();el.scrollIntoView({behavior:'smooth',block:'start'});}
+  });
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,1476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Workshop of Precision — Academy of Profit Center · EPCM Study Tour · BrainSpring</title>
+<meta name="description" content="Custom Calculation rules are the precision instruments of EPCM. When Allocation rules can't do it, Custom Calc can. Hall 5 covers syntax, patterns, NonEmptyTuple performance, and every trap on the 1Z0-1082-25 exam.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Pro:ital,wght@0,300;0,400;0,500;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+/* ══════════════════════════════════════════
+   ACADEMY OF PROFIT CENTER — DESIGN SYSTEM
+   Hall 5: Workshop of Precision
+   Accent: coral #fb923c
+══════════════════════════════════════════ */
+:root {
+  --navy:    #08111e;
+  --navy2:   #0d1b2e;
+  --navy3:   #112240;
+  --navy4:   #172d47;
+  --navy5:   #1e3855;
+  --amber:   #f59e0b;
+  --amber2:  #d97706;
+  --amber-dim: rgba(245,158,11,.12);
+  --amber-border: rgba(245,158,11,.25);
+  /* Hall 5 accent — coral */
+  --accent:  #fb923c;
+  --accent2: #ea580c;
+  --accent-dim: rgba(251,146,60,.08);
+  --accent-border: rgba(251,146,60,.28);
+  --green:   #4ade80;
+  --green-dim: rgba(74,222,128,.08);
+  --red:     #f87171;
+  --red-dim: rgba(248,113,113,.08);
+  --purple:  #a855f7;
+  --teal:    #2dd4bf;
+  --sky:     #38bdf8;
+  --lime:    #a3e635;
+  --white:   #e8f0f8;
+  --silver:  #c8d4e0;
+  --silver2: #8fa3b8;
+  --dim:     #4a6080;
+  --border:  rgba(200,212,224,.08);
+  --border2: rgba(200,212,224,.14);
+  --font-display: 'Cinzel', serif;
+  --font-body:    'Crimson Pro', serif;
+  --font-mono:    'JetBrains Mono', monospace;
+  --topbar-h: 52px;
+  --sidebar-w: 228px;
+  --r: 10px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--font-body);
+  background: var(--navy);
+  color: var(--white);
+  min-height: 100vh;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+}
+body::before {
+  content: '';
+  position: fixed; inset: 0; pointer-events: none; z-index: 0;
+  background-image:
+    linear-gradient(rgba(251,146,60,.012) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(251,146,60,.012) 1px, transparent 1px);
+  background-size: 60px 60px;
+}
+body::after {
+  content: '';
+  position: fixed; inset: 0; pointer-events: none; z-index: 0;
+  background: radial-gradient(ellipse 90% 60% at 50% -5%, rgba(251,146,60,.05) 0%, transparent 65%);
+}
+
+#stars { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
+.star { position: absolute; border-radius: 50%; background: #fb923c; animation: twinkle var(--d,4s) infinite var(--delay,0s); }
+@keyframes twinkle { 0%,100%{opacity:.015} 50%{opacity:var(--op,.12)} }
+@keyframes fadeUp { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:none} }
+@keyframes slideIn { from{opacity:0;transform:translateX(-10px)} to{opacity:1;transform:none} }
+@keyframes pulse { 0%,100%{box-shadow:0 0 0 0 rgba(251,146,60,.28)} 50%{box-shadow:0 0 0 6px transparent} }
+@keyframes glow { 0%,100%{text-shadow:0 0 12px rgba(251,146,60,.3)} 50%{text-shadow:0 0 28px rgba(251,146,60,.65)} }
+
+/* ── TOPBAR ── */
+#topbar {
+  position: fixed; top: 0; left: 0; right: 0; height: var(--topbar-h);
+  background: rgba(8,17,30,.92); backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 14px;
+  padding: 0 20px; z-index: 100;
+}
+.tb-logo { display: flex; align-items: center; gap: 8px; text-decoration: none; flex-shrink: 0; }
+.tb-logo svg { flex-shrink: 0; }
+.tb-brand { font-family: var(--font-mono); font-size: 12px; font-weight: 600; letter-spacing: .04em; }
+.tb-brain { color: var(--accent); }
+.tb-spring { color: var(--silver2); }
+.tb-sep { color: var(--dim); font-size: 12px; }
+.tb-course { font-family: var(--font-mono); font-size: 10px; letter-spacing: .06em; color: var(--amber); text-transform: uppercase; }
+.tb-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); animation: pulse 2.5s infinite; flex-shrink: 0; margin-left: 2px; }
+.tb-hall-badge { font-family: var(--font-mono); font-size: 9.5px; letter-spacing: .06em; color: var(--silver2); text-transform: uppercase; margin-left: auto; }
+.tb-hamburger { display: none; background: none; border: none; cursor: pointer; padding: 6px; color: var(--silver2); }
+.tb-nav-right { display: flex; align-items: center; gap: 4px; margin-left: 16px; overflow-x: auto; scrollbar-width: none; }
+.tb-nav-right::-webkit-scrollbar { display: none; }
+.tb-link {
+  font-family: var(--font-mono); font-size: 9px; letter-spacing: .07em; text-transform: uppercase;
+  color: var(--dim); text-decoration: none; padding: 5px 10px; border-radius: 5px;
+  transition: color .15s, background .15s; white-space: nowrap;
+}
+.tb-link:hover { color: var(--silver); background: rgba(255,255,255,.05); }
+.tb-link.current { color: var(--accent); background: var(--accent-dim); }
+
+/* ── SIDEBAR ── */
+.sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.5); z-index: 89; }
+.sidebar-overlay.open { display: block; }
+.sidebar {
+  width: var(--sidebar-w); flex-shrink: 0;
+  position: sticky; top: var(--topbar-h);
+  height: calc(100vh - var(--topbar-h));
+  overflow-y: auto; overflow-x: hidden;
+  background: rgba(8,17,30,.7);
+  border-right: 1px solid var(--border);
+  padding: 24px 0 40px;
+  scrollbar-width: thin; scrollbar-color: var(--navy3) transparent;
+}
+.sidebar::-webkit-scrollbar { width: 3px; }
+.sidebar::-webkit-scrollbar-thumb { background: var(--navy3); }
+.sb-label {
+  font-family: var(--font-mono); font-size: 8px; letter-spacing: .14em;
+  color: var(--dim); text-transform: uppercase;
+  padding: 0 18px; margin: 20px 0 8px;
+}
+.sb-label:first-child { margin-top: 0; }
+.sb-hall {
+  display: flex; align-items: center; gap: 10px;
+  padding: 8px 18px; text-decoration: none;
+  transition: background .15s; position: relative;
+}
+.sb-hall:hover { background: rgba(255,255,255,.03); }
+.sb-hall.current { background: var(--accent-dim); }
+.sb-hall.current::before {
+  content: ''; position: absolute; left: 0; top: 0; bottom: 0;
+  width: 2px; background: var(--accent);
+}
+.sb-hall-num {
+  width: 22px; height: 22px; border-radius: 6px; flex-shrink: 0;
+  border: 1px solid var(--border2);
+  font-family: var(--font-mono); font-size: 10px; font-weight: 600;
+  color: var(--dim); display: flex; align-items: center; justify-content: center;
+}
+.sb-hall.current .sb-hall-num { border-color: var(--accent-border); color: var(--accent); background: var(--accent-dim); }
+.sb-hall-info { flex: 1; min-width: 0; }
+.sb-hall-name { font-family: var(--font-mono); font-size: 10px; font-weight: 500; color: var(--silver2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sb-hall.current .sb-hall-name { color: var(--accent); }
+.sb-hall-title { font-size: 10px; color: var(--dim); margin-top: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sb-status { width: 5px; height: 5px; border-radius: 50%; background: var(--dim); flex-shrink: 0; }
+.sb-status.current { background: var(--accent); animation: pulse 2s infinite; }
+.sb-status.locked { background: transparent; border: 1px solid var(--dim); }
+.sb-toc-item {
+  display: block; padding: 5px 18px 5px 26px;
+  font-size: 11.5px; color: var(--dim); text-decoration: none;
+  border-left: 1px solid transparent; margin-left: 10px;
+  transition: color .15s, border-color .15s; line-height: 1.4;
+}
+.sb-toc-item:hover { color: var(--silver2); border-left-color: var(--border2); }
+
+/* Dean Eliot sidebar */
+.sb-eliot {
+  margin: 16px 12px 0;
+  background: var(--accent-dim);
+  border: 1px solid var(--accent-border);
+  border-radius: var(--r); overflow: hidden;
+}
+.sb-eliot-header {
+  display: flex; align-items: center; gap: 8px;
+  padding: 10px 12px; border-bottom: 1px solid var(--accent-border);
+}
+.sb-eliot-avatar {
+  width: 28px; height: 28px; border-radius: 8px;
+  background: rgba(251,146,60,.12); border: 1px solid var(--accent-border);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; flex-shrink: 0;
+}
+.sb-eliot-name { font-family: var(--font-mono); font-size: 9.5px; font-weight: 600; letter-spacing: .06em; color: var(--accent); }
+.sb-eliot-role { font-size: 9px; color: var(--silver2); margin-top: 1px; }
+.sb-chips { padding: 8px 10px; display: flex; flex-direction: column; gap: 5px; }
+.sb-chip {
+  font-size: 10.5px; color: var(--silver2); padding: 5px 8px;
+  background: rgba(255,255,255,.03); border: 1px solid var(--border);
+  border-radius: 6px; cursor: pointer; line-height: 1.4;
+  transition: background .15s, border-color .15s, color .15s;
+}
+.sb-chip:hover { background: var(--accent-dim); border-color: var(--accent-border); color: var(--white); }
+.sb-eliot-input-row { display: flex; gap: 6px; padding: 8px 10px; border-top: 1px solid var(--border); }
+.sb-eliot-input {
+  flex: 1; background: rgba(255,255,255,.04); border: 1px solid var(--border);
+  border-radius: 6px; padding: 5px 8px; font-size: 11px;
+  font-family: var(--font-body); color: var(--white); outline: none;
+}
+.sb-eliot-input:focus { border-color: var(--accent-border); }
+.sb-eliot-input::placeholder { color: var(--dim); }
+.sb-eliot-send {
+  width: 28px; height: 28px; border-radius: 6px;
+  background: var(--accent-dim); border: 1px solid var(--accent-border);
+  color: var(--accent); cursor: pointer; font-size: 13px;
+  display: flex; align-items: center; justify-content: center;
+  transition: background .15s;
+}
+.sb-eliot-send:hover { background: rgba(251,146,60,.2); }
+.sb-eliot-msgs { max-height: 160px; overflow-y: auto; padding: 8px 10px; display: flex; flex-direction: column; gap: 6px; scrollbar-width: thin; }
+.sb-eliot-msgs:empty { display: none; }
+.sb-msg { font-size: 11px; line-height: 1.55; padding: 6px 8px; border-radius: 6px; }
+.sb-msg.user { background: rgba(251,146,60,.1); color: var(--silver); text-align: right; }
+.sb-msg.guide { background: rgba(245,158,11,.06); color: var(--silver); }
+.sb-msg.typing { opacity: .5; }
+
+.sb-company {
+  margin: 12px 12px 0;
+  background: rgba(255,255,255,.02);
+  border: 1px solid var(--border);
+  border-radius: var(--r); padding: 12px;
+}
+.sb-company-label { font-family: var(--font-mono); font-size: 7.5px; letter-spacing: .1em; color: var(--dim); text-transform: uppercase; margin-bottom: 8px; }
+.sb-company-name { font-family: var(--font-display); font-size: 12px; color: var(--white); margin-bottom: 3px; }
+.sb-company-desc { font-size: 10.5px; color: var(--silver2); line-height: 1.5; }
+
+/* ── LAYOUT ── */
+#app { display: flex; flex-direction: column; min-height: 100vh; padding-top: var(--topbar-h); position: relative; z-index: 1; }
+#body { display: flex; flex: 1; }
+.main { flex: 1; min-width: 0; padding: 36px 52px 96px; animation: fadeUp .5s ease both; }
+
+/* ── CAMPUS MAP ── */
+.campus-map-wrap {
+  margin-bottom: 32px; background: rgba(13,27,46,.6);
+  border: 1px solid var(--border); border-radius: 14px;
+  padding: 16px 20px; overflow: hidden;
+}
+.campus-map-label {
+  font-family: var(--font-mono); font-size: 8.5px; letter-spacing: .14em;
+  color: var(--dim); text-transform: uppercase; margin-bottom: 12px;
+  display: flex; align-items: center; gap: 8px;
+}
+.campus-map-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+.campus-map-row { display: flex; align-items: center; gap: 0; overflow-x: auto; scrollbar-width: none; }
+.campus-map-row::-webkit-scrollbar { display: none; }
+.campus-stop { display: flex; flex-direction: column; align-items: center; gap: 5px; flex-shrink: 0; }
+.campus-building {
+  width: 40px; height: 40px; border-radius: 10px;
+  border: 1px solid var(--border2); background: var(--navy3);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-mono); font-size: 12px; font-weight: 600;
+  color: var(--dim); text-decoration: none; transition: all .2s;
+}
+.campus-building:hover { transform: translateY(-2px); border-color: var(--silver2); color: var(--silver2); }
+.campus-building.done { background: rgba(74,222,128,.06); border-color: rgba(74,222,128,.2); color: #22c55e; }
+.campus-building.active { background: var(--accent-dim); border-color: var(--accent); color: var(--accent); box-shadow: 0 0 18px rgba(251,146,60,.2); }
+.campus-building.locked { opacity: .35; cursor: default; pointer-events: none; }
+.campus-stop-label { font-family: var(--font-mono); font-size: 8px; letter-spacing: .04em; color: var(--dim); text-align: center; max-width: 52px; line-height: 1.3; white-space: nowrap; }
+.campus-stop.active-stop .campus-stop-label { color: var(--accent); }
+.campus-stop.done-stop .campus-stop-label { color: #22c55e; }
+.campus-connector { width: 24px; height: 1px; background: var(--border2); flex-shrink: 0; margin-bottom: 18px; position: relative; }
+.campus-connector::after { content: '›'; position: absolute; right: -5px; top: -9px; color: var(--dim); font-size: 10px; }
+
+/* ── HALL HERO ── */
+.hall-hero { margin-bottom: 32px; }
+.hall-eyebrow {
+  display: flex; align-items: center; gap: 8px;
+  font-family: var(--font-mono); font-size: 10px; letter-spacing: .1em;
+  color: var(--accent); text-transform: uppercase; margin-bottom: 10px;
+}
+.hall-eyebrow-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--accent); animation: pulse 2s infinite; }
+.hall-building-name {
+  font-family: var(--font-display); font-size: 11px; letter-spacing: .18em;
+  color: var(--accent2); text-transform: uppercase; margin-bottom: 6px;
+}
+.hall-title {
+  font-family: var(--font-display); font-size: 36px; font-weight: 600;
+  color: var(--white); line-height: 1.15; margin-bottom: 14px; letter-spacing: .02em;
+}
+.hall-title em { font-style: normal; color: var(--accent); animation: glow 4s infinite; }
+.hall-tagline { font-size: 16px; color: var(--silver2); line-height: 1.75; max-width: 700px; margin-bottom: 18px; font-style: italic; }
+.hall-tags { display: flex; gap: 7px; flex-wrap: wrap; }
+.htag {
+  font-family: var(--font-mono); font-size: 9px; letter-spacing: .08em;
+  text-transform: uppercase; padding: 4px 10px; border-radius: 5px;
+  border: 1px solid var(--border2); color: var(--silver2);
+}
+.htag.conceptual { border-color: rgba(56,189,248,.2); color: var(--sky); background: rgba(56,189,248,.05); }
+.htag.technical   { border-color: rgba(168,85,247,.2); color: var(--purple); background: rgba(168,85,247,.05); }
+.htag.lab         { border-color: rgba(74,222,128,.2); color: var(--green); background: var(--green-dim); }
+.htag.exam        { border-color: rgba(251,191,36,.2); color: var(--amber); background: var(--amber-dim); }
+.htag.interactive { border-color: rgba(251,146,60,.2); color: var(--accent); background: var(--accent-dim); }
+
+/* ── TABS ── */
+.tab-bar {
+  display: flex; gap: 2px; border-bottom: 1px solid var(--border);
+  margin-bottom: 32px;
+  position: sticky; top: var(--topbar-h);
+  background: rgba(8,17,30,.95); backdrop-filter: blur(12px);
+  z-index: 20; padding: 10px 0 0;
+  margin-left: -52px; margin-right: -52px;
+  padding-left: 52px; padding-right: 52px;
+}
+.tab-btn {
+  display: flex; align-items: center; gap: 7px;
+  padding: 9px 16px; border: none; background: none; cursor: pointer;
+  font-family: var(--font-mono); font-size: 10px; letter-spacing: .07em;
+  text-transform: uppercase; color: var(--dim);
+  border-bottom: 2px solid transparent; margin-bottom: -1px;
+  transition: color .15s, border-color .15s; white-space: nowrap;
+}
+.tab-btn:hover { color: var(--silver2); }
+.tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+.tab-icon { font-size: 13px; }
+.tab-panel { display: none; animation: fadeUp .25s ease; }
+.tab-panel.active { display: block; }
+
+/* ── SECTIONS ── */
+.section { margin-bottom: 48px; }
+.sec-type-bar { display: flex; align-items: center; gap: 8px; margin-bottom: 14px; }
+.sec-type-icon {
+  width: 28px; height: 28px; border-radius: 7px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center; font-size: 13px;
+}
+.sec-type-icon.conceptual { background: rgba(56,189,248,.08); border: 1px solid rgba(56,189,248,.18); }
+.sec-type-icon.technical   { background: rgba(168,85,247,.08); border: 1px solid rgba(168,85,247,.18); }
+.sec-type-icon.lab         { background: rgba(74,222,128,.08); border: 1px solid rgba(74,222,128,.18); }
+.sec-type-icon.exam        { background: rgba(251,191,36,.08); border: 1px solid rgba(251,191,36,.18); }
+.sec-type-icon.interactive { background: rgba(251,146,60,.08); border: 1px solid rgba(251,146,60,.18); }
+.sec-type-label { font-family: var(--font-mono); font-size: 9px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; }
+.sec-type-label.conceptual { color: var(--sky); }
+.sec-type-label.technical   { color: var(--purple); }
+.sec-type-label.lab         { color: var(--green); }
+.sec-type-label.exam        { color: var(--amber); }
+.sec-type-label.interactive { color: var(--accent); }
+.sec-h { font-family: var(--font-display); font-size: 22px; font-weight: 600; color: var(--white); margin-bottom: 6px; letter-spacing: .02em; }
+.sec-div { width: 40px; height: 2px; background: linear-gradient(to right, var(--accent), transparent); margin-bottom: 14px; }
+.sec-sub { font-size: 14px; color: var(--silver2); margin-bottom: 20px; font-style: italic; line-height: 1.6; }
+.prose { font-size: 15px; color: var(--silver); line-height: 1.78; margin-bottom: 14px; }
+.prose strong { color: var(--white); font-weight: 500; }
+.prose code { font-family: var(--font-mono); font-size: 12px; background: rgba(255,255,255,.06); border: 1px solid var(--border2); border-radius: 4px; padding: 1px 6px; color: var(--accent); }
+
+/* ── INFOBOXES ── */
+.infobox { display: flex; gap: 12px; border-radius: 10px; padding: 14px 16px; margin: 18px 0; line-height: 1.65; }
+.infobox-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+.infobox-body { font-size: 13.5px; }
+.infobox-body strong { font-weight: 500; }
+.infobox.note { background: rgba(56,189,248,.06); border: 1px solid rgba(56,189,248,.15); color: var(--silver2); }
+.infobox.note .infobox-body strong { color: var(--sky); }
+.infobox.trap { background: rgba(248,113,113,.06); border: 1px solid rgba(248,113,113,.15); color: var(--silver2); }
+.infobox.trap .infobox-body strong { color: var(--red); }
+.infobox.tip { background: var(--green-dim); border: 1px solid rgba(74,222,128,.18); color: var(--silver2); }
+.infobox.tip .infobox-body strong { color: var(--green); }
+.infobox.warn { background: var(--amber-dim); border: 1px solid var(--amber-border); color: var(--silver2); }
+.infobox.warn .infobox-body strong { color: var(--amber); }
+.infobox.coral { background: var(--accent-dim); border: 1px solid var(--accent-border); color: var(--silver2); }
+.infobox.coral .infobox-body strong { color: var(--accent); }
+
+/* ── TABLE ── */
+.tbl-wrap { overflow-x: auto; margin: 18px 0; border-radius: 10px; border: 1px solid var(--border); }
+.tbl { width: 100%; border-collapse: collapse; font-size: 13px; }
+.tbl th {
+  font-family: var(--font-mono); font-size: 8.5px; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--accent);
+  padding: 10px 14px; text-align: left;
+  border-bottom: 1px solid var(--border2); white-space: nowrap;
+  background: rgba(251,146,60,.04);
+}
+.tbl td { padding: 10px 14px; border-bottom: 1px solid var(--border); color: var(--silver2); vertical-align: top; line-height: 1.55; }
+.tbl tr:last-child td { border-bottom: none; }
+.tbl tr:hover td { background: rgba(255,255,255,.02); }
+.badge { font-family: var(--font-mono); font-size: 9px; letter-spacing: .06em; text-transform: uppercase; padding: 3px 8px; border-radius: 4px; white-space: nowrap; }
+.badge.green  { background: var(--green-dim); color: var(--green); border: 1px solid rgba(74,222,128,.2); }
+.badge.amber  { background: var(--amber-dim); color: var(--amber); border: 1px solid var(--amber-border); }
+.badge.coral  { background: var(--accent-dim); color: var(--accent); border: 1px solid var(--accent-border); }
+.badge.sky    { background: rgba(56,189,248,.1); color: var(--sky); border: 1px solid rgba(56,189,248,.2); }
+.badge.red    { background: var(--red-dim); color: var(--red); border: 1px solid rgba(248,113,113,.2); }
+.badge.purple { background: rgba(168,85,247,.1); color: var(--purple); border: 1px solid rgba(168,85,247,.2); }
+
+/* ── CODE BLOCKS ── */
+.code-block {
+  background: rgba(0,0,0,.4); border: 1px solid rgba(255,255,255,.07);
+  border-radius: 10px; padding: 18px 20px; margin: 16px 0;
+  overflow-x: auto; position: relative;
+}
+.code-block pre {
+  font-family: var(--font-mono); font-size: 12px;
+  color: rgba(232,240,248,.8); line-height: 1.75; margin: 0;
+}
+.code-label {
+  font-family: var(--font-mono); font-size: 8.5px; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--dim); margin-bottom: 10px; display: block;
+}
+.kw  { color: #fb923c; } /* keyword — coral */
+.fn  { color: #38bdf8; } /* function/dim name — sky */
+.cm  { color: #4a6080; font-style: italic; } /* comment */
+.nu  { color: #4ade80; } /* number — green */
+.st  { color: #f59e0b; } /* string — amber */
+.op  { color: #c8d4e0; } /* operator */
+
+/* ── PATTERN CARDS ── */
+.pattern-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px,1fr)); gap: 14px; margin: 20px 0; }
+.pattern-card {
+  background: var(--navy3); border: 1px solid var(--border);
+  border-radius: 12px; overflow: hidden;
+  transition: transform .2s, box-shadow .2s;
+}
+.pattern-card:hover { transform: translateY(-2px); box-shadow: 0 10px 32px rgba(0,0,0,.35); }
+.pc-top { padding: 14px 16px 10px; border-bottom: 1px solid var(--border); }
+.pc-badge {
+  font-family: var(--font-mono); font-size: 8.5px; font-weight: 600;
+  letter-spacing: .08em; text-transform: uppercase;
+  padding: 3px 9px; border-radius: 5px; display: inline-block; margin-bottom: 8px;
+}
+.pc-name { font-family: var(--font-display); font-size: 15px; color: var(--white); margin-bottom: 4px; }
+.pc-when { font-size: 12px; color: var(--dim); font-style: italic; }
+.pc-body { padding: 12px 16px; }
+.pc-desc { font-size: 13px; color: var(--silver2); line-height: 1.65; }
+.pc-trap { margin-top: 8px; padding: 7px 10px; background: rgba(248,113,113,.06); border: 1px solid rgba(248,113,113,.14); border-radius: 6px; font-size: 11.5px; color: var(--silver2); line-height: 1.6; }
+.pc-trap strong { color: var(--red); font-size: 10px; font-family: var(--font-mono); letter-spacing: .06em; text-transform: uppercase; }
+
+/* ── BEFORE/AFTER COMPARE ── */
+.ba-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 18px 0; }
+.ba-card { background: var(--navy3); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+.ba-header {
+  padding: 10px 14px; border-bottom: 1px solid var(--border);
+  font-family: var(--font-mono); font-size: 9px; letter-spacing: .1em;
+  text-transform: uppercase; font-weight: 600;
+}
+.ba-header.before { color: var(--red); background: var(--red-dim); }
+.ba-header.after  { color: var(--green); background: var(--green-dim); }
+.ba-body { padding: 14px; }
+.ba-stat { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 6px; }
+.ba-stat-label { font-size: 12px; color: var(--dim); }
+.ba-stat-val { font-family: var(--font-mono); font-size: 13px; font-weight: 600; }
+.ba-before .ba-stat-val { color: var(--red); }
+.ba-after  .ba-stat-val { color: var(--green); }
+.ba-note { font-size: 11.5px; color: var(--dim); font-style: italic; margin-top: 8px; line-height: 1.5; }
+
+/* ── INTERACTIVE PLAYGROUND ── */
+.playground-wrap {
+  background: var(--navy3); border: 1px solid var(--border);
+  border-radius: 14px; overflow: hidden; margin: 18px 0;
+}
+.playground-header {
+  padding: 14px 18px; border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;
+}
+.playground-title { font-family: var(--font-mono); font-size: 9px; letter-spacing: .1em; text-transform: uppercase; color: var(--accent); }
+.playground-body { padding: 20px; }
+.pg-scenario { background: rgba(255,255,255,.02); border: 1px solid var(--border); border-radius: 8px; padding: 14px 16px; font-size: 13.5px; color: rgba(232,240,248,.65); line-height: 1.72; margin-bottom: 16px; }
+.pg-scenario strong { color: var(--white); }
+.pg-controls { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+.pg-btn {
+  padding: 7px 16px; border-radius: 7px;
+  border: 1px solid var(--border2); background: var(--navy2);
+  font-family: var(--font-mono); font-size: 9px; letter-spacing: .07em;
+  text-transform: uppercase; color: var(--dim); cursor: pointer;
+  transition: all .15s;
+}
+.pg-btn:hover { border-color: var(--accent-border); color: var(--accent); background: var(--accent-dim); }
+.pg-btn.active { background: var(--accent-dim); border-color: var(--accent); color: var(--accent); }
+.pg-result {
+  background: rgba(0,0,0,.3); border: 1px solid var(--border);
+  border-radius: 8px; padding: 16px; font-family: var(--font-mono);
+  font-size: 12px; color: var(--silver2); line-height: 1.8; min-height: 80px;
+  transition: all .25s;
+}
+.pg-result .result-line { margin-bottom: 3px; }
+.pg-result .result-good { color: var(--green); }
+.pg-result .result-bad  { color: var(--red); }
+.pg-result .result-key  { color: var(--accent); }
+
+/* ── LAB ── */
+.lab-box {
+  background: var(--green-dim); border: 1px solid rgba(74,222,128,.12);
+  border-radius: 12px; padding: 22px 24px; margin: 18px 0;
+}
+.lab-header {
+  font-family: var(--font-mono); font-size: 9.5px; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--green);
+  margin-bottom: 16px; display: flex; align-items: center; gap: 8px;
+}
+.lab-header::before { content: ''; width: 3px; height: 14px; background: var(--green); border-radius: 2px; }
+.lab-scenario {
+  background: rgba(255,255,255,.02); border: 1px solid var(--border);
+  border-radius: 8px; padding: 14px 16px;
+  font-size: 13.5px; color: rgba(232,240,248,.65);
+  line-height: 1.72; margin-bottom: 18px;
+}
+.lab-scenario strong { color: var(--white); font-weight: 500; }
+.lab-checklist { display: flex; flex-direction: column; gap: 10px; }
+.lab-check-item { display: flex; gap: 12px; align-items: flex-start; cursor: pointer; }
+.lab-check-box {
+  width: 20px; height: 20px; border-radius: 5px; flex-shrink: 0;
+  border: 1px solid rgba(74,222,128,.3); background: rgba(74,222,128,.04);
+  display: flex; align-items: center; justify-content: center;
+  transition: all .15s; margin-top: 2px;
+}
+.lab-check-box:hover { border-color: var(--green); background: rgba(74,222,128,.1); }
+.lab-check-box.checked { background: var(--green); border-color: var(--green); }
+.lab-check-box.checked::after { content: '✓'; font-size: 11px; color: var(--navy); font-weight: 700; }
+.lab-check-text { font-size: 13.5px; color: rgba(232,240,248,.7); line-height: 1.65; flex: 1; }
+.lab-check-text strong { color: var(--white); font-weight: 500; }
+.lab-check-item.checked .lab-check-text { color: var(--dim); text-decoration: line-through; text-decoration-color: rgba(255,255,255,.2); }
+.lab-progress { margin-top: 14px; }
+.lab-progress-bar { height: 3px; background: var(--border); border-radius: 2px; overflow: hidden; margin-top: 6px; }
+.lab-progress-fill { height: 100%; background: var(--green); border-radius: 2px; transition: width .3s ease; }
+.lab-progress-label { font-family: var(--font-mono); font-size: 9px; color: var(--dim); }
+
+/* ── EXAM ── */
+.exam-box { background: var(--amber-dim); border: 1px solid rgba(245,158,11,.15); border-radius: 12px; overflow: hidden; margin: 16px 0; }
+.exam-box-header {
+  font-family: var(--font-mono); font-size: 9px; letter-spacing: .09em;
+  text-transform: uppercase; color: var(--amber);
+  padding: 11px 16px; border-bottom: 1px solid rgba(245,158,11,.12);
+  background: rgba(245,158,11,.04);
+}
+.exam-box-body { padding: 16px; font-size: 13.5px; color: var(--silver2); line-height: 1.72; }
+.exam-box-body strong { color: var(--white); font-weight: 500; }
+
+/* Quiz */
+.quiz-q { margin-bottom: 28px; }
+.quiz-stem { font-size: 14.5px; color: var(--white); line-height: 1.7; margin-bottom: 14px; padding: 14px 16px; background: rgba(255,255,255,.02); border: 1px solid var(--border); border-radius: 8px; }
+.quiz-options { display: flex; flex-direction: column; gap: 7px; }
+.quiz-opt {
+  padding: 10px 14px; border-radius: 8px;
+  border: 1px solid var(--border); background: rgba(255,255,255,.02);
+  font-size: 13.5px; color: var(--silver2); cursor: pointer;
+  transition: all .15s; text-align: left; line-height: 1.5;
+}
+.quiz-opt:hover:not(.revealed) { border-color: var(--accent-border); color: var(--white); background: var(--accent-dim); }
+.quiz-opt.correct { background: var(--green-dim); border-color: rgba(74,222,128,.25); color: var(--green); pointer-events: none; }
+.quiz-opt.wrong { background: var(--red-dim); border-color: rgba(248,113,113,.2); color: var(--red); pointer-events: none; }
+.quiz-opt.revealed { pointer-events: none; }
+.quiz-explanation { margin-top: 10px; padding: 12px 14px; background: var(--accent-dim); border: 1px solid var(--accent-border); border-radius: 8px; font-size: 13px; color: var(--silver2); line-height: 1.65; display: none; }
+.quiz-explanation.show { display: block; animation: fadeUp .2s ease; }
+.quiz-explanation strong { color: var(--accent); }
+.quiz-meta { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+.quiz-diff { font-family: var(--font-mono); font-size: 8.5px; letter-spacing: .08em; text-transform: uppercase; padding: 2px 8px; border-radius: 4px; }
+.quiz-diff.foundation { background: var(--green-dim); color: var(--green); border: 1px solid rgba(74,222,128,.15); }
+.quiz-diff.practitioner { background: var(--amber-dim); color: var(--amber); border: 1px solid var(--amber-border); }
+.quiz-diff.expert { background: var(--red-dim); color: var(--red); border: 1px solid rgba(248,113,113,.15); }
+.quiz-qnum { font-family: var(--font-mono); font-size: 9px; color: var(--dim); }
+.quiz-score { margin-top: 24px; padding: 18px; background: var(--navy3); border: 1px solid var(--border); border-radius: 12px; display: none; text-align: center; }
+.quiz-score.show { display: block; animation: fadeUp .3s ease; }
+.quiz-score-num { font-family: var(--font-display); font-size: 36px; color: var(--accent); }
+.quiz-score-label { font-family: var(--font-mono); font-size: 10px; color: var(--dim); letter-spacing: .1em; text-transform: uppercase; margin-top: 4px; }
+.quiz-score-msg { font-size: 14px; color: var(--silver2); margin-top: 10px; }
+
+/* ── HALL NAV FOOTER ── */
+.hall-nav-footer {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-top: 64px; padding-top: 28px; border-top: 1px solid var(--border);
+}
+.hnf-prev, .hnf-next {
+  display: flex; align-items: center; gap: 10px;
+  text-decoration: none; padding: 12px 16px; border-radius: 10px;
+  border: 1px solid var(--border); background: var(--navy3); transition: all .2s;
+}
+.hnf-prev:hover, .hnf-next:hover { border-color: var(--accent-border); background: var(--accent-dim); }
+.hnf-dir { font-family: var(--font-mono); font-size: 8.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--dim); }
+.hnf-name { font-size: 14px; color: var(--white); margin-top: 2px; }
+.hnf-next { flex-direction: row-reverse; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 900px) {
+  .sidebar { display: none; position: fixed; left: 0; top: var(--topbar-h); height: calc(100vh - var(--topbar-h)); z-index: 90; transform: translateX(-100%); transition: transform .25s ease; }
+  .sidebar.open { display: flex; flex-direction: column; transform: translateX(0); }
+  .sidebar-overlay { display: none; }
+  .sidebar-overlay.open { display: block; }
+  .tb-hamburger { display: flex; }
+  .main { padding: 20px 18px 80px; }
+  .tab-bar { margin-left: -18px; margin-right: -18px; padding-left: 18px; padding-right: 18px; overflow-x: auto; scrollbar-width: none; }
+  .tab-bar::-webkit-scrollbar { display: none; }
+  .hall-title { font-size: 26px; }
+  .ba-wrap { grid-template-columns: 1fr; }
+  .pattern-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<div id="stars"></div>
+<div class="sidebar-overlay" id="overlay" onclick="closeSidebar()"></div>
+
+<div id="app">
+
+  <!-- ── TOPBAR ── -->
+  <header id="topbar">
+    <a href="https://brainspring.ai" class="tb-logo" target="_blank" rel="noopener">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 36" width="18" height="20">
+        <path d="M16 2L3 9v18l13 7 13-7V9L16 2z" fill="none" stroke="#fb923c" stroke-width="2"/>
+        <path d="M16 8l7 4v8l-7 4-7-4v-8l7-4z" fill="#fb923c" opacity=".3"/>
+      </svg>
+      <span class="tb-brand"><span class="tb-brain">Brain</span><span class="tb-spring">Spring</span></span>
+    </a>
+    <span class="tb-sep">›</span>
+    <span class="tb-course">Academy of Profit Center</span>
+    <div class="tb-dot"></div>
+    <nav class="tb-nav-right">
+      <a href="hall-1.html" class="tb-link">Foundations</a>
+      <a href="hall-2.html" class="tb-link">Dimensions</a>
+      <a href="hall-3.html" class="tb-link">Models</a>
+      <a href="hall-4.html" class="tb-link">Hall of Logic</a>
+      <a href="hall-5.html" class="tb-link current">Workshop</a>
+    </nav>
+    <span class="tb-hall-badge">Hall 5 of 9 · Workshop of Precision</span>
+    <button class="tb-hamburger" onclick="toggleSidebar()" aria-label="Menu">
+      <svg width="18" height="14" viewBox="0 0 18 14" fill="none"><rect width="18" height="2" rx="1" fill="currentColor"/><rect y="6" width="18" height="2" rx="1" fill="currentColor"/><rect y="12" width="18" height="2" rx="1" fill="currentColor"/></svg>
+    </button>
+  </header>
+
+  <div id="body">
+
+    <!-- ── SIDEBAR ── -->
+    <nav class="sidebar" id="sidebar">
+      <div class="sb-label">Academy Halls</div>
+      <a href="hall-1.html" class="sb-hall"><div class="sb-hall-num">1</div><div class="sb-hall-info"><div class="sb-hall-name">Foundations Hall</div><div class="sb-hall-title">Orientation</div></div><div class="sb-status"></div></a>
+      <a href="hall-2.html" class="sb-hall"><div class="sb-hall-num">2</div><div class="sb-hall-info"><div class="sb-hall-name">Dimensions Gallery</div><div class="sb-hall-title">Geometry of Profit Center</div></div><div class="sb-status"></div></a>
+      <a href="hall-3.html" class="sb-hall"><div class="sb-hall-num">3</div><div class="sb-hall-info"><div class="sb-hall-name">Models Pavilion</div><div class="sb-hall-title">Perspective Gallery</div></div><div class="sb-status"></div></a>
+      <a href="hall-4.html" class="sb-hall"><div class="sb-hall-num">4</div><div class="sb-hall-info"><div class="sb-hall-name">Hall of Logic</div><div class="sb-hall-title">Rule Sets &amp; Sequences</div></div><div class="sb-status"></div></a>
+      <a href="hall-5.html" class="sb-hall current"><div class="sb-hall-num">5</div><div class="sb-hall-info"><div class="sb-hall-name">Workshop of Precision</div><div class="sb-hall-title">Custom Calculations</div></div><div class="sb-status current"></div></a>
+      <a href="hall-6.html" class="sb-hall"><div class="sb-hall-num">6</div><div class="sb-hall-info"><div class="sb-hall-name">Control Tower</div><div class="sb-hall-title">Calc Analysis Chamber</div></div><div class="sb-status locked"></div></a>
+      <a href="hall-7.html" class="sb-hall"><div class="sb-hall-num">7</div><div class="sb-hall-info"><div class="sb-hall-name">Profit Curve Observatory</div><div class="sb-hall-title">Rule Balancing</div></div><div class="sb-status locked"></div></a>
+      <a href="hall-8.html" class="sb-hall"><div class="sb-hall-num">8</div><div class="sb-hall-info"><div class="sb-hall-name">Pipeline Lab</div><div class="sb-hall-title">Data Integration Workshop</div></div><div class="sb-status locked"></div></a>
+      <a href="hall-9.html" class="sb-hall"><div class="sb-hall-num">9</div><div class="sb-hall-info"><div class="sb-hall-name">Examination Hall</div><div class="sb-hall-title">Graduation</div></div><div class="sb-status locked"></div></a>
+
+      <div class="sb-label">This Hall</div>
+      <div id="sb-toc"></div>
+
+      <div class="sb-label">Dean's Office</div>
+      <div class="sb-eliot">
+        <div class="sb-eliot-header">
+          <div class="sb-eliot-avatar">🎓</div>
+          <div>
+            <div class="sb-eliot-name">Dean Eliot</div>
+            <div class="sb-eliot-role">Senior Oracle EPM Practitioner</div>
+          </div>
+        </div>
+        <div class="sb-chips">
+          <span class="sb-chip" onclick="chipAsk(this)">When should I use Custom Calc instead of an Allocation rule?</span>
+          <span class="sb-chip" onclick="chipAsk(this)">What does NONEMPTTUPLE actually do in a Custom Calc rule?</span>
+          <span class="sb-chip" onclick="chipAsk(this)">Why does NovaPrism's seq:10 use Custom Calc not Allocation?</span>
+          <span class="sb-chip" onclick="chipAsk(this)">What is the FIX statement and when do I need it?</span>
+        </div>
+        <div class="sb-eliot-msgs" id="sb-msgs"></div>
+        <div class="sb-eliot-input-row">
+          <input class="sb-eliot-input" id="sb-input" type="text" placeholder="Ask the Dean anything…" onkeydown="if(event.key==='Enter')sbSend()">
+          <button class="sb-eliot-send" onclick="sbSend()">↑</button>
+        </div>
+      </div>
+
+      <div class="sb-company">
+        <div class="sb-company-label">Case Company</div>
+        <div class="sb-company-name" id="sb-company-name">NovaPrism Group</div>
+        <div class="sb-company-desc" id="sb-company-desc">Loading…</div>
+      </div>
+    </nav>
+
+    <!-- ── MAIN ── -->
+    <main class="main">
+
+      <!-- Campus Map -->
+      <div class="campus-map-wrap">
+        <div class="campus-map-label">Academy of Profit Center — Your Journey</div>
+        <div class="campus-map-row" id="campus-map"></div>
+      </div>
+
+      <!-- Hall Hero -->
+      <header class="hall-hero">
+        <div class="hall-building-name">Workshop of Precision</div>
+        <div class="hall-eyebrow">
+          <span class="hall-eyebrow-dot"></span>
+          Hall 5 of 9 · Academy of Profit Center · EPCM Study Tour
+        </div>
+        <h1 class="hall-title">The <em>precision</em> instrument</h1>
+        <p class="hall-tagline">Allocation rules handle 80% of what EPCM needs to do. Custom Calculation rules handle the other 20% — the aggregations, conditional logic, and multi-step staging that no Allocation rule can express. This hall teaches you the syntax, the patterns, the performance traps, and the one operator — NONEMPTYTUPLE — that separates fast Custom Calc rules from catastrophically slow ones.</p>
+        <div class="hall-tags">
+          <span class="htag conceptual">Conceptual</span>
+          <span class="htag technical">Technical</span>
+          <span class="htag interactive">Interactive</span>
+          <span class="htag lab">Lab</span>
+          <span class="htag exam">Exam: 1Z0-1082-25</span>
+        </div>
+      </header>
+
+      <!-- TAB BAR -->
+      <div class="tab-bar" role="tablist">
+        <button class="tab-btn active" role="tab" onclick="switchTab('conceptual',this)"><span class="tab-icon">📐</span> Conceptual</button>
+        <button class="tab-btn" role="tab" onclick="switchTab('technical',this)"><span class="tab-icon">⚙️</span> Technical</button>
+        <button class="tab-btn" role="tab" onclick="switchTab('interactive',this)"><span class="tab-icon">⚡</span> Performance</button>
+        <button class="tab-btn" role="tab" onclick="switchTab('lab',this)"><span class="tab-icon">🔬</span> Lab</button>
+        <button class="tab-btn" role="tab" onclick="switchTab('exam',this)"><span class="tab-icon">📝</span> Exam Prep</button>
+      </div>
+
+      <!-- ═══════ TAB 1: CONCEPTUAL ═══════ -->
+      <div class="tab-panel active" id="tab-conceptual">
+
+        <section class="section" id="when-custom-calc">
+          <div class="sec-type-bar"><div class="sec-type-icon conceptual">📐</div><span class="sec-type-label conceptual">Conceptual</span></div>
+          <h2 class="sec-h">When Allocation rules aren't enough</h2>
+          <div class="sec-div"></div>
+          <p class="sec-sub">An Allocation rule has one job: take a pool total, apply a driver ratio, write PCM_Allocated_In and PCM_Allocated_Out. The moment your logic needs anything more — aggregation, conditional branching, multi-step staging — you need a Custom Calculation rule.</p>
+
+          <p class="prose">In NovaPrism's model, seq:10 (IT Cost Pool Formation) cannot be an Allocation rule. It needs to <strong>read 120+ GL account members</strong> tagged under the IT cost group in the Account dimension alt hierarchy and <strong>sum them into a single stageable member</strong> — <code>IT_Pool_Staged</code> — so that seq:40's Allocation rule has a clean, single-source pool to read from. Allocation rules don't aggregate. Custom Calc rules do.</p>
+          <p class="prose">Custom Calculation rules in EPCM use a <strong>subset of Oracle Essbase calculation script language</strong>. If you have written Essbase calc scripts before, most of the syntax is familiar. If you haven't, the key things to understand are: member names are case-sensitive, the FIX statement limits which cells the script touches (critical for performance), and the NONEMPTYTUPLE operator is how you avoid calculating against empty intersections.</p>
+
+          <div class="infobox coral">
+            <div class="infobox-icon">🔧</div>
+            <div class="infobox-body"><strong>The division of labour:</strong> Use an Allocation rule when you have a pool total and a driver ratio and want EPCM to manage the PCM_Balance members automatically. Use a Custom Calc rule when you need to build the pool total first, apply conditional logic, or write to specific PCM_Balance members yourself with full control over the arithmetic. In NovaPrism's model, 15 of 18 rules are Allocation or Offset — only 3 are Custom Calc, all in seq:10. That ratio is typical.</div>
+          </div>
+        </section>
+
+        <section class="section" id="decision-matrix">
+          <div class="sec-type-bar"><div class="sec-type-icon conceptual">🗂️</div><span class="sec-type-label conceptual">Conceptual</span></div>
+          <h2 class="sec-h">Allocation rule vs Custom Calc — the decision matrix</h2>
+          <div class="sec-div"></div>
+          <p class="sec-sub">The wrong choice doesn't break the model — it just makes it harder to maintain and diagnose. Use this matrix before writing any rule.</p>
+
+          <div class="tbl-wrap">
+            <table class="tbl">
+              <thead><tr><th>Requirement</th><th>Allocation Rule</th><th>Custom Calc Rule</th></tr></thead>
+              <tbody>
+                <tr><td>Distribute a pool to cost objects using a driver ratio</td><td><span class="badge green">Best fit</span></td><td><span class="badge amber">Possible but over-engineered</span></td></tr>
+                <tr><td>Aggregate multiple GL members into a single pool total</td><td><span class="badge red">Cannot do</span></td><td><span class="badge green">Best fit</span></td></tr>
+                <tr><td>Write PCM_Allocated_In and PCM_Allocated_Out automatically</td><td><span class="badge green">Automatic</span></td><td><span class="badge amber">Manual — you write every member explicitly</span></td></tr>
+                <tr><td>Conditional logic (IF/THEN — different treatment for different entities)</td><td><span class="badge red">Cannot do</span></td><td><span class="badge green">Best fit</span></td></tr>
+                <tr><td>Stage an intermediate value for a downstream rule to read</td><td><span class="badge red">Cannot do</span></td><td><span class="badge green">Best fit</span></td></tr>
+                <tr><td>Apply a fixed percentage split (not driver-based)</td><td><span class="badge amber">Possible with manual driver members</span></td><td><span class="badge green">Simpler</span></td></tr>
+                <tr><td>Offset / zero-out a cost centre after allocation</td><td><span class="badge red">Cannot do</span></td><td><span class="badge amber">Possible — but use dedicated Offset rule type</span></td></tr>
+                <tr><td>Read a value written by a prior rule in a Serial set</td><td><span class="badge green">Yes</span></td><td><span class="badge green">Yes</span></td></tr>
+                <tr><td>Handle sparse data efficiently (skip empty cells)</td><td><span class="badge green">Automatic</span></td><td><span class="badge coral">Requires NONEMPTYTUPLE — manual</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="infobox trap">
+            <div class="infobox-icon">⚠️</div>
+            <div class="infobox-body"><strong>The most dangerous Custom Calc mistake:</strong> Writing a Custom Calc rule without a FIX statement or NONEMPTYTUPLE operator in a large ASO cube. EPCM will attempt to calculate <em>every possible cell intersection</em> — including millions of empty ones. A rule that runs in 8 seconds with proper scoping can take 45 minutes without it. NovaPrism's cube has 11 dimensions × thousands of members each — the combinatorial explosion is enormous. Every Custom Calc rule you write must be scoped.</div>
+          </div>
+        </section>
+
+        <section class="section" id="novaprism-custom-calcs">
+          <div class="sec-type-bar"><div class="sec-type-icon conceptual">🏢</div><span class="sec-type-label conceptual">Conceptual</span></div>
+          <h2 class="sec-h">NovaPrism's three Custom Calc rules</h2>
+          <div class="sec-div"></div>
+          <p class="sec-sub">All three Custom Calc rules live in seq:10 (IT Cost Pool Formation, Serial). They run in order: aggregate first, validate second, stage ratios third.</p>
+
+          <div class="pattern-grid">
+            <div class="pattern-card">
+              <div class="pc-top">
+                <span class="pc-badge" style="background:var(--accent-dim);color:var(--accent);border:1px solid var(--accent-border)">Seq:10 · Rule 1</span>
+                <div class="pc-name">GL Account Aggregation</div>
+                <div class="pc-when">Reads 120+ GL account members → writes IT_Pool_Staged</div>
+              </div>
+              <div class="pc-body">
+                <div class="pc-desc">Uses a FIX on the IT cost group in the Account alt hierarchy to read all IT-tagged GL accounts and sum them into <code>IT_Pool_Staged</code> at the ES Entity × PCM_Input intersection. This creates the clean $52M pool source that seq:40 reads.</div>
+                <div class="pc-trap"><strong>Why not Allocation?</strong> Allocation rules read a single source member. This rule must aggregate hundreds of source members into one target. Only Custom Calc can do this.</div>
+              </div>
+            </div>
+            <div class="pattern-card">
+              <div class="pc-top">
+                <span class="pc-badge" style="background:var(--accent-dim);color:var(--accent);border:1px solid var(--accent-border)">Seq:10 · Rule 2</span>
+                <div class="pc-name">Pool Validation</div>
+                <div class="pc-when">Reads IT_Pool_Staged → writes a validation flag member</div>
+              </div>
+              <div class="pc-body">
+                <div class="pc-desc">Confirms <code>IT_Pool_Staged</code> equals the expected $52M from <code>NP.costPools.IT.amount</code>. If the value differs by more than the rounding tolerance, writes a non-zero flag to a control member that Rule Balancing (Hall 7) monitors. This is NovaPrism's data quality gate before any allocation runs.</div>
+                <div class="pc-trap"><strong>Must be Serial Rule 2</strong> in seq:10. It reads what Rule 1 just wrote. If seq:10 were Parallel, this rule could read a zero pool total.</div>
+              </div>
+            </div>
+            <div class="pattern-card">
+              <div class="pc-top">
+                <span class="pc-badge" style="background:var(--accent-dim);color:var(--accent);border:1px solid var(--accent-border)">Seq:10 · Rule 3</span>
+                <div class="pc-name">Driver Ratio Staging</div>
+                <div class="pc-when">Computes ticket-count ratios → writes three driver staging members</div>
+              </div>
+              <div class="pc-body">
+                <div class="pc-desc">Calculates DS (1,240/4,540 = 27.3%), IS (2,890/4,540 = 63.6%), CL (410/4,540 = 9.0%) and writes each ratio to a dedicated driver staging member. Seq:40's Allocation rule reads these pre-computed ratios rather than recomputing them inline — cleaner logic, easier audit.</div>
+                <div class="pc-trap"><strong>Also Serial Rule 3:</strong> reads the total from Rule 1. Could not exist in a Parallel set with Rules 1 or 2.</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+      </div><!-- /conceptual -->
+
+      <!-- ═══════ TAB 2: TECHNICAL ═══════ -->
+      <div class="tab-panel" id="tab-technical">
+
+        <section class="section" id="syntax-fundamentals">
+          <div class="sec-type-bar"><div class="sec-type-icon technical">⚙️</div><span class="sec-type-label technical">Technical</span></div>
+          <h2 class="sec-h">Custom Calc syntax — the fundamentals</h2>
+          <div class="sec-div"></div>
+          <p class="sec-sub">EPCM Custom Calc rules use Essbase calc script language with EPCM-specific member references. The four constructs you must know: FIX, NONEMPTYTUPLE, member cross-dimension references, and PCM_Balance member writes.</p>
+
+          <div class="code-block">
+            <span class="code-label">Pattern 1 — Basic FIX scope + member write</span>
+            <pre><span class="cm">/* Aggregate IT GL accounts into IT_Pool_Staged */</span>
+<span class="cm">/* Scope: ES entity only, PCM_Input balance, current period/scenario/version */</span>
+
+<span class="kw">FIX</span>(<span class="fn">"ES"</span>, <span class="fn">"PCM_Input"</span>)
+  <span class="fn">"IT_Pool_Staged"</span> = <span class="kw">@SUMRANGE</span>(<span class="fn">"Account"</span>, <span class="fn">@DESCENDANTS</span>(<span class="fn">"IT_Cost_Group"</span>));
+<span class="kw">ENDFIX</span></pre>
+          </div>
+
+          <div class="infobox note">
+            <div class="infobox-icon">📋</div>
+            <div class="infobox-body"><strong>What FIX does:</strong> The FIX statement tells EPCM to run the enclosed calculation <em>only</em> for the cell intersections where all the named members appear. In the example above: only for the ES entity, only at PCM_Input. Every other Entity × PCM_Balance combination is untouched. Without FIX, the calculation runs against every cell in the cube slice — including millions of empty intersections.</div>
+          </div>
+
+          <div class="code-block">
+            <span class="code-label">Pattern 2 — NONEMPTYTUPLE to skip empty cells</span>
+            <pre><span class="cm">/* Stage driver ratios — only where source data exists */</span>
+
+<span class="kw">FIX</span>(<span class="fn">"IT_Pool_Staged"</span>, <span class="fn">"PCM_Input"</span>)
+  <span class="kw">NONEMPTYTUPLE</span>(<span class="fn">"Entity"</span>)
+    <span class="fn">"IT_Driver_Ratio"</span> =
+      <span class="fn">"IT_Tickets_Division"</span> / <span class="fn">"IT_Tickets_Total"</span>;
+  <span class="kw">ENDNONEMPTYTUPLE</span>
+<span class="kw">ENDFIX</span></pre>
+          </div>
+
+          <div class="infobox coral">
+            <div class="infobox-icon">⚡</div>
+            <div class="infobox-body"><strong>NONEMPTYTUPLE:</strong> Iterates only over the dimension combinations where at least one specified member contains actual data. In NovaPrism's case, the Entity dimension has only 4 members with data (DS, IS, CL, ES) out of potentially many more combinations. NONEMPTYTUPLE skips all the empty Entity×Period×Scenario intersections automatically. Without it, the script loops through every possible combination — most of which are empty — and the runtime multiplies accordingly.</div>
+          </div>
+
+          <div class="code-block">
+            <span class="code-label">Pattern 3 — Conditional logic (IF/ELSEIF/ENDIF)</span>
+            <pre><span class="cm">/* Apply different treatment to IS vs other divisions */</span>
+
+<span class="kw">FIX</span>(<span class="fn">"PCM_Input"</span>)
+  <span class="kw">NONEMPTYTUPLE</span>(<span class="fn">"Entity"</span>)
+    <span class="kw">IF</span> (<span class="fn">@ISMBR</span>(<span class="fn">"IS"</span>))
+      <span class="fn">"Overhead_Surcharge"</span> = <span class="fn">"Direct_Cost"</span> * <span class="nu">0.08</span>;
+    <span class="kw">ELSEIF</span> (<span class="fn">@ISMBR</span>(<span class="fn">"DS"</span>))
+      <span class="fn">"Overhead_Surcharge"</span> = <span class="fn">"Direct_Cost"</span> * <span class="nu">0.05</span>;
+    <span class="kw">ELSE</span>
+      <span class="fn">"Overhead_Surcharge"</span> = <span class="fn">"Direct_Cost"</span> * <span class="nu">0.03</span>;
+    <span class="kw">ENDIF</span>
+  <span class="kw">ENDNONEMPTYTUPLE</span>
+<span class="kw">ENDFIX</span></pre>
+          </div>
+
+          <div class="infobox trap">
+            <div class="infobox-icon">⚠️</div>
+            <div class="infobox-body"><strong>PCM_Balance writes are your responsibility:</strong> In an Allocation rule, EPCM automatically writes PCM_Allocated_In to the target and PCM_Allocated_Out to the source. In a Custom Calc rule, <strong>you write every PCM_Balance member explicitly</strong>. If you write to a target member but forget to write the corresponding PCM_Allocated_Out to the cost centre, the model will be unbalanced — ES will show a residual balance that Rule Balancing flags as an error. This is the most common Custom Calc mistake in production implementations.</div>
+          </div>
+
+          <div class="code-block">
+            <span class="code-label">Pattern 4 — Writing PCM_Balance members explicitly (the right way)</span>
+            <pre><span class="cm">/* Correct: write both sides of the allocation */</span>
+
+<span class="kw">FIX</span>(<span class="fn">"Actual"</span>, <span class="fn">"Working"</span>)
+  <span class="cm">/* Write the allocated-in amount to receiving divisions */</span>
+  <span class="kw">FIX</span>(<span class="fn">"PCM_Allocated_In"</span>)
+    <span class="kw">NONEMPTYTUPLE</span>(<span class="fn">"Entity"</span>)
+      <span class="fn">"IT_Overhead"</span>-><span class="fn">"DS"</span> = <span class="fn">"IT_Pool_Staged"</span>-><span class="fn">"ES"</span> * <span class="nu">0.273</span>;
+      <span class="fn">"IT_Overhead"</span>-><span class="fn">"IS"</span> = <span class="fn">"IT_Pool_Staged"</span>-><span class="fn">"ES"</span> * <span class="nu">0.636</span>;
+      <span class="fn">"IT_Overhead"</span>-><span class="fn">"CL"</span> = <span class="fn">"IT_Pool_Staged"</span>-><span class="fn">"ES"</span> * <span class="nu">0.091</span>;
+    <span class="kw">ENDNONEMPTYTUPLE</span>
+  <span class="kw">ENDFIX</span>
+  <span class="cm">/* Write the allocated-out amount to ES (the source) */</span>
+  <span class="kw">FIX</span>(<span class="fn">"PCM_Allocated_Out"</span>, <span class="fn">"ES"</span>)
+    <span class="fn">"IT_Pool_Staged"</span> = <span class="fn">"IT_Pool_Staged"</span>-><span class="fn">"PCM_Input"</span>;
+  <span class="kw">ENDFIX</span>
+<span class="kw">ENDFIX</span></pre>
+          </div>
+
+          <h3 style="font-family:var(--font-display);font-size:18px;color:var(--white);margin:28px 0 14px;letter-spacing:.02em">Cross-dimension member references</h3>
+          <p class="prose">The <code>-></code> operator pins a member from a specific dimension, regardless of the current FIX context. In the example above, <code>"IT_Pool_Staged"->"ES"</code> reads the IT_Pool_Staged value specifically for the ES entity — even inside a FIX that iterates across all entities. This is how you reference a source member while writing to a target member in the same script block.</p>
+
+          <div class="tbl-wrap">
+            <table class="tbl">
+              <thead><tr><th>Syntax element</th><th>Purpose</th><th>NovaPrism example</th></tr></thead>
+              <tbody>
+                <tr><td><code>FIX(…) ENDFIX</code></td><td>Scope the calculation to specific member intersections — essential for performance</td><td><code>FIX("ES", "PCM_Input")</code> — only runs against Enterprise Support at PCM_Input</td></tr>
+                <tr><td><code>NONEMPTYTUPLE(dim)</code></td><td>Skip empty cells in the named dimension — prevents brute-force iteration</td><td><code>NONEMPTYTUPLE("Entity")</code> — only processes DS, IS, CL, ES where data exists</td></tr>
+                <tr><td><code>member->dimension</code></td><td>Cross-dimension member reference — pin a member from a specific dimension</td><td><code>"IT_Pool_Staged"->"ES"</code> — read IT_Pool_Staged specifically at the ES entity</td></tr>
+                <tr><td><code>@SUMRANGE(dim, set)</code></td><td>Sum all members in a set within a dimension</td><td><code>@SUMRANGE("Account", @DESCENDANTS("IT_Cost_Group"))</code></td></tr>
+                <tr><td><code>@DESCENDANTS(member)</code></td><td>Return all descendants of a parent member</td><td><code>@DESCENDANTS("IT_Cost_Group")</code> — all 120+ IT GL accounts</td></tr>
+                <tr><td><code>@ISMBR(member)</code></td><td>Test whether the current calculation context includes a specific member</td><td><code>@ISMBR("IS")</code> — true when calculating the IS entity row</td></tr>
+                <tr><td><code>IF/ELSEIF/ELSE/ENDIF</code></td><td>Conditional logic — apply different arithmetic for different members</td><td>Different overhead surcharge rates per division</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+      </div><!-- /technical -->
+
+      <!-- ═══════ TAB 3: PERFORMANCE ═══════ -->
+      <div class="tab-panel" id="tab-interactive">
+
+        <section class="section" id="performance-lab">
+          <div class="sec-type-bar"><div class="sec-type-icon interactive">⚡</div><span class="sec-type-label interactive">Performance</span></div>
+          <h2 class="sec-h">The performance cost of unscoped Custom Calc</h2>
+          <div class="sec-div"></div>
+          <p class="sec-sub">The same calculation. The same result. Wildly different runtimes. Select a rule variant below to see the impact of scoping on NovaPrism's IT pool aggregation rule.</p>
+
+          <div class="playground-wrap">
+            <div class="playground-header">
+              <span class="playground-title">NovaPrism seq:10 Rule 1 — Runtime comparison</span>
+              <span style="font-size:11px;color:var(--dim);font-style:italic">Select a variant to inspect</span>
+            </div>
+            <div class="playground-body">
+              <div class="pg-scenario">
+                <strong>Context:</strong> NovaPrism's PCM_CLC cube — 11 dimensions, ~8,400 entity members across all hierarchies, 1,200 Account members, 4 Scenarios × 4 Versions × 5 Periods = 80 POV combinations. The IT pool aggregation rule must run in every M01 calculation.
+              </div>
+              <div class="pg-controls">
+                <button class="pg-btn active" id="btn-v1" onclick="showVariant('v1')">Variant A — No FIX, No NET</button>
+                <button class="pg-btn" id="btn-v2" onclick="showVariant('v2')">Variant B — FIX only</button>
+                <button class="pg-btn" id="btn-v3" onclick="showVariant('v3')">Variant C — FIX + NONEMPTYTUPLE</button>
+              </div>
+              <div class="pg-result" id="pg-result"></div>
+            </div>
+          </div>
+
+          <div class="ba-wrap">
+            <div class="ba-card ba-before">
+              <div class="ba-header before">⚠ Without scoping (Variant A)</div>
+              <div class="ba-body">
+                <div class="ba-stat"><span class="ba-stat-label">Cells evaluated</span><span class="ba-stat-val" style="color:var(--red)">~24 million</span></div>
+                <div class="ba-stat"><span class="ba-stat-label">Empty cells processed</span><span class="ba-stat-val" style="color:var(--red)">~23.95 million</span></div>
+                <div class="ba-stat"><span class="ba-stat-label">Estimated runtime</span><span class="ba-stat-val" style="color:var(--red)">38–46 minutes</span></div>
+                <div class="ba-stat"><span class="ba-stat-label">Correct result?</span><span class="ba-stat-val" style="color:var(--green)">Yes — eventually</span></div>
+                <div class="ba-note">The calculation is mathematically correct — it just evaluates 24 million cells to do what 4 cells require. In production, this blocks every other model calculation during the window.</div>
+              </div>
+            </div>
+            <div class="ba-card ba-after">
+              <div class="ba-header after">✓ With FIX + NONEMPTYTUPLE (Variant C)</div>
+              <div class="ba-body">
+                <div class="ba-stat"><span class="ba-stat-label">Cells evaluated</span><span class="ba-stat-val" style="color:var(--green)">4</span></div>
+                <div class="ba-stat"><span class="ba-stat-label">Empty cells processed</span><span class="ba-stat-val" style="color:var(--green)">0</span></div>
+                <div class="ba-stat"><span class="ba-stat-label">Estimated runtime</span><span class="ba-stat-val" style="color:var(--green)">&lt;2 seconds</span></div>
+                <div class="ba-stat"><span class="ba-stat-label">Correct result?</span><span class="ba-stat-val" style="color:var(--green)">Yes — fast</span></div>
+                <div class="ba-note">FIX restricts to the ES entity + PCM_Input balance. NONEMPTYTUPLE then skips the handful of empty period/version combinations. Only the 4 cells that actually hold data are touched.</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="infobox coral">
+            <div class="infobox-icon">⚡</div>
+            <div class="infobox-body"><strong>The practitioner rule:</strong> Every Custom Calc rule you write in EPCM starts with FIX. If FIX alone doesn't scope it tightly enough, add NONEMPTYTUPLE on the dimension with the most sparse data (usually Entity or Customer). Test runtime in sandbox before promoting to production — a rule that runs 40 minutes in sandbox will run 40 minutes in production during the monthly close window, blocking everything downstream.</div>
+          </div>
+        </section>
+
+        <section class="section" id="scope-decision">
+          <div class="sec-type-bar"><div class="sec-type-icon interactive">🎯</div><span class="sec-type-label interactive">Performance</span></div>
+          <h2 class="sec-h">Choosing the right scope strategy</h2>
+          <div class="sec-div"></div>
+          <p class="sec-sub">FIX and NONEMPTYTUPLE are not interchangeable — they solve different parts of the scoping problem. Use this guide to decide which you need.</p>
+
+          <div class="tbl-wrap">
+            <table class="tbl">
+              <thead><tr><th>Scoping tool</th><th>What it restricts</th><th>When to use</th><th>NovaPrism usage</th></tr></thead>
+              <tbody>
+                <tr><td><code>FIX</code></td><td>Restricts calculation to specific named members across one or more dimensions</td><td>When you know exactly which members the rule should touch — the source entity, the PCM_Balance member, the Scenario</td><td><code>FIX("ES", "PCM_Input", "Actual", "Working")</code> — locks the pool aggregation to one entity + one balance member + one POV</td></tr>
+                <tr><td><code>NONEMPTYTUPLE</code></td><td>Within the FIX scope, skips dimension combinations where data is absent</td><td>When the FIX scope still spans many combinations and most are empty — especially Customer (60 engagements) or Period</td><td><code>NONEMPTYTUPLE("Entity")</code> in the driver ratio rule — ensures only DS, IS, CL are processed, not every possible entity combination</td></tr>
+                <tr><td>Both together</td><td>FIX locks to known members; NONEMPTYTUPLE then skips sparse combinations within that locked space</td><td>Complex rules that touch multiple entities and periods — the production standard for NovaPrism</td><td>All three seq:10 Custom Calc rules use both. The combination reduces 24M potential cell evaluations to under 10.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+      </div><!-- /performance -->
+
+      <!-- ═══════ TAB 4: LAB ═══════ -->
+      <div class="tab-panel" id="tab-lab">
+
+        <section class="section" id="lab-build">
+          <div class="sec-type-bar"><div class="sec-type-icon lab">🔬</div><span class="sec-type-label lab">Lab Scenario</span></div>
+          <h2 class="sec-h">Write NovaPrism's seq:10 Custom Calc rules</h2>
+          <div class="sec-div"></div>
+          <p class="sec-sub">Hall 4 designed the rule sets. This workshop writes the actual scripts. Seq:10 is Serial with 3 Custom Calc rules. You are writing all three before the Q1 close window opens.</p>
+
+          <div class="lab-box">
+            <div class="lab-header">Mission Brief — Seq:10 Custom Calc Scripts</div>
+            <div class="lab-scenario">
+              <strong>Situation:</strong> NovaPrism's Oracle implementation partner has configured the application, dimensions, and models. Seq:10 (IT Cost Pool Formation) is the only ruleset that requires Custom Calc rules — the other four rulesets use Allocation and Offset rules handled by the platform. You must write the three Custom Calc scripts for seq:10 before the Finance Controller can run M01 for the first time. If seq:10 doesn't stage <code>IT_Pool_Staged</code> correctly, seq:40 allocates $0 of IT cost to every division. Silently.
+            </div>
+            <div class="lab-checklist" id="lab-checklist">
+              <div class="lab-check-item" onclick="toggleCheck(this)">
+                <div class="lab-check-box"></div>
+                <div class="lab-check-text"><strong>Write Rule 1 — GL Account Aggregation.</strong> Use FIX to restrict to ES entity + PCM_Input balance. Use @SUMRANGE and @DESCENDANTS to aggregate all members under the "IT_Cost_Group" Account hierarchy parent into <code>IT_Pool_Staged</code>. State why FIX must name both "ES" and "PCM_Input" — not just one of them.</div>
+              </div>
+              <div class="lab-check-item" onclick="toggleCheck(this)">
+                <div class="lab-check-box"></div>
+                <div class="lab-check-text"><strong>Write Rule 2 — Pool Validation.</strong> After Rule 1 writes <code>IT_Pool_Staged</code>, Rule 2 must confirm the value equals $52M (from NP.costPools.IT.amount). Write the conditional: if the value differs by more than $0.10, write a non-zero flag to <code>IT_Pool_Validation_Flag</code>. Explain why this rule must be Serial Rule 2 and cannot run in a Parallel set with Rule 1.</div>
+              </div>
+              <div class="lab-check-item" onclick="toggleCheck(this)">
+                <div class="lab-check-box"></div>
+                <div class="lab-check-text"><strong>Write Rule 3 — Driver Ratio Staging.</strong> Using the ticket counts from NP.drivers.itTickets (DS: 1,240; IS: 2,890; CL: 410; total: 4,540), write three ratios to driver staging members. Use NONEMPTYTUPLE on the Entity dimension. Explain why pre-computing the ratios here — rather than computing them inline inside seq:40's Allocation rule — is a better design.</div>
+              </div>
+              <div class="lab-check-item" onclick="toggleCheck(this)">
+                <div class="lab-check-box"></div>
+                <div class="lab-check-text"><strong>Diagnose the silent failure scenario.</strong> The Finance Controller runs M01 and notices DS receives $0 IT allocation, IS receives $0, CL receives $0. The Facilities and HR/Finance allocations ran correctly. Seq:40 shows "completed successfully" with no errors. Walk through the diagnosis: which rule failed, what went wrong in the script, and what the correct fix is.</div>
+              </div>
+              <div class="lab-check-item" onclick="toggleCheck(this)">
+                <div class="lab-check-box"></div>
+                <div class="lab-check-text"><strong>Write the performance brief.</strong> The sandbox run of Rule 1 without FIX took 43 minutes on NovaPrism's 11-dimension cube. With FIX("ES","PCM_Input") it takes 4 seconds. Explain in non-technical language why removing FIX causes this difference, why the result is mathematically identical either way, and what the monthly close governance implication is (hint: the M01 close window is 2 hours).</div>
+              </div>
+            </div>
+            <div class="lab-progress">
+              <div class="lab-progress-label" id="lab-progress-label">0 of 5 tasks completed</div>
+              <div class="lab-progress-bar"><div class="lab-progress-fill" id="lab-progress-fill" style="width:0%"></div></div>
+            </div>
+          </div>
+
+          <div class="infobox tip" style="margin-top:20px">
+            <div class="infobox-icon">🎓</div>
+            <div class="infobox-body"><strong>Dean's hint on task 4 (silent failure diagnosis):</strong> The most likely cause is that seq:10 Rule 1 ran but wrote to the wrong PCM_Balance member — e.g., wrote to <code>PCM_Output</code> instead of <code>PCM_Input</code>. Seq:40's Allocation rule reads <code>IT_Pool_Staged</code> at <code>PCM_Input</code>. If Rule 1 wrote to the wrong balance member, the value at PCM_Input is zero, seq:40 computes 0 × ratio = 0 for every division, and reports success because no calculation error occurred — zero multiplied by anything is still zero. The fix: correct the FIX target in Rule 1 to explicitly name "PCM_Input".</div>
+          </div>
+        </section>
+
+      </div><!-- /lab -->
+
+      <!-- ═══════ TAB 5: EXAM PREP ═══════ -->
+      <div class="tab-panel" id="tab-exam">
+
+        <section class="section" id="exam-alignment">
+          <div class="sec-type-bar"><div class="sec-type-icon exam">📝</div><span class="sec-type-label exam">Exam Alignment · 1Z0-1082-25</span></div>
+          <h2 class="sec-h">What Workshop of Precision covers on the exam</h2>
+          <div class="sec-div"></div>
+          <p class="sec-sub">Hall 5 maps into the fourth and fifth syllabus topics: Managing Rule Sets and Rules (continued), and Calculating Models. Custom Calc rules appear in 3–5 questions across the 50-question exam — always as part of a "when to use which rule type" or "what does this script actually do" question.</p>
+
+          <div class="exam-box">
+            <div class="exam-box-header">📝 Syllabus coverage — Custom Calculation rules</div>
+            <div class="exam-box-body">
+              <strong>What the exam tests on Custom Calc:</strong><br><br>
+              1. <strong>When to use Custom Calc vs Allocation rule</strong> — the exam will describe a scenario and ask which rule type is appropriate. Know that Custom Calc is required for aggregation, conditional logic, and staging; Allocation is required for driver-based distribution.<br><br>
+              2. <strong>FIX statement purpose and syntax</strong> — know that FIX restricts the calculation to named members and is mandatory for performance. Know the ENDFIX closing syntax.<br><br>
+              3. <strong>NONEMPTYTUPLE purpose</strong> — know that it skips empty cell combinations within the FIX scope, and that it takes a dimension name as its argument.<br><br>
+              4. <strong>PCM_Balance responsibility</strong> — know that in a Custom Calc rule (unlike an Allocation rule), the implementer must write both PCM_Allocated_In (target) and PCM_Allocated_Out (source) explicitly. Forgetting the PCM_Allocated_Out write creates an unbalanced model.
+            </div>
+          </div>
+
+          <div class="exam-box">
+            <div class="exam-box-header">⚠️ The four most-tested traps in this section</div>
+            <div class="exam-box-body">
+              <strong>Trap 1: "FIX and NONEMPTYTUPLE are interchangeable."</strong><br>
+              FALSE. FIX restricts to named members. NONEMPTYTUPLE skips empty combinations <em>within</em> the FIX scope. They solve different problems and are often used together.<br><br>
+              <strong>Trap 2: "A Custom Calc rule automatically manages PCM_Allocated_In and PCM_Allocated_Out."</strong><br>
+              FALSE. Only Allocation rules do this automatically. In Custom Calc, you write every PCM_Balance member explicitly. Missing the Allocated_Out write is the most common production error.<br><br>
+              <strong>Trap 3: "Removing FIX from a Custom Calc rule makes it calculate more accurately."</strong><br>
+              FALSE. The result is identical — removing FIX only makes it slower, sometimes catastrophically. FIX is a performance scope, not a filter that excludes correct data.<br><br>
+              <strong>Trap 4: "Custom Calc rules can only read from members in the same dimension."</strong><br>
+              FALSE. The <code>-></code> cross-dimension member reference syntax allows a Custom Calc rule to read from any dimension intersection explicitly, regardless of the current FIX context.
+            </div>
+          </div>
+
+          <div id="quiz-container"></div>
+          <div class="quiz-score" id="quiz-score">
+            <div class="quiz-score-num" id="quiz-score-num">0/5</div>
+            <div class="quiz-score-label">Hall 5 Exam Score</div>
+            <div class="quiz-score-msg" id="quiz-score-msg"></div>
+          </div>
+
+          <div class="tbl-wrap" style="margin-top:28px">
+            <table class="tbl">
+              <thead><tr><th>Concept</th><th>Exam answer</th><th>Implementation reality</th></tr></thead>
+              <tbody>
+                <tr><td>When to use Custom Calc</td><td>Aggregation, conditional logic, staging, multi-step arithmetic — anything an Allocation rule cannot express</td><td>Most real models use Custom Calc sparingly — 2–4 rules per model is typical. Seq:10 is the classic use case.</td></tr>
+                <tr><td>FIX purpose</td><td>Restricts calculation to specific named member intersections — required for performance in multi-dimensional ASO cubes</td><td>Every Custom Calc rule in production must have FIX. An unscoped rule in a large cube is a close-window incident waiting to happen.</td></tr>
+                <tr><td>NONEMPTYTUPLE purpose</td><td>Skips empty cell combinations within the FIX scope — iterates only over dimension members where data exists</td><td>Add NONEMPTYTUPLE when FIX alone still spans too many combinations, especially on sparse dimensions like Customer (60 engagements).</td></tr>
+                <tr><td>PCM_Balance in Custom Calc</td><td>Must be written explicitly by the implementer — both Allocated_In (target) and Allocated_Out (source)</td><td>Create a personal checklist: every Custom Calc that moves money must have both sides. Rule Balancing will catch the miss, but only after you've run the full model.</td></tr>
+                <tr><td>Cross-dimension reference</td><td><code>member->dimension</code> syntax — reads a specific member from a named dimension regardless of current context</td><td>Used constantly in staging rules where you read ES source values while iterating over DS/IS/CL targets.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+      </div><!-- /exam -->
+
+      <!-- Hall Nav Footer -->
+      <div class="hall-nav-footer">
+        <a href="hall-4.html" class="hnf-prev">
+          <span style="font-size:14px">←</span>
+          <div><div class="hnf-dir">Previous Hall</div><div class="hnf-name">Hall of Logic</div></div>
+        </a>
+        <a href="hall-6.html" class="hnf-next">
+          <div><div class="hnf-dir">Next Hall</div><div class="hnf-name">Control Tower</div></div>
+          <span style="font-size:14px">→</span>
+        </a>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<!-- ══ SCRIPTS ══ -->
+<script src="./constants.js"></script>
+<script>
+
+/* ── Stars ── */
+(function(){
+  var s=document.getElementById('stars');
+  for(var i=0;i<50;i++){
+    var d=document.createElement('div');d.className='star';
+    var sz=Math.random()*1.2+0.3;
+    d.style.cssText='width:'+sz+'px;height:'+sz+'px;top:'+Math.random()*100+'%;left:'+Math.random()*100+'%;--d:'+(3+Math.random()*6)+'s;--delay:'+Math.random()*8+'s;--op:'+(0.04+Math.random()*0.12);
+    s.appendChild(d);
+  }
+})();
+
+/* ── Sidebar ── */
+function toggleSidebar(){ document.getElementById('sidebar').classList.toggle('open'); document.getElementById('overlay').classList.toggle('open'); }
+function closeSidebar(){ document.getElementById('sidebar').classList.remove('open'); document.getElementById('overlay').classList.remove('open'); }
+
+/* ── Campus map ── */
+(function(){
+  var halls=[
+    {n:1,name:'Foundations',url:'hall-1.html',done:true},
+    {n:2,name:'Dimensions',url:'hall-2.html',done:true},
+    {n:3,name:'Models',url:'hall-3.html',done:true},
+    {n:4,name:'Logic',url:'hall-4.html',done:true},
+    {n:5,name:'Workshop',url:'hall-5.html',active:true},
+    {n:6,name:'Control',url:'hall-6.html'},
+    {n:7,name:'Observatory',url:'hall-7.html'},
+    {n:8,name:'Pipeline',url:'hall-8.html'},
+    {n:9,name:'Exam Hall',url:'hall-9.html'},
+  ];
+  var map=document.getElementById('campus-map');
+  var html='';
+  halls.forEach(function(h,i){
+    var cls=h.active?'campus-building active':h.done?'campus-building done':'campus-building locked';
+    var stopCls=h.active?'campus-stop active-stop':h.done?'campus-stop done-stop':'campus-stop';
+    html+='<div class="'+stopCls+'"><a href="'+h.url+'" class="'+cls+'">'+h.n+'</a><div class="campus-stop-label">'+h.name+'</div></div>';
+    if(i<halls.length-1) html+='<div class="campus-connector"></div>';
+  });
+  map.innerHTML=html;
+})();
+
+/* ── Company sidebar ── */
+(function(){
+  if(typeof NP==='undefined') return;
+  var c=NP.company;
+  var el=document.getElementById('sb-company-desc');
+  if(el) el.textContent='$'+(c.revenue/1000).toFixed(1)+'B · 3 divisions · 1 cost centre · '+c.employees.toLocaleString()+' staff';
+})();
+
+/* ── Tabs ── */
+function switchTab(name,btn){
+  document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.remove('active');});
+  document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('active');});
+  document.getElementById('tab-'+name).classList.add('active');
+  btn.classList.add('active');
+  buildTOC();
+}
+
+/* ── TOC ── */
+function buildTOC(){
+  var toc=document.getElementById('sb-toc');
+  if(!toc) return;
+  toc.innerHTML='';
+  var panel=document.querySelector('.tab-panel.active');
+  if(!panel) return;
+  panel.querySelectorAll('h2.sec-h').forEach(function(h){
+    if(!h.id) h.id='toc-'+h.textContent.trim().toLowerCase().replace(/[^a-z0-9]+/g,'-').slice(0,40);
+    var a=document.createElement('a');
+    a.href='#'+h.id; a.className='sb-toc-item';
+    a.textContent=h.textContent;
+    toc.appendChild(a);
+  });
+}
+setTimeout(buildTOC,100);
+
+/* ── Performance Playground ── */
+var variants = {
+  v1: {
+    code: [
+      '<span class="cm">/* Variant A — No FIX, no NONEMPTYTUPLE */</span>',
+      '<span class="cm">/* EPCM evaluates every cell in the entire cube slice */</span>',
+      '',
+      '<span class="fn">"IT_Pool_Staged"</span> = <span class="kw">@SUMRANGE</span>(<span class="fn">"Account"</span>, <span class="fn">@DESCENDANTS</span>(<span class="fn">"IT_Cost_Group"</span>));'
+    ],
+    result: [
+      {cls:'result-bad',  text:'Cells evaluated:    ~24,000,000 (all Entity × Period × Scenario × Version combinations)'},
+      {cls:'result-bad',  text:'Empty cells touched: ~23,950,000 (99.8% wasted work)'},
+      {cls:'result-bad',  text:'Estimated runtime:   38–46 minutes on NovaPrism cube'},
+      {cls:'result-good', text:'Result correct:      Yes — mathematically identical output'},
+      {cls:'',            text:''},
+      {cls:'result-bad',  text:'⚠ This rule would consume the entire 2-hour M01 close window on its own.'}
+    ]
+  },
+  v2: {
+    code: [
+      '<span class="cm">/* Variant B — FIX scope only, no NONEMPTYTUPLE */</span>',
+      '<span class="cm">/* Restricts to ES entity + PCM_Input balance */</span>',
+      '',
+      '<span class="kw">FIX</span>(<span class="fn">"ES"</span>, <span class="fn">"PCM_Input"</span>)',
+      '  <span class="fn">"IT_Pool_Staged"</span> = <span class="kw">@SUMRANGE</span>(<span class="fn">"Account"</span>, <span class="fn">@DESCENDANTS</span>(<span class="fn">"IT_Cost_Group"</span>));',
+      '<span class="kw">ENDFIX</span>'
+    ],
+    result: [
+      {cls:'result-key',  text:'FIX reduces scope to: ES entity × PCM_Input × all Period/Scenario/Version combos'},
+      {cls:'result-bad',  text:'Cells evaluated:    ~960 (80 POV combinations × 12 periods)'},
+      {cls:'result-bad',  text:'Empty cells touched: ~940 (many period/scenario combos have no data)'},
+      {cls:'',            text:'Estimated runtime:   ~12 seconds'},
+      {cls:'result-good', text:'Result correct:      Yes — same output'},
+      {cls:'',            text:''},
+      {cls:'',            text:'Better — but still processes empty Period×Scenario×Version intersections.'}
+    ]
+  },
+  v3: {
+    code: [
+      '<span class="cm">/* Variant C — FIX + NONEMPTYTUPLE — production standard */</span>',
+      '',
+      '<span class="kw">FIX</span>(<span class="fn">"ES"</span>, <span class="fn">"PCM_Input"</span>, <span class="fn">"Actual"</span>, <span class="fn">"Working"</span>)',
+      '  <span class="kw">NONEMPTYTUPLE</span>(<span class="fn">"Period"</span>)',
+      '    <span class="fn">"IT_Pool_Staged"</span> = <span class="kw">@SUMRANGE</span>(<span class="fn">"Account"</span>,',
+      '      <span class="fn">@DESCENDANTS</span>(<span class="fn">"IT_Cost_Group"</span>));',
+      '  <span class="kw">ENDNONEMPTYTUPLE</span>',
+      '<span class="kw">ENDFIX</span>'
+    ],
+    result: [
+      {cls:'result-key',  text:'FIX locks to: ES × PCM_Input × Actual × Working'},
+      {cls:'result-key',  text:'NONEMPTYTUPLE skips: all Period members where no data loaded'},
+      {cls:'result-good', text:'Cells evaluated:    4 (Q1 only — the only period with loaded data)'},
+      {cls:'result-good', text:'Empty cells touched: 0'},
+      {cls:'result-good', text:'Estimated runtime:   < 2 seconds'},
+      {cls:'result-good', text:'Result correct:      Yes'},
+      {cls:'',            text:''},
+      {cls:'result-good', text:'✓ Production standard. Scales identically whether 1 or 4 periods are loaded.'}
+    ]
+  }
+};
+
+function showVariant(key){
+  ['v1','v2','v3'].forEach(function(k){
+    document.getElementById('btn-'+k).classList.toggle('active', k===key);
+  });
+  var v=variants[key];
+  var html='<div style="font-family:var(--font-mono);font-size:11.5px;line-height:1.8;margin-bottom:14px;padding:12px;background:rgba(0,0,0,.35);border-radius:6px">';
+  v.code.forEach(function(l){ html+='<div>'+l+'</div>'; });
+  html+='</div>';
+  v.result.forEach(function(r){
+    html+='<div class="result-line '+(r.cls||'")">'+r.text+'</div>';
+  });
+  document.getElementById('pg-result').innerHTML=html;
+}
+showVariant('v1');
+
+/* ── Lab checklist ── */
+function toggleCheck(item){
+  var box=item.querySelector('.lab-check-box');
+  box.classList.toggle('checked');
+  item.classList.toggle('checked');
+  updateLabProgress();
+}
+function updateLabProgress(){
+  var done=document.querySelectorAll('.lab-check-box.checked').length;
+  var total=document.querySelectorAll('.lab-check-item').length;
+  document.getElementById('lab-progress-label').textContent=done+' of '+total+' tasks completed';
+  document.getElementById('lab-progress-fill').style.width=(done/total*100)+'%';
+}
+
+/* ── Quiz ── */
+var quizData=[
+  {
+    diff:'foundation',qnum:'Q1',
+    stem:'NovaPrism\'s seq:10 (IT Cost Pool Formation) uses a Custom Calculation rule to aggregate 120+ GL account members into IT_Pool_Staged. Why can this not be done with an Allocation rule?',
+    options:[
+      'Allocation rules can only run in Parallel rule sets — seq:10 is Serial, so Custom Calc is required',
+      'Allocation rules distribute a pool to cost objects using a driver ratio — they cannot aggregate multiple source members into a single target. Custom Calc is required for aggregation.',
+      'Allocation rules cannot write to PCM_Input — they only write to PCM_Allocated_In and PCM_Allocated_Out',
+      'Allocation rules require a FIX statement — Custom Calc rules do not, making Custom Calc faster for this operation'
+    ],
+    correct:1,
+    explanation:'Allocation rules have one function: take a source pool total and distribute it to targets using a driver ratio. They read a single source member and write to multiple targets. They cannot aggregate many source members into one target — that requires iterating over a set of members and summing them, which is exactly what a Custom Calc script with @SUMRANGE and @DESCENDANTS does. The rule type choice here is driven by the operation, not the rule set execution mode.'
+  },
+  {
+    diff:'foundation',qnum:'Q2',
+    stem:'A Custom Calc rule in NovaPrism\'s seq:10 is written without a FIX statement. The rule calculates correctly but takes 43 minutes to run. With a FIX("ES","PCM_Input") statement added, the same rule takes 4 seconds. The result is identical in both cases. What does FIX do that explains this difference?',
+    options:[
+      'FIX compresses the ASO database before calculation, reducing the amount of data the script must process',
+      'FIX parallelises the calculation across calcThreads — removing FIX forces single-threaded execution',
+      'FIX restricts the calculation to specific named member intersections — without it, EPCM evaluates every cell in the cube slice, including millions of empty intersections that produce no useful result',
+      'FIX caches the result after the first run — without it, EPCM recalculates the same cells multiple times'
+    ],
+    correct:2,
+    explanation:'FIX is a scope restriction, not a compression, parallelisation, or caching mechanism. Without FIX, EPCM iterates through every possible cell intersection in the ASO cube slice — including approximately 24 million combinations for NovaPrism\'s 11-dimension model, of which 99.8% are empty. With FIX("ES","PCM_Input"), EPCM evaluates only the cells where the ES entity and PCM_Input balance member intersect — a tiny fraction of the full cube. The result is the same; only the number of cells touched changes.'
+  },
+  {
+    diff:'practitioner',qnum:'Q3',
+    stem:'A Custom Calc rule writes the IT allocation from ES to DS, IS, and CL but only writes to the PCM_Allocated_In member for each receiving division. It does not write to PCM_Allocated_Out for ES. The rule completes without errors. What is the consequence?',
+    options:[
+      'EPCM automatically writes PCM_Allocated_Out when PCM_Allocated_In is written — no additional script is needed',
+      'The model is unbalanced: ES PCM_Output will not net to zero, and Rule Balancing will flag ES as carrying a residual balance equal to the allocated amount',
+      'The allocation fails because PCM_Allocated_Out is required before PCM_Allocated_In can be written',
+      'PCM_Allocated_Out is only needed for Allocation rules — Custom Calc rules use a different balancing mechanism'
+    ],
+    correct:1,
+    explanation:'Unlike Allocation rules (which automatically write both sides), Custom Calc rules require the implementer to write every PCM_Balance member explicitly. If PCM_Allocated_Out is not written for ES, EPCM has no record that ES sent costs anywhere. ES PCM_Output = PCM_Input ($134M) − PCM_Allocated_Out ($0) = $134M residual. Rule Balancing checks that ES nets to zero — it will flag a $134M imbalance. The rule completed without a script error because writing only one side is syntactically valid — the model error shows up at balance verification time, not at calculation time.'
+  },
+  {
+    diff:'practitioner',qnum:'Q4',
+    stem:'NovaPrism\'s seq:10 Rule 3 stages IT ticket-count driver ratios for DS (27.3%), IS (63.6%), and CL (9.0%) into driver staging members. The rule uses NONEMPTYTUPLE("Entity"). What would happen if NONEMPTYTUPLE were removed, assuming FIX is still present?',
+    options:[
+      'The rule would fail with a division-by-zero error because empty Entity members have no ticket data to divide',
+      'The rule would write zero values to the driver staging members for every empty Entity combination — inflating the denominator used by seq:40 and producing wrong allocation ratios',
+      'The calculation result would be identical but runtime would increase as EPCM iterates through empty Entity intersections within the FIX scope',
+      'NONEMPTYTUPLE is required for Parallel rule sets only — removing it from a Serial rule set has no effect'
+    ],
+    correct:2,
+    explanation:'NONEMPTYTUPLE skips empty cell combinations within the FIX scope. Removing it does not change the mathematical result because empty cells evaluate to zero and do not affect the final written values — the driver ratios are determined by cells that actually contain data. However, EPCM will iterate through every Entity member combination within the FIX scope, including any empty ones. For NovaPrism\'s model this is a minor overhead, but on a Customer dimension with 60 engagement codes or a multi-region hierarchy, the empty-cell iteration can become significant.'
+  },
+  {
+    diff:'expert',qnum:'Q5',
+    stem:'A NovaPrism consultant wants to read the IT_Pool_Staged value specifically for the ES entity while iterating over DS, IS, and CL entities in a Custom Calc rule. The FIX context currently iterates over all Entity members. Which syntax correctly reads the ES-specific value?',
+    options:[
+      '"IT_Pool_Staged" — the current FIX context provides the ES value automatically when iterating Entity',
+      '"IT_Pool_Staged"->"ES" — the cross-dimension member reference pins the read to the ES entity regardless of the current iteration context',
+      '@MEMBER("IT_Pool_Staged", "ES") — the @MEMBER function returns a value from a named entity',
+      'FIX("ES") ... ENDFIX nested inside the outer FIX — the only way to read a different entity mid-iteration'
+    ],
+    correct:1,
+    explanation:'The <code>-></code> cross-dimension member reference syntax pins a member from a named dimension, regardless of the current FIX iteration context. When the FIX is iterating over Entity members (DS, IS, CL) and you need to read the ES-specific value, <code>"IT_Pool_Staged"->"ES"</code> explicitly references the ES entity member. Without the pin, <code>"IT_Pool_Staged"</code> would read the value for whichever entity is currently in scope — which is DS, IS, or CL, not ES. This pattern is used constantly in Custom Calc rules that allocate from a single source entity to multiple target entities.'
+  }
+];
+
+var quizAnswers={};
+(function renderQuiz(){
+  var container=document.getElementById('quiz-container');
+  if(!container) return;
+  var html='';
+  quizData.forEach(function(q,i){
+    html+='<div class="quiz-q" id="qq-'+i+'">';
+    html+='<div class="quiz-meta"><span class="quiz-diff '+q.diff+'">'+q.diff+'</span><span class="quiz-qnum">'+q.qnum+'</span></div>';
+    html+='<div class="quiz-stem">'+q.stem+'</div>';
+    html+='<div class="quiz-options">';
+    q.options.forEach(function(opt,j){
+      html+='<button class="quiz-opt" onclick="answerQ('+i+','+j+')">'+String.fromCharCode(65+j)+'. '+opt+'</button>';
+    });
+    html+='</div>';
+    html+='<div class="quiz-explanation" id="qexp-'+i+'"></div>';
+    html+='</div>';
+  });
+  container.innerHTML=html;
+})();
+
+function answerQ(qi,oi){
+  if(quizAnswers[qi]!==undefined) return;
+  quizAnswers[qi]=oi;
+  var q=quizData[qi];
+  document.querySelectorAll('#qq-'+qi+' .quiz-opt').forEach(function(o,j){
+    o.classList.add('revealed');
+    if(j===q.correct) o.classList.add('correct');
+    else if(j===oi&&oi!==q.correct) o.classList.add('wrong');
+  });
+  var exp=document.getElementById('qexp-'+qi);
+  exp.innerHTML='<strong>'+(oi===q.correct?'✓ Correct':'✗ Incorrect')+'</strong> — '+q.explanation;
+  exp.classList.add('show');
+  if(Object.keys(quizAnswers).length===quizData.length) showScore();
+}
+function showScore(){
+  var correct=0;
+  quizData.forEach(function(q,i){if(quizAnswers[i]===q.correct)correct++;});
+  var total=quizData.length;
+  var pct=Math.round(correct/total*100);
+  document.getElementById('quiz-score-num').textContent=correct+'/'+total;
+  document.getElementById('quiz-score-msg').textContent=pct<60?'Review the Workshop before moving on.':pct<100?'Good precision — proceed to the Control Tower.':'Perfect. Your scripts are production-ready.';
+  document.getElementById('quiz-score').classList.add('show');
+}
+
+/* ── Dean Eliot ── */
+var HALL_SYSTEM_EXTENSION=[
+  'CURRENT HALL: Hall 5 — Workshop of Precision (Academy of Profit Center)',
+  'HALL SCOPE: Custom Calculation rules in EPCM — syntax, patterns, performance, when to use vs Allocation rules.',
+  'FIX statement, NONEMPTYTUPLE, cross-dimension references, PCM_Balance explicit writes.',
+  '',
+  'KEY CONCEPTS IN THIS HALL:',
+  '- Custom Calc vs Allocation: Use Custom Calc for aggregation, conditional logic, staging. Use Allocation for driver-based distribution.',
+  '- FIX statement: restricts the script to named member intersections. Mandatory for performance. Without FIX, EPCM evaluates every cell.',
+  '- NONEMPTYTUPLE(dim): skips empty cell combinations within the FIX scope. Iterates only over members with data.',
+  '- PCM_Balance in Custom Calc: the implementer must write both PCM_Allocated_In (target) AND PCM_Allocated_Out (source) explicitly. Allocation rules do this automatically; Custom Calc rules do not.',
+  '- Cross-dimension reference: "member"->Dimension syntax pins a member from a specific dimension regardless of FIX context.',
+  '',
+  'NOVAPRISM IN THIS HALL:',
+  'All 3 Custom Calc rules are in seq:10 (IT Cost Pool Formation, Serial).',
+  'Rule 1: Aggregate 120+ IT GL accounts into IT_Pool_Staged using FIX("ES","PCM_Input") + @SUMRANGE.',
+  'Rule 2: Validate IT_Pool_Staged == $52M. Writes IT_Pool_Validation_Flag if mismatch.',
+  'Rule 3: Stage driver ratios — DS 27.3% (1240/4540), IS 63.6% (2890/4540), CL 9.0% (410/4540).',
+  'Without FIX, Rule 1 takes 43 minutes. With FIX, 4 seconds. Same result.',
+  '',
+  'EXAM TOPICS: Managing rule sets and rules (Custom Calc subset) + Calculating Models.',
+  '',
+  'COMMON MISCONCEPTIONS:',
+  '- FIX and NONEMPTYTUPLE are interchangeable: FALSE. FIX restricts to named members; NET skips empty combos within that scope.',
+  '- Custom Calc auto-manages PCM_Balance: FALSE. Only Allocation rules do that. Custom Calc requires explicit writes.',
+  '- Removing FIX changes the result: FALSE. FIX only affects which cells are evaluated — not the arithmetic result.',
+  '- Custom Calc can only read the current dimension context: FALSE. The -> operator enables cross-dimension reads.',
+  '',
+  'OUT OF SCOPE: Calc statistics and monitoring → Control Tower (Hall 6). Rule Balancing → Observatory (Hall 7).'
+].join('\n');
+
+function buildSystemPrompt(){
+  var pa=(typeof NP!=='undefined')?NP.postAllocation:null;
+  return [
+    'You are Dean Eliot, the AI practitioner-guide for the BrainSpring EPCM Study Tour — Academy of Profit Center.',
+    'You are a senior Oracle EPM practitioner who has implemented EPCM at 40+ enterprises.',
+    'Voice: direct (no hedging), practitioner-honest, concise (3–5 sentences target), never sycophantic.',
+    '',
+    'CASE COMPANY: NovaPrism Group — $2.1B professional services conglomerate. 8,400 employees. 4 divisions.',
+    pa?('IS: $'+pa.IS.revenue+'M revenue | '+pa.IS.directPct+'% direct → '+pa.IS.marginPct+'% fully-loaded | $'+pa.IS.allocatedIn+'M allocated in.'):'',
+    'Enterprise Support: $134M costs across IT $52M (tickets), Facilities $38M (sqft), Finance $28M (headcount), HR $16M (headcount).',
+    'Seq:10 has 3 Custom Calc rules: Rule 1 aggregates IT GL accounts into IT_Pool_Staged, Rule 2 validates, Rule 3 stages driver ratios.',
+    'NP.drivers.itTickets: DS=1240, IS=2890, CL=410, total=4540.',
+    '',
+    'RULES: Connect every answer to NovaPrism. Name exam answer AND implementation reality when they differ.',
+    'Never invent product behaviour. For out-of-scope topics, name the hall that covers them.',
+    '',
+    HALL_SYSTEM_EXTENSION
+  ].filter(Boolean).join('\n');
+}
+
+var sbHistory=[];
+function sbSend(){
+  var inp=document.getElementById('sb-input');
+  var txt=inp.value.trim(); if(!txt) return;
+  inp.value='';
+  sbAddMsg('user',txt);
+  sbHistory.push({role:'user',content:txt});
+  var typing=sbAddMsg('guide','…');
+  typing.classList.add('typing');
+  sbCall(typing);
+}
+function chipAsk(chip){
+  document.getElementById('sb-input').value=chip.textContent;
+  sbSend();
+}
+function sbAddMsg(role,text){
+  var msgs=document.getElementById('sb-msgs');
+  var div=document.createElement('div');
+  div.className='sb-msg '+role;
+  div.textContent=text;
+  msgs.appendChild(div);
+  msgs.scrollTop=msgs.scrollHeight;
+  return div;
+}
+async function sbCall(typingEl){
+  try{
+    var resp=await fetch('https://epbcs-tutor.fancy-brook-fc0d.workers.dev',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        model:'claude-sonnet-4-20250514',
+        max_tokens:500,
+        system:buildSystemPrompt(),
+        messages:sbHistory
+      })
+    });
+    var data=await resp.json();
+    var reply=(data.content&&data.content[0]&&data.content[0].text)||'Try rephrasing — I had trouble with that one.';
+    typingEl.textContent=reply;
+    typingEl.classList.remove('typing');
+    sbHistory.push({role:'assistant',content:reply});
+  }catch(e){
+    typingEl.textContent='Connection issue — please try again.';
+    typingEl.classList.remove('typing');
+  }
+}
+
+document.querySelectorAll('a[href^="#"]').forEach(function(a){
+  a.addEventListener('click',function(e){
+    var id=this.getAttribute('href').slice(1);
+    var el=document.getElementById(id);
+    if(el){e.preventDefault();el.scrollIntoView({behavior:'smooth',block:'start'});}
+  });
+});
+</script>
+</body>
+</html>
