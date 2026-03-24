@@ -1,0 +1,1561 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dimensions Gallery — Academy of Profit Center · EPCM Study Tour · BrainSpring</title>
+<meta name="description" content="11 dimensions. One ASO cube. Every storage decision has a consequence. Hall 2 of the EPCM Study Tour — dimension design for NovaPrism Group.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Pro:ital,wght@0,300;0,400;0,500;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+/* ══════════════════════════════════════════
+   ACADEMY OF PROFIT CENTER — DESIGN SYSTEM
+   Hall 2: Dimensions Gallery
+   Accent: teal #2dd4bf
+══════════════════════════════════════════ */
+:root {
+  --navy:    #08111e;
+  --navy2:   #0d1b2e;
+  --navy3:   #112240;
+  --navy4:   #172d47;
+  --navy5:   #1e3855;
+  --amber:   #f59e0b;
+  --amber2:  #d97706;
+  --amber-dim: rgba(245,158,11,.12);
+  --amber-border: rgba(245,158,11,.25);
+  /* Hall 2 accent — teal */
+  --accent:  #2dd4bf;
+  --accent2: #0d9488;
+  --accent-dim: rgba(45,212,191,.08);
+  --accent-border: rgba(45,212,191,.22);
+  --green:   #4ade80;
+  --green-dim: rgba(74,222,128,.08);
+  --red:     #f87171;
+  --red-dim: rgba(248,113,113,.08);
+  --purple:  #a855f7;
+  --coral:   #fb923c;
+  --sky:     #38bdf8;
+  --lime:    #a3e635;
+  --white:   #e8f0f8;
+  --silver:  #c8d4e0;
+  --silver2: #8fa3b8;
+  --dim:     #4a6080;
+  --border:  rgba(200,212,224,.08);
+  --border2: rgba(200,212,224,.14);
+  --font-display: 'Cinzel', serif;
+  --font-body:    'Crimson Pro', serif;
+  --font-mono:    'JetBrains Mono', monospace;
+  --topbar-h: 52px;
+  --sidebar-w: 228px;
+  --r: 10px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--font-body);
+  background: var(--navy);
+  color: var(--white);
+  min-height: 100vh;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+}
+body::before {
+  content: '';
+  position: fixed; inset: 0; pointer-events: none; z-index: 0;
+  background-image:
+    linear-gradient(rgba(45,212,191,.012) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(45,212,191,.012) 1px, transparent 1px);
+  background-size: 60px 60px;
+}
+body::after {
+  content: '';
+  position: fixed; inset: 0; pointer-events: none; z-index: 0;
+  background: radial-gradient(ellipse 90% 60% at 50% -5%, rgba(45,212,191,.04) 0%, transparent 65%);
+}
+
+#stars { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
+.star { position: absolute; border-radius: 50%; background: #2dd4bf; animation: twinkle var(--d,4s) infinite var(--delay,0s); }
+@keyframes twinkle { 0%,100%{opacity:.015} 50%{opacity:var(--op,.1)} }
+@keyframes fadeUp { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:none} }
+@keyframes pulse { 0%,100%{box-shadow:0 0 0 0 rgba(45,212,191,.25)} 50%{box-shadow:0 0 0 6px transparent} }
+@keyframes glow { 0%,100%{text-shadow:0 0 12px rgba(45,212,191,.3)} 50%{text-shadow:0 0 28px rgba(45,212,191,.6)} }
+@keyframes slideIn { from{opacity:0;transform:translateX(-8px)} to{opacity:1;transform:none} }
+
+/* ── TOPBAR ── */
+#topbar {
+  position: fixed; top: 0; left: 0; right: 0; height: var(--topbar-h);
+  background: rgba(8,17,30,.92); backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 14px;
+  padding: 0 20px; z-index: 100;
+}
+.tb-logo { display: flex; align-items: center; gap: 8px; text-decoration: none; flex-shrink: 0; }
+.tb-brand { font-family: var(--font-mono); font-size: 12px; font-weight: 600; letter-spacing: .04em; }
+.tb-brain { color: var(--accent); }
+.tb-spring { color: var(--silver2); }
+.tb-sep { color: var(--dim); font-size: 12px; }
+.tb-course { font-family: var(--font-mono); font-size: 10px; letter-spacing: .06em; color: var(--amber); text-transform: uppercase; }
+.tb-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); animation: pulse 2.5s infinite; flex-shrink: 0; margin-left: 2px; }
+.tb-hall-badge { font-family: var(--font-mono); font-size: 9.5px; letter-spacing: .06em; color: var(--silver2); text-transform: uppercase; margin-left: auto; }
+.tb-hamburger { display: none; background: none; border: none; cursor: pointer; padding: 6px; color: var(--silver2); }
+.tb-nav-right { display: flex; align-items: center; gap: 4px; margin-left: 16px; overflow-x: auto; scrollbar-width: none; }
+.tb-nav-right::-webkit-scrollbar { display: none; }
+.tb-link {
+  font-family: var(--font-mono); font-size: 9px; letter-spacing: .07em; text-transform: uppercase;
+  color: var(--dim); text-decoration: none; padding: 5px 10px; border-radius: 5px;
+  transition: color .15s, background .15s; white-space: nowrap;
+}
+.tb-link:hover { color: var(--silver); background: rgba(255,255,255,.05); }
+.tb-link.current { color: var(--accent); background: var(--accent-dim); }
+
+/* ── SIDEBAR ── */
+.sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.5); z-index: 89; }
+.sidebar-overlay.open { display: block; }
+.sidebar {
+  width: var(--sidebar-w); flex-shrink: 0;
+  position: sticky; top: var(--topbar-h);
+  height: calc(100vh - var(--topbar-h));
+  overflow-y: auto; overflow-x: hidden;
+  background: rgba(8,17,30,.7);
+  border-right: 1px solid var(--border);
+  padding: 24px 0 40px;
+  scrollbar-width: thin; scrollbar-color: var(--navy3) transparent;
+}
+.sidebar::-webkit-scrollbar { width: 3px; }
+.sidebar::-webkit-scrollbar-thumb { background: var(--navy3); }
+.sb-label {
+  font-family: var(--font-mono); font-size: 8px; letter-spacing: .14em;
+  color: var(--dim); text-transform: uppercase;
+  padding: 0 18px; margin: 20px 0 8px;
+}
+.sb-label:first-child { margin-top: 0; }
+.sb-hall {
+  display: flex; align-items: center; gap: 10px;
+  padding: 8px 18px; text-decoration: none;
+  transition: background .15s; position: relative;
+}
+.sb-hall:hover { background: rgba(255,255,255,.03); }
+.sb-hall.current { background: var(--accent-dim); }
+.sb-hall.current::before {
+  content: ''; position: absolute; left: 0; top: 0; bottom: 0;
+  width: 2px; background: var(--accent);
+}
+.sb-hall-num {
+  width: 22px; height: 22px; border-radius: 6px; flex-shrink: 0;
+  border: 1px solid var(--border2);
+  font-family: var(--font-mono); font-size: 10px; font-weight: 600;
+  color: var(--dim); display: flex; align-items: center; justify-content: center;
+}
+.sb-hall.current .sb-hall-num { border-color: var(--accent-border); color: var(--accent); background: var(--accent-dim); }
+.sb-hall-info { flex: 1; min-width: 0; }
+.sb-hall-name { font-family: var(--font-mono); font-size: 10px; font-weight: 500; color: var(--silver2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sb-hall.current .sb-hall-name { color: var(--accent); }
+.sb-hall-title { font-size: 10px; color: var(--dim); margin-top: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sb-status { width: 5px; height: 5px; border-radius: 50%; background: var(--dim); flex-shrink: 0; }
+.sb-status.current { background: var(--accent); animation: pulse 2s infinite; }
+.sb-status.locked { background: transparent; border: 1px solid var(--dim); }
+.sb-toc-item {
+  display: block; padding: 5px 18px 5px 26px;
+  font-size: 11.5px; color: var(--dim); text-decoration: none;
+  border-left: 1px solid transparent; margin-left: 10px;
+  transition: color .15s, border-color .15s; line-height: 1.4;
+}
+.sb-toc-item:hover { color: var(--silver2); border-left-color: var(--border2); }
+
+/* Dean Eliot sidebar */
+.sb-eliot {
+  margin: 16px 12px 0;
+  background: rgba(45,212,191,.04);
+  border: 1px solid var(--accent-border);
+  border-radius: var(--r); overflow: hidden;
+}
+.sb-eliot-header {
+  display: flex; align-items: center; gap: 8px;
+  padding: 10px 12px; border-bottom: 1px solid var(--accent-border);
+}
+.sb-eliot-avatar {
+  width: 28px; height: 28px; border-radius: 8px;
+  background: var(--accent-dim); border: 1px solid var(--accent-border);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; flex-shrink: 0;
+}
+.sb-eliot-name { font-family: var(--font-mono); font-size: 9.5px; font-weight: 600; letter-spacing: .06em; color: var(--accent); }
+.sb-eliot-role { font-size: 9px; color: var(--silver2); margin-top: 1px; }
+.sb-chips { padding: 8px 10px; display: flex; flex-direction: column; gap: 5px; }
+.sb-chip {
+  font-size: 10.5px; color: var(--silver2); padding: 5px 8px;
+  background: rgba(255,255,255,.03); border: 1px solid var(--border);
+  border-radius: 6px; cursor: pointer; line-height: 1.4;
+  transition: background .15s, border-color .15s, color .15s;
+}
+.sb-chip:hover { background: var(--accent-dim); border-color: var(--accent-border); color: var(--white); }
+.sb-eliot-input-row { display: flex; gap: 6px; padding: 8px 10px; border-top: 1px solid var(--border); }
+.sb-eliot-input {
+  flex: 1; background: rgba(255,255,255,.04); border: 1px solid var(--border);
+  border-radius: 6px; padding: 5px 8px; font-size: 11px;
+  font-family: var(--font-body); color: var(--white); outline: none;
+}
+.sb-eliot-input:focus { border-color: var(--accent-border); }
+.sb-eliot-input::placeholder { color: var(--dim); }
+.sb-eliot-send {
+  width: 28px; height: 28px; border-radius: 6px;
+  background: var(--accent-dim); border: 1px solid var(--accent-border);
+  color: var(--accent); cursor: pointer; font-size: 13px;
+  display: flex; align-items: center; justify-content: center;
+  transition: background .15s;
+}
+.sb-eliot-send:hover { background: rgba(45,212,191,.2); }
+.sb-eliot-msgs { max-height: 160px; overflow-y: auto; padding: 8px 10px; display: flex; flex-direction: column; gap: 6px; scrollbar-width: thin; }
+.sb-eliot-msgs:empty { display: none; }
+.sb-msg { font-size: 11px; line-height: 1.55; padding: 6px 8px; border-radius: 6px; }
+.sb-msg.user { background: rgba(45,212,191,.08); color: var(--silver); text-align: right; }
+.sb-msg.guide { background: rgba(245,158,11,.06); color: var(--silver); }
+.sb-msg.typing { opacity: .5; }
+
+.sb-company {
+  margin: 12px 12px 0;
+  background: rgba(255,255,255,.02);
+  border: 1px solid var(--border);
+  border-radius: var(--r); padding: 12px;
+}
+.sb-company-label { font-family: var(--font-mono); font-size: 7.5px; letter-spacing: .1em; color: var(--dim); text-transform: uppercase; margin-bottom: 8px; }
+.sb-company-name { font-family: var(--font-display); font-size: 12px; color: var(--white); margin-bottom: 3px; }
+.sb-company-desc { font-size: 10.5px; color: var(--silver2); line-height: 1.5; }
+
+/* ── LAYOUT ── */
+#app { display: flex; flex-direction: column; min-height: 100vh; padding-top: var(--topbar-h); position: relative; z-index: 1; }
+#body { display: flex; flex: 1; }
+.main { flex: 1; min-width: 0; padding: 36px 52px 96px; animation: fadeUp .5s ease both; }
+
+/* ── CAMPUS MAP ── */
+.campus-map-wrap {
+  margin-bottom: 32px;
+  background: rgba(13,27,46,.6);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 16px 20px;
+  overflow: hidden;
+}
+.campus-map-label {
+  font-family: var(--font-mono); font-size: 8.5px; letter-spacing: .14em;
+  color: var(--dim); text-transform: uppercase; margin-bottom: 12px;
+  display: flex; align-items: center; gap: 8px;
+}
+.campus-map-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+.campus-map-row { display: flex; align-items: center; gap: 0; overflow-x: auto; scrollbar-width: none; }
+.campus-map-row::-webkit-scrollbar { display: none; }
+.campus-stop { display: flex; flex-direction: column; align-items: center; gap: 5px; flex-shrink: 0; }
+.campus-building {
+  width: 40px; height: 40px; border-radius: 10px;
+  border: 1px solid var(--border2);
+  background: var(--navy3);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-mono); font-size: 12px; font-weight: 600;
+  color: var(--dim); text-decoration: none;
+  transition: all .2s; cursor: pointer;
+}
+.campus-building:hover { transform: translateY(-2px); border-color: var(--silver2); color: var(--silver2); }
+.campus-building.done { background: rgba(74,222,128,.06); border-color: rgba(74,222,128,.2); color: var(--green); }
+.campus-building.active { background: var(--accent-dim); border-color: var(--accent); color: var(--accent); box-shadow: 0 0 18px rgba(45,212,191,.18); }
+.campus-building.locked { opacity: .35; cursor: default; }
+.campus-building.locked:hover { transform: none; }
+.campus-stop-label { font-family: var(--font-mono); font-size: 8px; letter-spacing: .04em; color: var(--dim); text-align: center; max-width: 52px; line-height: 1.3; white-space: nowrap; }
+.campus-stop.active-stop .campus-stop-label { color: var(--accent); }
+.campus-stop.done-stop .campus-stop-label { color: var(--green); }
+.campus-connector { width: 24px; height: 1px; background: var(--border2); flex-shrink: 0; margin-bottom: 18px; position: relative; }
+.campus-connector::after { content: '›'; position: absolute; right: -5px; top: -9px; color: var(--dim); font-size: 10px; }
+
+/* ── HALL HERO ── */
+.hall-hero { margin-bottom: 32px; }
+.hall-eyebrow {
+  display: flex; align-items: center; gap: 8px;
+  font-family: var(--font-mono); font-size: 10px; letter-spacing: .1em;
+  color: var(--accent); text-transform: uppercase; margin-bottom: 10px;
+}
+.hall-eyebrow-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--accent); animation: pulse 2s infinite; }
+.hall-building-name {
+  font-family: var(--font-display); font-size: 11px; letter-spacing: .18em;
+  color: var(--accent2); text-transform: uppercase; margin-bottom: 6px;
+}
+.hall-title {
+  font-family: var(--font-display); font-size: 36px; font-weight: 600;
+  color: var(--white); line-height: 1.15; margin-bottom: 14px; letter-spacing: .02em;
+}
+.hall-title em { font-style: normal; color: var(--accent); animation: glow 4s infinite; }
+.hall-tagline { font-size: 16px; color: var(--silver2); line-height: 1.75; max-width: 700px; margin-bottom: 18px; font-style: italic; }
+.hall-tags { display: flex; gap: 7px; flex-wrap: wrap; }
+.htag {
+  font-family: var(--font-mono); font-size: 9px; letter-spacing: .08em;
+  text-transform: uppercase; padding: 4px 10px; border-radius: 5px;
+  border: 1px solid var(--border2); color: var(--silver2);
+}
+.htag.conceptual { border-color: rgba(56,189,248,.2); color: var(--sky); background: rgba(56,189,248,.05); }
+.htag.technical   { border-color: rgba(168,85,247,.2); color: var(--purple); background: rgba(168,85,247,.05); }
+.htag.lab         { border-color: rgba(74,222,128,.2); color: var(--green); background: rgba(74,222,128,.05); }
+.htag.exam        { border-color: rgba(251,191,36,.2); color: var(--amber); background: var(--amber-dim); }
+.htag.interactive { border-color: rgba(45,212,191,.2); color: var(--accent); background: var(--accent-dim); }
+
+/* ── TABS ── */
+.tab-bar {
+  display: flex; gap: 2px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 32px;
+  position: sticky; top: var(--topbar-h);
+  background: rgba(8,17,30,.95); backdrop-filter: blur(12px);
+  z-index: 20; padding: 10px 0 0;
+  margin-left: -52px; margin-right: -52px;
+  padding-left: 52px; padding-right: 52px;
+}
+.tab-btn {
+  display: flex; align-items: center; gap: 7px;
+  padding: 9px 16px; border: none; background: none; cursor: pointer;
+  font-family: var(--font-mono); font-size: 10px; letter-spacing: .07em;
+  text-transform: uppercase; color: var(--dim);
+  border-bottom: 2px solid transparent; margin-bottom: -1px;
+  transition: color .15s, border-color .15s; white-space: nowrap;
+}
+.tab-btn:hover { color: var(--silver2); }
+.tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+.tab-icon { font-size: 13px; }
+.tab-panel { display: none; animation: fadeUp .25s ease; }
+.tab-panel.active { display: block; }
+
+/* ── SECTIONS ── */
+.section { margin-bottom: 48px; }
+.sec-type-bar { display: flex; align-items: center; gap: 8px; margin-bottom: 14px; }
+.sec-type-icon {
+  width: 28px; height: 28px; border-radius: 7px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center; font-size: 13px;
+}
+.sec-type-icon.conceptual { background: rgba(56,189,248,.08); border: 1px solid rgba(56,189,248,.18); }
+.sec-type-icon.technical   { background: rgba(168,85,247,.08); border: 1px solid rgba(168,85,247,.18); }
+.sec-type-icon.lab         { background: rgba(74,222,128,.08); border: 1px solid rgba(74,222,128,.18); }
+.sec-type-icon.exam        { background: rgba(251,191,36,.08); border: 1px solid rgba(251,191,36,.18); }
+.sec-type-icon.interactive { background: rgba(45,212,191,.08); border: 1px solid rgba(45,212,191,.18); }
+.sec-type-label { font-family: var(--font-mono); font-size: 9px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; }
+.sec-type-label.conceptual { color: var(--sky); }
+.sec-type-label.technical   { color: var(--purple); }
+.sec-type-label.lab         { color: var(--green); }
+.sec-type-label.exam        { color: var(--amber); }
+.sec-type-label.interactive { color: var(--accent); }
+.sec-h { font-family: var(--font-display); font-size: 22px; font-weight: 600; color: var(--white); margin-bottom: 6px; letter-spacing: .02em; }
+.sec-div { width: 40px; height: 2px; background: linear-gradient(to right, var(--accent), transparent); margin-bottom: 14px; }
+.sec-sub { font-size: 14px; color: var(--silver2); margin-bottom: 20px; font-style: italic; line-height: 1.6; }
+.prose { font-size: 15px; color: var(--silver); line-height: 1.78; margin-bottom: 14px; }
+.prose strong { color: var(--white); font-weight: 500; }
+.prose code { font-family: var(--font-mono); font-size: 12px; background: rgba(255,255,255,.06); border: 1px solid var(--border2); border-radius: 4px; padding: 1px 6px; color: var(--accent); }
+
+/* ── INFOBOXES ── */
+.infobox { display: flex; gap: 12px; border-radius: 10px; padding: 14px 16px; margin: 18px 0; line-height: 1.65; }
+.infobox-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+.infobox-body { font-size: 13.5px; }
+.infobox-body strong { font-weight: 500; }
+.infobox.note { background: rgba(56,189,248,.06); border: 1px solid rgba(56,189,248,.15); color: var(--silver2); }
+.infobox.note .infobox-body strong { color: var(--sky); }
+.infobox.trap { background: rgba(248,113,113,.06); border: 1px solid rgba(248,113,113,.15); color: var(--silver2); }
+.infobox.trap .infobox-body strong { color: var(--red); }
+.infobox.tip { background: rgba(74,222,128,.05); border: 1px solid rgba(74,222,128,.14); color: var(--silver2); }
+.infobox.tip .infobox-body strong { color: var(--green); }
+.infobox.warn { background: var(--amber-dim); border: 1px solid var(--amber-border); color: var(--silver2); }
+.infobox.warn .infobox-body strong { color: var(--amber); }
+.infobox.teal { background: rgba(45,212,191,.05); border: 1px solid rgba(45,212,191,.16); color: var(--silver2); }
+.infobox.teal .infobox-body strong { color: var(--accent); }
+
+/* ── DIMENSION TABLE (live from NP.dimensions) ── */
+.dim-table-wrap { overflow-x: auto; margin: 18px 0; border-radius: 10px; border: 1px solid var(--border); }
+.dim-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.dim-table th {
+  font-family: var(--font-mono); font-size: 8.5px; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--accent);
+  padding: 10px 14px; text-align: left;
+  border-bottom: 1px solid var(--border2); white-space: nowrap;
+  background: rgba(45,212,191,.04);
+}
+.dim-table td { padding: 10px 14px; border-bottom: 1px solid var(--border); color: var(--silver2); vertical-align: top; line-height: 1.5; }
+.dim-table tr:last-child td { border-bottom: none; }
+.dim-table tr:hover td { background: rgba(255,255,255,.02); }
+.dim-table td:first-child { font-family: var(--font-display); font-size: 13px; color: var(--white); }
+.storage-badge {
+  font-family: var(--font-mono); font-size: 9px; letter-spacing: .06em;
+  text-transform: uppercase; padding: 3px 8px; border-radius: 4px; white-space: nowrap;
+}
+.storage-badge.stored { background: rgba(74,222,128,.08); color: var(--green); border: 1px solid rgba(74,222,128,.2); }
+.storage-badge.system { background: rgba(245,158,11,.08); color: var(--amber); border: 1px solid var(--amber-border); }
+.storage-badge.dynamic { background: rgba(248,113,113,.08); color: var(--red); border: 1px solid rgba(248,113,113,.2); }
+
+/* ── VENTURI VISUALISER ── */
+.venturi-wrap {
+  background: var(--navy3);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  overflow: hidden;
+  margin: 18px 0;
+}
+.venturi-header {
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: 10px;
+}
+.venturi-title { font-family: var(--font-mono); font-size: 9px; letter-spacing: .1em; text-transform: uppercase; color: var(--accent); }
+.venturi-hint { font-size: 11px; color: var(--dim); font-style: italic; }
+.venturi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(88px, 1fr));
+  gap: 8px;
+  padding: 16px;
+}
+.venturi-node {
+  border-radius: 10px;
+  border: 1px solid var(--border2);
+  padding: 12px 10px;
+  cursor: pointer;
+  transition: all .18s;
+  background: var(--navy2);
+  text-align: center;
+  position: relative;
+}
+.venturi-node:hover { transform: translateY(-2px); border-color: var(--accent-border); background: var(--accent-dim); }
+.venturi-node.selected { border-color: var(--accent); background: var(--accent-dim); box-shadow: 0 0 0 2px rgba(45,212,191,.15); }
+.venturi-node.stored-node { border-color: rgba(74,222,128,.2); }
+.venturi-node.stored-node:hover, .venturi-node.stored-node.selected { border-color: var(--green); background: var(--green-dim); }
+.venturi-node.system-node { border-color: var(--amber-border); }
+.venturi-node.system-node:hover, .venturi-node.system-node.selected { border-color: var(--amber); background: var(--amber-dim); }
+.venturi-dim-icon { font-size: 18px; margin-bottom: 5px; display: block; }
+.venturi-dim-name { font-family: var(--font-display); font-size: 10px; color: var(--white); display: block; margin-bottom: 3px; line-height: 1.3; }
+.venturi-dim-storage { font-family: var(--font-mono); font-size: 8px; letter-spacing: .05em; text-transform: uppercase; }
+.venturi-node.stored-node .venturi-dim-storage { color: var(--green); }
+.venturi-node.system-node .venturi-dim-storage { color: var(--amber); }
+
+/* Detail panel */
+.venturi-detail {
+  border-top: 1px solid var(--border);
+  padding: 20px 20px;
+  min-height: 140px;
+  animation: slideIn .2s ease;
+  background: rgba(8,17,30,.4);
+}
+.vd-empty { color: var(--dim); font-size: 13px; font-style: italic; padding-top: 8px; }
+.vd-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 14px; flex-wrap: wrap; }
+.vd-name { font-family: var(--font-display); font-size: 20px; color: var(--white); }
+.vd-storage-pill {
+  font-family: var(--font-mono); font-size: 9px; letter-spacing: .08em;
+  text-transform: uppercase; padding: 4px 12px; border-radius: 20px;
+  flex-shrink: 0; margin-top: 3px;
+}
+.vd-storage-pill.stored { background: rgba(74,222,128,.1); color: var(--green); border: 1px solid rgba(74,222,128,.22); }
+.vd-storage-pill.system { background: var(--amber-dim); color: var(--amber); border: 1px solid var(--amber-border); }
+.vd-body { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.vd-field-label { font-family: var(--font-mono); font-size: 8px; letter-spacing: .1em; color: var(--dim); text-transform: uppercase; margin-bottom: 4px; }
+.vd-field-val { font-size: 13px; color: var(--silver); line-height: 1.55; }
+.vd-members { font-family: var(--font-mono); font-size: 11px; color: var(--accent); }
+.vd-trap { grid-column: span 2; background: rgba(248,113,113,.06); border: 1px solid rgba(248,113,113,.14); border-radius: 8px; padding: 10px 12px; font-size: 12.5px; color: var(--silver2); line-height: 1.6; }
+.vd-trap strong { color: var(--red); }
+.vd-notes { grid-column: span 2; font-size: 13px; color: var(--silver2); line-height: 1.6; padding-top: 6px; border-top: 1px solid var(--border); }
+
+/* ── STORED vs DYNAMIC TOGGLE ── */
+.toggle-box {
+  background: var(--navy3);
+  border: 1px solid var(--border);
+  border-radius: 14px; overflow: hidden; margin: 18px 0;
+}
+.toggle-header { padding: 16px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+.toggle-title { font-family: var(--font-mono); font-size: 9px; letter-spacing: .1em; text-transform: uppercase; color: var(--accent); }
+.toggle-switch-row { display: flex; align-items: center; gap: 12px; }
+.toggle-label { font-family: var(--font-mono); font-size: 10px; font-weight: 600; letter-spacing: .06em; }
+.toggle-label.stored-lbl { color: var(--green); }
+.toggle-label.dynamic-lbl { color: var(--red); }
+.toggle-switch {
+  position: relative; width: 52px; height: 26px;
+  background: var(--navy2); border: 1px solid var(--border2);
+  border-radius: 13px; cursor: pointer; transition: background .2s;
+}
+.toggle-switch.on { background: rgba(248,113,113,.15); border-color: rgba(248,113,113,.3); }
+.toggle-knob {
+  position: absolute; top: 3px; left: 3px;
+  width: 18px; height: 18px; border-radius: 50%;
+  background: var(--green); transition: all .2s;
+}
+.toggle-switch.on .toggle-knob { left: 29px; background: var(--red); }
+.toggle-content { padding: 20px; }
+.toggle-panel { display: none; }
+.toggle-panel.active { display: block; animation: fadeUp .2s ease; }
+.toggle-scenario { font-family: var(--font-mono); font-size: 9px; letter-spacing: .08em; text-transform: uppercase; color: var(--dim); margin-bottom: 10px; }
+.consequence-list { display: flex; flex-direction: column; gap: 8px; }
+.consequence-item { display: flex; gap: 10px; align-items: flex-start; padding: 10px 12px; border-radius: 8px; }
+.consequence-item.good { background: rgba(74,222,128,.05); border: 1px solid rgba(74,222,128,.12); }
+.consequence-item.bad  { background: rgba(248,113,113,.05); border: 1px solid rgba(248,113,113,.12); }
+.consequence-icon { font-size: 14px; flex-shrink: 0; margin-top: 1px; }
+.consequence-text { font-size: 13px; color: var(--silver2); line-height: 1.6; }
+.consequence-text strong { color: var(--white); }
+
+/* ── DIMENSION DECISION TREE ── */
+.decision-tree {
+  background: var(--navy3);
+  border: 1px solid var(--border);
+  border-radius: 14px; padding: 22px; margin: 18px 0;
+}
+.dt-header { font-family: var(--font-mono); font-size: 9px; letter-spacing: .1em; text-transform: uppercase; color: var(--accent); margin-bottom: 18px; display: flex; align-items: center; gap: 8px; }
+.dt-header::before { content: ''; width: 3px; height: 14px; background: var(--accent); border-radius: 2px; }
+.dt-question { font-size: 15px; color: var(--white); line-height: 1.6; margin-bottom: 14px; }
+.dt-question-num { font-family: var(--font-mono); font-size: 9px; color: var(--dim); margin-bottom: 6px; letter-spacing: .08em; text-transform: uppercase; }
+.dt-options { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 4px; }
+.dt-opt {
+  padding: 9px 18px; border-radius: 8px;
+  border: 1px solid var(--border2); background: rgba(255,255,255,.02);
+  font-size: 13px; color: var(--silver2); cursor: pointer;
+  transition: all .15s;
+}
+.dt-opt:hover { border-color: var(--accent-border); color: var(--white); background: var(--accent-dim); }
+.dt-result {
+  padding: 16px 18px; border-radius: 10px; margin-top: 14px;
+  display: none; animation: fadeUp .2s ease;
+}
+.dt-result.stored-result { background: rgba(74,222,128,.06); border: 1px solid rgba(74,222,128,.18); }
+.dt-result.dynamic-result { background: rgba(248,113,113,.06); border: 1px solid rgba(248,113,113,.18); }
+.dt-result.show { display: block; }
+.dt-result-verdict { font-family: var(--font-display); font-size: 16px; margin-bottom: 6px; }
+.dt-result.stored-result .dt-result-verdict { color: var(--green); }
+.dt-result.dynamic-result .dt-result-verdict { color: var(--red); }
+.dt-result-reason { font-size: 13.5px; color: var(--silver2); line-height: 1.65; }
+.dt-reset { font-family: var(--font-mono); font-size: 9px; letter-spacing: .08em; text-transform: uppercase; color: var(--dim); background: none; border: none; cursor: pointer; margin-top: 12px; padding: 0; transition: color .15s; }
+.dt-reset:hover { color: var(--accent); }
+.dt-progress { height: 3px; background: var(--border); border-radius: 2px; margin-bottom: 16px; overflow: hidden; }
+.dt-progress-fill { height: 100%; background: linear-gradient(to right, var(--accent), var(--accent2)); border-radius: 2px; transition: width .3s ease; }
+
+/* ── LAB ── */
+.lab-box {
+  background: rgba(74,222,128,.03);
+  border: 1px solid rgba(74,222,128,.12);
+  border-radius: 12px; padding: 22px 24px; margin: 18px 0;
+}
+.lab-header {
+  font-family: var(--font-mono); font-size: 9.5px; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--green);
+  margin-bottom: 16px; display: flex; align-items: center; gap: 8px;
+}
+.lab-header::before { content: ''; width: 3px; height: 14px; background: var(--green); border-radius: 2px; }
+.lab-scenario {
+  background: rgba(255,255,255,.02); border: 1px solid var(--border);
+  border-radius: 8px; padding: 14px 16px;
+  font-size: 13.5px; color: rgba(232,240,248,.65);
+  line-height: 1.72; margin-bottom: 18px;
+}
+.lab-scenario strong { color: var(--white); font-weight: 500; }
+.lab-checklist { display: flex; flex-direction: column; gap: 10px; }
+.lab-check-item { display: flex; gap: 12px; align-items: flex-start; cursor: pointer; }
+.lab-check-box {
+  width: 20px; height: 20px; border-radius: 5px; flex-shrink: 0;
+  border: 1px solid rgba(74,222,128,.3); background: rgba(74,222,128,.04);
+  display: flex; align-items: center; justify-content: center;
+  transition: all .15s; margin-top: 2px;
+}
+.lab-check-box:hover { border-color: var(--green); background: rgba(74,222,128,.1); }
+.lab-check-box.checked { background: var(--green); border-color: var(--green); }
+.lab-check-box.checked::after { content: '✓'; font-size: 11px; color: var(--navy); font-weight: 700; }
+.lab-check-text { font-size: 13.5px; color: rgba(232,240,248,.7); line-height: 1.65; flex: 1; }
+.lab-check-text strong { color: var(--white); font-weight: 500; }
+.lab-check-item.checked .lab-check-text { color: var(--dim); text-decoration: line-through; text-decoration-color: rgba(255,255,255,.2); }
+.lab-progress { margin-top: 14px; }
+.lab-progress-bar { height: 3px; background: var(--border); border-radius: 2px; overflow: hidden; margin-top: 6px; }
+.lab-progress-fill { height: 100%; background: var(--green); border-radius: 2px; transition: width .3s ease; }
+.lab-progress-label { font-family: var(--font-mono); font-size: 9px; color: var(--dim); }
+
+/* ── EXAM ── */
+.exam-box { background: rgba(245,158,11,.04); border: 1px solid rgba(245,158,11,.15); border-radius: 12px; overflow: hidden; margin: 16px 0; }
+.exam-box-header {
+  font-family: var(--font-mono); font-size: 9px; letter-spacing: .09em;
+  text-transform: uppercase; color: var(--amber);
+  padding: 11px 16px; border-bottom: 1px solid rgba(245,158,11,.12);
+  background: rgba(245,158,11,.04);
+}
+.exam-box-body { padding: 16px; font-size: 13.5px; color: var(--silver2); line-height: 1.72; }
+.exam-box-body strong { color: var(--white); font-weight: 500; }
+
+/* Quiz */
+.quiz-q { margin-bottom: 28px; }
+.quiz-stem { font-size: 14.5px; color: var(--white); line-height: 1.7; margin-bottom: 14px; padding: 14px 16px; background: rgba(255,255,255,.02); border: 1px solid var(--border); border-radius: 8px; }
+.quiz-options { display: flex; flex-direction: column; gap: 7px; }
+.quiz-opt {
+  padding: 10px 14px; border-radius: 8px;
+  border: 1px solid var(--border); background: rgba(255,255,255,.02);
+  font-size: 13.5px; color: var(--silver2); cursor: pointer;
+  transition: all .15s; text-align: left; line-height: 1.5;
+}
+.quiz-opt:hover:not(.revealed) { border-color: var(--accent-border); color: var(--white); background: var(--accent-dim); }
+.quiz-opt.correct { background: rgba(74,222,128,.08); border-color: rgba(74,222,128,.25); color: var(--green); pointer-events: none; }
+.quiz-opt.wrong { background: rgba(248,113,113,.08); border-color: rgba(248,113,113,.2); color: var(--red); pointer-events: none; }
+.quiz-opt.revealed { pointer-events: none; }
+.quiz-explanation { margin-top: 10px; padding: 12px 14px; background: rgba(45,212,191,.05); border: 1px solid rgba(45,212,191,.14); border-radius: 8px; font-size: 13px; color: var(--silver2); line-height: 1.65; display: none; }
+.quiz-explanation.show { display: block; animation: fadeUp .2s ease; }
+.quiz-explanation strong { color: var(--accent); }
+.quiz-meta { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+.quiz-diff { font-family: var(--font-mono); font-size: 8.5px; letter-spacing: .08em; text-transform: uppercase; padding: 2px 8px; border-radius: 4px; }
+.quiz-diff.foundation { background: rgba(74,222,128,.08); color: var(--green); border: 1px solid rgba(74,222,128,.15); }
+.quiz-diff.practitioner { background: var(--amber-dim); color: var(--amber); border: 1px solid var(--amber-border); }
+.quiz-diff.expert { background: rgba(248,113,113,.08); color: var(--red); border: 1px solid rgba(248,113,113,.15); }
+.quiz-qnum { font-family: var(--font-mono); font-size: 9px; color: var(--dim); }
+.quiz-score { margin-top: 24px; padding: 18px; background: var(--navy3); border: 1px solid var(--border); border-radius: 12px; display: none; text-align: center; }
+.quiz-score.show { display: block; animation: fadeUp .3s ease; }
+.quiz-score-num { font-family: var(--font-display); font-size: 36px; color: var(--accent); }
+.quiz-score-label { font-family: var(--font-mono); font-size: 10px; color: var(--dim); letter-spacing: .1em; text-transform: uppercase; margin-top: 4px; }
+.quiz-score-msg { font-size: 14px; color: var(--silver2); margin-top: 10px; }
+
+/* ── HALL NAV FOOTER ── */
+.hall-nav-footer {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-top: 64px; padding-top: 28px; border-top: 1px solid var(--border);
+}
+.hnf-prev, .hnf-next {
+  display: flex; align-items: center; gap: 10px;
+  text-decoration: none; padding: 12px 16px; border-radius: 10px;
+  border: 1px solid var(--border); background: var(--navy3); transition: all .2s;
+}
+.hnf-prev:hover, .hnf-next:hover { border-color: var(--accent-border); background: var(--accent-dim); }
+.hnf-dir { font-family: var(--font-mono); font-size: 8.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--dim); }
+.hnf-name { font-size: 14px; color: var(--white); margin-top: 2px; }
+.hnf-next { flex-direction: row-reverse; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 900px) {
+  .sidebar { display: none; position: fixed; left: 0; top: var(--topbar-h); height: calc(100vh - var(--topbar-h)); z-index: 90; transform: translateX(-100%); transition: transform .25s ease; }
+  .sidebar.open { display: flex; flex-direction: column; transform: translateX(0); }
+  .sidebar-overlay { display: none; }
+  .sidebar-overlay.open { display: block; }
+  .tb-hamburger { display: flex; }
+  .main { padding: 20px 18px 80px; }
+  .tab-bar { margin-left: -18px; margin-right: -18px; padding-left: 18px; padding-right: 18px; overflow-x: auto; scrollbar-width: none; }
+  .hall-title { font-size: 26px; }
+  .venturi-grid { grid-template-columns: repeat(auto-fill, minmax(76px, 1fr)); }
+  .vd-body { grid-template-columns: 1fr; }
+  .vd-trap, .vd-notes { grid-column: span 1; }
+}
+</style>
+</head>
+<body>
+
+<div id="stars"></div>
+<div class="sidebar-overlay" id="overlay" onclick="closeSidebar()"></div>
+
+<div id="app">
+
+  <!-- ── TOPBAR ── -->
+  <header id="topbar">
+    <a href="https://brainspring.ai" class="tb-logo" target="_blank" rel="noopener">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 36" width="18" height="20">
+        <path d="M16 2L3 9v18l13 7 13-7V9L16 2z" fill="none" stroke="#2dd4bf" stroke-width="2"/>
+        <path d="M16 8l7 4v8l-7 4-7-4v-8l7-4z" fill="#2dd4bf" opacity=".3"/>
+      </svg>
+      <span class="tb-brand"><span class="tb-brain">Brain</span><span class="tb-spring">Spring</span></span>
+    </a>
+    <span class="tb-sep">›</span>
+    <span class="tb-course">Academy of Profit Center</span>
+    <div class="tb-dot"></div>
+    <nav class="tb-nav-right">
+      <a href="hall-1.html" class="tb-link">Foundations</a>
+      <a href="hall-2.html" class="tb-link current">Dimensions</a>
+      <a href="hall-4.html" class="tb-link">Hall of Logic</a>
+      <a href="hall-7.html" class="tb-link">Observatory</a>
+      <a href="hall-9.html" class="tb-link">Exam Hall</a>
+    </nav>
+    <span class="tb-hall-badge">Hall 2 of 9 · Dimensions Gallery</span>
+    <button class="tb-hamburger" onclick="toggleSidebar()" aria-label="Menu">
+      <svg width="18" height="14" viewBox="0 0 18 14" fill="none"><rect width="18" height="2" rx="1" fill="currentColor"/><rect y="6" width="18" height="2" rx="1" fill="currentColor"/><rect y="12" width="18" height="2" rx="1" fill="currentColor"/></svg>
+    </button>
+  </header>
+
+  <div id="body">
+
+    <!-- ── SIDEBAR ── -->
+    <nav class="sidebar" id="sidebar">
+      <div class="sb-label">Academy Halls</div>
+      <a href="hall-1.html" class="sb-hall"><div class="sb-hall-num">1</div><div class="sb-hall-info"><div class="sb-hall-name">Foundations Hall</div><div class="sb-hall-title">Orientation</div></div><div class="sb-status"></div></a>
+      <a href="hall-2.html" class="sb-hall current"><div class="sb-hall-num">2</div><div class="sb-hall-info"><div class="sb-hall-name">Dimensions Gallery</div><div class="sb-hall-title">Geometry of Profit Center</div></div><div class="sb-status current"></div></a>
+      <a href="hall-3.html" class="sb-hall"><div class="sb-hall-num">3</div><div class="sb-hall-info"><div class="sb-hall-name">Models Pavilion</div><div class="sb-hall-title">Perspective Gallery</div></div><div class="sb-status locked"></div></a>
+      <a href="hall-4.html" class="sb-hall"><div class="sb-hall-num">4</div><div class="sb-hall-info"><div class="sb-hall-name">Hall of Logic</div><div class="sb-hall-title">Rule Sets &amp; Sequences</div></div><div class="sb-status locked"></div></a>
+      <a href="hall-5.html" class="sb-hall"><div class="sb-hall-num">5</div><div class="sb-hall-info"><div class="sb-hall-name">Workshop of Precision</div><div class="sb-hall-title">Custom Calculations</div></div><div class="sb-status locked"></div></a>
+      <a href="hall-6.html" class="sb-hall"><div class="sb-hall-num">6</div><div class="sb-hall-info"><div class="sb-hall-name">Control Tower</div><div class="sb-hall-title">Calc Analysis Chamber</div></div><div class="sb-status locked"></div></a>
+      <a href="hall-7.html" class="sb-hall"><div class="sb-hall-num">7</div><div class="sb-hall-info"><div class="sb-hall-name">Profit Curve Observatory</div><div class="sb-hall-title">Rule Balancing</div></div><div class="sb-status locked"></div></a>
+      <a href="hall-8.html" class="sb-hall"><div class="sb-hall-num">8</div><div class="sb-hall-info"><div class="sb-hall-name">Pipeline Lab</div><div class="sb-hall-title">Data Integration Workshop</div></div><div class="sb-status locked"></div></a>
+      <a href="hall-9.html" class="sb-hall"><div class="sb-hall-num">9</div><div class="sb-hall-info"><div class="sb-hall-name">Examination Hall</div><div class="sb-hall-title">Graduation</div></div><div class="sb-status locked"></div></a>
+
+      <div class="sb-label">This Hall</div>
+      <div id="sb-toc"></div>
+
+      <div class="sb-label">Dean's Office</div>
+      <div class="sb-eliot">
+        <div class="sb-eliot-header">
+          <div class="sb-eliot-avatar">🎓</div>
+          <div>
+            <div class="sb-eliot-name">Dean Eliot</div>
+            <div class="sb-eliot-role">Senior Oracle EPM Practitioner</div>
+          </div>
+        </div>
+        <div class="sb-chips">
+          <span class="sb-chip" onclick="chipAsk(this)">Why can't I use Dynamic for driver members?</span>
+          <span class="sb-chip" onclick="chipAsk(this)">What happens if I set Period to Dynamic?</span>
+          <span class="sb-chip" onclick="chipAsk(this)">Why does PCM_Balance exist as a System dimension?</span>
+          <span class="sb-chip" onclick="chipAsk(this)">How many dimensions can EPCM Standard handle?</span>
+        </div>
+        <div class="sb-eliot-msgs" id="sb-msgs"></div>
+        <div class="sb-eliot-input-row">
+          <input class="sb-eliot-input" id="sb-input" type="text" placeholder="Ask the Dean anything…" onkeydown="if(event.key==='Enter')sbSend()">
+          <button class="sb-eliot-send" onclick="sbSend()">↑</button>
+        </div>
+      </div>
+
+      <div class="sb-company">
+        <div class="sb-company-label">Case Company</div>
+        <div class="sb-company-name" id="sb-company-name">NovaPrism Group</div>
+        <div class="sb-company-desc" id="sb-company-desc">Loading…</div>
+      </div>
+    </nav>
+
+    <!-- ── MAIN ── -->
+    <main class="main">
+
+      <!-- Campus Map -->
+      <div class="campus-map-wrap">
+        <div class="campus-map-label">Academy of Profit Center — Your Journey</div>
+        <div class="campus-map-row" id="campus-map"></div>
+      </div>
+
+      <!-- Hall Hero -->
+      <header class="hall-hero">
+        <div class="hall-building-name">Dimensions Gallery</div>
+        <div class="hall-eyebrow">
+          <span class="hall-eyebrow-dot"></span>
+          Hall 2 of 9 · Academy of Profit Center · EPCM Study Tour
+        </div>
+        <h1 class="hall-title">The <em>geometry</em> of profit</h1>
+        <p class="hall-tagline">11 dimensions. Every one of them Stored. That is not a coincidence — it is a design decision with consequences that reach into every rule you will ever write. This hall explains why ASO dimension design is different, what Stored vs Dynamic actually means in production, and how NovaPrism's 11 dimensions were chosen and justified.</p>
+        <div class="hall-tags">
+          <span class="htag conceptual">Conceptual</span>
+          <span class="htag technical">Technical</span>
+          <span class="htag interactive">Interactive</span>
+          <span class="htag lab">Lab</span>
+          <span class="htag exam">Exam: 1Z0-1082-25</span>
+        </div>
+      </header>
+
+      <!-- TAB BAR -->
+      <div class="tab-bar" role="tablist">
+        <button class="tab-btn active" role="tab" onclick="switchTab('conceptual',this)"><span class="tab-icon">📐</span> Conceptual</button>
+        <button class="tab-btn" role="tab" onclick="switchTab('technical',this)"><span class="tab-icon">⚙️</span> Technical</button>
+        <button class="tab-btn" role="tab" onclick="switchTab('interactive',this)"><span class="tab-icon">🧭</span> Visualiser</button>
+        <button class="tab-btn" role="tab" onclick="switchTab('lab',this)"><span class="tab-icon">🔬</span> Lab</button>
+        <button class="tab-btn" role="tab" onclick="switchTab('exam',this)"><span class="tab-icon">📝</span> Exam Prep</button>
+      </div>
+
+      <!-- ═══════ TAB 1: CONCEPTUAL ═══════ -->
+      <div class="tab-panel active" id="tab-conceptual">
+
+        <section class="section" id="why-dimensions">
+          <div class="sec-type-bar"><div class="sec-type-icon conceptual">📐</div><span class="sec-type-label conceptual">Conceptual</span></div>
+          <h2 class="sec-h">Why dimensions are the foundation of everything</h2>
+          <div class="sec-div"></div>
+          <p class="sec-sub">Every rule you write in Hall 4, every model you define in Hall 3, every number that appears in PCM_REP — all of it flows from the dimension design you lock in here.</p>
+          <p class="prose">A dimension is an axis of analysis. It answers one question: <strong>from what perspective do we want to see cost?</strong> NovaPrism needs to ask: by division (Entity), by GL account (Account), by shared service function (Function), by client engagement (Customer), by time period (Period), and more. Each unique question becomes a dimension.</p>
+          <p class="prose">The reason dimension design is Hall 2 and not Hall 8 is simple: <strong>you cannot add a dimension to a live EPCM application without rebuilding it.</strong> Every downstream decision — rule design, data load format, reporting layout — assumes a fixed dimension set. Get this wrong and you rebuild from scratch. Get it right and every subsequent hall clicks into place.</p>
+          <div class="infobox teal">
+            <div class="infobox-icon">📐</div>
+            <div class="infobox-body"><strong>The NovaPrism constraint:</strong> NovaPrism's CFO needs cost visible by four angles simultaneously — which division, which function, which client, and which period. That four-way intersection is only possible if all four are dimensions. A flat GL cannot do this. A single-dimension allocation tool cannot do this. EPCM's multi-dimensional ASO cube is designed exactly for it.</div>
+          </div>
+        </section>
+
+        <section class="section" id="aso-rules">
+          <div class="sec-type-bar"><div class="sec-type-icon conceptual">🧱</div><span class="sec-type-label conceptual">Conceptual</span></div>
+          <h2 class="sec-h">ASO dimension rules — what changes vs BSO</h2>
+          <div class="sec-div"></div>
+          <p class="sec-sub">EPCM uses ASO (Aggregate Storage). Planning uses BSO (Block Storage). They look similar in the UI. They behave very differently. The storage type of each dimension has direct consequences for aggregation, calculation, and rule reliability.</p>
+          <p class="prose">In BSO, dimension members can be Tagged with Dense or Sparse storage. In ASO there are no Dense/Sparse tags — instead, each member has a <strong>Data Storage</strong> property: Stored or Dynamic (or Never Share, Label Only for structural members). This is a more powerful distinction than it sounds.</p>
+
+          <div class="toggle-box">
+            <div class="toggle-header">
+              <span class="toggle-title">Dimension storage type — consequences simulator</span>
+              <div class="toggle-switch-row">
+                <span class="toggle-label stored-lbl">Stored</span>
+                <div class="toggle-switch" id="storage-toggle" onclick="flipToggle()">
+                  <div class="toggle-knob"></div>
+                </div>
+                <span class="toggle-label dynamic-lbl">Dynamic</span>
+              </div>
+            </div>
+            <div class="toggle-content">
+              <!-- Stored panel -->
+              <div class="toggle-panel active" id="panel-stored">
+                <div class="toggle-scenario">Scenario: Region dimension set to Stored (NovaPrism's actual design)</div>
+                <div class="consequence-list">
+                  <div class="consequence-item good"><span class="consequence-icon">✓</span><div class="consequence-text"><strong>Aggregation works correctly.</strong> Americas and APAC roll up to NovaPrism_Group via outline hierarchy. The rollup executes at query time using stored values — fast, reliable.</div></div>
+                  <div class="consequence-item good"><span class="consequence-icon">✓</span><div class="consequence-text"><strong>Allocation rules can target this member.</strong> A rule that writes to Region→Americas is writing to a stored cell. The value persists after the rule completes. If Region were Dynamic, the write would be discarded.</div></div>
+                  <div class="consequence-item good"><span class="consequence-icon">✓</span><div class="consequence-text"><strong>Driver members are safe here.</strong> If you stage a driver ratio into a Region member for use in a later rule, Stored means that staged value will be there when the next rule reads it. Dynamic would recalculate and potentially wipe it.</div></div>
+                  <div class="consequence-item good"><span class="consequence-icon">✓</span><div class="consequence-text"><strong>Audit trail is intact.</strong> Every stored cell has a written value that can be traced back to the rule that wrote it. PCM_REP archives these values for historical comparison.</div></div>
+                </div>
+              </div>
+              <!-- Dynamic panel -->
+              <div class="toggle-panel" id="panel-dynamic">
+                <div class="toggle-scenario">Scenario: Region dimension flipped to Dynamic (hypothetical — do not do this)</div>
+                <div class="consequence-list">
+                  <div class="consequence-item bad"><span class="consequence-icon">✗</span><div class="consequence-text"><strong>Allocation rules cannot write to Dynamic members.</strong> EPCM's rule engine writes to ASO stored cells. If Region is Dynamic, any rule targeting Region members will silently fail or produce incorrect output. This is the most dangerous consequence and the hardest to diagnose.</div></div>
+                  <div class="consequence-item bad"><span class="consequence-icon">✗</span><div class="consequence-text"><strong>Staged driver values are lost between rules.</strong> If rule seq:10 stages a ticket-count ratio into a Dynamic member so that rule seq:40 can read it, the value is gone — Dynamic members recalculate on read, they do not persist writes. The IT allocation produces zero or garbage.</div></div>
+                  <div class="consequence-item bad"><span class="consequence-icon">✗</span><div class="consequence-text"><strong>PCM_Balance interactions break.</strong> The PCM_Input → PCM_Output flow depends on stored intermediate values. Dynamic members in operational dimensions break this chain at the point where the Dynamic member intersects the balance flow.</div></div>
+                  <div class="consequence-item bad"><span class="consequence-icon">✗</span><div class="consequence-text"><strong>Rule Balancing reads incorrect totals.</strong> Rule Balancing in Hall 7 confirms that allocated amounts sum to pool totals. If any dimension in the balance equation is Dynamic, the sum reads a recalculated value, not the value written by the rule. False balance confirmed — real error hidden.</div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="infobox trap">
+            <div class="infobox-icon">⚠️</div>
+            <div class="infobox-body"><strong>The Dynamic trap on the exam:</strong> A question will describe a scenario where "a dimension was set to Dynamic to improve query performance." The correct answer will always identify this as wrong for operational dimensions — because Dynamic members cannot be targets of allocation rule writes. The performance benefit of Dynamic is real; the cost to rule reliability makes it unacceptable for any dimension that participates in allocation logic.</div>
+          </div>
+        </section>
+
+        <section class="section" id="novaprism-11">
+          <div class="sec-type-bar"><div class="sec-type-icon conceptual">🔢</div><span class="sec-type-label conceptual">Conceptual</span></div>
+          <h2 class="sec-h">NovaPrism's 11 dimensions — the design rationale</h2>
+          <div class="sec-div"></div>
+          <p class="sec-sub">Each dimension answers a distinct business question. The design principle: if two questions can be answered from the same axis, they share a dimension. If they cannot, they get their own.</p>
+          <div class="dim-table-wrap"><table class="dim-table" id="dim-table">
+            <thead><tr><th>Dimension</th><th>Storage</th><th>Business question it answers</th><th>NovaPrism design notes</th></tr></thead>
+            <tbody id="dim-table-body"></tbody>
+          </table></div>
+          <div class="infobox teal">
+            <div class="infobox-icon">💡</div>
+            <div class="infobox-body"><strong>Why no Dynamic dimensions in NovaPrism's design?</strong> Every one of NovaPrism's 11 dimensions is either Stored or System. This is the correct default for an allocation model. Dynamic is appropriate for pure reporting dimensions where values are always derived from others — like a calculated subtotal that never needs to be written to by a rule. In NovaPrism's model, every dimension is either a target or a context for rule execution. Stored is the right answer for all of them.</div>
+          </div>
+        </section>
+
+      </div><!-- /conceptual -->
+
+      <!-- ═══════ TAB 2: TECHNICAL ═══════ -->
+      <div class="tab-panel" id="tab-technical">
+
+        <section class="section" id="pcm-balance">
+          <div class="sec-type-bar"><div class="sec-type-icon technical">⚙️</div><span class="sec-type-label technical">Technical</span></div>
+          <h2 class="sec-h">PCM_Balance — the system dimension you don't design</h2>
+          <div class="sec-div"></div>
+          <p class="sec-sub">PCM_Balance is the only dimension in EPCM that you cannot rename, restructure, or change. It is prebuilt by the system and its six members define the entire flow of money through the model.</p>
+          <p class="prose">Every other dimension tells EPCM <em>what kind of thing</em> you are measuring (which account, which entity, which period). PCM_Balance tells EPCM <em>what stage in the allocation pipeline</em> the value is at. You can think of it as the allocation lifecycle dimension — every cell in the model has a PCM_Balance coordinate that tells you whether the value is raw input, in-transit allocation, or final output.</p>
+
+          <div class="dim-table-wrap">
+            <table class="dim-table">
+              <thead><tr><th>PCM_Balance Member</th><th>What it holds</th><th>Written by</th><th>NovaPrism example</th></tr></thead>
+              <tbody>
+                <tr><td><code>PCM_Input</code></td><td>Raw costs loaded from source system</td><td>Data load (Hall 8)</td><td>ES division's $52M IT pool cost, loaded from GL extract</td></tr>
+                <tr><td><code>PCM_Allocated_In</code></td><td>Cost received from another cost object</td><td>Allocation rules</td><td>DS receives $14.19M from the IT pool — this is its PCM_Allocated_In</td></tr>
+                <tr><td><code>PCM_Allocated_Out</code></td><td>Cost sent to another cost object</td><td>Allocation rules</td><td>ES sends its full $134M out — PCM_Allocated_Out = $134M</td></tr>
+                <tr><td><code>PCM_Adjustment_In</code></td><td>Manual adjustment credits</td><td>Manual data entry or adjustment rules</td><td>Q1 restatement: +$0.3M correction to DS IT allocation</td></tr>
+                <tr><td><code>PCM_Adjustment_Out</code></td><td>Manual adjustment debits</td><td>Manual data entry or adjustment rules</td><td>Corresponding $0.3M debit from IS</td></tr>
+                <tr><td><code>PCM_Output</code></td><td>Final fully-loaded cost for this object</td><td>Calculated: Input + Allocated_In − Allocated_Out + Adjustments</td><td>DS: $580M direct + $40.26M allocated in = $620.26M output</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="infobox note">
+            <div class="infobox-icon">📋</div>
+            <div class="infobox-body"><strong>The balance check:</strong> For any cost centre (like ES), PCM_Input must equal PCM_Allocated_Out. ES has $134M input and $134M allocated out — it nets to zero. For any receiving division (like DS), PCM_Output = PCM_Input + PCM_Allocated_In − PCM_Allocated_Out ± Adjustments. This is how Rule Balancing in Hall 7 confirms the model is correct: it verifies these equations hold across every member of every dimension.</div>
+          </div>
+        </section>
+
+        <section class="section" id="alt-hierarchies">
+          <div class="sec-type-bar"><div class="sec-type-icon technical">🌿</div><span class="sec-type-label technical">Technical</span></div>
+          <h2 class="sec-h">Alternate hierarchies — Period and View without Dynamic</h2>
+          <div class="sec-div"></div>
+          <p class="sec-sub">NovaPrism needs Periodic, YTD, and QTD views. The wrong approach is to make View a Dynamic dimension using formula members. The right approach is alternate hierarchies in Stored dimensions.</p>
+          <p class="prose">In ASO, a dimension can have multiple hierarchies — a primary hierarchy for base aggregation, and one or more alternate hierarchies for different rollup paths. NovaPrism's Period dimension has a primary hierarchy (Q1, Q2, Q3, Q4 rolling up to FY24) and an alternate hierarchy (Jan, Feb, Mar rolling up to Q1_YTD).</p>
+          <p class="prose">This means <strong>YTD values are aggregations, not formulas.</strong> When the reporting user selects Q1_YTD, ASO aggregates Jan + Feb + Mar from stored cells. No formula member, no Dynamic dependency. The value is always consistent with the underlying data and can be written to by rules if needed.</p>
+
+          <div class="infobox trap">
+            <div class="infobox-icon">⚠️</div>
+            <div class="infobox-body"><strong>The exam question on this:</strong> "A designer has created a View dimension with members Periodic, YTD, and QTD as Dynamic Calculation members that sum the appropriate Period members. Is this correct?" — <strong>No.</strong> Dynamic Calculation members in ASO cannot be targets of rule writes, and they add calculation overhead at query time. The correct design uses alternate hierarchies in the Period dimension with Stored members. View as a separate dimension is unnecessary if Period has alternates designed correctly.</div>
+          </div>
+
+          <div class="dim-table-wrap">
+            <table class="dim-table">
+              <thead><tr><th>Design choice</th><th>Approach</th><th>Can rules write to it?</th><th>Performance</th><th>Verdict</th></tr></thead>
+              <tbody>
+                <tr><td>View as Dynamic dim</td><td>YTD member uses Dynamic formula summing Period members</td><td style="color:var(--red)">No</td><td style="color:var(--red)">Calculated at query time</td><td><span class="storage-badge dynamic">Avoid</span></td></tr>
+                <tr><td>Period alt hierarchy</td><td>YTD node in alternate hierarchy aggregates stored Period members</td><td style="color:var(--green)">Yes</td><td style="color:var(--green)">Aggregated from stored cells</td><td><span class="storage-badge stored">Correct</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="section" id="customer-dimension">
+          <div class="sec-type-bar"><div class="sec-type-icon technical">👥</div><span class="sec-type-label technical">Technical</span></div>
+          <h2 class="sec-h">The Customer dimension — 60 engagements + rollup</h2>
+          <div class="sec-div"></div>
+          <p class="sec-sub">The Customer dimension is what makes NovaPrism's model worth building. Without it, you can see divisional profitability. With it, you can see which of the 60 engagements is destroying value.</p>
+          <p class="prose">NovaPrism has <strong>60 active client engagements</strong> coded as ENG_001 through ENG_060. These are leaf members in the Customer dimension, rolling up to a parent <code>All_Customers</code>. The Engagement Contribution ruleset (seq:50 in Hall 4) pushes fully-loaded costs from the Entity dimension intersection down to the Customer dimension intersection — creating a fully-loaded P&L at the engagement level.</p>
+          <p class="prose">This is the dimension that delivers the key insight: <strong>17 of 60 engagements are loss-making on a fully-loaded basis, but none appear loss-making on direct costs alone.</strong> The Customer dimension is what makes that visible. Without it, you would never know.</p>
+
+          <div class="infobox teal">
+            <div class="infobox-icon">💡</div>
+            <div class="infobox-body"><strong>Design decision:</strong> The <code>All_Customers</code> rollup parent must be Stored (not Dynamic) because rules write to the engagement-level leaf members and the system aggregates to <code>All_Customers</code>. If <code>All_Customers</code> were Dynamic, the aggregation would recalculate but never match the sum of engagement-level PCM_Output values exactly — because Dynamic members in ASO recalculate from stored children, but intermediate stored values at the parent level are not guaranteed to match when the rule writes happen at different times. Stored is safer and gives a directly auditable group total.</div>
+          </div>
+        </section>
+
+      </div><!-- /technical -->
+
+      <!-- ═══════ TAB 3: INTERACTIVE VISUALISER ═══════ -->
+      <div class="tab-panel" id="tab-interactive">
+
+        <section class="section" id="venturi-visualiser">
+          <div class="sec-type-bar"><div class="sec-type-icon interactive">🧭</div><span class="sec-type-label interactive">Interactive</span></div>
+          <h2 class="sec-h">Venturi Dimension Visualiser</h2>
+          <div class="sec-div"></div>
+          <p class="sec-sub">Click any dimension node to inspect its storage type, member design, exam traps, and NovaPrism-specific justification. This is NovaPrism's live dimension map.</p>
+
+          <div class="venturi-wrap">
+            <div class="venturi-header">
+              <span class="venturi-title">NovaPrism_EPCM_PROD — 11 Dimensions</span>
+              <span class="venturi-hint">Click a dimension to inspect</span>
+            </div>
+            <div class="venturi-grid" id="venturi-grid"></div>
+            <div class="venturi-detail" id="venturi-detail">
+              <div class="vd-empty">← Select a dimension node above to see its full design specification.</div>
+            </div>
+          </div>
+        </section>
+
+        <section class="section" id="decision-tree-section">
+          <div class="sec-type-bar"><div class="sec-type-icon interactive">🌿</div><span class="sec-type-label interactive">Interactive</span></div>
+          <h2 class="sec-h">Dimension design decision tree</h2>
+          <div class="sec-div"></div>
+          <p class="sec-sub">Answer five questions about a dimension you are designing. The tree tells you Stored or Dynamic — and why.</p>
+
+          <div class="decision-tree" id="decision-tree">
+            <div class="dt-header">Dimension storage decision engine</div>
+            <div class="dt-progress"><div class="dt-progress-fill" id="dt-progress-fill" style="width:0%"></div></div>
+            <div id="dt-body"></div>
+          </div>
+        </section>
+
+      </div><!-- /interactive -->
+
+      <!-- ═══════ TAB 4: LAB ═══════ -->
+      <div class="tab-panel" id="tab-lab">
+
+        <section class="section" id="lab-scenario">
+          <div class="sec-type-bar"><div class="sec-type-icon lab">🔬</div><span class="sec-type-label lab">Lab Scenario</span></div>
+          <h2 class="sec-h">Design NovaPrism's dimension set from scratch</h2>
+          <div class="sec-div"></div>
+          <p class="sec-sub">You are the EPCM implementation lead. The application is empty. You must propose and justify the complete dimension set before the build can begin.</p>
+
+          <div class="lab-box">
+            <div class="lab-header">Mission Brief — Dimension Design Sign-off</div>
+            <div class="lab-scenario">
+              <strong>Situation:</strong> NovaPrism's Finance Director has reviewed your Hall 1 business case and approved the EPCM project. The next meeting is with the Oracle implementation team to agree the dimension design. You have one hour to prepare. The meeting agenda: (1) confirm the list of dimensions, (2) justify each storage type, (3) confirm PCM_Balance is understood, (4) sign off the Account alt hierarchy grouping, (5) confirm Customer dimension scope. You need answers to all five items before you walk in.
+            </div>
+            <div class="lab-checklist" id="lab-checklist">
+              <div class="lab-check-item" onclick="toggleCheck(this)">
+                <div class="lab-check-box"></div>
+                <div class="lab-check-text"><strong>List all 11 dimensions and state their storage type.</strong> Use NP.dimensions from constants.js as your source. For each dimension, write one sentence justifying why Stored is correct. Note which one is System and why you cannot change it.</div>
+              </div>
+              <div class="lab-check-item" onclick="toggleCheck(this)">
+                <div class="lab-check-box"></div>
+                <div class="lab-check-text"><strong>Explain PCM_Balance to the Finance Director.</strong> Use the six-member lifecycle analogy: Input (what came in from the GL), Allocated_In (what was received from other cost objects), Allocated_Out (what was sent out), two Adjustment members, and Output (the final fully-loaded number). Map each member to a NovaPrism example using the $134M ES allocation.</div>
+              </div>
+              <div class="lab-check-item" onclick="toggleCheck(this)">
+                <div class="lab-check-box"></div>
+                <div class="lab-check-text"><strong>Design the Account dimension alt hierarchy.</strong> NovaPrism has 1,200 GL accounts. They must group into 8 cost pools for allocation purposes. Sketch the two-level hierarchy: leaf = GL account code, alternate parent = cost pool (IT, Facilities, Finance, HR + 4 revenue pools). Explain why this is an alternate hierarchy and not a separate dimension.</div>
+              </div>
+              <div class="lab-check-item" onclick="toggleCheck(this)">
+                <div class="lab-check-box"></div>
+                <div class="lab-check-text"><strong>Justify the Period + View design choice.</strong> NovaPrism needs Periodic, YTD, and QTD views. Explain why you are NOT creating a View dimension with Dynamic formula members, and instead using alternate hierarchies in the Period dimension. State the specific consequence of the Dynamic approach that makes it incorrect for EPCM.</div>
+              </div>
+              <div class="lab-check-item" onclick="toggleCheck(this)">
+                <div class="lab-check-box"></div>
+                <div class="lab-check-text"><strong>Scope the Customer dimension.</strong> Confirm 60 engagement codes (ENG_001–ENG_060), one <code>All_Customers</code> rollup parent, and a <code>No_Customer</code> member for costs not yet attributable to an engagement. Explain why this third member is necessary and what happens to allocation calculations if it is missing.</div>
+              </div>
+            </div>
+            <div class="lab-progress">
+              <div class="lab-progress-label" id="lab-progress-label">0 of 5 tasks completed</div>
+              <div class="lab-progress-bar"><div class="lab-progress-fill" id="lab-progress-fill" style="width:0%"></div></div>
+            </div>
+          </div>
+
+          <div class="infobox tip" style="margin-top:20px">
+            <div class="infobox-icon">🎓</div>
+            <div class="infobox-body"><strong>Dean's hint on task 5:</strong> The <code>No_Customer</code> member is critical. When the Facilities pool is allocated to DS, IS, and CL by square footage, the allocation targets Entity members. The Engagement Contribution ruleset (seq:50) then maps Entity-level costs to Customer-level engagements. But not every cost has a clear engagement mapping at the time of allocation. <code>No_Customer</code> captures the unattributed portion — without it, the Customer dimension total will not reconcile with the Entity dimension total, and Rule Balancing will fail.</div>
+          </div>
+        </section>
+
+      </div><!-- /lab -->
+
+      <!-- ═══════ TAB 5: EXAM PREP ═══════ -->
+      <div class="tab-panel" id="tab-exam">
+
+        <section class="section" id="exam-alignment">
+          <div class="sec-type-bar"><div class="sec-type-icon exam">📝</div><span class="sec-type-label exam">Exam Alignment · 1Z0-1082-25</span></div>
+          <h2 class="sec-h">What Dimensions Gallery covers on the exam</h2>
+          <div class="sec-div"></div>
+          <p class="sec-sub">Hall 2 maps to the second syllabus topic: Designing Dimensions. Expect 5–7 questions in this area across the 50-question exam. It is the second-highest weighted topic after Rule Sets &amp; Rules.</p>
+
+          <div class="exam-box">
+            <div class="exam-box-header">📝 Syllabus — Designing Dimensions</div>
+            <div class="exam-box-body">
+              <strong>Key sub-bullets tested:</strong><br><br>
+              1. Describe dimension types and storage properties in EPCM Standard (ASO) — Stored vs Dynamic, Label Only, Never Share.<br>
+              2. Explain the PCM_Balance system dimension and its six members.<br>
+              3. Design alternate hierarchies for Period/View without Dynamic formula members.<br>
+              4. Explain the consequences of setting operational dimension members to Dynamic.<br>
+              5. Identify which dimensions are prebuilt (PCM_Balance) vs user-defined.
+            </div>
+          </div>
+
+          <div class="exam-box">
+            <div class="exam-box-header">⚠️ The three most dangerous distractors in this section</div>
+            <div class="exam-box-body">
+              <strong>Distractor 1: "Dynamic members improve performance, so use them for the Period dimension."</strong><br>
+              FALSE for any dimension whose members are targets of allocation rule writes. Dynamic members in ASO do not persist values — rules that write to them will fail silently. Stored + alternate hierarchy is the correct Period design.<br><br>
+              <strong>Distractor 2: "You can rename PCM_Balance to match your company's naming convention."</strong><br>
+              FALSE. PCM_Balance is a System dimension. Its name, its six prebuilt members, and their definitions are fixed. You can add members to user-defined dimensions freely — you cannot modify PCM_Balance.<br><br>
+              <strong>Distractor 3: "EPCM Standard supports up to 20 dimensions."</strong><br>
+              The exam tests the actual limit. EPCM Standard supports up to <strong>20 user-defined dimensions</strong> plus the mandatory system dimensions. NovaPrism uses 10 user-defined + PCM_Balance (system) = 11 total, well within limits. The number 20 is the ceiling for user dimensions, not total dimensions.
+            </div>
+          </div>
+
+          <div id="quiz-container"></div>
+          <div class="quiz-score" id="quiz-score">
+            <div class="quiz-score-num" id="quiz-score-num">0/5</div>
+            <div class="quiz-score-label">Hall 2 Exam Score</div>
+            <div class="quiz-score-msg" id="quiz-score-msg"></div>
+          </div>
+
+          <div class="dim-table-wrap" style="margin-top:28px">
+            <table class="dim-table">
+              <thead><tr><th>Concept</th><th>Exam answer</th><th>Implementation reality</th></tr></thead>
+              <tbody>
+                <tr><td>Default storage type for operational dims</td><td>Stored</td><td>Every dimension that participates in rule logic must be Stored — this is the first thing you verify on any implementation</td></tr>
+                <tr><td>PCM_Balance member count</td><td>6 (Input, Allocated_In, Allocated_Out, Adjustment_In, Adjustment_Out, Output)</td><td>You reference these names in every rule you write — memorise them in Hall 4</td></tr>
+                <tr><td>Dynamic member use case</td><td>Pure reporting members with no rule write target — calculated subtotals only</td><td>In practice most implementations use zero Dynamic members in the operational model</td></tr>
+                <tr><td>YTD/QTD design pattern</td><td>Alternate hierarchies in Period dimension, Stored members</td><td>Same — this is the only correct pattern for EPCM allocation models</td></tr>
+                <tr><td>Max user dimensions (Standard)</td><td>20</td><td>NovaPrism uses 10 user-defined. Most implementations use 8–14.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+      </div><!-- /exam -->
+
+      <!-- Hall Nav Footer -->
+      <div class="hall-nav-footer">
+        <a href="hall-1.html" class="hnf-prev">
+          <span style="font-size:14px">←</span>
+          <div><div class="hnf-dir">Previous Hall</div><div class="hnf-name">Foundations Hall</div></div>
+        </a>
+        <a href="hall-3.html" class="hnf-next">
+          <div><div class="hnf-dir">Next Hall</div><div class="hnf-name">Models Pavilion</div></div>
+          <span style="font-size:14px">→</span>
+        </a>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<!-- ══ SCRIPTS ══ -->
+<script src="./constants.js"></script>
+<script>
+/* ── Stars ── */
+(function(){
+  var s=document.getElementById('stars');
+  for(var i=0;i<50;i++){
+    var d=document.createElement('div');d.className='star';
+    var sz=Math.random()*1.2+0.3;
+    d.style.cssText='width:'+sz+'px;height:'+sz+'px;top:'+Math.random()*100+'%;left:'+Math.random()*100+'%;--d:'+(3+Math.random()*6)+'s;--delay:'+Math.random()*8+'s;--op:'+(0.04+Math.random()*0.1);
+    s.appendChild(d);
+  }
+})();
+
+/* ── Sidebar ── */
+function toggleSidebar(){ document.getElementById('sidebar').classList.toggle('open'); document.getElementById('overlay').classList.toggle('open'); }
+function closeSidebar(){ document.getElementById('sidebar').classList.remove('open'); document.getElementById('overlay').classList.remove('open'); }
+
+/* ── Campus map ── */
+(function(){
+  var halls=[
+    {n:1,name:'Foundations',url:'hall-1.html',done:true},
+    {n:2,name:'Dimensions',url:'hall-2.html',active:true},
+    {n:3,name:'Models',url:'hall-3.html'},
+    {n:4,name:'Logic',url:'hall-4.html'},
+    {n:5,name:'Workshop',url:'hall-5.html'},
+    {n:6,name:'Control',url:'hall-6.html'},
+    {n:7,name:'Observatory',url:'hall-7.html'},
+    {n:8,name:'Pipeline',url:'hall-8.html'},
+    {n:9,name:'Exam Hall',url:'hall-9.html'},
+  ];
+  var map=document.getElementById('campus-map');
+  var html='';
+  halls.forEach(function(h,i){
+    var cls=h.active?'campus-building active':h.done?'campus-building done':'campus-building locked';
+    var stopCls=h.active?'campus-stop active-stop':h.done?'campus-stop done-stop':'campus-stop';
+    html+='<div class="'+stopCls+'"><a href="'+h.url+'" class="'+cls+'">'+h.n+'</a><div class="campus-stop-label">'+h.name+'</div></div>';
+    if(i<halls.length-1) html+='<div class="campus-connector"></div>';
+  });
+  map.innerHTML=html;
+})();
+
+/* ── Company sidebar ── */
+(function(){
+  if(typeof NP==='undefined') return;
+  var c=NP.company;
+  var el=document.getElementById('sb-company-desc');
+  if(el) el.textContent='$'+(c.revenue/1000).toFixed(1)+'B · 3 divisions · 1 cost centre · '+c.employees.toLocaleString()+' staff';
+})();
+
+/* ── Dimension table (live from NP.dimensions) ── */
+(function(){
+  if(typeof NP==='undefined') return;
+  var icons={Account:'📒',Entity:'🏢',Region:'🌏',Function:'⚙️',Product:'📦',Customer:'👥',PCM_Balance:'⚖️',Period:'📅',Scenario:'🎭',Version:'🔖',View:'👁️'};
+  var questions={
+    Account:'Which GL account is this cost from?',
+    Entity:'Which division carries this cost?',
+    Region:'Which geography does this relate to?',
+    Function:'Which shared service function is this?',
+    Product:'Which service line or product code?',
+    Customer:'Which client engagement?',
+    PCM_Balance:'What stage in the allocation lifecycle?',
+    Period:'Which time period?',
+    Scenario:'Actual, Forecast, Budget, or What-If?',
+    Version:'Working, Final, or scenario pass?',
+    View:'Periodic, YTD, or QTD?',
+  };
+  var tbody=document.getElementById('dim-table-body');
+  if(!tbody) return;
+  var html='';
+  NP.dimensions.forEach(function(d){
+    var sc=d.storage.toLowerCase();
+    html+='<tr>';
+    html+='<td>'+(icons[d.name]||'◆')+' '+d.name+'</td>';
+    html+='<td><span class="storage-badge '+sc+'">'+d.storage+'</span></td>';
+    html+='<td>'+(questions[d.name]||'—')+'</td>';
+    html+='<td>'+d.notes+'</td>';
+    html+='</tr>';
+  });
+  tbody.innerHTML=html;
+})();
+
+/* ── Tabs ── */
+function switchTab(name,btn){
+  document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.remove('active');});
+  document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('active');});
+  document.getElementById('tab-'+name).classList.add('active');
+  btn.classList.add('active');
+  buildTOC();
+}
+
+/* ── TOC ── */
+function buildTOC(){
+  var toc=document.getElementById('sb-toc');
+  if(!toc) return;
+  toc.innerHTML='';
+  var panel=document.querySelector('.tab-panel.active');
+  if(!panel) return;
+  panel.querySelectorAll('h2.sec-h').forEach(function(h){
+    if(!h.id) h.id='toc-'+h.textContent.trim().toLowerCase().replace(/[^a-z0-9]+/g,'-').slice(0,40);
+    var a=document.createElement('a');
+    a.href='#'+h.id; a.className='sb-toc-item';
+    a.textContent=h.textContent;
+    toc.appendChild(a);
+  });
+}
+setTimeout(buildTOC,100);
+
+/* ── Stored/Dynamic toggle ── */
+var toggleState=false; // false=stored, true=dynamic
+function flipToggle(){
+  toggleState=!toggleState;
+  var sw=document.getElementById('storage-toggle');
+  sw.classList.toggle('on',toggleState);
+  document.getElementById('panel-stored').classList.toggle('active',!toggleState);
+  document.getElementById('panel-dynamic').classList.toggle('active',toggleState);
+}
+
+/* ── Venturi Visualiser ── */
+(function buildVenturi(){
+  if(typeof NP==='undefined') return;
+  var icons={Account:'📒',Entity:'🏢',Region:'🌏',Function:'⚙️',Product:'📦',Customer:'👥',PCM_Balance:'⚖️',Period:'📅',Scenario:'🎭',Version:'🔖',View:'👁️'};
+  var members={
+    Account:'1,200 GL accounts + 8 alt-hierarchy cost pool parents',
+    Entity:'DS · IS · CL · ES · NovaPrism_Group (rollup)',
+    Region:'Americas · APAC · NovaPrism_Global (rollup)',
+    Function:'IT · Facilities · Finance · HR · No_Function',
+    Product:'12 product codes + All_Products rollup',
+    Customer:'ENG_001–ENG_060 + All_Customers + No_Customer',
+    PCM_Balance:'Input · Allocated_In · Allocated_Out · Adj_In · Adj_Out · Output',
+    Period:'FY24 Q1–Q4 + YTD alt hierarchy',
+    Scenario:'Actual · Forecast · Budget · What-If',
+    Version:'Working · Final · Pass1 · Pass2',
+    View:'Periodic · YTD · QTD (via Period alt hierarchy)',
+  };
+  var traps={
+    Account:'Do NOT make cost pool groupings a separate dimension — use alt hierarchies within Account.',
+    Entity:'ES must be a member here even though it allocates out to zero. Omitting ES breaks the balance check.',
+    Region:'Do NOT set to Dynamic. Region is a context for rules that write to Americas or APAC members.',
+    Function:'The Function dimension is what separates the four cost pools. Without it, you cannot route the $52M IT pool separately from the $38M Facilities pool.',
+    Product:'If product codes change mid-year, add new members — do not reuse codes. Old codes remain for historical data integrity.',
+    Customer:'No_Customer is mandatory. Without it, unattributed costs cause the Customer total to misreconcile with the Entity total and Rule Balancing fails.',
+    PCM_Balance:'System dimension — you cannot rename it, restructure it, or add members. This is the most common source of confusion for implementers coming from legacy PCM.',
+    Period:'Do NOT create YTD as a Dynamic formula member. Use alternate hierarchies. Dynamic = rule writes fail at this intersection.',
+    Scenario:'What-If is the fourth scenario — used by the CFO restructure model in Hall 4. Without it, the model cannot support the M04 what-if analysis.',
+    Version:'Pass1 and Pass2 support multi-pass allocation sequences. Required if any ruleset needs to run in multiple passes before finalisation.',
+    View:'View as a standalone dimension with Dynamic members is the wrong design. Let Period alternate hierarchies handle YTD/QTD. View adds no value and breaks rule writes.',
+  };
+  var grid=document.getElementById('venturi-grid');
+  if(!grid) return;
+  var html='';
+  NP.dimensions.forEach(function(d,i){
+    var sc=d.storage.toLowerCase()==='system'?'system-node':'stored-node';
+    html+='<div class="venturi-node '+sc+'" data-idx="'+i+'" onclick="selectDim('+i+')">';
+    html+='<span class="venturi-dim-icon">'+(icons[d.name]||'◆')+'</span>';
+    html+='<span class="venturi-dim-name">'+d.name+'</span>';
+    html+='<span class="venturi-dim-storage">'+d.storage+'</span>';
+    html+='</div>';
+  });
+  grid.innerHTML=html;
+
+  window._venturiData={icons:icons,members:members,traps:traps};
+})();
+
+function selectDim(idx){
+  if(typeof NP==='undefined') return;
+  var d=NP.dimensions[idx];
+  var data=window._venturiData;
+  // deselect all
+  document.querySelectorAll('.venturi-node').forEach(function(n){n.classList.remove('selected');});
+  document.querySelectorAll('.venturi-node')[idx].classList.add('selected');
+  var sc=d.storage.toLowerCase();
+  var detail=document.getElementById('venturi-detail');
+  detail.innerHTML=
+    '<div class="vd-header">'+
+      '<div class="vd-name">'+(data.icons[d.name]||'◆')+' '+d.name+'</div>'+
+      '<span class="vd-storage-pill '+sc+'">'+d.storage+'</span>'+
+    '</div>'+
+    '<div class="vd-body">'+
+      '<div><div class="vd-field-label">Members</div><div class="vd-members">'+(data.members[d.name]||'—')+'</div></div>'+
+      '<div><div class="vd-field-label">Design notes</div><div class="vd-field-val">'+d.notes+'</div></div>'+
+      '<div class="vd-trap"><strong>⚠ Exam trap:</strong> '+(data.traps[d.name]||'No specific trap noted for this dimension.')+'</div>'+
+    '</div>';
+  detail.style.animation='none';
+  requestAnimationFrame(function(){ detail.style.animation='slideIn .2s ease'; });
+}
+
+/* ── Decision Tree ── */
+var dtQuestions=[
+  {
+    q:'Will any EPCM allocation rule ever write a value to a member of this dimension?',
+    opts:['Yes — rules target members in this dimension','No — this dimension is read-only context for rules'],
+    next:[1,2]
+  },
+  {
+    q:'Does the value written by the rule need to persist so a later rule in the sequence can read it?',
+    opts:['Yes — downstream rules depend on this stored value','No — the value is only used in reporting'],
+    next:['stored-rule','stored-persist']
+  },
+  {
+    q:'Are the members in this dimension calculated from other dimension members using a formula (e.g. YTD = sum of months)?',
+    opts:['Yes — members derive their value from other members','No — members represent independent categories'],
+    next:[3,'stored-category']
+  },
+  {
+    q:'Does this derived value ever need to be the target of a rule write — or participate in a Rule Balance check?',
+    opts:['Yes — it does','No — it is purely a reporting calculation'],
+    next:['stored-balance','dynamic-ok']
+  },
+];
+var dtResults={
+  'stored-rule':{verdict:'Use Stored',cls:'stored-result',reason:'Any dimension whose members are written to by allocation rules must be Stored. In ASO, Dynamic members do not persist values written by rules. If you set this dimension to Dynamic, your rules will appear to execute successfully but the written values will be discarded. NovaPrism uses Stored for all 10 user-defined dimensions for exactly this reason.'},
+  'stored-persist':{verdict:'Use Stored',cls:'stored-result',reason:'Even if reporting is the only downstream use, Stored is safer and carries no performance penalty in EPCM\'s ASO model for allocation-scale data. Dynamic is only appropriate when the calculated value is always derivable from other stored members with no rule writes anywhere in the chain.'},
+  'stored-category':{verdict:'Use Stored',cls:'stored-result',reason:'Independent category members (like Entity or Region) should always be Stored. They represent fixed real-world entities that rules reference as context. Stored gives you reliable aggregation and the ability to add rules that write to these members in future without a dimension redesign.'},
+  'stored-balance':{verdict:'Use Stored',cls:'stored-result',reason:'If this member participates in a Rule Balance check or is the target of a rule write anywhere in the model, it must be Stored. Dynamic members produce aggregated values that may not match the sum of rule-written values at leaf level — making Rule Balancing unreliable. Use alternate hierarchies instead.'},
+  'dynamic-ok':{verdict:'Dynamic is acceptable (with caution)',cls:'dynamic-result',reason:'This is one of the rare cases where Dynamic might be acceptable — a purely derived reporting value that no rule ever writes to and that does not participate in balance checks. The YTD rollup node in an alt hierarchy is typically Stored anyway. If you do use Dynamic here, document it clearly and verify that no future rule change will need to write to this member.'},
+};
+var dtPath=[];
+var dtCurrent=0;
+
+function buildDT(){
+  var body=document.getElementById('dt-body');
+  var q=dtQuestions[dtCurrent];
+  if(!q) return;
+  var pct=Math.round(dtPath.length/4*100);
+  document.getElementById('dt-progress-fill').style.width=pct+'%';
+  var html='<div class="dt-question-num">Question '+(dtCurrent+1)+' of '+(dtQuestions.length)+'</div>';
+  html+='<div class="dt-question">'+q.q+'</div>';
+  html+='<div class="dt-options">';
+  q.opts.forEach(function(o,i){
+    html+='<button class="dt-opt" onclick="dtAnswer('+i+')">'+o+'</button>';
+  });
+  html+='</div>';
+  body.innerHTML=html;
+}
+
+function dtAnswer(optIdx){
+  var q=dtQuestions[dtCurrent];
+  var next=q.next[optIdx];
+  dtPath.push(optIdx);
+  if(typeof next==='string'){
+    // result
+    showDTResult(next);
+  } else {
+    dtCurrent=next;
+    buildDT();
+  }
+}
+
+function showDTResult(key){
+  document.getElementById('dt-progress-fill').style.width='100%';
+  var r=dtResults[key];
+  var body=document.getElementById('dt-body');
+  body.innerHTML=
+    '<div class="dt-result '+r.cls+' show">'+
+      '<div class="dt-result-verdict">'+r.verdict+'</div>'+
+      '<div class="dt-result-reason">'+r.reason+'</div>'+
+      '<button class="dt-reset" onclick="resetDT()">← Start over with a different dimension</button>'+
+    '</div>';
+}
+
+function resetDT(){
+  dtPath=[];
+  dtCurrent=0;
+  document.getElementById('dt-progress-fill').style.width='0%';
+  buildDT();
+}
+
+buildDT();
+
+/* ── Lab checklist ── */
+function toggleCheck(item){
+  var box=item.querySelector('.lab-check-box');
+  box.classList.toggle('checked');
+  item.classList.toggle('checked');
+  updateLabProgress();
+}
+function updateLabProgress(){
+  var done=document.querySelectorAll('.lab-check-box.checked').length;
+  var total=document.querySelectorAll('.lab-check-item').length;
+  document.getElementById('lab-progress-label').textContent=done+' of '+total+' tasks completed';
+  document.getElementById('lab-progress-fill').style.width=(done/total*100)+'%';
+}
+
+/* ── Quiz ── */
+var quizData=[
+  {
+    diff:'foundation',qnum:'Q1',
+    stem:'In EPCM Standard (ASO), NovaPrism\'s implementation lead is designing the Region dimension. She wants to set it to Dynamic for better query performance. A colleague objects. Which statement best explains why Dynamic is incorrect for the Region dimension?',
+    options:[
+      'Dynamic dimensions are not supported in EPCM Standard — all dimensions must use Block Storage',
+      'Dynamic members in ASO do not persist values written by allocation rules, causing rule writes to be silently discarded',
+      'The Region dimension must be Dynamic because it contains rollup members for Americas and APAC',
+      'Dynamic dimensions cannot be used with alternate hierarchies, which NovaPrism requires for YTD reporting'
+    ],
+    correct:1,
+    explanation:'In ASO, Dynamic members recalculate their values at query time from stored children — they do not store values themselves. Any allocation rule that writes to a Dynamic member will appear to succeed but the written value is discarded. For any dimension that is a target of rule writes (which includes Region, since rules can write to Americas or APAC members), Stored is mandatory.'
+  },
+  {
+    diff:'foundation',qnum:'Q2',
+    stem:'Which of the following correctly describes the PCM_Balance dimension in EPCM Standard?',
+    options:[
+      'A user-defined dimension with six members that the implementer names according to their project conventions',
+      'A prebuilt System dimension with six fixed members that cannot be renamed or restructured',
+      'An optional dimension that only appears in the model if the implementer adds it during application setup',
+      'A dimension shared between PCM_CLC and PCM_REP that uses Dynamic members for balance calculations'
+    ],
+    correct:1,
+    explanation:'PCM_Balance is a System dimension — prebuilt by EPCM, not the implementer. Its six members (PCM_Input, PCM_Allocated_In, PCM_Allocated_Out, PCM_Adjustment_In, PCM_Adjustment_Out, PCM_Output) are fixed. You cannot rename them, restructure the hierarchy, or add new members. This is the most common source of confusion for implementers coming from legacy on-premise PCM, where dimension naming was more flexible.'
+  },
+  {
+    diff:'practitioner',qnum:'Q3',
+    stem:'NovaPrism needs Periodic, YTD, and QTD views in their EPCM reports. A junior developer proposes creating a View dimension with three Dynamic Calculation members: Periodic (equals the Period member value), YTD (sums all periods year-to-date), and QTD (sums all periods quarter-to-date). What is the primary problem with this design?',
+    options:[
+      'EPCM Standard does not support Dynamic Calculation members in any dimension',
+      'The View dimension would exceed the maximum of 20 user-defined dimensions when combined with NovaPrism\'s other 11 dimensions',
+      'Dynamic members cannot be targets of allocation rule writes, so any rule that needs to write a value at a specific View intersection will fail',
+      'The YTD and QTD formulas would cause circular reference errors in the ASO cube'
+    ],
+    correct:2,
+    explanation:'The core problem is that Dynamic members do not store values — they calculate on read. If any rule needs to write to a View dimension member (for example, writing a YTD allocation total), the write fails silently. The correct design uses alternate hierarchies within the Period dimension so that YTD and QTD are aggregations of Stored Period members. This way, rule writes target Period members directly and aggregations are always consistent.'
+  },
+  {
+    diff:'practitioner',qnum:'Q4',
+    stem:'NovaPrism\'s Customer dimension has 60 engagement codes (ENG_001–ENG_060) and an All_Customers rollup. During Rule Balancing for the Engagement Contribution ruleset, the Implementation Lead notices that the Customer dimension total does not reconcile with the Entity dimension total. What is the most likely missing design element?',
+    options:[
+      'The Customer dimension needs a Dynamic rollup member to sum the engagement codes',
+      'A No_Customer member is missing — costs not yet attributed to a specific engagement have nowhere to land',
+      'The Entity dimension should not be Stored — it should be Dynamic to match the Customer dimension',
+      'The All_Customers rollup should be removed and replaced with a calculated PCM_Balance member'
+    ],
+    correct:1,
+    explanation:'When the Engagement Contribution ruleset pushes costs from Entity-level to Customer-level, some costs may not have a clear engagement attribution at the time of allocation. Without a No_Customer member, those costs have no valid Customer dimension target and are effectively lost from the Customer subtotal. The Customer total then misreconciles with the Entity total and Rule Balancing reports a false imbalance. Adding No_Customer as a member gives unattributed costs a valid home and restores the balance.'
+  },
+  {
+    diff:'expert',qnum:'Q5',
+    stem:'During NovaPrism\'s dimension design review, the CFO asks why the Account dimension uses alternate hierarchies to group the 1,200 GL accounts into 8 cost pools, rather than creating a separate Cost_Pool dimension. What is the correct technical justification?',
+    options:[
+      'EPCM Standard does not support more than 10 user-defined dimensions, so adding a Cost_Pool dimension would exceed the limit',
+      'A separate Cost_Pool dimension would require Dynamic members, which cannot be used in allocation rules',
+      'Alternate hierarchies within Account provide the same grouping without adding a dimension — keeping the cube smaller, avoiding a cross-dimensional join, and maintaining a single source of truth for the GL account hierarchy',
+      'The PCM_Balance dimension already serves the function of a Cost_Pool dimension, making a separate one redundant'
+    ],
+    correct:2,
+    explanation:'Adding a Cost_Pool dimension would create a cross-dimensional design where the same cost pool concept is represented twice (once in Account, once in Cost_Pool), requiring rules to be written against both dimensions. Alternate hierarchies solve this elegantly: the primary Account hierarchy provides the GL structure, and the alternate hierarchy groups the same leaf members into cost pools. One dimension, two views, no redundancy. This is a standard ASO design pattern and reduces cube complexity, which has direct performance benefits at NovaPrism\'s 1,200-account scale.'
+  }
+];
+
+var quizAnswers={};
+(function renderQuiz(){
+  var container=document.getElementById('quiz-container');
+  if(!container) return;
+  var html='';
+  quizData.forEach(function(q,i){
+    html+='<div class="quiz-q" id="qq-'+i+'">';
+    html+='<div class="quiz-meta"><span class="quiz-diff '+q.diff+'">'+q.diff+'</span><span class="quiz-qnum">'+q.qnum+'</span></div>';
+    html+='<div class="quiz-stem">'+q.stem+'</div>';
+    html+='<div class="quiz-options">';
+    q.options.forEach(function(opt,j){
+      html+='<button class="quiz-opt" onclick="answerQ('+i+','+j+')">'+String.fromCharCode(65+j)+'. '+opt+'</button>';
+    });
+    html+='</div>';
+    html+='<div class="quiz-explanation" id="qexp-'+i+'"></div>';
+    html+='</div>';
+  });
+  container.innerHTML=html;
+})();
+
+function answerQ(qi,oi){
+  if(quizAnswers[qi]!==undefined) return;
+  quizAnswers[qi]=oi;
+  var q=quizData[qi];
+  document.querySelectorAll('#qq-'+qi+' .quiz-opt').forEach(function(o,j){
+    o.classList.add('revealed');
+    if(j===q.correct) o.classList.add('correct');
+    else if(j===oi&&oi!==q.correct) o.classList.add('wrong');
+  });
+  var exp=document.getElementById('qexp-'+qi);
+  exp.innerHTML='<strong>'+(oi===q.correct?'✓ Correct':'✗ Incorrect')+'</strong> — '+q.explanation;
+  exp.classList.add('show');
+  if(Object.keys(quizAnswers).length===quizData.length) showScore();
+}
+function showScore(){
+  var correct=0;
+  quizData.forEach(function(q,i){if(quizAnswers[i]===q.correct)correct++;});
+  var total=quizData.length;
+  var pct=Math.round(correct/total*100);
+  document.getElementById('quiz-score-num').textContent=correct+'/'+total;
+  document.getElementById('quiz-score-msg').textContent=pct<60?'Review the Dimensions Gallery before moving on.':pct<100?'Solid dimension knowledge — proceed to the Models Pavilion.':'Perfect. Your dimensions are locked.';
+  document.getElementById('quiz-score').classList.add('show');
+}
+
+/* ── Dean Eliot ── */
+var HALL_SYSTEM_EXTENSION=[
+  'CURRENT HALL: Hall 2 — Dimensions Gallery (Academy of Profit Center)',
+  'HALL SCOPE: ASO dimension design for EPCM. Stored vs Dynamic storage types and their consequences.',
+  'The 11 NovaPrism dimensions — justification for each. PCM_Balance system dimension.',
+  'Alternate hierarchies for Period/View. Customer dimension scope (60 engagements + No_Customer).',
+  '',
+  'KEY CONCEPTS IN THIS HALL:',
+  '- Stored vs Dynamic: Dynamic members in ASO do not persist values written by rules. Use Stored for any dimension whose members are targets of allocation rule writes.',
+  '- PCM_Balance: System dimension, 6 fixed members (Input/Allocated_In/Allocated_Out/Adj_In/Adj_Out/Output). Cannot be renamed or restructured.',
+  '- Alternate hierarchies: YTD/QTD should be modelled as alternate hierarchies in Period (Stored), not as Dynamic formula members in a separate View dimension.',
+  '- Customer dimension: 60 engagement codes + All_Customers rollup + No_Customer. Missing No_Customer causes Rule Balancing failures.',
+  '- Account alt hierarchy: 1,200 GL accounts grouped into 8 cost pools via alternate hierarchy, not a separate Cost_Pool dimension.',
+  '',
+  'NOVAPRISM IN THIS HALL:',
+  'NovaPrism has 11 dimensions total — 10 user-defined (all Stored) + 1 system (PCM_Balance).',
+  'All 11 dimensions are either Stored or System. Zero Dynamic members in the operational model.',
+  '60 engagement codes in Customer dimension — this is what reveals the 17 loss-making engagements.',
+  '',
+  'EXAM TOPICS: Designing dimensions — storage types, PCM_Balance, alternate hierarchies, dimension limits.',
+  '',
+  'COMMON MISCONCEPTIONS:',
+  '- Dynamic improves performance so should be used: Only for pure reporting derivations. Never for rule write targets.',
+  '- PCM_Balance can be renamed: FALSE. It is a System dimension with fixed member names.',
+  '- EPCM supports unlimited dimensions: FALSE. Max 20 user-defined dimensions in Standard.',
+  '- YTD needs a separate View dimension: FALSE. Use Period alternate hierarchies.',
+  '',
+  'OUT OF SCOPE: Rule set design → Hall of Logic (Hall 4). Data load → Pipeline Lab (Hall 8). POV/model → Models Pavilion (Hall 3).'
+].join('\n');
+
+function buildSystemPrompt(){
+  var pa=(typeof NP!=='undefined')?NP.postAllocation:null;
+  return [
+    'You are Dean Eliot, the AI practitioner-guide for the BrainSpring EPCM Study Tour — Academy of Profit Center.',
+    'You are a senior Oracle EPM practitioner who has implemented EPCM at 40+ enterprises.',
+    'Voice: direct (no hedging), practitioner-honest, concise (3–5 sentences target), never sycophantic.',
+    '',
+    'CASE COMPANY: NovaPrism Group — $2.1B professional services conglomerate. 8,400 employees. 4 divisions.',
+    pa?('IS margin: '+pa.IS.directPct+'% direct → '+pa.IS.marginPct+'% fully-loaded ($'+pa.IS.allocatedIn+'M ES allocation).'):''  ,
+    'Enterprise Support: $134M costs across 4 pools: IT $52M (tickets), Facilities $38M (sqft), Finance $28M (headcount), HR $16M (headcount).',
+    '11 dimensions: Account, Entity, Region, Function, Product, Customer, PCM_Balance, Period, Scenario, Version, View.',
+    'Customer: 60 engagements (ENG_001–060) + All_Customers + No_Customer.',
+    '',
+    'RULES: Connect every answer to NovaPrism. Name exam answer AND implementation reality when they differ.',
+    'Never invent product behaviour. For out-of-scope topics, name the hall that covers them.',
+    '',
+    HALL_SYSTEM_EXTENSION
+  ].filter(Boolean).join('\n');
+}
+
+var sbHistory=[];
+function sbSend(){
+  var inp=document.getElementById('sb-input');
+  var txt=inp.value.trim(); if(!txt) return;
+  inp.value='';
+  sbAddMsg('user',txt);
+  sbHistory.push({role:'user',content:txt});
+  var typing=sbAddMsg('guide','…');
+  typing.classList.add('typing');
+  sbCall(typing);
+}
+function chipAsk(chip){
+  document.getElementById('sb-input').value=chip.textContent;
+  sbSend();
+}
+function sbAddMsg(role,text){
+  var msgs=document.getElementById('sb-msgs');
+  var div=document.createElement('div');
+  div.className='sb-msg '+role;
+  div.textContent=text;
+  msgs.appendChild(div);
+  msgs.scrollTop=msgs.scrollHeight;
+  return div;
+}
+async function sbCall(typingEl){
+  try{
+    var resp=await fetch('https://epbcs-tutor.fancy-brook-fc0d.workers.dev',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        model:'claude-sonnet-4-20250514',
+        max_tokens:500,
+        system:buildSystemPrompt(),
+        messages:sbHistory
+      })
+    });
+    var data=await resp.json();
+    var reply=(data.content&&data.content[0]&&data.content[0].text)||'Try rephrasing — I had trouble with that one.';
+    typingEl.textContent=reply;
+    typingEl.classList.remove('typing');
+    sbHistory.push({role:'assistant',content:reply});
+  }catch(e){
+    typingEl.textContent='Connection issue — please try again.';
+    typingEl.classList.remove('typing');
+  }
+}
+
+/* ── Smooth scroll ── */
+document.querySelectorAll('a[href^="#"]').forEach(function(a){
+  a.addEventListener('click',function(e){
+    var id=this.getAttribute('href').slice(1);
+    var el=document.getElementById(id);
+    if(el){e.preventDefault();el.scrollIntoView({behavior:'smooth',block:'start'});}
+  });
+});
+</script>
+</body>
+</html>
