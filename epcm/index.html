@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EPCM Study Tour — Oracle EPM Cloud | BrainSpring</title>
+<meta name="description" content="Free AI-first study tour for Oracle Enterprise Project Cost Management (EPCM). 9 halls covering dimensions, models, rule sets, calc scripts, data integration and exam prep. Built by BrainSpring.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Crimson+Pro:ital,wght@0,400;0,500;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#0d1b2e;--navy2:#112240;--navy3:#16304f;--navy4:#1e3f64;
+  --silver:#c8d4e0;--silver2:#8fa3b8;
+  --green:#4ade80;--green2:#22c55e;--green3:#16a34a;
+  --purple:#a855f7;--teal:#2dd4bf;--amber:#fbbf24;--red:#f87171;--sky:#38bdf8;
+  --coral:#fb923c;--coral2:#ea6a0a;--coral3:rgba(251,146,60,.15);
+  --white:#e8f0f8;--dim:#4a6080;
+  --border:rgba(200,212,224,.1);--border2:rgba(251,146,60,.18);
+  --r:10px
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Crimson Pro',serif;background:var(--navy);color:var(--white);min-height:100vh;overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;background-image:linear-gradient(rgba(251,146,60,.015) 1px,transparent 1px),linear-gradient(90deg,rgba(251,146,60,.015) 1px,transparent 1px);background-size:56px 56px}
+body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;background:radial-gradient(ellipse 80% 50% at 50% -10%,rgba(251,146,60,.06) 0%,transparent 70%)}
+#stars{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+.star{position:absolute;border-radius:50%;background:var(--coral);animation:twinkle var(--d,4s) infinite var(--delay,0s)}
+@keyframes twinkle{0%,100%{opacity:.02}50%{opacity:var(--op,.14)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@keyframes glow{0%,100%{text-shadow:0 0 40px rgba(251,146,60,.18)}50%{text-shadow:0 0 80px rgba(251,146,60,.42)}}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(74,222,128,.22)}50%{box-shadow:0 0 0 5px rgba(74,222,128,0)}}
+@keyframes pulse-c{0%,100%{box-shadow:0 0 0 0 rgba(251,146,60,.22)}50%{box-shadow:0 0 0 5px rgba(251,146,60,0)}}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+
+/* ── Topbar ── */
+#topbar{position:fixed;top:0;left:0;right:0;height:54px;background:rgba(13,27,46,.97);backdrop-filter:blur(20px);border-bottom:1px solid var(--border2);display:flex;align-items:center;padding:0 24px;gap:14px;z-index:200}
+.tb-shield{display:flex;align-items:center;gap:9px;text-decoration:none;flex-shrink:0}
+.tb-brand{font-family:'Rajdhani',sans-serif;font-size:16px;font-weight:700;letter-spacing:.03em}
+.tb-brain{color:var(--white)}.tb-spring{color:var(--green)}
+.tb-sep{color:var(--dim);font-size:13px}
+.tb-product{font-family:'Rajdhani',sans-serif;font-size:12px;font-weight:600;color:var(--silver2);letter-spacing:.07em;text-transform:uppercase}
+.tb-dot{width:7px;height:7px;border-radius:50%;background:var(--green);animation:pulse 2.5s infinite;flex-shrink:0}
+.tb-nav{display:flex;gap:5px;margin-left:auto;overflow-x:auto;align-items:center}
+.tb-nav::-webkit-scrollbar{display:none}
+.tb-link{padding:4px 10px;border-radius:6px;border:1px solid var(--border);color:var(--dim);font-family:'Rajdhani',sans-serif;font-size:10.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;text-decoration:none;white-space:nowrap;transition:all .15s}
+.tb-link:hover{border-color:var(--coral);color:var(--coral)}
+.tb-link.live{border-color:rgba(74,222,128,.3);color:var(--green)}
+.tb-link.live-c{border-color:rgba(251,146,60,.35);color:var(--coral)}
+.tb-live-dot{display:inline-block;width:5px;height:5px;border-radius:50%;background:var(--green);margin-right:4px;animation:pulse 2s infinite}
+.tb-live-dot-c{display:inline-block;width:5px;height:5px;border-radius:50%;background:var(--coral);margin-right:4px;animation:pulse-c 2s infinite}
+
+/* ── Layout ── */
+.wrap{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:0 28px}
+@media(max-width:680px){.wrap{padding:0 16px}}
+
+/* ── Hero ── */
+.hero{padding:calc(54px + 56px) 0 48px;animation:fadeUp .6s ease both}
+.hero-top{display:flex;align-items:flex-start;justify-content:space-between;gap:32px;flex-wrap:wrap}
+.hero-left{flex:1;min-width:280px}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:8px;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.13em;color:rgba(251,146,60,.6);text-transform:uppercase;border:1px solid rgba(251,146,60,.18);border-radius:20px;padding:5px 16px;margin-bottom:22px}
+.hero-title{font-family:'Rajdhani',sans-serif;font-size:clamp(34px,5vw,56px);font-weight:700;line-height:1.06;margin-bottom:10px;animation:glow 5s infinite}
+.ht-sub{color:var(--silver2);font-weight:500;font-size:.48em;letter-spacing:.1em;text-transform:uppercase;display:block;margin-bottom:4px}
+.ht-main{color:var(--white)}
+.ht-accent{color:var(--coral)}
+.hero-desc{font-size:15px;color:rgba(232,240,248,.45);font-style:italic;max-width:520px;margin:0 0 28px;line-height:1.8}
+.hero-cta{display:flex;gap:10px;flex-wrap:wrap}
+.btn{padding:10px 24px;font-family:'Rajdhani',sans-serif;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;border-radius:8px;text-decoration:none;transition:all .18s;display:inline-block}
+.btn-c{background:var(--coral2);color:#fff;border:none}
+.btn-c:hover{background:var(--coral);transform:translateY(-1px);box-shadow:0 6px 28px rgba(251,146,60,.3)}
+.btn-o{background:transparent;color:var(--silver);border:1px solid rgba(200,212,224,.18)}
+.btn-o:hover{border-color:var(--silver);color:var(--white)}
+
+/* ── KPI Strip ── */
+.hero-right{display:flex;flex-direction:column;gap:10px;min-width:200px;align-self:flex-start;margin-top:36px}
+.kpi-strip{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.kpi{background:var(--navy2);border:1px solid var(--border);border-radius:10px;padding:14px 16px;text-align:center}
+.kpi-v{font-family:'Rajdhani',sans-serif;font-size:28px;font-weight:700;color:var(--coral);display:block;line-height:1}
+.kpi-l{font-family:'JetBrains Mono',monospace;font-size:8.5px;color:var(--dim);letter-spacing:.1em;text-transform:uppercase;margin-top:3px;display:block}
+.kpi-wide{grid-column:span 2;background:rgba(251,146,60,.05);border-color:var(--border2)}
+.kpi-wide .kpi-v{font-size:13px;color:var(--coral);letter-spacing:.04em}
+
+/* ── Progress bar ── */
+.progress-bar{background:var(--navy2);border:1px solid var(--border2);border-radius:12px;padding:18px 22px;margin-bottom:32px}
+.pb-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.pb-label{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.12em;color:var(--dim);text-transform:uppercase}
+.pb-pct{font-family:'Rajdhani',sans-serif;font-size:13px;font-weight:700;color:var(--coral)}
+.pb-track{height:6px;background:rgba(255,255,255,.05);border-radius:3px;overflow:hidden}
+.pb-fill{height:100%;width:11%;background:linear-gradient(90deg,var(--coral2),var(--coral));border-radius:3px;transition:width .6s ease}
+.pb-note{font-size:11px;color:var(--dim);margin-top:8px;font-style:italic}
+
+/* ── Section ── */
+.sec{padding:48px 0}
+.sec-lbl{font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:.16em;color:rgba(251,146,60,.5);text-transform:uppercase;margin-bottom:6px}
+.sec-h{font-family:'Rajdhani',sans-serif;font-size:clamp(20px,3vw,30px);font-weight:700;color:var(--white);margin-bottom:4px}
+.sec-sub{font-size:14px;color:rgba(232,240,248,.42);font-style:italic;line-height:1.7;max-width:640px;margin-bottom:24px}
+.sec-div{width:44px;height:2px;background:linear-gradient(90deg,var(--coral),transparent);margin:10px 0 22px}
+
+/* ── Hall Grid ── */
+.hall-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:14px;margin-bottom:48px}
+
+/* ── Hall Card ── */
+.hall-card{background:var(--navy2);border:1px solid var(--border);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;transition:all .2s;position:relative}
+.hall-card.live:hover{transform:translateY(-3px);box-shadow:0 14px 44px rgba(0,0,0,.4)}
+.hall-card.soon{opacity:.72}
+.hc-accent{height:3px;width:100%}
+.hc-body{padding:20px 22px;flex:1;display:flex;flex-direction:column;gap:10px}
+.hc-header{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+.hc-num{font-family:'Rajdhani',sans-serif;font-size:32px;font-weight:700;color:rgba(251,146,60,.18);line-height:1;flex-shrink:0}
+.hc-badge{font-family:'JetBrains Mono',monospace;font-size:8px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:3px 9px;border-radius:10px}
+.badge-live{background:rgba(74,222,128,.1);border:1px solid rgba(74,222,128,.22);color:var(--green)}
+.badge-soon{background:rgba(251,191,36,.08);border:1px solid rgba(251,191,36,.18);color:var(--amber)}
+.hc-label{font-family:'JetBrains Mono',monospace;font-size:8.5px;color:var(--dim);letter-spacing:.08em;text-transform:uppercase}
+.hc-title{font-family:'Rajdhani',sans-serif;font-size:18px;font-weight:700;color:var(--white);line-height:1.2}
+.hc-desc{font-size:13px;color:rgba(232,240,248,.48);line-height:1.65;flex:1}
+.hc-tags{display:flex;flex-wrap:wrap;gap:4px;margin-top:2px}
+.hc-tag{font-size:10.5px;padding:2px 7px;border-radius:4px;border:1px solid var(--border);color:var(--dim);font-family:'Rajdhani',sans-serif;font-weight:600}
+.hc-foot{padding:14px 22px;border-top:1px solid var(--border)}
+.hc-cta{display:block;text-align:center;padding:9px;font-family:'Rajdhani',sans-serif;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;border-radius:7px;text-decoration:none;transition:all .18s}
+.cta-coral{background:rgba(251,146,60,.18);color:var(--coral);border:1px solid rgba(251,146,60,.32)}
+.cta-coral:hover{background:rgba(251,146,60,.28);box-shadow:0 5px 18px rgba(251,146,60,.2)}
+.cta-soon{background:rgba(251,191,36,.07);color:var(--amber);border:1px solid rgba(251,191,36,.14);cursor:default}
+
+/* ── Highlight widget (H1 spotlight) ── */
+.spotlight{background:linear-gradient(135deg,rgba(251,146,60,.08),rgba(234,106,10,.04));border:1px solid rgba(251,146,60,.22);border-radius:14px;padding:26px 28px;margin-bottom:28px;display:flex;gap:24px;align-items:flex-start;flex-wrap:wrap}
+.sp-icon{font-size:44px;animation:float 3s infinite;flex-shrink:0}
+.sp-body{flex:1;min-width:220px}
+.sp-eyebrow{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.14em;color:rgba(251,146,60,.55);text-transform:uppercase;margin-bottom:6px}
+.sp-title{font-family:'Rajdhani',sans-serif;font-size:22px;font-weight:700;color:var(--white);margin-bottom:8px}
+.sp-desc{font-size:13.5px;color:rgba(232,240,248,.52);line-height:1.7;margin-bottom:14px}
+.sp-tags{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:16px}
+.sp-tag{font-size:10.5px;padding:3px 8px;border-radius:4px;background:rgba(251,146,60,.08);border:1px solid rgba(251,146,60,.2);color:var(--coral);font-family:'Rajdhani',sans-serif;font-weight:600}
+
+/* ── What you'll learn strip ── */
+.learn-strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:10px;margin-bottom:48px}
+.learn-card{background:var(--navy2);border:1px solid var(--border);border-radius:10px;padding:16px 18px}
+.lrn-icon{font-size:20px;margin-bottom:8px}
+.lrn-title{font-family:'Rajdhani',sans-serif;font-size:13px;font-weight:700;color:var(--white);margin-bottom:4px}
+.lrn-desc{font-size:11.5px;color:rgba(232,240,248,.42);line-height:1.55}
+
+/* ── Section divider ── */
+.sdiv{height:1px;background:linear-gradient(90deg,transparent,rgba(251,146,60,.18),transparent);margin:0 0 48px}
+
+/* ── Free banner ── */
+.free-banner{background:linear-gradient(135deg,rgba(251,146,60,.07),rgba(234,106,10,.03));border:1px solid rgba(251,146,60,.18);border-radius:12px;padding:22px 28px;display:flex;align-items:center;gap:18px;margin-bottom:48px}
+.fb-icon{font-size:30px;flex-shrink:0;animation:float 3s infinite}
+.fb-title{font-family:'Rajdhani',sans-serif;font-size:16px;font-weight:700;color:var(--coral);margin-bottom:3px}
+.fb-desc{font-size:12.5px;color:rgba(232,240,248,.48);line-height:1.65}
+@media(max-width:560px){.free-banner{flex-direction:column;text-align:center}}
+
+/* ── Footer ── */
+footer{border-top:1px solid var(--border);padding:32px 0;text-align:center;position:relative;z-index:1}
+.ft-b{font-family:'Rajdhani',sans-serif;font-size:15px;font-weight:700;margin-bottom:5px}
+.ft-br{color:var(--white)}.ft-sp{color:var(--green)}
+.ft-links{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin:12px 0}
+.ft-links a{font-size:11px;color:var(--dim);text-decoration:none;font-family:'Rajdhani',sans-serif;font-weight:600;letter-spacing:.04em;text-transform:uppercase;transition:color .15s}
+.ft-links a:hover{color:var(--coral)}
+.ft-note{font-size:10px;color:rgba(74,96,128,.5);margin-top:8px;line-height:1.75}
+</style>
+</head>
+<body>
+<div id="stars"></div>
+
+<!-- ══ TOPBAR ══ -->
+<div id="topbar">
+  <a href="https://brainspring.ai" class="tb-shield" target="_blank" rel="noopener" title="BrainSpring · Beyond the Prompt">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 36" width="20" height="22">
+      <path d="M16 1L2 7v12c0 8.3 6 16 14 18 8-2 14-9.7 14-18V7L16 1z" fill="#0d1b2e" stroke="#4ade80" stroke-width="1.5"/>
+      <path d="M10 14c0-2 1.5-3.5 3-3.5s2.5 1 2.5 1V10h3v5c.4-.4 1-.7 1.5-.7 1.8 0 3 1.5 3 3.5s-1.2 3.5-3 3.5c-.5 0-1.1-.3-1.5-.7V23h-3v-.7s-1 .7-2.5.7-3-1.5-3-3.5z" fill="none" stroke="#4ade80" stroke-width="1.1" opacity=".9"/>
+      <circle cx="21" cy="27" r="2.2" fill="none" stroke="#4ade80" stroke-width=".9" opacity=".7"/>
+    </svg>
+    <span class="tb-brand"><span class="tb-brain">Brain</span><span class="tb-spring">Spring</span></span>
+  </a>
+  <span class="tb-sep">›</span>
+  <span class="tb-product">EPCM Study Tour</span>
+  <span class="tb-dot" style="background:var(--coral);animation-name:pulse-c"></span>
+  <nav class="tb-nav">
+    <a href="/epcm/hall-1.html" class="tb-link live-c"><span class="tb-live-dot-c"></span>Hall 1</a>
+    <a href="/halls/hall-1.html" class="tb-link live"><span class="tb-live-dot"></span>FCCS</a>
+    <a href="/epbcs/" class="tb-link live"><span class="tb-live-dot"></span>Planning</a>
+    <a href="/epmdi.html" class="tb-link live"><span class="tb-live-dot"></span>DI</a>
+    <a href="/" class="tb-link">All Tours</a>
+  </nav>
+</div>
+
+<!-- ══ HERO ══ -->
+<div class="wrap">
+  <section class="hero">
+    <div class="hero-top">
+      <div class="hero-left">
+        <div class="hero-eyebrow"><span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--coral);animation:pulse-c 2s infinite"></span>Free · AI-First · No Registration Required</div>
+        <h1 class="hero-title">
+          <span class="ht-sub">Oracle EPM Cloud</span>
+          <span class="ht-main">EPCM </span><span class="ht-accent">Study Tour</span>
+        </h1>
+        <p class="hero-desc">Enterprise Project Cost Management — from dimension design to live exam prep. 9 halls, AI guide at every step, no account needed.</p>
+        <div class="hero-cta">
+          <a href="/epcm/hall-1.html" class="btn btn-c">Enter Hall 1 →</a>
+          <a href="/" class="btn btn-o">← All EPM Tours</a>
+        </div>
+      </div>
+      <div class="hero-right">
+        <div class="kpi-strip">
+          <div class="kpi"><span class="kpi-v">9</span><span class="kpi-l">Halls</span></div>
+          <div class="kpi"><span class="kpi-v">1</span><span class="kpi-l">Live Now</span></div>
+          <div class="kpi"><span class="kpi-v">AI</span><span class="kpi-l">Every Hall</span></div>
+          <div class="kpi"><span class="kpi-v">Free</span><span class="kpi-l">No Login</span></div>
+          <div class="kpi kpi-wide"><span class="kpi-v">Free · Open · No Login</span><span class="kpi-l">Community Resource</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ══ PROGRESS ══ -->
+<div class="wrap">
+  <div class="progress-bar">
+    <div class="pb-header">
+      <span class="pb-label">Tour Progress</span>
+      <span class="pb-pct">1 / 9 Halls Live</span>
+    </div>
+    <div class="pb-track"><div class="pb-fill"></div></div>
+    <p class="pb-note">Hall 1 is live now. Halls 2–9 are being built — check back soon or follow BrainSpring for release updates.</p>
+  </div>
+</div>
+
+<!-- ══ HALL 1 SPOTLIGHT ══ -->
+<div class="wrap">
+  <div class="sec-lbl">Live Now</div>
+  <div class="sec-div"></div>
+
+  <div class="spotlight">
+    <div class="sp-icon">🏗️</div>
+    <div class="sp-body">
+      <div class="sp-eyebrow">Hall 1 · Live Now</div>
+      <div class="sp-title">EPCM Foundations &amp; Application Shell</div>
+      <div class="sp-desc">Start here. Understand what EPCM is, how it fits into Oracle's EPM Cloud suite, and how the application shell is structured — environments, service admin roles, navigators, and the foundational setup checklist every implementation needs before going further.</div>
+      <div class="sp-tags">
+        <span class="sp-tag">What is EPCM</span>
+        <span class="sp-tag">Suite Positioning</span>
+        <span class="sp-tag">Environment Setup</span>
+        <span class="sp-tag">Service Admin</span>
+        <span class="sp-tag">Navigator</span>
+        <span class="sp-tag">AI Guide</span>
+      </div>
+      <a href="/epcm/hall-1.html" class="btn btn-c">Enter Hall 1 — Foundations →</a>
+    </div>
+  </div>
+</div>
+
+<div class="wrap"><div class="sdiv"></div></div>
+
+<!-- ══ ALL HALLS ══ -->
+<div class="wrap">
+  <div class="sec-lbl">Full Curriculum</div>
+  <h2 class="sec-h">9 Halls — Full EPCM Journey</h2>
+  <div class="sec-div"></div>
+  <p class="sec-sub">From application shell to live exam. Each hall builds on the last — follow in order or jump to the topic you need.</p>
+
+  <div class="hall-grid">
+
+    <!-- Hall 1 — LIVE -->
+    <div class="hall-card live">
+      <div class="hc-accent" style="background:linear-gradient(90deg,var(--coral),var(--coral2))"></div>
+      <div class="hc-body">
+        <div class="hc-header">
+          <span class="hc-num">01</span>
+          <span class="hc-badge badge-live"><span style="display:inline-block;width:5px;height:5px;border-radius:50%;background:var(--green);margin-right:4px;animation:pulse 2s infinite;vertical-align:middle"></span>Live Now</span>
+        </div>
+        <div class="hc-label">Oracle EPCM · Application Shell</div>
+        <div class="hc-title">Foundations &amp; Application Shell</div>
+        <div class="hc-desc">What EPCM is, where it sits in the suite, environment provisioning, service admin roles, navigator structure, and the setup checklist every implementation needs.</div>
+        <div class="hc-tags">
+          <span class="hc-tag">Suite Positioning</span><span class="hc-tag">Environments</span><span class="hc-tag">Service Admin</span><span class="hc-tag">Navigator</span>
+        </div>
+      </div>
+      <div class="hc-foot"><a href="/epcm/hall-1.html" class="hc-cta cta-coral">Enter Hall 1 →</a></div>
+    </div>
+
+    <!-- Hall 2 -->
+    <div class="hall-card soon">
+      <div class="hc-accent" style="background:linear-gradient(90deg,rgba(251,146,60,.3),transparent)"></div>
+      <div class="hc-body">
+        <div class="hc-header">
+          <span class="hc-num">02</span>
+          <span class="hc-badge badge-soon">Coming Soon</span>
+        </div>
+        <div class="hc-label">Oracle EPCM · Dimension Design</div>
+        <div class="hc-title">Dimension Design</div>
+        <div class="hc-desc">Build the dimensional skeleton: Project, Resource, Time, Scenario, Version, Entity. Venturi visualiser walkthrough. ASO stored vs dynamic toggle and when to flip it.</div>
+        <div class="hc-tags">
+          <span class="hc-tag">Dimensions</span><span class="hc-tag">ASO</span><span class="hc-tag">Hierarchies</span><span class="hc-tag">Venturi</span>
+        </div>
+      </div>
+      <div class="hc-foot"><a class="hc-cta cta-soon">Hall 2 — Coming Soon</a></div>
+    </div>
+
+    <!-- Hall 3 -->
+    <div class="hall-card soon">
+      <div class="hc-accent" style="background:linear-gradient(90deg,rgba(251,146,60,.3),transparent)"></div>
+      <div class="hc-body">
+        <div class="hc-header">
+          <span class="hc-num">03</span>
+          <span class="hc-badge badge-soon">Coming Soon</span>
+        </div>
+        <div class="hc-label">Oracle EPCM · Models &amp; POVs</div>
+        <div class="hc-title">Models &amp; Points of View</div>
+        <div class="hc-desc">Project models, sub-models, and the POV selector. How Scenario and Version intersect with the project lifecycle. Plan vs Forecast vs Actuals POV patterns.</div>
+        <div class="hc-tags">
+          <span class="hc-tag">Models</span><span class="hc-tag">POV Selector</span><span class="hc-tag">Scenarios</span><span class="hc-tag">Versions</span>
+        </div>
+      </div>
+      <div class="hc-foot"><a class="hc-cta cta-soon">Hall 3 — Coming Soon</a></div>
+    </div>
+
+    <!-- Hall 4 -->
+    <div class="hall-card soon">
+      <div class="hc-accent" style="background:linear-gradient(90deg,rgba(251,146,60,.3),transparent)"></div>
+      <div class="hc-body">
+        <div class="hc-header">
+          <span class="hc-num">04</span>
+          <span class="hc-badge badge-soon">Coming Soon</span>
+        </div>
+        <div class="hc-label">Oracle EPCM · Rule Sets &amp; Rules</div>
+        <div class="hc-title">Rule Sets &amp; Rules</div>
+        <div class="hc-desc">The rule engine that drives EPCM calculations. Rule types, execution sequence, the script count calculator, and a sequence diagram of how rules fire across the project lifecycle.</div>
+        <div class="hc-tags">
+          <span class="hc-tag">Rule Sets</span><span class="hc-tag">Rule Types</span><span class="hc-tag">Sequence</span><span class="hc-tag">Rule Builder</span>
+        </div>
+      </div>
+      <div class="hc-foot"><a class="hc-cta cta-soon">Hall 4 — Coming Soon</a></div>
+    </div>
+
+    <!-- Hall 5 -->
+    <div class="hall-card soon">
+      <div class="hc-accent" style="background:linear-gradient(90deg,rgba(251,146,60,.3),transparent)"></div>
+      <div class="hc-body">
+        <div class="hc-header">
+          <span class="hc-num">05</span>
+          <span class="hc-badge badge-soon">Coming Soon</span>
+        </div>
+        <div class="hc-label">Oracle EPCM · Custom Calculations</div>
+        <div class="hc-title">Custom Calculations</div>
+        <div class="hc-desc">Writing and optimising custom calc scripts. NonEmptyTuple performance patterns with before/after simulation. When to use custom calc vs rule sets.</div>
+        <div class="hc-tags">
+          <span class="hc-tag">Custom Calc</span><span class="hc-tag">NonEmptyTuple</span><span class="hc-tag">Performance</span><span class="hc-tag">Optimisation</span>
+        </div>
+      </div>
+      <div class="hc-foot"><a class="hc-cta cta-soon">Hall 5 — Coming Soon</a></div>
+    </div>
+
+    <!-- Hall 6 -->
+    <div class="hall-card soon">
+      <div class="hc-accent" style="background:linear-gradient(90deg,rgba(251,146,60,.3),transparent)"></div>
+      <div class="hc-body">
+        <div class="hc-header">
+          <span class="hc-num">06</span>
+          <span class="hc-badge badge-soon">Coming Soon</span>
+        </div>
+        <div class="hc-label">Oracle EPCM · Calc Control</div>
+        <div class="hc-title">Calc Control &amp; Statistics</div>
+        <div class="hc-desc">Monitoring and controlling calculation runs. Reading calc stats, interpreting the comparison table, identifying bottlenecks, and tuning run-time performance.</div>
+        <div class="hc-tags">
+          <span class="hc-tag">Calc Control</span><span class="hc-tag">Calc Stats</span><span class="hc-tag">Monitoring</span><span class="hc-tag">Tuning</span>
+        </div>
+      </div>
+      <div class="hc-foot"><a class="hc-cta cta-soon">Hall 6 — Coming Soon</a></div>
+    </div>
+
+    <!-- Hall 7 -->
+    <div class="hall-card soon">
+      <div class="hc-accent" style="background:linear-gradient(90deg,rgba(251,146,60,.3),transparent)"></div>
+      <div class="hc-body">
+        <div class="hc-header">
+          <span class="hc-num">07</span>
+          <span class="hc-badge badge-soon">Coming Soon</span>
+        </div>
+        <div class="hc-label">Oracle EPCM · Rule Balancing</div>
+        <div class="hc-title">Rule Balancing</div>
+        <div class="hc-desc">Profit curve analysis across 60 engagements. Balancing rule complexity against performance. The rule balancing decision framework with a live Chart.js visualisation.</div>
+        <div class="hc-tags">
+          <span class="hc-tag">Rule Balancing</span><span class="hc-tag">Profit Curve</span><span class="hc-tag">Engagements</span><span class="hc-tag">Decision Framework</span>
+        </div>
+      </div>
+      <div class="hc-foot"><a class="hc-cta cta-soon">Hall 7 — Coming Soon</a></div>
+    </div>
+
+    <!-- Hall 8 -->
+    <div class="hall-card soon">
+      <div class="hc-accent" style="background:linear-gradient(90deg,rgba(251,146,60,.3),transparent)"></div>
+      <div class="hc-body">
+        <div class="hc-header">
+          <span class="hc-num">08</span>
+          <span class="hc-badge badge-soon">Coming Soon</span>
+        </div>
+        <div class="hc-label">Oracle EPCM · Data Integration</div>
+        <div class="hc-title">Data Integration</div>
+        <div class="hc-desc">Loading actuals, commitments, and budgets into EPCM. Pipeline architecture diagram, source-to-target mapping, the integration decision tree, and ERP writeback patterns.</div>
+        <div class="hc-tags">
+          <span class="hc-tag">Pipelines</span><span class="hc-tag">Actuals Load</span><span class="hc-tag">Commitments</span><span class="hc-tag">ERP Writeback</span>
+        </div>
+      </div>
+      <div class="hc-foot"><a class="hc-cta cta-soon">Hall 8 — Coming Soon</a></div>
+    </div>
+
+    <!-- Hall 9 -->
+    <div class="hall-card soon">
+      <div class="hc-accent" style="background:linear-gradient(90deg,rgba(251,146,60,.3),transparent)"></div>
+      <div class="hc-body">
+        <div class="hc-header">
+          <span class="hc-num">09</span>
+          <span class="hc-badge badge-soon">Coming Soon</span>
+        </div>
+        <div class="hc-label">Oracle EPCM · Exam Prep</div>
+        <div class="hc-title">Exam Prep &amp; Mock Exam</div>
+        <div class="hc-desc">Full timed mock exam engine with scoring, topic breakdown, and answer explanations. Covers all hall topics. Know your weak spots before exam day.</div>
+        <div class="hc-tags">
+          <span class="hc-tag">Mock Exam</span><span class="hc-tag">Timed</span><span class="hc-tag">Scoring</span><span class="hc-tag">All Topics</span>
+        </div>
+      </div>
+      <div class="hc-foot"><a class="hc-cta cta-soon">Hall 9 — Coming Soon</a></div>
+    </div>
+
+  </div>
+</div>
+
+<div class="wrap"><div class="sdiv"></div></div>
+
+<!-- ══ WHAT YOU'LL LEARN ══ -->
+<div class="wrap">
+  <div class="sec-lbl">What You'll Learn</div>
+  <h2 class="sec-h">The Full EPCM Skill Set</h2>
+  <div class="sec-div"></div>
+
+  <div class="learn-strip">
+    <div class="learn-card">
+      <div class="lrn-icon">🏗️</div>
+      <div class="lrn-title">Application Architecture</div>
+      <div class="lrn-desc">How EPCM fits in Oracle EPM Cloud, environment provisioning, and the admin navigator.</div>
+    </div>
+    <div class="learn-card">
+      <div class="lrn-icon">📐</div>
+      <div class="lrn-title">Dimension &amp; Model Design</div>
+      <div class="lrn-desc">Project, Resource, Time and custom dimensions. ASO storage design and hierarchy best practice.</div>
+    </div>
+    <div class="learn-card">
+      <div class="lrn-icon">⚙️</div>
+      <div class="lrn-title">Rule Engine Mastery</div>
+      <div class="lrn-desc">Rule sets, rule types, execution order, and the full rule builder from scratch.</div>
+    </div>
+    <div class="learn-card">
+      <div class="lrn-icon">📊</div>
+      <div class="lrn-title">Performance Tuning</div>
+      <div class="lrn-desc">Custom calc optimisation, NonEmptyTuple patterns, calc stats, and bottleneck identification.</div>
+    </div>
+    <div class="learn-card">
+      <div class="lrn-icon">🔗</div>
+      <div class="lrn-title">Data Integration</div>
+      <div class="lrn-desc">Loading actuals and commitments from ERP. Pipeline design, member mapping, and writeback.</div>
+    </div>
+    <div class="learn-card">
+      <div class="lrn-icon">🎯</div>
+      <div class="lrn-title">Exam Readiness</div>
+      <div class="lrn-desc">Timed mock exam, topic scoring, and targeted revision to pass on the first attempt.</div>
+    </div>
+  </div>
+</div>
+
+<div class="wrap"><div class="sdiv"></div></div>
+
+<!-- ══ FREE BANNER ══ -->
+<div class="wrap">
+  <div class="free-banner">
+    <div class="fb-icon">🔓</div>
+    <div>
+      <div class="fb-title">Free. No Registration. AI in Every Hall.</div>
+      <p class="fb-desc">The EPCM Study Tour is free, open to all, and requires no account to access. Each hall has an AI guide trained on that hall's content. Built by practitioners, for practitioners.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ══ FOOTER ══ -->
+<div class="wrap">
+  <footer>
+    <div class="ft-b"><span class="ft-br">Brain</span><span class="ft-sp">Spring</span></div>
+    <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--dim);letter-spacing:.12em;margin-bottom:12px">BEYOND THE PROMPT · ORACLE EPM CLOUD LEARNING HUB</div>
+    <div class="ft-links">
+      <a href="/epcm/hall-1.html">Hall 1 — Live</a>
+      <a href="/halls/hall-1.html">FCCS Tour</a>
+      <a href="/epbcs/">Planning Quest</a>
+      <a href="/epmdi.html">Data Integration</a>
+      <a href="/">All Tours</a>
+      <a href="https://brainspring.ai" target="_blank">brainspring.ai</a>
+    </div>
+    <p class="ft-note">
+      Free educational resource · No registration required · AI-powered guides in every hall<br>
+      Content cross-validated against Oracle documentation · Built with Claude AI · <a href="https://brainspring.ai" target="_blank" style="color:rgba(251,146,60,.35);text-decoration:none">brainspring.ai</a><br>
+      Oracle, EPCM, FCCS, EPBCS, Planning, and related names are trademarks of Oracle Corporation.<br>
+      BrainSpring is an independent educational resource and is not affiliated with or endorsed by Oracle Corporation.
+    </p>
+  </footer>
+</div>
+
+<script>
+(function(){
+  var s=document.getElementById('stars');
+  for(var i=0;i<55;i++){
+    var d=document.createElement('div');d.className='star';
+    var sz=Math.random()*1.4+0.4;
+    d.style.cssText='width:'+sz+'px;height:'+sz+'px;top:'+Math.random()*100+'%;left:'+Math.random()*100+'%;--d:'+(3+Math.random()*5)+'s;--delay:'+Math.random()*6+'s;--op:'+(0.06+Math.random()*0.12);
+    s.appendChild(d);
+  }
+})();
+document.querySelectorAll('a[href^="#"]').forEach(function(a){
+  a.addEventListener('click',function(e){
+    var id=this.getAttribute('href').slice(1);
+    var el=document.getElementById(id);
+    if(el){e.preventDefault();el.scrollIntoView({behavior:'smooth',block:'start'});}
+  });
+});
+</script>
+</body>
+</html>
