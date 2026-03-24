@@ -1,0 +1,1501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pipeline Lab — Academy of Profit Center · EPCM Study Tour · BrainSpring</title>
+<meta name="description" content="Data Integration is how EPCM connects to the world. Hall 8 covers pipelines, actuals load, ERP writeback, REST APIs, and the integration patterns that make profitability models production-ready.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Pro:ital,wght@0,300;0,400;0,500;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+/* ══════════════════════════════════════════
+   ACADEMY OF PROFIT CENTER — DESIGN SYSTEM
+   Hall 8: Pipeline Lab
+   Accent: rose #f472b6
+══════════════════════════════════════════ */
+:root {
+  --navy:    #08111e;
+  --navy2:   #0d1b2e;
+  --navy3:   #112240;
+  --navy4:   #172d47;
+  --navy5:   #1e3855;
+  --amber:   #f59e0b;
+  --amber2:  #d97706;
+  --amber-dim: rgba(245,158,11,.12);
+  --amber-border: rgba(245,158,11,.25);
+  /* Hall 8 accent — rose */
+  --accent:  #f472b6;
+  --accent2: #db2777;
+  --accent-dim: rgba(244,114,182,.08);
+  --accent-border: rgba(244,114,182,.28);
+  --green:   #4ade80;
+  --green-dim: rgba(74,222,128,.08);
+  --red:     #f87171;
+  --red-dim: rgba(248,113,113,.08);
+  --purple:  #a855f7;
+  --teal:    #2dd4bf;
+  --sky:     #38bdf8;
+  --lime:    #a3e635;
+  --coral:   #fb923c;
+  --white:   #e8f0f8;
+  --silver:  #c8d4e0;
+  --silver2: #8fa3b8;
+  --dim:     #4a6080;
+  --border:  rgba(200,212,224,.08);
+  --border2: rgba(200,212,224,.14);
+  --font-display: 'Cinzel', serif;
+  --font-body:    'Crimson Pro', serif;
+  --font-mono:    'JetBrains Mono', monospace;
+  --topbar-h: 52px;
+  --sidebar-w: 228px;
+  --r: 10px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--font-body);
+  background: var(--navy);
+  color: var(--white);
+  min-height: 100vh;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+}
+body::before {
+  content: '';
+  position: fixed; inset: 0; pointer-events: none; z-index: 0;
+  background-image:
+    linear-gradient(rgba(244,114,182,.012) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(244,114,182,.012) 1px, transparent 1px);
+  background-size: 60px 60px;
+}
+body::after {
+  content: '';
+  position: fixed; inset: 0; pointer-events: none; z-index: 0;
+  background: radial-gradient(ellipse 90% 60% at 50% -5%, rgba(244,114,182,.05) 0%, transparent 65%);
+}
+
+#stars { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
+.star { position: absolute; border-radius: 50%; background: #f472b6; animation: twinkle var(--d,4s) infinite var(--delay,0s); }
+@keyframes twinkle { 0%,100%{opacity:.015} 50%{opacity:var(--op,.12)} }
+@keyframes fadeUp { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:none} }
+@keyframes slideIn { from{opacity:0;transform:translateX(-10px)} to{opacity:1;transform:none} }
+@keyframes pulse { 0%,100%{box-shadow:0 0 0 0 rgba(244,114,182,.28)} 50%{box-shadow:0 0 0 6px transparent} }
+@keyframes glow { 0%,100%{text-shadow:0 0 12px rgba(244,114,182,.3)} 50%{text-shadow:0 0 28px rgba(244,114,182,.65)} }
+
+/* ── TOPBAR ── */
+#topbar {
+  position: fixed; top: 0; left: 0; right: 0; height: var(--topbar-h);
+  background: rgba(8,17,30,.92); backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 14px;
+  padding: 0 20px; z-index: 100;
+}
+.tb-logo { display: flex; align-items: center; gap: 8px; text-decoration: none; flex-shrink: 0; }
+.tb-logo svg { flex-shrink: 0; }
+.tb-brand { font-family: var(--font-mono); font-size: 12px; font-weight: 600; letter-spacing: .04em; }
+.tb-brain { color: var(--accent); }
+.tb-spring { color: var(--silver2); }
+.tb-sep { color: var(--dim); font-size: 12px; }
+.tb-course { font-family: var(--font-mono); font-size: 10px; letter-spacing: .06em; color: var(--amber); text-transform: uppercase; }
+.tb-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); animation: pulse 2.5s infinite; flex-shrink: 0; margin-left: 2px; }
+.tb-hall-badge { font-family: var(--font-mono); font-size: 9.5px; letter-spacing: .06em; color: var(--silver2); text-transform: uppercase; margin-left: auto; }
+.tb-hamburger { display: none; background: none; border: none; cursor: pointer; padding: 6px; color: var(--silver2); }
+.tb-nav-right { display: flex; align-items: center; gap: 4px; margin-left: 16px; overflow-x: auto; scrollbar-width: none; }
+.tb-nav-right::-webkit-scrollbar { display: none; }
+.tb-link {
+  font-family: var(--font-mono); font-size: 9px; letter-spacing: .07em; text-transform: uppercase;
+  color: var(--dim); text-decoration: none; padding: 5px 10px; border-radius: 5px;
+  transition: color .15s, background .15s; white-space: nowrap;
+}
+.tb-link:hover { color: var(--silver); background: rgba(255,255,255,.05); }
+.tb-link.current { color: var(--accent); background: var(--accent-dim); }
+
+/* ── SIDEBAR ── */
+.sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.5); z-index: 89; }
+.sidebar-overlay.open { display: block; }
+.sidebar {
+  width: var(--sidebar-w); flex-shrink: 0;
+  position: sticky; top: var(--topbar-h);
+  height: calc(100vh - var(--topbar-h));
+  overflow-y: auto; overflow-x: hidden;
+  background: rgba(8,17,30,.7);
+  border-right: 1px solid var(--border);
+  padding: 24px 0 40px;
+  scrollbar-width: thin; scrollbar-color: var(--navy3) transparent;
+}
+.sidebar::-webkit-scrollbar { width: 3px; }
+.sidebar::-webkit-scrollbar-thumb { background: var(--navy3); }
+.sb-label {
+  font-family: var(--font-mono); font-size: 8px; letter-spacing: .14em;
+  color: var(--dim); text-transform: uppercase;
+  padding: 0 18px; margin: 20px 0 8px;
+}
+.sb-label:first-child { margin-top: 0; }
+.sb-hall {
+  display: flex; align-items: center; gap: 10px;
+  padding: 8px 18px; text-decoration: none;
+  transition: background .15s; position: relative;
+}
+.sb-hall:hover { background: rgba(255,255,255,.03); }
+.sb-hall.current { background: var(--accent-dim); }
+.sb-hall.current::before {
+  content: ''; position: absolute; left: 0; top: 0; bottom: 0;
+  width: 2px; background: var(--accent);
+}
+.sb-hall-num {
+  width: 22px; height: 22px; border-radius: 6px; flex-shrink: 0;
+  border: 1px solid var(--border2);
+  font-family: var(--font-mono); font-size: 10px; font-weight: 600;
+  color: var(--dim); display: flex; align-items: center; justify-content: center;
+}
+.sb-hall.current .sb-hall-num { border-color: var(--accent-border); color: var(--accent); background: var(--accent-dim); }
+.sb-hall-info { flex: 1; min-width: 0; }
+.sb-hall-name { font-family: var(--font-mono); font-size: 10px; font-weight: 500; color: var(--silver2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sb-hall.current .sb-hall-name { color: var(--accent); }
+.sb-hall-title { font-size: 10px; color: var(--dim); margin-top: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sb-status { width: 5px; height: 5px; border-radius: 50%; background: var(--green); flex-shrink: 0; }
+.sb-status.current { background: var(--accent); animation: pulse 2s infinite; }
+.sb-status.locked { background: transparent; border: 1px solid var(--dim); }
+.sb-toc-item {
+  display: block; padding: 5px 18px 5px 26px;
+  font-size: 11.5px; color: var(--dim); text-decoration: none;
+  border-left: 1px solid transparent; margin-left: 10px;
+  transition: color .15s, border-color .15s; line-height: 1.4;
+}
+.sb-toc-item:hover { color: var(--silver2); border-left-color: var(--border2); }
+
+/* Dean Eliot sidebar */
+.sb-eliot {
+  margin: 16px 12px 0;
+  background: var(--accent-dim);
+  border: 1px solid var(--accent-border);
+  border-radius: var(--r); overflow: hidden;
+}
+.sb-eliot-header {
+  display: flex; align-items: center; gap: 8px;
+  padding: 10px 12px; border-bottom: 1px solid var(--accent-border);
+}
+.sb-eliot-avatar {
+  width: 28px; height: 28px; border-radius: 8px;
+  background: rgba(244,114,182,.12); border: 1px solid var(--accent-border);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; flex-shrink: 0;
+}
+.sb-eliot-name { font-family: var(--font-mono); font-size: 9.5px; font-weight: 600; letter-spacing: .06em; color: var(--accent); }
+.sb-eliot-role { font-size: 9px; color: var(--silver2); margin-top: 1px; }
+.sb-chips { padding: 8px 10px; display: flex; flex-direction: column; gap: 5px; }
+.sb-chip {
+  font-size: 10.5px; color: var(--silver2); padding: 5px 8px;
+  background: rgba(255,255,255,.03); border: 1px solid var(--border);
+  border-radius: 6px; cursor: pointer; line-height: 1.4;
+  transition: background .15s, border-color .15s, color .15s;
+}
+.sb-chip:hover { background: var(--accent-dim); border-color: var(--accent-border); color: var(--white); }
+.sb-eliot-input-row { display: flex; gap: 6px; padding: 8px 10px; border-top: 1px solid var(--border); }
+.sb-eliot-input {
+  flex: 1; background: rgba(255,255,255,.04); border: 1px solid var(--border);
+  border-radius: 6px; padding: 5px 8px; font-size: 11px;
+  font-family: var(--font-body); color: var(--white); outline: none;
+}
+.sb-eliot-input:focus { border-color: var(--accent-border); }
+.sb-eliot-input::placeholder { color: var(--dim); }
+.sb-eliot-send {
+  width: 28px; height: 28px; border-radius: 6px;
+  background: var(--accent-dim); border: 1px solid var(--accent-border);
+  color: var(--accent); cursor: pointer; font-size: 13px;
+  display: flex; align-items: center; justify-content: center;
+  transition: background .15s;
+}
+.sb-eliot-send:hover { background: rgba(244,114,182,.2); }
+.sb-eliot-msgs { max-height: 160px; overflow-y: auto; padding: 8px 10px; display: flex; flex-direction: column; gap: 6px; scrollbar-width: thin; }
+.sb-eliot-msgs:empty { display: none; }
+.sb-msg { font-size: 11px; line-height: 1.55; padding: 6px 8px; border-radius: 6px; }
+.sb-msg.user { background: rgba(244,114,182,.1); color: var(--silver); text-align: right; }
+.sb-msg.guide { background: rgba(245,158,11,.06); color: var(--silver); }
+.sb-msg.typing { opacity: .5; }
+
+.sb-company {
+  margin: 12px 12px 0;
+  background: rgba(255,255,255,.02);
+  border: 1px solid var(--border);
+  border-radius: var(--r); padding: 12px;
+}
+.sb-company-label { font-family: var(--font-mono); font-size: 7.5px; letter-spacing: .1em; color: var(--dim); text-transform: uppercase; margin-bottom: 8px; }
+.sb-company-name { font-family: var(--font-display); font-size: 12px; color: var(--white); margin-bottom: 3px; }
+.sb-company-desc { font-size: 10.5px; color: var(--silver2); line-height: 1.5; }
+
+/* ── LAYOUT ── */
+#app { display: flex; flex-direction: column; min-height: 100vh; padding-top: var(--topbar-h); position: relative; z-index: 1; }
+#body { display: flex; flex: 1; }
+.main { flex: 1; min-width: 0; padding: 36px 52px 96px; animation: fadeUp .5s ease both; }
+
+/* ── CAMPUS MAP ── */
+.campus-map-wrap {
+  margin-bottom: 32px; background: rgba(13,27,46,.6);
+  border: 1px solid var(--border); border-radius: 14px;
+  padding: 16px 20px; overflow: hidden;
+}
+.campus-map-label {
+  font-family: var(--font-mono); font-size: 8.5px; letter-spacing: .14em;
+  color: var(--dim); text-transform: uppercase; margin-bottom: 12px;
+  display: flex; align-items: center; gap: 8px;
+}
+.campus-map-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+.campus-map-row { display: flex; align-items: center; gap: 0; overflow-x: auto; scrollbar-width: none; }
+.campus-map-row::-webkit-scrollbar { display: none; }
+.campus-stop { display: flex; flex-direction: column; align-items: center; gap: 5px; flex-shrink: 0; }
+.campus-building {
+  width: 40px; height: 40px; border-radius: 10px;
+  border: 1px solid var(--border2); background: var(--navy3);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-mono); font-size: 12px; font-weight: 600;
+  color: var(--dim); text-decoration: none; transition: all .2s;
+}
+.campus-building:hover { transform: translateY(-2px); border-color: var(--silver2); color: var(--silver2); }
+.campus-building.done { background: rgba(74,222,128,.06); border-color: rgba(74,222,128,.2); color: #22c55e; }
+.campus-building.active { background: var(--accent-dim); border-color: var(--accent); color: var(--accent); box-shadow: 0 0 18px rgba(244,114,182,.2); }
+.campus-building.locked { opacity: .35; cursor: default; pointer-events: none; }
+.campus-stop-label { font-family: var(--font-mono); font-size: 8px; letter-spacing: .04em; color: var(--dim); text-align: center; max-width: 52px; line-height: 1.3; white-space: nowrap; }
+.campus-stop.active-stop .campus-stop-label { color: var(--accent); }
+.campus-stop.done-stop .campus-stop-label { color: #22c55e; }
+.campus-connector { width: 24px; height: 1px; background: var(--border2); flex-shrink: 0; margin-bottom: 18px; position: relative; }
+.campus-connector::after { content: '>'; position: absolute; right: -5px; top: -9px; color: var(--dim); font-size: 10px; }
+
+/* ── HALL HERO ── */
+.hall-hero { margin-bottom: 32px; }
+.hall-eyebrow {
+  display: flex; align-items: center; gap: 8px;
+  font-family: var(--font-mono); font-size: 10px; letter-spacing: .1em;
+  color: var(--accent); text-transform: uppercase; margin-bottom: 10px;
+}
+.hall-eyebrow-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--accent); animation: pulse 2s infinite; }
+.hall-building-name {
+  font-family: var(--font-display); font-size: 11px; letter-spacing: .18em;
+  color: var(--accent2); text-transform: uppercase; margin-bottom: 6px;
+}
+.hall-title {
+  font-family: var(--font-display); font-size: 36px; font-weight: 600;
+  color: var(--white); line-height: 1.15; margin-bottom: 14px; letter-spacing: .02em;
+}
+.hall-title em { font-style: normal; color: var(--accent); animation: glow 4s infinite; }
+.hall-tagline { font-size: 16px; color: var(--silver2); line-height: 1.75; max-width: 700px; margin-bottom: 18px; font-style: italic; }
+.hall-tags { display: flex; gap: 7px; flex-wrap: wrap; }
+.htag {
+  font-family: var(--font-mono); font-size: 9px; letter-spacing: .08em;
+  text-transform: uppercase; padding: 4px 10px; border-radius: 5px;
+  border: 1px solid var(--border2); color: var(--silver2);
+}
+.htag.conceptual { border-color: rgba(56,189,248,.2); color: var(--sky); background: rgba(56,189,248,.05); }
+.htag.technical   { border-color: rgba(168,85,247,.2); color: var(--purple); background: rgba(168,85,247,.05); }
+.htag.lab         { border-color: rgba(74,222,128,.2); color: var(--green); background: var(--green-dim); }
+.htag.exam        { border-color: rgba(251,191,36,.2); color: var(--amber); background: var(--amber-dim); }
+.htag.interactive { border-color: rgba(244,114,182,.2); color: var(--accent); background: var(--accent-dim); }
+
+/* ── TABS ── */
+.tab-bar {
+  display: flex; gap: 2px; border-bottom: 1px solid var(--border);
+  margin-bottom: 32px;
+  position: sticky; top: var(--topbar-h);
+  background: rgba(8,17,30,.95); backdrop-filter: blur(12px);
+  z-index: 20; padding: 10px 0 0;
+  margin-left: -52px; margin-right: -52px;
+  padding-left: 52px; padding-right: 52px;
+}
+.tab-btn {
+  display: flex; align-items: center; gap: 7px;
+  padding: 9px 16px; border: none; background: none; cursor: pointer;
+  font-family: var(--font-mono); font-size: 10px; letter-spacing: .07em;
+  text-transform: uppercase; color: var(--dim);
+  border-bottom: 2px solid transparent; margin-bottom: -1px;
+  transition: color .15s, border-color .15s; white-space: nowrap;
+}
+.tab-btn:hover { color: var(--silver2); }
+.tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+.tab-icon { font-size: 13px; }
+.tab-panel { display: none; animation: fadeUp .25s ease; }
+.tab-panel.active { display: block; }
+
+/* ── SECTIONS ── */
+.section { margin-bottom: 48px; }
+.sec-type-bar { display: flex; align-items: center; gap: 8px; margin-bottom: 14px; }
+.sec-type-icon {
+  width: 28px; height: 28px; border-radius: 7px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center; font-size: 13px;
+}
+.sec-type-icon.conceptual { background: rgba(56,189,248,.08); border: 1px solid rgba(56,189,248,.18); }
+.sec-type-icon.technical   { background: rgba(168,85,247,.08); border: 1px solid rgba(168,85,247,.18); }
+.sec-type-icon.lab         { background: rgba(74,222,128,.08); border: 1px solid rgba(74,222,128,.18); }
+.sec-type-icon.exam        { background: rgba(251,191,36,.08); border: 1px solid rgba(251,191,36,.18); }
+.sec-type-icon.interactive { background: rgba(244,114,182,.08); border: 1px solid rgba(244,114,182,.18); }
+.sec-type-label { font-family: var(--font-mono); font-size: 9px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; }
+.sec-type-label.conceptual { color: var(--sky); }
+.sec-type-label.technical   { color: var(--purple); }
+.sec-type-label.lab         { color: var(--green); }
+.sec-type-label.exam        { color: var(--amber); }
+.sec-type-label.interactive { color: var(--accent); }
+.sec-h { font-family: var(--font-display); font-size: 22px; font-weight: 600; color: var(--white); margin-bottom: 6px; letter-spacing: .02em; }
+.sec-div { width: 40px; height: 2px; background: linear-gradient(to right, var(--accent), transparent); margin-bottom: 14px; }
+.sec-sub { font-size: 14px; color: var(--silver2); margin-bottom: 20px; font-style: italic; line-height: 1.6; }
+.prose { font-size: 15px; color: var(--silver); line-height: 1.78; margin-bottom: 14px; }
+.prose strong { color: var(--white); font-weight: 500; }
+.prose code { font-family: var(--font-mono); font-size: 12px; background: rgba(255,255,255,.06); border: 1px solid var(--border2); border-radius: 4px; padding: 1px 6px; color: var(--accent); }
+
+/* ── INFOBOXES ── */
+.infobox { display: flex; gap: 12px; border-radius: 10px; padding: 14px 16px; margin: 18px 0; line-height: 1.65; }
+.infobox-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+.infobox-body { font-size: 13.5px; }
+.infobox-body strong { font-weight: 500; }
+.infobox.note { background: rgba(56,189,248,.06); border: 1px solid rgba(56,189,248,.15); color: var(--silver2); }
+.infobox.note .infobox-body strong { color: var(--sky); }
+.infobox.trap { background: rgba(248,113,113,.06); border: 1px solid rgba(248,113,113,.15); color: var(--silver2); }
+.infobox.trap .infobox-body strong { color: var(--red); }
+.infobox.tip { background: var(--green-dim); border: 1px solid rgba(74,222,128,.18); color: var(--silver2); }
+.infobox.tip .infobox-body strong { color: var(--green); }
+.infobox.warn { background: var(--amber-dim); border: 1px solid var(--amber-border); color: var(--silver2); }
+.infobox.warn .infobox-body strong { color: var(--amber); }
+.infobox.rose { background: var(--accent-dim); border: 1px solid var(--accent-border); color: var(--silver2); }
+.infobox.rose .infobox-body strong { color: var(--accent); }
+
+/* ── TABLE ── */
+.tbl-wrap { overflow-x: auto; margin: 18px 0; border-radius: 10px; border: 1px solid var(--border); }
+.tbl { width: 100%; border-collapse: collapse; font-size: 13px; }
+.tbl th {
+  font-family: var(--font-mono); font-size: 8.5px; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--accent);
+  padding: 10px 14px; text-align: left;
+  border-bottom: 1px solid var(--border2); white-space: nowrap;
+  background: rgba(244,114,182,.04);
+}
+.tbl td { padding: 10px 14px; border-bottom: 1px solid var(--border); color: var(--silver2); vertical-align: top; line-height: 1.55; }
+.tbl tr:last-child td { border-bottom: none; }
+.tbl tr:hover td { background: rgba(255,255,255,.02); }
+.badge { font-family: var(--font-mono); font-size: 9px; letter-spacing: .06em; text-transform: uppercase; padding: 3px 8px; border-radius: 4px; white-space: nowrap; }
+.badge.green  { background: var(--green-dim); color: var(--green); border: 1px solid rgba(74,222,128,.2); }
+.badge.amber  { background: var(--amber-dim); color: var(--amber); border: 1px solid var(--amber-border); }
+.badge.red    { background: var(--red-dim); color: var(--red); border: 1px solid rgba(248,113,113,.2); }
+.badge.rose   { background: var(--accent-dim); color: var(--accent); border: 1px solid var(--accent-border); }
+.badge.purple { background: rgba(168,85,247,.08); color: var(--purple); border: 1px solid rgba(168,85,247,.2); }
+.badge.sky    { background: rgba(56,189,248,.08); color: var(--sky); border: 1px solid rgba(56,189,248,.2); }
+
+/* ── CODE BLOCKS ── */
+.code-block {
+  background: rgba(0,0,0,.25); border: 1px solid var(--border2);
+  border-radius: 10px; margin: 18px 0; overflow: hidden;
+}
+.code-label {
+  font-family: var(--font-mono); font-size: 9px; letter-spacing: .08em;
+  text-transform: uppercase; color: var(--dim);
+  padding: 8px 14px; border-bottom: 1px solid var(--border);
+}
+.code-block pre {
+  font-family: var(--font-mono); font-size: 12px; line-height: 1.65;
+  color: var(--silver); padding: 14px; overflow-x: auto;
+}
+.code-block .kw { color: var(--accent); }
+.code-block .fn { color: var(--sky); }
+.code-block .cm { color: var(--dim); font-style: italic; }
+.code-block .str { color: var(--green); }
+.code-block .num { color: var(--amber); }
+
+/* ── PIPELINE DIAGRAM ── */
+.pipeline-diagram {
+  background: rgba(13,27,46,.5); border: 1px solid var(--border);
+  border-radius: 14px; padding: 24px; margin: 24px 0;
+}
+.pipeline-title {
+  font-family: var(--font-mono); font-size: 10px; letter-spacing: .1em;
+  color: var(--accent); text-transform: uppercase; margin-bottom: 20px;
+  text-align: center;
+}
+.pipeline-flow {
+  display: flex; align-items: center; justify-content: center;
+  gap: 0; flex-wrap: wrap;
+}
+.pipeline-node {
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+  padding: 16px 20px; background: var(--navy3); border: 1px solid var(--border2);
+  border-radius: 10px; min-width: 100px; text-align: center;
+  transition: all .2s;
+}
+.pipeline-node:hover { border-color: var(--accent-border); background: var(--accent-dim); }
+.pipeline-node-icon { font-size: 24px; }
+.pipeline-node-label { font-family: var(--font-mono); font-size: 9px; letter-spacing: .06em; color: var(--silver2); text-transform: uppercase; }
+.pipeline-node-detail { font-size: 11px; color: var(--dim); }
+.pipeline-node.source { border-color: rgba(74,222,128,.3); }
+.pipeline-node.source .pipeline-node-icon { color: var(--green); }
+.pipeline-node.transform { border-color: rgba(168,85,247,.3); }
+.pipeline-node.transform .pipeline-node-icon { color: var(--purple); }
+.pipeline-node.target { border-color: rgba(244,114,182,.3); }
+.pipeline-node.target .pipeline-node-icon { color: var(--accent); }
+.pipeline-arrow {
+  font-size: 20px; color: var(--dim); padding: 0 8px;
+}
+
+/* ── INTEGRATION CARDS ── */
+.int-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 14px; margin: 20px 0; }
+.int-card {
+  background: var(--navy3); border: 1px solid var(--border2);
+  border-radius: 12px; padding: 18px; transition: all .2s;
+}
+.int-card:hover { border-color: var(--accent-border); transform: translateY(-2px); }
+.int-card-header { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+.int-card-icon {
+  width: 36px; height: 36px; border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; flex-shrink: 0;
+}
+.int-card-icon.erp { background: rgba(74,222,128,.1); border: 1px solid rgba(74,222,128,.2); }
+.int-card-icon.epm { background: rgba(168,85,247,.1); border: 1px solid rgba(168,85,247,.2); }
+.int-card-icon.file { background: rgba(56,189,248,.1); border: 1px solid rgba(56,189,248,.2); }
+.int-card-icon.api { background: rgba(244,114,182,.1); border: 1px solid rgba(244,114,182,.2); }
+.int-card-title { font-family: var(--font-mono); font-size: 12px; font-weight: 600; color: var(--white); }
+.int-card-subtitle { font-size: 11px; color: var(--dim); }
+.int-card-body { font-size: 13px; color: var(--silver2); line-height: 1.6; }
+.int-card-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 12px; }
+
+/* ── PATTERN CARDS ── */
+.pattern-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 14px; margin: 20px 0; }
+.pattern-card {
+  background: var(--navy3); border: 1px solid var(--border);
+  border-radius: 12px; overflow: hidden; transition: all .2s;
+}
+.pattern-card:hover { border-color: var(--accent-border); }
+.pc-top { padding: 16px 18px; border-bottom: 1px solid var(--border); }
+.pc-badge { font-family: var(--font-mono); font-size: 8px; letter-spacing: .08em; text-transform: uppercase; padding: 3px 8px; border-radius: 4px; display: inline-block; margin-bottom: 8px; }
+.pc-name { font-family: var(--font-display); font-size: 16px; font-weight: 600; color: var(--white); margin-bottom: 4px; }
+.pc-when { font-size: 12px; color: var(--dim); font-style: italic; }
+.pc-body { padding: 14px 18px; }
+.pc-desc { font-size: 13px; color: var(--silver2); line-height: 1.65; margin-bottom: 10px; }
+.pc-trap { font-size: 12px; color: var(--amber); background: var(--amber-dim); border-radius: 6px; padding: 8px 10px; line-height: 1.5; }
+
+/* ── LAB STEPS ── */
+.lab-steps { margin: 20px 0; }
+.lab-step {
+  display: flex; gap: 14px; padding: 16px;
+  background: var(--navy3); border: 1px solid var(--border);
+  border-radius: 10px; margin-bottom: 10px; transition: all .2s;
+}
+.lab-step:hover { border-color: var(--accent-border); }
+.lab-step-num {
+  width: 28px; height: 28px; border-radius: 8px;
+  background: var(--accent-dim); border: 1px solid var(--accent-border);
+  font-family: var(--font-mono); font-size: 12px; font-weight: 600;
+  color: var(--accent); display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.lab-step-body { flex: 1; }
+.lab-step-title { font-family: var(--font-mono); font-size: 12px; font-weight: 600; color: var(--white); margin-bottom: 4px; }
+.lab-step-desc { font-size: 13px; color: var(--silver2); line-height: 1.6; }
+
+/* ── QUIZ ── */
+.quiz-card {
+  background: var(--navy3); border: 1px solid var(--border);
+  border-radius: 12px; padding: 20px; margin-bottom: 14px; transition: border-color .2s;
+}
+.quiz-card.answered { border-color: var(--border2); }
+.quiz-card.correct { border-color: rgba(74,222,128,.4); background: rgba(74,222,128,.03); }
+.quiz-card.wrong { border-color: rgba(248,113,113,.4); background: rgba(248,113,113,.03); }
+.quiz-q-row { display: flex; gap: 10px; margin-bottom: 14px; }
+.quiz-q-num {
+  width: 24px; height: 24px; border-radius: 6px;
+  background: var(--accent-dim); border: 1px solid var(--accent-border);
+  font-family: var(--font-mono); font-size: 11px; font-weight: 600;
+  color: var(--accent); display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.quiz-q-text { font-size: 14px; color: var(--white); line-height: 1.55; }
+.quiz-opts { display: flex; flex-direction: column; gap: 8px; }
+.quiz-opt {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 12px; border-radius: 8px;
+  background: rgba(255,255,255,.03); border: 1px solid var(--border);
+  cursor: pointer; transition: all .15s;
+}
+.quiz-opt:hover { border-color: var(--accent-border); background: var(--accent-dim); }
+.quiz-opt.selected { border-color: var(--accent); background: var(--accent-dim); }
+.quiz-opt.correct-answer { border-color: var(--green); background: var(--green-dim); }
+.quiz-opt.wrong-answer { border-color: var(--red); background: var(--red-dim); }
+.quiz-opt input { display: none; }
+.quiz-opt-marker {
+  width: 18px; height: 18px; border-radius: 50%;
+  border: 2px solid var(--dim); flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px; color: transparent; transition: all .15s;
+}
+.quiz-opt.selected .quiz-opt-marker { border-color: var(--accent); background: var(--accent); color: #fff; }
+.quiz-opt.correct-answer .quiz-opt-marker { border-color: var(--green); background: var(--green); color: #fff; }
+.quiz-opt.wrong-answer .quiz-opt-marker { border-color: var(--red); background: var(--red); color: #fff; }
+.quiz-opt-text { font-size: 13px; color: var(--silver2); line-height: 1.5; }
+.quiz-feedback { margin-top: 12px; padding: 12px; border-radius: 8px; font-size: 13px; line-height: 1.6; display: none; }
+.quiz-card.answered .quiz-feedback { display: block; }
+.quiz-feedback.correct { background: var(--green-dim); border: 1px solid rgba(74,222,128,.2); color: var(--silver); }
+.quiz-feedback.wrong { background: var(--red-dim); border: 1px solid rgba(248,113,113,.2); color: var(--silver); }
+.quiz-submit {
+  margin-top: 10px; padding: 10px 20px;
+  background: var(--accent-dim); border: 1px solid var(--accent-border);
+  border-radius: 8px; font-family: var(--font-mono); font-size: 11px;
+  letter-spacing: .08em; text-transform: uppercase;
+  color: var(--accent); cursor: pointer; transition: all .15s;
+}
+.quiz-submit:hover { background: rgba(244,114,182,.15); }
+.quiz-submit:disabled { opacity: .5; cursor: not-allowed; }
+.quiz-score-box {
+  background: var(--accent-dim); border: 1px solid var(--accent-border);
+  border-radius: 12px; padding: 20px; text-align: center; margin-top: 24px;
+}
+.quiz-score-val { font-family: var(--font-display); font-size: 36px; font-weight: 700; color: var(--accent); }
+.quiz-score-label { font-family: var(--font-mono); font-size: 10px; color: var(--dim); letter-spacing: .1em; text-transform: uppercase; margin-top: 4px; }
+.quiz-score-msg { font-size: 14px; color: var(--silver2); margin-top: 10px; }
+
+/* ── HALL NAV FOOTER ── */
+.hall-nav-footer {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-top: 64px; padding-top: 28px; border-top: 1px solid var(--border);
+}
+.hnf-prev, .hnf-next {
+  display: flex; align-items: center; gap: 10px;
+  text-decoration: none; padding: 12px 16px; border-radius: 10px;
+  border: 1px solid var(--border); background: var(--navy3); transition: all .2s;
+}
+.hnf-prev:hover, .hnf-next:hover { border-color: var(--accent-border); background: var(--accent-dim); }
+.hnf-dir { font-family: var(--font-mono); font-size: 8.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--dim); }
+.hnf-name { font-size: 14px; color: var(--white); margin-top: 2px; }
+.hnf-next { flex-direction: row-reverse; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 900px) {
+  .sidebar { display: none; position: fixed; left: 0; top: var(--topbar-h); height: calc(100vh - var(--topbar-h)); z-index: 90; transform: translateX(-100%); transition: transform .25s ease; }
+  .sidebar.open { display: flex; flex-direction: column; transform: translateX(0); }
+  .sidebar-overlay { display: none; }
+  .sidebar-overlay.open { display: block; }
+  .tb-hamburger { display: flex; }
+  .main { padding: 20px 18px 80px; }
+  .tab-bar { margin-left: -18px; margin-right: -18px; padding-left: 18px; padding-right: 18px; overflow-x: auto; scrollbar-width: none; }
+  .tab-bar::-webkit-scrollbar { display: none; }
+  .hall-title { font-size: 26px; }
+  .pipeline-flow { flex-direction: column; }
+  .pipeline-arrow { transform: rotate(90deg); }
+  .pattern-grid { grid-template-columns: 1fr; }
+  .int-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<div id="stars"></div>
+<div class="sidebar-overlay" id="overlay" onclick="closeSidebar()"></div>
+
+<div id="app">
+
+  <!-- ── TOPBAR ── -->
+  <header id="topbar">
+    <a href="https://brainspring.ai" class="tb-logo" target="_blank" rel="noopener">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 36" width="18" height="20">
+        <path d="M16 2L3 9v18l13 7 13-7V9L16 2z" fill="none" stroke="#f472b6" stroke-width="2"/>
+        <path d="M16 8l7 4v8l-7 4-7-4v-8l7-4z" fill="#f472b6" opacity=".3"/>
+      </svg>
+      <span class="tb-brand"><span class="tb-brain">Brain</span><span class="tb-spring">Spring</span></span>
+    </a>
+    <span class="tb-sep">></span>
+    <span class="tb-course">Academy of Profit Center</span>
+    <div class="tb-dot"></div>
+    <nav class="tb-nav-right">
+      <a href="hall-1.html" class="tb-link">Foundations</a>
+      <a href="hall-2.html" class="tb-link">Dimensions</a>
+      <a href="hall-3.html" class="tb-link">Models</a>
+      <a href="hall-4.html" class="tb-link">Logic</a>
+      <a href="hall-5.html" class="tb-link">Workshop</a>
+      <a href="hall-6.html" class="tb-link">Control</a>
+      <a href="hall-7.html" class="tb-link">Observatory</a>
+      <a href="hall-8.html" class="tb-link current">Pipeline</a>
+      <a href="hall-9.html" class="tb-link">Exam</a>
+    </nav>
+    <span class="tb-hall-badge">Hall 8 of 9 - Pipeline Lab</span>
+    <button class="tb-hamburger" onclick="toggleSidebar()" aria-label="Menu">
+      <svg width="18" height="14" viewBox="0 0 18 14" fill="none"><rect width="18" height="2" rx="1" fill="currentColor"/><rect y="6" width="18" height="2" rx="1" fill="currentColor"/><rect y="12" width="18" height="2" rx="1" fill="currentColor"/></svg>
+    </button>
+  </header>
+
+  <div id="body">
+
+    <!-- ── SIDEBAR ── -->
+    <nav class="sidebar" id="sidebar">
+      <div class="sb-label">Academy Halls</div>
+      <a href="hall-1.html" class="sb-hall"><div class="sb-hall-num">1</div><div class="sb-hall-info"><div class="sb-hall-name">Foundations Hall</div><div class="sb-hall-title">Orientation</div></div><div class="sb-status"></div></a>
+      <a href="hall-2.html" class="sb-hall"><div class="sb-hall-num">2</div><div class="sb-hall-info"><div class="sb-hall-name">Dimensions Gallery</div><div class="sb-hall-title">Geometry of Profit Center</div></div><div class="sb-status"></div></a>
+      <a href="hall-3.html" class="sb-hall"><div class="sb-hall-num">3</div><div class="sb-hall-info"><div class="sb-hall-name">Models Pavilion</div><div class="sb-hall-title">Perspective Gallery</div></div><div class="sb-status"></div></a>
+      <a href="hall-4.html" class="sb-hall"><div class="sb-hall-num">4</div><div class="sb-hall-info"><div class="sb-hall-name">Hall of Logic</div><div class="sb-hall-title">Rule Sets &amp; Sequences</div></div><div class="sb-status"></div></a>
+      <a href="hall-5.html" class="sb-hall"><div class="sb-hall-num">5</div><div class="sb-hall-info"><div class="sb-hall-name">Workshop of Precision</div><div class="sb-hall-title">Custom Calculations</div></div><div class="sb-status"></div></a>
+      <a href="hall-6.html" class="sb-hall"><div class="sb-hall-num">6</div><div class="sb-hall-info"><div class="sb-hall-name">Control Tower</div><div class="sb-hall-title">Calc Analysis Chamber</div></div><div class="sb-status"></div></a>
+      <a href="hall-7.html" class="sb-hall"><div class="sb-hall-num">7</div><div class="sb-hall-info"><div class="sb-hall-name">Observatory</div><div class="sb-hall-title">Rule Balancing</div></div><div class="sb-status"></div></a>
+      <a href="hall-8.html" class="sb-hall current"><div class="sb-hall-num">8</div><div class="sb-hall-info"><div class="sb-hall-name">Pipeline Lab</div><div class="sb-hall-title">Data Integration Workshop</div></div><div class="sb-status current"></div></a>
+      <a href="hall-9.html" class="sb-hall"><div class="sb-hall-num">9</div><div class="sb-hall-info"><div class="sb-hall-name">Examination Hall</div><div class="sb-hall-title">Graduation</div></div><div class="sb-status"></div></a>
+
+      <div class="sb-label">This Hall</div>
+      <div id="sb-toc"></div>
+
+      <div class="sb-label">Dean's Office</div>
+      <div class="sb-eliot">
+        <div class="sb-eliot-header">
+          <div class="sb-eliot-avatar">🎓</div>
+          <div>
+            <div class="sb-eliot-name">Dean Eliot</div>
+            <div class="sb-eliot-role">Senior Oracle EPM Practitioner</div>
+          </div>
+        </div>
+        <div class="sb-chips">
+          <span class="sb-chip" onclick="chipAsk(this)">What is Data Integration in EPCM?</span>
+          <span class="sb-chip" onclick="chipAsk(this)">How do I load actuals from Oracle ERP Cloud?</span>
+          <span class="sb-chip" onclick="chipAsk(this)">What is a Pipeline and when should I use it?</span>
+          <span class="sb-chip" onclick="chipAsk(this)">Can EPCM write back to the General Ledger?</span>
+        </div>
+        <div class="sb-eliot-msgs" id="sb-msgs"></div>
+        <div class="sb-eliot-input-row">
+          <input class="sb-eliot-input" id="sb-input" type="text" placeholder="Ask the Dean anything..." onkeydown="if(event.key==='Enter')sbSend()">
+          <button class="sb-eliot-send" onclick="sbSend()">^</button>
+        </div>
+      </div>
+
+      <div class="sb-company">
+        <div class="sb-company-label">Case Company</div>
+        <div class="sb-company-name" id="sb-company-name">NovaPrism Group</div>
+        <div class="sb-company-desc" id="sb-company-desc">Loading...</div>
+      </div>
+    </nav>
+
+    <!-- ── MAIN ── -->
+    <main class="main">
+
+      <!-- Campus Map -->
+      <div class="campus-map-wrap">
+        <div class="campus-map-label">Academy of Profit Center - Your Journey</div>
+        <div class="campus-map-row" id="campus-map"></div>
+      </div>
+
+      <!-- Hall Hero -->
+      <header class="hall-hero">
+        <div class="hall-building-name">Pipeline Lab</div>
+        <div class="hall-eyebrow">
+          <span class="hall-eyebrow-dot"></span>
+          Hall 8 of 9 - Academy of Profit Center - EPCM Study Tour
+        </div>
+        <h1 class="hall-title">The <em>integration</em> lifeline</h1>
+        <p class="hall-tagline">A profitability model without data is just a hypothesis. Data Integration is how EPCM connects to the world - loading actuals from Oracle ERP Cloud, importing cost drivers from flat files, orchestrating multi-step pipelines, and writing allocated costs back to the General Ledger. This hall teaches you how to make your model production-ready.</p>
+        <div class="hall-tags">
+          <span class="htag conceptual">Conceptual</span>
+          <span class="htag technical">Technical</span>
+          <span class="htag interactive">Interactive</span>
+          <span class="htag lab">Lab</span>
+          <span class="htag exam">Exam: 1Z0-1082-25</span>
+        </div>
+      </header>
+
+      <!-- TAB BAR -->
+      <div class="tab-bar" role="tablist">
+        <button class="tab-btn active" role="tab" onclick="switchTab('conceptual',this)"><span class="tab-icon">📐</span> Conceptual</button>
+        <button class="tab-btn" role="tab" onclick="switchTab('technical',this)"><span class="tab-icon">⚙️</span> Technical</button>
+        <button class="tab-btn" role="tab" onclick="switchTab('pipeline',this)"><span class="tab-icon">🔗</span> Pipelines</button>
+        <button class="tab-btn" role="tab" onclick="switchTab('lab',this)"><span class="tab-icon">🔬</span> Lab</button>
+        <button class="tab-btn" role="tab" onclick="switchTab('exam',this)"><span class="tab-icon">📝</span> Exam Prep</button>
+      </div>
+
+      <!-- ═══════ TAB 1: CONCEPTUAL ═══════ -->
+      <div class="tab-panel active" id="tab-conceptual">
+
+        <section class="section" id="what-is-di">
+          <div class="sec-type-bar"><div class="sec-type-icon conceptual">📐</div><span class="sec-type-label conceptual">Conceptual</span></div>
+          <h2 class="sec-h">What is Data Integration in EPCM?</h2>
+          <div class="sec-div"></div>
+          <p class="sec-sub">Data Integration is the bridge between your source systems and the EPCM profitability model. Without it, you're allocating imaginary numbers.</p>
+
+          <p class="prose">EPCM can be registered as both a <strong>source</strong> and a <strong>target</strong> in Oracle's Data Integration framework. This means you can pull actuals <em>into</em> EPCM from Oracle ERP Cloud, Oracle Financials Cloud, or flat files - and push allocated results <em>out</em> to the General Ledger or downstream reporting systems. The result is a closed-loop profitability process: actuals in, allocations run, results written back.</p>
+
+          <p class="prose">For NovaPrism Group, the integration challenge is clear: <strong>$134M in indirect costs</strong> sitting in four corporate cost pools (IT $52M, Facilities $38M, Finance $28M, HR $16M) need to flow from the ERP General Ledger into EPCM, get allocated across 60 client engagements, and then the per-engagement profitability needs to be visible back in the ERP for executive dashboards.</p>
+
+          <div class="infobox rose">
+            <div class="infobox-icon">🔗</div>
+            <div class="infobox-body"><strong>Key integration points for EPCM:</strong> (1) GL actuals - cost pool source data from Oracle ERP Cloud; (2) Driver data - headcount, square footage, IT tickets from HR/Facilities/IT systems; (3) Writeback - allocated costs returned to ERP for journal creation; (4) Cross-EPM - data exchange with Planning, Consolidation, or other EPM business processes.</div>
+          </div>
+        </section>
+
+        <section class="section" id="integration-types">
+          <div class="sec-type-bar"><div class="sec-type-icon conceptual">🗂️</div><span class="sec-type-label conceptual">Conceptual</span></div>
+          <h2 class="sec-h">Integration types - direct vs file-based</h2>
+          <div class="sec-div"></div>
+          <p class="sec-sub">Choose direct integration when you have Oracle ERP Cloud. Choose file-based when you don't - or when you need maximum control over the data transformation.</p>
+
+          <div class="int-grid">
+            <div class="int-card">
+              <div class="int-card-header">
+                <div class="int-card-icon erp">🏢</div>
+                <div>
+                  <div class="int-card-title">Direct Integration</div>
+                  <div class="int-card-subtitle">Oracle ERP Cloud to EPCM</div>
+                </div>
+              </div>
+              <div class="int-card-body">
+                Data is extracted directly from Oracle ERP Cloud General Ledger and Sub-Ledger balances, mapped to EPCM dimensions, and loaded in a single automated process. Best for organisations with Oracle Fusion Cloud ERP.
+              </div>
+              <div class="int-card-tags">
+                <span class="badge green">Recommended</span>
+                <span class="badge sky">Automated</span>
+                <span class="badge purple">GL + SL</span>
+              </div>
+            </div>
+
+            <div class="int-card">
+              <div class="int-card-header">
+                <div class="int-card-icon file">📄</div>
+                <div>
+                  <div class="int-card-title">File-Based Integration</div>
+                  <div class="int-card-subtitle">CSV/TXT files to EPCM</div>
+                </div>
+              </div>
+              <div class="int-card-body">
+                Data from text files is imported into EPCM with member mapping applied during load. Useful when source systems are not Oracle ERP Cloud or when data requires pre-processing before load.
+              </div>
+              <div class="int-card-tags">
+                <span class="badge amber">Flexible</span>
+                <span class="badge sky">Any Source</span>
+                <span class="badge purple">Manual Control</span>
+              </div>
+            </div>
+
+            <div class="int-card">
+              <div class="int-card-header">
+                <div class="int-card-icon epm">⚡</div>
+                <div>
+                  <div class="int-card-title">Cross-EPM Integration</div>
+                  <div class="int-card-subtitle">EPM to EPM data exchange</div>
+                </div>
+              </div>
+              <div class="int-card-body">
+                EPCM integrates with other Cloud EPM business processes within the same or different instances. Register as a local application for same-instance, or as a Cloud EPM application for cross-instance pulls.
+              </div>
+              <div class="int-card-tags">
+                <span class="badge rose">Cross-Instance</span>
+                <span class="badge sky">Planning</span>
+                <span class="badge purple">FCCS</span>
+              </div>
+            </div>
+
+            <div class="int-card">
+              <div class="int-card-header">
+                <div class="int-card-icon api">🔌</div>
+                <div>
+                  <div class="int-card-title">REST API Integration</div>
+                  <div class="int-card-subtitle">Programmatic data exchange</div>
+                </div>
+              </div>
+              <div class="int-card-body">
+                Use Cloud EPM Import/Export Data REST APIs for programmatic integration. Requires Service Administrator role. Can import data with or without predefined job definitions for maximum flexibility.
+              </div>
+              <div class="int-card-tags">
+                <span class="badge rose">Advanced</span>
+                <span class="badge sky">Automated</span>
+                <span class="badge purple">Scripted</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="infobox trap">
+            <div class="infobox-icon">⚠️</div>
+            <div class="infobox-body"><strong>EPCM does not integrate with:</strong> EPM Planning (EPBCS/PBCS), Projects module, or Oracle Fusion Cloud Project Management. If you need to pull planning data into EPCM, you'll need a file-based workaround or Groovy script to call EPCM REST APIs from another EPM process.</div>
+          </div>
+        </section>
+
+        <section class="section" id="writeback">
+          <div class="sec-type-bar"><div class="sec-type-icon conceptual">📤</div><span class="sec-type-label conceptual">Conceptual</span></div>
+          <h2 class="sec-h">Writeback - closing the loop</h2>
+          <div class="sec-div"></div>
+          <p class="sec-sub">Writeback enables allocated costs to flow from EPCM back to Oracle ERP Cloud General Ledger as journal entries - completing the profitability cycle.</p>
+
+          <p class="prose">When NovaPrism's $52M IT allocation runs in EPCM, the result is a detailed breakdown showing how much IT cost each of the 60 engagements consumed. That's useful for management reporting - but the real value comes when those allocated costs appear in the ERP system where executives can see them alongside revenue and margin in their standard financial reports.</p>
+
+          <p class="prose"><strong>Writeback creates journal entries</strong> in Oracle ERP Cloud's General Ledger. The process extracts EPCM allocation results, maps them to GL account codes and legal entity structures, and posts journals that offset the original cost pool while crediting the receiving cost objects. The result: your ERP now shows fully-loaded costs at the engagement level.</p>
+
+          <div class="tbl-wrap">
+            <table class="tbl">
+              <thead><tr><th>Writeback Method</th><th>Target</th><th>Use Case</th></tr></thead>
+              <tbody>
+                <tr><td><strong>Oracle ERP Cloud Writeback</strong></td><td>General Ledger journals</td><td>Standard writeback for Oracle Fusion Cloud customers. Creates actual or budget journals.</td></tr>
+                <tr><td><strong>EPM Integration Agent</strong></td><td>On-premises databases</td><td>Writeback to on-premises Oracle DB, SQL Server, or other databases via the EPM Agent.</td></tr>
+                <tr><td><strong>File Export</strong></td><td>CSV/TXT files</td><td>Export allocation results to files for manual upload or third-party ETL processing.</td></tr>
+                <tr><td><strong>REST API Export</strong></td><td>External systems</td><td>Programmatic export for custom integrations, data warehouses, or reporting systems.</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="infobox tip">
+            <div class="infobox-icon">💡</div>
+            <div class="infobox-body"><strong>Best practice:</strong> Always validate EPCM allocation results using Rule Balancing (Hall 7) before triggering writeback. A misconfigured allocation that writes incorrect journals to the GL can take days to reverse. NovaPrism runs a validation ruleset that checks pool totals balance to zero before any writeback job executes.</div>
+          </div>
+        </section>
+
+      </div><!-- /conceptual -->
+
+      <!-- ═══════ TAB 2: TECHNICAL ═══════ -->
+      <div class="tab-panel" id="tab-technical">
+
+        <section class="section" id="registration">
+          <div class="sec-type-bar"><div class="sec-type-icon technical">⚙️</div><span class="sec-type-label technical">Technical</span></div>
+          <h2 class="sec-h">Registering EPCM as source and target</h2>
+          <div class="sec-div"></div>
+          <p class="sec-sub">Before you can integrate data, you must register the EPCM application in Data Integration. The registration type depends on where the data is coming from or going to.</p>
+
+          <div class="tbl-wrap">
+            <table class="tbl">
+              <thead><tr><th>Registration Type</th><th>When to Use</th><th>Configuration</th></tr></thead>
+              <tbody>
+                <tr><td><strong>Local Application</strong></td><td>Integrating within the same EPM instance (e.g., EPCM to same-instance FCCS)</td><td>Select the EPCM application directly from the instance application list.</td></tr>
+                <tr><td><strong>Cloud EPM Application</strong></td><td>Pulling from a separate EPM instance</td><td>Configure a source connection specifying the remote instance URL and credentials.</td></tr>
+                <tr><td><strong>Oracle ERP Cloud</strong></td><td>Direct integration with Oracle Fusion ERP</td><td>Configure ERP Cloud connection with credentials and ledger/chart of accounts mapping.</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="code-block">
+            <span class="code-label">Navigation - Register EPCM Application</span>
+            <pre><span class="cm">/* Data Integration registration path */</span>
+
+Navigator > Data Integration > Actions > Applications
+  > Register > EPM Cloud Application
+    > Application: [Your EPCM App Name]
+    > Application Type: Enterprise Profitability and Cost Management
+    > Category: Planning  <span class="cm">/* Note: EPCM is categorised under Planning */</span>
+    > Prefix: <span class="str">"EPCM_"</span>  <span class="cm">/* Optional naming prefix */</span></pre>
+          </div>
+
+          <div class="infobox note">
+            <div class="infobox-icon">📋</div>
+            <div class="infobox-body"><strong>EPCM registration note:</strong> Even though EPCM is a distinct EPM application, it's registered under the "Planning" category in Data Integration. This is because EPCM uses the Essbase calculation engine shared with Planning applications. Don't let the category name confuse you.</div>
+          </div>
+        </section>
+
+        <section class="section" id="mapping">
+          <div class="sec-type-bar"><div class="sec-type-icon technical">🗺️</div><span class="sec-type-label technical">Technical</span></div>
+          <h2 class="sec-h">Member mapping - source to target</h2>
+          <div class="sec-div"></div>
+          <p class="sec-sub">Mapping transforms source system values (GL account codes, cost centre IDs) into EPCM dimension members. Get this wrong and your data lands in the wrong places.</p>
+
+          <p class="prose">NovaPrism's GL uses account code <code>6100-IT-CORP</code> for corporate IT costs. EPCM's Account dimension has a member called <code>IT_Cost_Pool</code>. The mapping rule transforms the source value to the target member. Mappings can be <strong>explicit</strong> (one-to-one), <strong>like</strong> (pattern matching), <strong>between</strong> (range), or <strong>multi-dimensional</strong> (combining multiple source columns).</p>
+
+          <div class="pattern-grid">
+            <div class="pattern-card">
+              <div class="pc-top">
+                <span class="pc-badge" style="background:var(--accent-dim);color:var(--accent);border:1px solid var(--accent-border)">Mapping Type</span>
+                <div class="pc-name">Explicit Mapping</div>
+                <div class="pc-when">One source value = one target member</div>
+              </div>
+              <div class="pc-body">
+                <div class="pc-desc">Source: <code>6100-IT-CORP</code> -> Target: <code>IT_Cost_Pool</code><br>Use when source values have a direct 1:1 relationship with EPCM members. Most common for account and entity mappings.</div>
+              </div>
+            </div>
+            <div class="pattern-card">
+              <div class="pc-top">
+                <span class="pc-badge" style="background:var(--accent-dim);color:var(--accent);border:1px solid var(--accent-border)">Mapping Type</span>
+                <div class="pc-name">Like Mapping</div>
+                <div class="pc-when">Pattern matching with wildcards</div>
+              </div>
+              <div class="pc-body">
+                <div class="pc-desc">Source: <code>61*</code> -> Target: <code>IT_Cost_Pool</code><br>Use when multiple source values should map to the same target. The asterisk (*) matches any characters. Good for account ranges.</div>
+              </div>
+            </div>
+            <div class="pattern-card">
+              <div class="pc-top">
+                <span class="pc-badge" style="background:var(--accent-dim);color:var(--accent);border:1px solid var(--accent-border)">Mapping Type</span>
+                <div class="pc-name">Between Mapping</div>
+                <div class="pc-when">Numeric range matching</div>
+              </div>
+              <div class="pc-body">
+                <div class="pc-desc">Source: <code>6100 to 6199</code> -> Target: <code>IT_Cost_Pool</code><br>Use for numeric account codes where a range of values should map to a single target. Cleaner than multiple explicit mappings.</div>
+              </div>
+            </div>
+            <div class="pattern-card">
+              <div class="pc-top">
+                <span class="pc-badge" style="background:var(--accent-dim);color:var(--accent);border:1px solid var(--accent-border)">Mapping Type</span>
+                <div class="pc-name">Multi-Dimensional</div>
+                <div class="pc-when">Combining source columns</div>
+              </div>
+              <div class="pc-body">
+                <div class="pc-desc">Source: <code>Account=6100</code> + <code>CostCentre=CORP</code> -> Target: <code>IT_Cost_Pool</code><br>Use when the target member depends on multiple source values combined. Essential for complex GL structures.</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="infobox trap">
+            <div class="infobox-icon">⚠️</div>
+            <div class="infobox-body"><strong>Mapping trap:</strong> Unmapped source values are rejected during load. If NovaPrism adds a new GL account <code>6150-IT-CLOUD</code> but forgets to add a mapping, those costs won't load. Always review the integration error log after each run and add mappings for new source values before they accumulate.</div>
+          </div>
+        </section>
+
+        <section class="section" id="smart-view">
+          <div class="sec-type-bar"><div class="sec-type-icon technical">📊</div><span class="sec-type-label technical">Technical</span></div>
+          <h2 class="sec-h">Smart View integration</h2>
+          <div class="sec-div"></div>
+          <p class="sec-sub">Oracle Smart View for Office provides Excel-based data entry, retrieval, and ad-hoc analysis for EPCM data. It's how power users interact with the model without using the web interface.</p>
+
+          <p class="prose">Smart View connects to EPCM via the EPM Cloud connection URL. Users can <strong>retrieve</strong> allocation results into Excel for analysis, <strong>submit</strong> driver data (headcount, square footage) directly from spreadsheets, and <strong>refresh</strong> forms to see the latest calculated values. For NovaPrism, the finance team uses Smart View to submit monthly driver updates for all 60 engagements - much faster than web form entry.</p>
+
+          <div class="code-block">
+            <span class="code-label">Smart View - Connection URL Pattern</span>
+            <pre><span class="cm">/* EPM Cloud Smart View connection URL */</span>
+https://<span class="fn">[instance]</span>.epm.<span class="fn">[datacenter]</span>.oraclecloud.com/epmcloud/SmartViewProviders
+
+<span class="cm">/* Example for US datacenter */</span>
+https://<span class="str">novaprism-epm</span>.epm.<span class="str">us6</span>.oraclecloud.com/epmcloud/SmartViewProviders
+
+<span class="cm">/* After connection, select: */</span>
+  > EPM Cloud > Enterprise Profitability and Cost Management
+    > [Application Name] > [Cube/Database]</pre>
+          </div>
+        </section>
+
+      </div><!-- /technical -->
+
+      <!-- ═══════ TAB 3: PIPELINES ═══════ -->
+      <div class="tab-panel" id="tab-pipeline">
+
+        <section class="section" id="pipeline-overview">
+          <div class="sec-type-bar"><div class="sec-type-icon interactive">🔗</div><span class="sec-type-label interactive">Interactive</span></div>
+          <h2 class="sec-h">The Pipeline - orchestrating end-to-end integration</h2>
+          <div class="sec-div"></div>
+          <p class="sec-sub">A Pipeline chains multiple jobs into a single automated process - from data extraction through transformation, loading, calculation, and writeback. It's the backbone of production EPCM deployments.</p>
+
+          <div class="pipeline-diagram">
+            <div class="pipeline-title">NovaPrism Monthly Profitability Pipeline</div>
+            <div class="pipeline-flow">
+              <div class="pipeline-node source">
+                <div class="pipeline-node-icon">🏢</div>
+                <div class="pipeline-node-label">Extract</div>
+                <div class="pipeline-node-detail">Oracle ERP GL</div>
+              </div>
+              <div class="pipeline-arrow">→</div>
+              <div class="pipeline-node transform">
+                <div class="pipeline-node-icon">🔄</div>
+                <div class="pipeline-node-label">Map</div>
+                <div class="pipeline-node-detail">Member Mapping</div>
+              </div>
+              <div class="pipeline-arrow">→</div>
+              <div class="pipeline-node target">
+                <div class="pipeline-node-icon">📥</div>
+                <div class="pipeline-node-label">Load</div>
+                <div class="pipeline-node-detail">EPCM Actuals</div>
+              </div>
+              <div class="pipeline-arrow">→</div>
+              <div class="pipeline-node transform">
+                <div class="pipeline-node-icon">⚡</div>
+                <div class="pipeline-node-label">Calculate</div>
+                <div class="pipeline-node-detail">Run Rulesets</div>
+              </div>
+              <div class="pipeline-arrow">→</div>
+              <div class="pipeline-node source">
+                <div class="pipeline-node-icon">📤</div>
+                <div class="pipeline-node-label">Writeback</div>
+                <div class="pipeline-node-detail">GL Journals</div>
+              </div>
+            </div>
+          </div>
+
+          <p class="prose">NovaPrism's monthly pipeline runs on the 3rd business day of each month. It extracts the prior month's GL actuals, maps them to EPCM dimensions, loads into the Actuals scenario, executes all five allocation rulesets (seq:10 through seq:50), validates balances, and writes allocated costs back to the ERP. Total runtime: ~12 minutes for $134M across 60 engagements.</p>
+        </section>
+
+        <section class="section" id="pipeline-jobs">
+          <div class="sec-type-bar"><div class="sec-type-icon interactive">📋</div><span class="sec-type-label interactive">Interactive</span></div>
+          <h2 class="sec-h">Pipeline job types for EPCM</h2>
+          <div class="sec-div"></div>
+          <p class="sec-sub">Not all Pipeline job types are available for EPCM. Here are the four platform job types supported, plus key integration jobs.</p>
+
+          <div class="tbl-wrap">
+            <table class="tbl">
+              <thead><tr><th>Job Type</th><th>Purpose</th><th>EPCM Support</th></tr></thead>
+              <tbody>
+                <tr><td><strong>Integration</strong></td><td>Load data from source to EPCM target</td><td><span class="badge green">Supported</span></td></tr>
+                <tr><td><strong>Clear Cube</strong></td><td>Clear data from specific POV before load</td><td><span class="badge green">Supported</span></td></tr>
+                <tr><td><strong>Export Data</strong></td><td>Export EPCM data to file or target system</td><td><span class="badge green">Supported</span></td></tr>
+                <tr><td><strong>EPM Platform Job</strong></td><td>Execute platform-level operations</td><td><span class="badge green">4 Types Only</span></td></tr>
+                <tr><td><strong>Business Rule (Calc Mgr)</strong></td><td>Run Calculation Manager business rules</td><td><span class="badge green">Via Pipeline</span></td></tr>
+                <tr><td><strong>EPCM Rules/Rulesets</strong></td><td>Run native EPCM rules and rulesets</td><td><span class="badge red">Not Supported</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="infobox trap">
+            <div class="infobox-icon">⚠️</div>
+            <div class="infobox-body"><strong>Critical limitation:</strong> You cannot call native EPCM rules or rulesets directly from a Pipeline. Only Calculation Manager-based business rules are supported. To run EPCM allocations from a Pipeline, create a Calculation Manager rule that calls the EPCM ruleset via Groovy script or REST API. This is the workaround NovaPrism uses for their automated monthly close.</div>
+          </div>
+        </section>
+
+        <section class="section" id="pipeline-design">
+          <div class="sec-type-bar"><div class="sec-type-icon interactive">🏗️</div><span class="sec-type-label interactive">Interactive</span></div>
+          <h2 class="sec-h">Designing NovaPrism's Pipeline</h2>
+          <div class="sec-div"></div>
+          <p class="sec-sub">A well-designed Pipeline handles errors gracefully, logs each step, and can be restarted from the point of failure.</p>
+
+          <div class="lab-steps">
+            <div class="lab-step">
+              <div class="lab-step-num">1</div>
+              <div class="lab-step-body">
+                <div class="lab-step-title">Clear Prior Period Data</div>
+                <div class="lab-step-desc">Use Clear Cube job to remove prior month's actuals from the target POV. This prevents double-counting if the pipeline is re-run.</div>
+              </div>
+            </div>
+            <div class="lab-step">
+              <div class="lab-step-num">2</div>
+              <div class="lab-step-body">
+                <div class="lab-step-title">Extract GL Actuals</div>
+                <div class="lab-step-desc">Pull GL balances from Oracle ERP Cloud for accounts 6100-6499 (indirect cost accounts) for the prior closed period.</div>
+              </div>
+            </div>
+            <div class="lab-step">
+              <div class="lab-step-num">3</div>
+              <div class="lab-step-body">
+                <div class="lab-step-title">Apply Member Mappings</div>
+                <div class="lab-step-desc">Transform GL account codes to EPCM Account members, cost centres to Entity members, and period codes to Time members.</div>
+              </div>
+            </div>
+            <div class="lab-step">
+              <div class="lab-step-num">4</div>
+              <div class="lab-step-body">
+                <div class="lab-step-title">Load to EPCM</div>
+                <div class="lab-step-desc">Integration job loads mapped data into EPCM at POV: Actuals / Working / [Current Period]. Validate row counts match source.</div>
+              </div>
+            </div>
+            <div class="lab-step">
+              <div class="lab-step-num">5</div>
+              <div class="lab-step-body">
+                <div class="lab-step-title">Run Allocation Rulesets</div>
+                <div class="lab-step-desc">EPM Platform Job calls Groovy rule that executes seq:10 through seq:50 in order. Each ruleset logs completion status.</div>
+              </div>
+            </div>
+            <div class="lab-step">
+              <div class="lab-step-num">6</div>
+              <div class="lab-step-body">
+                <div class="lab-step-title">Validate Balances</div>
+                <div class="lab-step-desc">Run Rule Balancing validation. If PCM_Balance doesn't sum to zero, halt pipeline and alert finance team.</div>
+              </div>
+            </div>
+            <div class="lab-step">
+              <div class="lab-step-num">7</div>
+              <div class="lab-step-body">
+                <div class="lab-step-title">Writeback to GL</div>
+                <div class="lab-step-desc">Export allocated costs and create GL journal entries in Oracle ERP Cloud. Journal name: "EPCM Allocation - [Period]".</div>
+              </div>
+            </div>
+            <div class="lab-step">
+              <div class="lab-step-num">8</div>
+              <div class="lab-step-body">
+                <div class="lab-step-title">Send Completion Notification</div>
+                <div class="lab-step-desc">Email finance team with pipeline status, row counts, and link to profitability dashboard.</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="infobox tip">
+            <div class="infobox-icon">💡</div>
+            <div class="infobox-body"><strong>Pipeline best practice:</strong> Add a validation step after each major operation. NovaPrism's pipeline checks: (1) row count matches source after load, (2) pool totals match expected amounts after load, (3) PCM_Balance sums to zero after allocation. Any validation failure stops the pipeline before bad data propagates downstream.</div>
+          </div>
+        </section>
+
+      </div><!-- /pipeline -->
+
+      <!-- ═══════ TAB 4: LAB ═══════ -->
+      <div class="tab-panel" id="tab-lab">
+
+        <section class="section" id="lab-8-1">
+          <div class="sec-type-bar"><div class="sec-type-icon lab">🔬</div><span class="sec-type-label lab">Lab 8.1</span></div>
+          <h2 class="sec-h">Lab: Create a file-based integration for driver data</h2>
+          <div class="sec-div"></div>
+          <p class="sec-sub">NovaPrism's driver data (headcount, IT tickets) comes from a monthly CSV export. In this lab, you'll create a Data Integration job to load that file into EPCM.</p>
+
+          <div class="lab-steps">
+            <div class="lab-step">
+              <div class="lab-step-num">1</div>
+              <div class="lab-step-body">
+                <div class="lab-step-title">Navigate to Data Integration</div>
+                <div class="lab-step-desc">Home > Data Integration > Create Integration. Select "File" as the source type.</div>
+              </div>
+            </div>
+            <div class="lab-step">
+              <div class="lab-step-num">2</div>
+              <div class="lab-step-body">
+                <div class="lab-step-title">Upload Sample Driver File</div>
+                <div class="lab-step-desc">Upload <code>NP_Drivers_M01.csv</code> containing: Entity, Account, Driver_Value columns. Preview the data to confirm format.</div>
+              </div>
+            </div>
+            <div class="lab-step">
+              <div class="lab-step-num">3</div>
+              <div class="lab-step-body">
+                <div class="lab-step-title">Map Source Columns to Dimensions</div>
+                <div class="lab-step-desc">Map Entity column to Entity dimension, Account column to Account dimension. Driver_Value maps to the data value.</div>
+              </div>
+            </div>
+            <div class="lab-step">
+              <div class="lab-step-num">4</div>
+              <div class="lab-step-body">
+                <div class="lab-step-title">Create Member Mappings</div>
+                <div class="lab-step-desc">Map source entity codes (DS, IS, CL, ES) to EPCM members. Map driver account codes to EPCM driver members (Headcount, IT_Tickets, SqFt).</div>
+              </div>
+            </div>
+            <div class="lab-step">
+              <div class="lab-step-num">5</div>
+              <div class="lab-step-body">
+                <div class="lab-step-title">Set Target POV</div>
+                <div class="lab-step-desc">Target: Scenario = Actuals, Version = Working, Period = Jan-25. This is where driver data will load.</div>
+              </div>
+            </div>
+            <div class="lab-step">
+              <div class="lab-step-num">6</div>
+              <div class="lab-step-body">
+                <div class="lab-step-title">Run Integration</div>
+                <div class="lab-step-desc">Execute the integration. Review the process log for row counts. Verify data loaded by checking driver forms in EPCM.</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="code-block">
+            <span class="code-label">Sample Driver File - NP_Drivers_M01.csv</span>
+            <pre>Entity,Account,Driver_Value
+DS,Headcount,340
+DS,IT_Tickets,1240
+DS,SqFt,12000
+IS,Headcount,520
+IS,IT_Tickets,2890
+IS,SqFt,18500
+CL,Headcount,85
+CL,IT_Tickets,410
+CL,SqFt,3200
+ES,Headcount,55
+ES,IT_Tickets,0
+ES,SqFt,2100</pre>
+          </div>
+        </section>
+
+        <section class="section" id="lab-8-2">
+          <div class="sec-type-bar"><div class="sec-type-icon lab">🔬</div><span class="sec-type-label lab">Lab 8.2</span></div>
+          <h2 class="sec-h">Lab: Configure ERP Cloud writeback</h2>
+          <div class="sec-div"></div>
+          <p class="sec-sub">After allocations run, write the results back to Oracle ERP Cloud General Ledger as journal entries.</p>
+
+          <div class="lab-steps">
+            <div class="lab-step">
+              <div class="lab-step-num">1</div>
+              <div class="lab-step-body">
+                <div class="lab-step-title">Create Writeback Integration</div>
+                <div class="lab-step-desc">Data Integration > Create Integration. Source: EPCM application. Target: Oracle ERP Cloud (GL Writeback).</div>
+              </div>
+            </div>
+            <div class="lab-step">
+              <div class="lab-step-num">2</div>
+              <div class="lab-step-body">
+                <div class="lab-step-title">Select Source POV</div>
+                <div class="lab-step-desc">Source: Scenario = Actuals, Version = Working, Period = Jan-25. Select PCM_Allocated_In and PCM_Allocated_Out members for writeback.</div>
+              </div>
+            </div>
+            <div class="lab-step">
+              <div class="lab-step-num">3</div>
+              <div class="lab-step-body">
+                <div class="lab-step-title">Map to GL Account Structure</div>
+                <div class="lab-step-desc">Map EPCM Account members back to GL account codes. Map Entity members to GL cost centres. Configure journal category and source.</div>
+              </div>
+            </div>
+            <div class="lab-step">
+              <div class="lab-step-num">4</div>
+              <div class="lab-step-body">
+                <div class="lab-step-title">Configure Journal Options</div>
+                <div class="lab-step-desc">Journal Name: "EPCM Allocation - Jan-25". Category: Allocations. Source: EPCM. Accounting Date: Last day of period.</div>
+              </div>
+            </div>
+            <div class="lab-step">
+              <div class="lab-step-num">5</div>
+              <div class="lab-step-body">
+                <div class="lab-step-title">Test Writeback</div>
+                <div class="lab-step-desc">Run in "Validate" mode first to check for mapping errors without creating actual journals. Review validation report.</div>
+              </div>
+            </div>
+            <div class="lab-step">
+              <div class="lab-step-num">6</div>
+              <div class="lab-step-body">
+                <div class="lab-step-title">Execute Production Writeback</div>
+                <div class="lab-step-desc">After validation passes, run in "Production" mode. Verify journal created in Oracle ERP Cloud GL > Journals > Manage Journals.</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+      </div><!-- /lab -->
+
+      <!-- ═══════ TAB 5: EXAM PREP ═══════ -->
+      <div class="tab-panel" id="tab-exam">
+
+        <section class="section" id="exam-quiz">
+          <div class="sec-type-bar"><div class="sec-type-icon exam">📝</div><span class="sec-type-label exam">Exam Preparation</span></div>
+          <h2 class="sec-h">Data Integration Quiz - 5 Questions</h2>
+          <div class="sec-div"></div>
+          <p class="sec-sub">Test your understanding of EPCM Data Integration concepts. These questions reflect topics covered in the 1Z0-1082-25 exam.</p>
+
+          <div id="quiz-container">
+            <!-- Quiz questions inserted by JS -->
+          </div>
+          <div class="quiz-score-box" id="quiz-score" style="display:none;">
+            <div class="quiz-score-val" id="quiz-score-val">0/5</div>
+            <div class="quiz-score-label">Quiz Score</div>
+            <div class="quiz-score-msg" id="quiz-score-msg"></div>
+          </div>
+        </section>
+
+        <section class="section" id="exam-takeaways">
+          <div class="sec-type-bar"><div class="sec-type-icon exam">🎯</div><span class="sec-type-label exam">Key Exam Takeaways</span></div>
+          <h2 class="sec-h">What to remember for 1Z0-1082-25</h2>
+          <div class="sec-div"></div>
+
+          <div class="tbl-wrap">
+            <table class="tbl">
+              <thead><tr><th>Topic</th><th>Key Point</th><th>Exam Tip</th></tr></thead>
+              <tbody>
+                <tr><td><strong>EPCM Registration</strong></td><td>EPCM can be both source and target</td><td>Know that EPCM registers under "Planning" category despite being a separate application.</td></tr>
+                <tr><td><strong>Integration Limitations</strong></td><td>EPCM does not integrate with EPM Planning or Projects</td><td>This is a common trap question. EPCM integrates with ERP Cloud and other EPM processes except Planning.</td></tr>
+                <tr><td><strong>Pipeline EPCM Rules</strong></td><td>Native EPCM rules cannot be called directly from Pipeline</td><td>Only Calculation Manager rules work in Pipeline. Use Groovy to call EPCM REST APIs as workaround.</td></tr>
+                <tr><td><strong>Writeback</strong></td><td>Creates GL journal entries</td><td>Understand that writeback creates actual journal entries, not just data exports.</td></tr>
+                <tr><td><strong>Mapping Types</strong></td><td>Explicit, Like, Between, Multi-Dimensional</td><td>Know when to use each mapping type. "Like" uses wildcards, "Between" uses numeric ranges.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+      </div><!-- /exam -->
+
+      <!-- ── HALL NAV FOOTER ── -->
+      <div class="hall-nav-footer">
+        <a href="hall-7.html" class="hnf-prev">
+          <div><div class="hnf-dir">Previous Hall</div><div class="hnf-name">Observatory - Rule Balancing</div></div>
+        </a>
+        <a href="hall-9.html" class="hnf-next">
+          <div><div class="hnf-dir">Next Hall</div><div class="hnf-name">Examination Hall - Graduation</div></div>
+        </a>
+      </div>
+
+    </main>
+
+  </div><!-- /body -->
+
+</div><!-- /app -->
+
+<script src="constants.js"></script>
+<script>
+// ── CONSTANTS FROM NP DATA ──
+const NP = window.NP || {
+  company: { name: 'NovaPrism Group', tagline: '$134M indirect cost challenge' },
+  divisions: ['DS','IS','CL','ES'],
+  costPools: { IT: { amount: 52000000 }, Facilities: { amount: 38000000 }, Finance: { amount: 28000000 }, HR: { amount: 16000000 } }
+};
+
+// ── SIDEBAR COMPANY ──
+document.getElementById('sb-company-name').textContent = NP.company?.name || 'NovaPrism Group';
+document.getElementById('sb-company-desc').textContent = NP.company?.tagline || '$134M indirect cost challenge';
+
+// ── STARS ──
+(function(){
+  const c = document.getElementById('stars');
+  for(let i=0; i<50; i++){
+    const s = document.createElement('div');
+    s.className = 'star';
+    const sz = Math.random()*1.2 + 0.4;
+    s.style.cssText = `width:${sz}px;height:${sz}px;top:${Math.random()*100}%;left:${Math.random()*100}%;--d:${3+Math.random()*5}s;--delay:${Math.random()*6}s;--op:${0.06+Math.random()*0.1}`;
+    c.appendChild(s);
+  }
+})();
+
+// ── CAMPUS MAP ──
+const halls = [
+  {n:1, name:'Foundations', href:'hall-1.html'},
+  {n:2, name:'Dimensions', href:'hall-2.html'},
+  {n:3, name:'Models', href:'hall-3.html'},
+  {n:4, name:'Logic', href:'hall-4.html'},
+  {n:5, name:'Workshop', href:'hall-5.html'},
+  {n:6, name:'Control', href:'hall-6.html'},
+  {n:7, name:'Observatory', href:'hall-7.html'},
+  {n:8, name:'Pipeline', href:'hall-8.html'},
+  {n:9, name:'Exam', href:'hall-9.html'}
+];
+const currentHall = 8;
+const mapRow = document.getElementById('campus-map');
+halls.forEach((h,i) => {
+  const stop = document.createElement('div');
+  stop.className = 'campus-stop' + (h.n === currentHall ? ' active-stop' : (h.n < currentHall ? ' done-stop' : ''));
+  const bld = document.createElement('a');
+  bld.href = h.href;
+  bld.className = 'campus-building' + (h.n === currentHall ? ' active' : (h.n < currentHall ? ' done' : ''));
+  bld.textContent = h.n;
+  const lbl = document.createElement('div');
+  lbl.className = 'campus-stop-label';
+  lbl.textContent = h.name;
+  stop.appendChild(bld);
+  stop.appendChild(lbl);
+  mapRow.appendChild(stop);
+  if(i < halls.length - 1){
+    const conn = document.createElement('div');
+    conn.className = 'campus-connector';
+    mapRow.appendChild(conn);
+  }
+});
+
+// ── TABS ──
+function switchTab(id, btn){
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + id).classList.add('active');
+  btn.classList.add('active');
+}
+
+// ── SIDEBAR TOGGLE ──
+function toggleSidebar(){
+  document.getElementById('sidebar').classList.toggle('open');
+  document.getElementById('overlay').classList.toggle('open');
+}
+function closeSidebar(){
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('overlay').classList.remove('open');
+}
+
+// ── DEAN ELIOT CHAT ──
+function chipAsk(el){ sbAsk(el.textContent); }
+function sbSend(){
+  const input = document.getElementById('sb-input');
+  const q = input.value.trim();
+  if(!q) return;
+  input.value = '';
+  sbAsk(q);
+}
+function sbAsk(q){
+  const msgs = document.getElementById('sb-msgs');
+  const uMsg = document.createElement('div');
+  uMsg.className = 'sb-msg user';
+  uMsg.textContent = q;
+  msgs.appendChild(uMsg);
+  const typing = document.createElement('div');
+  typing.className = 'sb-msg guide typing';
+  typing.textContent = 'Dean Eliot is thinking...';
+  msgs.appendChild(typing);
+  msgs.scrollTop = msgs.scrollHeight;
+  setTimeout(() => {
+    typing.remove();
+    const gMsg = document.createElement('div');
+    gMsg.className = 'sb-msg guide';
+    gMsg.innerHTML = getDeanResponse(q);
+    msgs.appendChild(gMsg);
+    msgs.scrollTop = msgs.scrollHeight;
+  }, 800 + Math.random()*600);
+}
+function getDeanResponse(q){
+  const ql = q.toLowerCase();
+  if(ql.includes('data integration') || ql.includes('what is')) return "Data Integration connects your source systems to EPCM. You can pull GL actuals from Oracle ERP Cloud, load driver data from files, and write allocated costs back to the General Ledger. It's how your profitability model stays current with real data.";
+  if(ql.includes('actuals') || ql.includes('erp') || ql.includes('load')) return "To load actuals from Oracle ERP Cloud: register your EPCM app in Data Integration, configure a source connection to ERP, create member mappings from GL accounts to EPCM members, and run the integration. NovaPrism pulls $134M of indirect costs this way monthly.";
+  if(ql.includes('pipeline')) return "A Pipeline orchestrates multiple integration jobs as a single automated process. For EPCM, you'd chain: Clear Cube > Load Actuals > Run Allocations > Validate > Writeback. The catch: native EPCM rules can't be called directly - use Groovy to call EPCM REST APIs instead.";
+  if(ql.includes('write') || ql.includes('journal') || ql.includes('gl')) return "Yes, EPCM can write allocated costs back to Oracle ERP Cloud's General Ledger. Writeback creates actual journal entries that post to your financial accounts. This closes the loop - actuals in, allocations run, results visible in ERP for executive reporting.";
+  if(ql.includes('smart view')) return "Smart View connects to EPCM via the EPM Cloud URL. Users can retrieve allocation results into Excel, submit driver data from spreadsheets, and refresh forms. It's faster than web forms for bulk data entry like NovaPrism's 60-engagement driver updates.";
+  return "Good question about Data Integration! The key points: EPCM can be both source and target, it integrates with ERP Cloud but not EPM Planning, and Pipeline jobs can't call native EPCM rules directly. What specific aspect would you like me to explain further?";
+}
+
+// ── QUIZ ──
+const quizData = [
+  {
+    q: "Which of the following can EPCM integrate with using Data Integration?",
+    opts: ["Oracle ERP Cloud General Ledger", "EPM Planning (EPBCS)", "Oracle Fusion Project Management", "All of the above"],
+    correct: 0,
+    explain: "EPCM integrates with Oracle ERP Cloud GL and other Cloud EPM processes, but explicitly does NOT integrate with EPM Planning or Projects."
+  },
+  {
+    q: "When registering an EPCM application in Data Integration, under which category does it appear?",
+    opts: ["Profitability", "Planning", "Consolidation", "Cost Management"],
+    correct: 1,
+    explain: "Despite being a distinct application, EPCM registers under the 'Planning' category because it shares the Essbase calculation engine with Planning applications."
+  },
+  {
+    q: "Which statement about calling EPCM rules from a Pipeline is correct?",
+    opts: ["Native EPCM rules and rulesets can be called directly", "Only Calculation Manager business rules can be called", "All EPM business rules are supported", "Pipelines cannot execute any calculations"],
+    correct: 1,
+    explain: "Only Calculation Manager-based business rules can be called from a Pipeline. Native EPCM rules/rulesets are not supported - you must use Groovy to call EPCM REST APIs as a workaround."
+  },
+  {
+    q: "What does EPCM writeback create in Oracle ERP Cloud?",
+    opts: ["Data exports only", "Budget entries", "Journal entries in the General Ledger", "Sub-ledger transactions"],
+    correct: 2,
+    explain: "Writeback creates actual journal entries in Oracle ERP Cloud's General Ledger, allowing allocated costs to appear in the ERP system alongside revenue for executive reporting."
+  },
+  {
+    q: "Which mapping type would you use to map GL accounts 6100-6199 to a single EPCM member?",
+    opts: ["Explicit mapping", "Like mapping", "Between mapping", "Multi-dimensional mapping"],
+    correct: 2,
+    explain: "Between mapping is used for numeric ranges. 'Between 6100 and 6199' would map all accounts in that range to a single target member. Like mapping uses wildcards (*), not numeric ranges."
+  }
+];
+
+const quizContainer = document.getElementById('quiz-container');
+let answered = 0;
+let score = 0;
+
+quizData.forEach((item, idx) => {
+  const card = document.createElement('div');
+  card.className = 'quiz-card';
+  card.id = 'quiz-' + idx;
+  card.innerHTML = `
+    <div class="quiz-q-row">
+      <div class="quiz-q-num">${idx+1}</div>
+      <div class="quiz-q-text">${item.q}</div>
+    </div>
+    <div class="quiz-opts">
+      ${item.opts.map((opt, oi) => `
+        <label class="quiz-opt" data-idx="${oi}">
+          <input type="radio" name="q${idx}" value="${oi}">
+          <span class="quiz-opt-marker">&#10003;</span>
+          <span class="quiz-opt-text">${opt}</span>
+        </label>
+      `).join('')}
+    </div>
+    <button class="quiz-submit" onclick="submitQuiz(${idx})">Check Answer</button>
+    <div class="quiz-feedback" id="fb-${idx}"></div>
+  `;
+  quizContainer.appendChild(card);
+});
+
+function submitQuiz(idx){
+  const card = document.getElementById('quiz-' + idx);
+  if(card.classList.contains('answered')) return;
+  const selected = card.querySelector('input:checked');
+  if(!selected) return;
+  const selIdx = parseInt(selected.value);
+  const item = quizData[idx];
+  card.classList.add('answered');
+  const opts = card.querySelectorAll('.quiz-opt');
+  opts.forEach((opt, oi) => {
+    if(oi === item.correct) opt.classList.add('correct-answer');
+    else if(oi === selIdx) opt.classList.add('wrong-answer');
+  });
+  const fb = document.getElementById('fb-' + idx);
+  if(selIdx === item.correct){
+    card.classList.add('correct');
+    fb.className = 'quiz-feedback correct';
+    fb.innerHTML = '<strong>Correct!</strong> ' + item.explain;
+    score++;
+  } else {
+    card.classList.add('wrong');
+    fb.className = 'quiz-feedback wrong';
+    fb.innerHTML = '<strong>Incorrect.</strong> ' + item.explain;
+  }
+  answered++;
+  if(answered === quizData.length){
+    const box = document.getElementById('quiz-score');
+    box.style.display = 'block';
+    document.getElementById('quiz-score-val').textContent = score + '/' + quizData.length;
+    const pct = Math.round(score/quizData.length*100);
+    let msg = pct >= 80 ? 'Excellent! You have a solid grasp of EPCM Data Integration.' : pct >= 60 ? 'Good effort. Review the Pipeline and writeback sections.' : 'Review this hall again before the exam.';
+    document.getElementById('quiz-score-msg').textContent = msg;
+  }
+}
+</script>
+</body>
+</html>
