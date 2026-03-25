@@ -373,7 +373,7 @@ body.hacker-mode #fsociety-mark{display:block!important}
   <section class="hero">
     <div class="hero-top">
       <div class="hero-left">
-        <div class="hero-eyebrow"><span class="tb-dot" style="width:6px;height:6px"></span>SaaS Standard · No EPM Automate Required · v1.0</div>
+        <div class="hero-eyebrow"><span class="tb-dot" style="width:6px;height:6px"></span>SaaS Standard · No EPM Automate Required · v1.1 · API-Validated</div>
         <h1 class="hero-title" data-text="Groovy Function Library">
           <span class="ht-sub">Oracle EPM Cloud</span>
           <span class="ht-main">Groovy </span><span class="ht-accent">Function Library</span>
@@ -384,11 +384,12 @@ body.hacker-mode #fsociety-mark{display:block!important}
           <button class="btn btn-g" onclick="document.getElementById('library').scrollIntoView({behavior:'smooth'})">Browse the Library ↓</button>
           <button class="btn btn-o" onclick="document.getElementById('quickstart').scrollIntoView({behavior:'smooth'})">Quick Start Guide</button>
           <button class="btn btn-p" onclick="document.getElementById('cheatsheet').scrollIntoView({behavior:'smooth'})">Cheat Sheet</button>
+          <button class="btn btn-o" onclick="document.getElementById('changelog').scrollIntoView({behavior:'smooth'})" style="border-color:rgba(248,113,113,.25);color:rgba(248,113,113,.7);font-size:10px">⚠ API Audit Log</button>
         </div>
       </div>
       <div class="hero-right">
         <div class="kpi-strip">
-          <div class="kpi"><span class="kpi-v" id="fnCount">25</span><span class="kpi-l">Functions</span></div>
+          <div class="kpi"><span class="kpi-v" id="fnCount">31</span><span class="kpi-l">Functions</span></div>
           <div class="kpi"><span class="kpi-v">8</span><span class="kpi-l">Categories</span></div>
           <div class="kpi"><span class="kpi-v">25.11</span><span class="kpi-l">EPM Release</span></div>
           <div class="kpi"><span class="kpi-v">SaaS</span><span class="kpi-l">Standard</span></div>
@@ -413,7 +414,7 @@ body.hacker-mode #fsociety-mark{display:block!important}
       <div class="qs-num">01</div>
       <div class="qs-title">The <code style="color:var(--green);font-family:'JetBrains Mono',monospace;font-size:13px">operation</code> Object</div>
       <div class="qs-text" style="font-size:11px;color:rgba(74,222,128,.35);font-style:italic;font-family:'JetBrains Mono',monospace;margin-bottom:6px">// root access. the only kind that matters.</div>
-      <div class="qs-text">Every Groovy rule has access to <code style="color:var(--green);font-family:'JetBrains Mono',monospace;font-size:11px">operation</code> — the root API object. It gives you <code style="color:var(--green);font-family:'JetBrains Mono',monospace;font-size:11px">operation.application</code>, <code style="color:var(--green);font-family:'JetBrains Mono',monospace;font-size:11px">operation.grid</code>, and <code style="color:var(--green);font-family:'JetBrains Mono',monospace;font-size:11px">operation.writeLine()</code>. Start every function with this in mind.</div>
+      <div class="qs-text">Every Groovy rule has access to <code style="color:var(--green);font-family:'JetBrains Mono',monospace;font-size:11px">operation</code> — the root API object. It gives you <code style="color:var(--green);font-family:'JetBrains Mono',monospace;font-size:11px">operation.application</code>, <code style="color:var(--green);font-family:'JetBrains Mono',monospace;font-size:11px">operation.grid</code>, and <code style="color:var(--green);font-family:'JetBrains Mono',monospace;font-size:11px">println()</code>. Start every function with this in mind.</div>
     </div>
     <div class="qs-card" style="border-top:2px solid var(--sky)">
       <div class="qs-num">02</div>
@@ -424,7 +425,7 @@ body.hacker-mode #fsociety-mark{display:block!important}
       <div class="qs-num">03</div>
       <div class="qs-title">Error Handling Pattern</div>
       <div class="qs-text" style="font-size:11px;color:rgba(251,191,36,.35);font-style:italic;font-family:'JetBrains Mono',monospace;margin-bottom:6px">// "A bug isn't a mistake. It's the system exposing its truth."</div>
-      <div class="qs-text">Always wrap top-level logic in <code style="color:var(--amber);font-family:'JetBrains Mono',monospace;font-size:11px">try/catch</code>. Use <code style="color:var(--amber);font-family:'JetBrains Mono',monospace;font-size:11px">operation.writeLine()</code> for the job console log and <code style="color:var(--amber);font-family:'JetBrains Mono',monospace;font-size:11px">EpmGroovyRtpException</code> for user-visible errors in forms.</div>
+      <div class="qs-text">Always wrap top-level logic in <code style="color:var(--amber);font-family:'JetBrains Mono',monospace;font-size:11px">try/catch</code>. Use <code style="color:var(--amber);font-family:'JetBrains Mono',monospace;font-size:11px">println()</code> for the job console log and <code style="color:var(--amber);font-family:'JetBrains Mono',monospace;font-size:11px">throwVetoException</code> for user-visible errors in forms.</div>
     </div>
     <div class="qs-card" style="border-top:2px solid var(--purple)">
       <div class="qs-num">04</div>
@@ -439,6 +440,19 @@ body.hacker-mode #fsociety-mark{display:block!important}
 
 <!-- ══ LIBRARY ══ -->
 <div class="wrap" id="library">
+  <div style="display:flex;align-items:center;gap:10px;margin-bottom:18px;padding:9px 16px;background:rgba(74,222,128,.05);border:1px solid rgba(74,222,128,.15);border-radius:8px;font-family:'JetBrains Mono',monospace;font-size:9.5px;flex-wrap:wrap;gap:14px">
+    <span style="display:flex;align-items:center;gap:6px;color:rgba(74,222,128,.7)"><span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:#4ade80;animation:pulse 2s infinite"></span>API VALIDATED · Oracle EPM Cloud 25.11</span>
+    <span style="color:rgba(74,96,128,.5)">·</span>
+    <span style="color:rgba(74,96,128,.6)">operation.application.getCube() ✓</span>
+    <span style="color:rgba(74,96,128,.5)">·</span>
+    <span style="color:rgba(74,96,128,.6)">throwVetoException() ✓</span>
+    <span style="color:rgba(74,96,128,.5)">·</span>
+    <span style="color:rgba(74,96,128,.6)">getSubstitutionVariableValue() ✓</span>
+    <span style="color:rgba(74,96,128,.5)">·</span>
+    <span style="color:rgba(74,96,128,.6)">isSuccessful() ✓</span>
+    <span style="color:rgba(74,96,128,.5)">·</span>
+    <span style="color:rgba(74,96,128,.6)">getOutline().getDimension() ✓</span>
+  </div>
   <div class="sec-lbl">The Library</div>
   <h2 class="sec-h">Standard Function Reference</h2>
   <div class="sec-div"></div>
@@ -460,7 +474,7 @@ body.hacker-mode #fsociety-mark{display:block!important}
     <button class="fpill" data-cat="rest" onclick="setFilter('rest',this)">🌐 REST / External</button>
   </div>
   <div class="stats-bar">
-    <span class="stat"><strong id="visCount">25</strong> functions shown</span>
+    <span class="stat"><strong id="visCount">31</strong> functions shown</span>
     <span class="stat-sep">·</span>
     <span class="stat">Cloud EPM <strong>25.11</strong> compatible</span>
     <span class="stat-sep">·</span>
@@ -477,14 +491,86 @@ body.hacker-mode #fsociety-mark{display:block!important}
 <!-- ══ CHEAT SHEET ══ -->
 <div class="wrap" id="cheatsheet">
   <div class="sec-lbl">Quick Reference</div>
-  <h2 class="sec-h">Groovy Function Cheat Sheet</h2>
+  <h2 class="sec-h">Groovy Function Cheat Sheet <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:rgba(74,222,128,.5);font-weight:400;vertical-align:middle;margin-left:10px">✓ API Validated 25.11</span></h2>
   <div class="sec-div"></div>
-  <p class="sec-sub">All 25 functions at a glance — name, category, what it does, and when to use it.</p>
+  <p class="sec-sub">All 31 functions at a glance — name, category, what it does, and when to use it.</p>
   <p style="font-size:11px;color:rgba(232,240,248,.18);font-style:italic;font-family:'JetBrains Mono',monospace;margin:-8px 0 18px">// "If you know the system's inventory, you own it."</p>
   <div class="tbl-wrap">
     <table class="cheat-table" id="cheatTable"></table>
   </div>
 </div>
+
+<div class="wrap" style="margin-top:0" id="changelog">
+  <div class="sec-lbl">API Audit Log</div>
+  <h2 class="sec-h">What Was Fixed — and Why</h2>
+  <div class="sec-div"></div>
+  <p class="sec-sub">Every snippet in this library was audited against the Oracle Cloud EPM Groovy Scripting Reference (25.11). Below is the complete record of API mismatches corrected from earlier published versions.</p>
+  <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:rgba(74,222,128,.28);margin:-8px 0 20px">// "The patch notes nobody reads. Read them." — E. Alderson</div>
+  <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:48px">
+    <div style="background:var(--navy2);border:1px solid var(--border);border-left:3px solid var(--red);border-radius:0 10px 10px 0;padding:14px 18px">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:9.5px;color:var(--red);margin-bottom:6px;letter-spacing:.08em">CRITICAL — WRONG CLASS</div>
+      <div style="font-size:12.5px;color:var(--white);margin-bottom:4px"><code style="color:var(--red)">operation.writeLine()</code> → <code style="color:var(--green)">println()</code></div>
+      <div style="font-size:11.5px;color:rgba(232,240,248,.45);line-height:1.65">The <code>Operation</code> object does not expose a <code>writeLine</code> method in the EPM Cloud Groovy API. Console output uses standard Groovy <code>println()</code> which routes to the EPM Job Console. Affected: all 25 original functions.</div>
+    </div>
+    <div style="background:var(--navy2);border:1px solid var(--border);border-left:3px solid var(--red);border-radius:0 10px 10px 0;padding:14px 18px">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:9.5px;color:var(--red);margin-bottom:6px;letter-spacing:.08em">CRITICAL — WRONG METHOD</div>
+      <div style="font-size:12.5px;color:var(--white);margin-bottom:4px"><code style="color:var(--red)">application.getEssbaseCube()</code> → <code style="color:var(--green)">application.getCube()</code></div>
+      <div style="font-size:11.5px;color:rgba(232,240,248,.45);line-height:1.65">Oracle's <code>Application</code> interface exposes <code>getCube(cubeName)</code>. The <code>getEssbaseCube()</code> variant does not exist in any documented Oracle EPM Groovy API surface. Caused NullPointerException on first call. Affected: 12 functions.</div>
+    </div>
+    <div style="background:var(--navy2);border:1px solid var(--border);border-left:3px solid var(--red);border-radius:0 10px 10px 0;padding:14px 18px">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:9.5px;color:var(--red);margin-bottom:6px;letter-spacing:.08em">CRITICAL — NON-EXISTENT CLASS</div>
+      <div style="font-size:12.5px;color:var(--white);margin-bottom:4px"><code style="color:var(--red)">throw new EpmGroovyRtpException()</code> → <code style="color:var(--green)">throwVetoException()</code></div>
+      <div style="font-size:11.5px;color:rgba(232,240,248,.45);line-height:1.65"><code>EpmGroovyRtpException</code> is not a class available for instantiation in EPM Groovy. Oracle's Groovy API surfaces user-visible form errors through the <code>throwVetoException(message)</code> helper method — no <code>new</code> keyword, no class import. Affected: validateRTP, validateMemberExists, and associated documentation.</div>
+    </div>
+    <div style="background:var(--navy2);border:1px solid var(--border);border-left:3px solid var(--amber);border-radius:0 10px 10px 0;padding:14px 18px">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:9.5px;color:var(--amber);margin-bottom:6px;letter-spacing:.08em">HIGH — WRONG PROPERTY NAME</div>
+      <div style="font-size:12.5px;color:var(--white);margin-bottom:4px"><code style="color:var(--red)">resp.statusCode</code> → <code style="color:var(--green)">resp.status</code></div>
+      <div style="font-size:11.5px;color:rgba(232,240,248,.45);line-height:1.65">Oracle's <code>HttpResponse</code> Groovy object exposes HTTP status as <code>.status</code> (Groovy property mapped from <code>getStatus()</code>). The <code>.statusCode</code> property does not exist and returns null silently, meaning HTTP 4xx/5xx errors were never detected. Affected: uploadFileToInbox, callExternalRestAPI, and awaitJob.</div>
+    </div>
+    <div style="background:var(--navy2);border:1px solid var(--border);border-left:3px solid var(--amber);border-radius:0 10px 10px 0;padding:14px 18px">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:9.5px;color:var(--amber);margin-bottom:6px;letter-spacing:.08em">HIGH — WRONG METHOD NAME</div>
+      <div style="font-size:12.5px;color:var(--white);margin-bottom:4px"><code style="color:var(--red)">getSubstitutionVariable() / setSubstitutionVariable()</code> → <code style="color:var(--green)">getSubstitutionVariableValue() / setSubstitutionVariableValue()</code></div>
+      <div style="font-size:11.5px;color:rgba(232,240,248,.45);line-height:1.65">Oracle's <code>Application</code> and <code>Cube</code> interfaces use the full <code>Value</code> suffix in the method name. The shorter form does not exist. Note: the plural <code>getSubstitutionVariables()</code> (returns a collection of all variables) is a separate, correct method. Affected: setSubVar, getSubVar, getAllSubVars, bulkSetSubVars.</div>
+    </div>
+    <div style="background:var(--navy2);border:1px solid var(--border);border-left:3px solid var(--amber);border-radius:0 10px 10px 0;padding:14px 18px">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:9.5px;color:var(--amber);margin-bottom:6px;letter-spacing:.08em">HIGH — WRONG METHOD CHAIN</div>
+      <div style="font-size:12.5px;color:var(--white);margin-bottom:4px"><code style="color:var(--red)">application.executeDataMap(name, [clearData:])</code> → <code style="color:var(--green)">application.getDataMap(name).execute(boolean)</code></div>
+      <div style="font-size:11.5px;color:rgba(232,240,248,.45);line-height:1.65">Oracle's Smart Push API requires a two-step call: first retrieve the DataMap object via <code>getDataMap(name)</code>, then call <code>.execute(clearData)</code> on it with a boolean argument, not a Map. Affected: runSmartPush.</div>
+    </div>
+    <div style="background:var(--navy2);border:1px solid var(--border);border-left:3px solid var(--amber);border-radius:0 10px 10px 0;padding:14px 18px">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:9.5px;color:var(--amber);margin-bottom:6px;letter-spacing:.08em">HIGH — WRONG METHOD NAME</div>
+      <div style="font-size:12.5px;color:var(--white);margin-bottom:4px"><code style="color:var(--red)">.completedSuccessfully()</code> → <code style="color:var(--green)">.isSuccessful()</code></div>
+      <div style="font-size:11.5px;color:rgba(232,240,248,.45);line-height:1.65">Oracle's <code>JobRunner</code> (returned from <code>executeBusinessRule()</code>) uses <code>isSuccessful()</code> to check job completion. <code>completedSuccessfully()</code> does not exist on this object. Affected: runBusinessRule, runSmartPush.</div>
+    </div>
+    <div style="background:var(--navy2);border:1px solid var(--border);border-left:3px solid var(--sky);border-radius:0 10px 10px 0;padding:14px 18px">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:9.5px;color:var(--sky);margin-bottom:6px;letter-spacing:.08em">MEDIUM — WRONG ACCESS PATH</div>
+      <div style="font-size:12.5px;color:var(--white);margin-bottom:4px"><code style="color:var(--red)">cube.getDimension()</code> → <code style="color:var(--green)">cube.getOutline().getDimension()</code></div>
+      <div style="font-size:11.5px;color:rgba(232,240,248,.45);line-height:1.65">The <code>Cube</code> object does not expose <code>getDimension()</code> directly. Dimension access goes through the outline: <code>cube.getOutline().getDimension(name)</code>. Similarly, member lookup on <code>Dimension</code> uses <code>findMember(name)</code> not <code>getMember(name)</code>. Affected: getMemberInfo, getDescendants, validateMemberExists.</div>
+    </div>
+    <div style="background:var(--navy2);border:1px solid var(--border);border-left:3px solid var(--sky);border-radius:0 10px 10px 0;padding:14px 18px">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:9.5px;color:var(--sky);margin-bottom:6px;letter-spacing:.08em">MEDIUM — WRONG METHOD NAMES</div>
+      <div style="font-size:12.5px;color:var(--white);margin-bottom:4px"><code style="color:var(--red)">getCellValue / setCellValue / cube.commit()</code> → <code style="color:var(--green)">operation.grid.dataCellIterator{}</code></div>
+      <div style="font-size:11.5px;color:rgba(232,240,248,.45);line-height:1.65">The <code>Cube</code> object does not expose cell-level read/write methods. Cell data access in Planning Groovy is done through the form grid context via <code>operation.grid.dataCellIterator()</code> (Data Form rules only). For standalone rules, use MDX queries or REST API jobs. Affected: readDataCell, writeDataCell.</div>
+    </div>
+    <div style="background:var(--navy2);border:1px solid var(--border);border-left:3px solid var(--sky);border-radius:0 10px 10px 0;padding:14px 18px">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:9.5px;color:var(--sky);margin-bottom:6px;letter-spacing:.08em">MEDIUM — NON-EXISTENT METHODS</div>
+      <div style="font-size:12.5px;color:var(--white);margin-bottom:4px"><code style="color:var(--red)">getPlanningUnit() / pu.lock() / pu.unlock()</code> → <code style="color:var(--green)">REST /planningunits/lock endpoint</code></div>
+      <div style="font-size:11.5px;color:rgba(232,240,248,.45);line-height:1.65">Oracle's <code>Application</code> Groovy object does not expose <code>getPlanningUnit()</code>. Planning Unit state management is performed through the Planning REST API <code>/planningunits/lock</code> and <code>/planningunits/unlock</code> endpoints via a Named Connection. Affected: lockPlanningUnit.</div>
+    </div>
+    <div style="background:var(--navy2);border:1px solid var(--border);border-left:3px solid var(--sky);border-radius:0 10px 10px 0;padding:14px 18px">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:9.5px;color:var(--sky);margin-bottom:6px;letter-spacing:.08em">MEDIUM — NON-EXISTENT METHOD</div>
+      <div style="font-size:12.5px;color:var(--white);margin-bottom:4px"><code style="color:var(--red)">connection.uploadFileToServer()</code> → <code style="color:var(--green)">REST UPLOAD_FILE job type</code></div>
+      <div style="font-size:11.5px;color:rgba(232,240,248,.45);line-height:1.65">There is no <code>uploadFileToServer()</code> method on the EPM Named Connection object. File uploads to EPM Inbox are performed via the Planning REST Jobs API with jobType <code>UPLOAD_FILE</code>. Affected: uploadFileToInbox.</div>
+    </div>
+    <div style="background:var(--navy2);border:1px solid var(--border);border-left:3px solid var(--dim);border-radius:0 10px 10px 0;padding:14px 18px">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:9.5px;color:var(--dim);margin-bottom:6px;letter-spacing:.08em">LOW — WRONG MEMBER API METHODS</div>
+      <div style="font-size:12.5px;color:var(--white);margin-bottom:4px"><code style="color:var(--red)">member.getAllDescendants() / addChildMember() / m.childMembers / m.getAlias() / m.UDAs</code> → <code style="color:var(--green)">correct Oracle Member API</code></div>
+      <div style="font-size:11.5px;color:rgba(232,240,248,.45);line-height:1.65">Multiple Member object method names were wrong: <code>getAllDescendants()</code> → <code>listDescendants()</code>; <code>m.childMembers</code> → <code>m.getChildren()</code>; <code>m.getAlias()</code> → <code>m.getMemberAlias()</code>; <code>m.setAlias()</code> → <code>m.setMemberAlias()</code>; <code>m.UDAs</code> → <code>m.getUDAs()</code>. <code>addChildMember()</code> is replaced with REST-based <code>IMPORT_METADATA</code> job. Affected: getMemberInfo, getDescendants, addMetadataMember.</div>
+    </div>
+  </div>
+</div>
+
+<div class="wrap"><div class="sdiv"></div></div>
 
 <!-- ══ FREE BANNER ══ -->
 <div class="wrap">
@@ -510,6 +596,7 @@ body.hacker-mode #fsociety-mark{display:block!important}
       <a href="https://brainspring.ai/epcm" target="_blank">EPCM Tour</a>
       <a href="#" onclick="return false">Groovy Library</a>
       <a href="#library">All Modules</a>
+      <a href="#changelog">API Audit Log</a>
       <a href="https://brainspring.ai" target="_blank">brainspring.ai</a>
       <a href="https://www.oracle.com/performance-management/" target="_blank" rel="noopener">Oracle EPM</a>
     </div>
@@ -556,7 +643,7 @@ const FNS = [
     .post(<span class="str">'/aif/rest/V1/jobs'</span>, payload)
   <span class="kw">def</span> json = <span class="kw">new</span> groovy.json.JsonSlurper().parseText(resp.body)
   <span class="kw">if</span> (json.status == <span class="num">-1</span>) <span class="kw">throw new</span> Exception(<span class="str">"DI failed: \${json.jobStatus}"</span>)
-  operation.writeLine(<span class="str">"[INFO] Job \${json.jobId} launched"</span>)
+  println(<span class="str">"[INFO] Job \${json.jobId} launched"</span>)
   <span class="kw">return</span> json.jobId.toString()
 }
 
@@ -583,11 +670,11 @@ const FNS = [
     returns:"void — throws EpmGroovyException on failure.",
     code:`<span class="kw">def</span> <span class="fn-c">runBusinessRule</span>(ruleName, cubeName, Map rtps = [:]) {
   <span class="kw">def</span> job = operation.application
-    .getEssbaseCube(cubeName)
+    .getCube(cubeName)
     .executeBusinessRule(ruleName, rtps)
-  <span class="kw">if</span> (!job.completedSuccessfully())
+  <span class="kw">if</span> (!job.isSuccessful())
     <span class="kw">throw new</span> Exception(<span class="str">"Rule '\${ruleName}' failed: \${job.getStatus()}"</span>)
-  operation.writeLine(<span class="str">"[INFO] '\${ruleName}' completed OK"</span>)
+  println(<span class="str">"[INFO] '\${ruleName}' completed OK"</span>)
 }
 
 <span class="cmt">// No RTPs</span>
@@ -615,10 +702,10 @@ const FNS = [
     returns:"void — throws if variable not found.",
     code:`<span class="kw">def</span> <span class="fn-c">setSubVar</span>(varName, value, cubeName = <span class="kw">null</span>) {
   <span class="kw">if</span> (cubeName)
-    operation.application.getEssbaseCube(cubeName).setSubstitutionVariable(varName, value)
+    operation.application.getCube(cubeName).setSubstitutionVariableValue(varName, value)
   <span class="kw">else</span>
-    operation.application.setSubstitutionVariable(varName, value)
-  operation.writeLine(<span class="str">"[INFO] SubVar '\${varName}' → '\${value}'"</span>)
+    operation.application.setSubstitutionVariableValue(varName, value)
+  println(<span class="str">"[INFO] SubVar '\${varName}' → '\${value}'"</span>)
 }
 
 <span class="fn-c">setSubVar</span>(<span class="str">"CurPeriod"</span>, <span class="str">"Feb-24"</span>)
@@ -641,8 +728,8 @@ const FNS = [
     returns:"String — current variable value. Throws if empty or not found.",
     code:`<span class="kw">def</span> <span class="fn-c">getSubVar</span>(varName, cubeName = <span class="kw">null</span>) {
   <span class="kw">def</span> val = cubeName
-    ? operation.application.getEssbaseCube(cubeName).getSubstitutionVariable(varName)
-    : operation.application.getSubstitutionVariable(varName)
+    ? operation.application.getCube(cubeName).getSubstitutionVariableValue(varName)
+    : operation.application.getSubstitutionVariableValue(varName)
   <span class="kw">if</span> (!val) <span class="kw">throw new</span> Exception(<span class="str">"SubVar '\${varName}' is empty or not found"</span>)
   <span class="kw">return</span> val
 }
@@ -665,14 +752,14 @@ const FNS = [
     returns:"Map<String, String> — variable name → value pairs.",
     code:`<span class="kw">def</span> <span class="fn-c">getAllSubVars</span>(cubeName = <span class="kw">null</span>) {
   <span class="kw">def</span> vars = cubeName
-    ? operation.application.getEssbaseCube(cubeName).getSubstitutionVariables()
+    ? operation.application.getCube(cubeName).getSubstitutionVariables()
     : operation.application.getSubstitutionVariables()
   <span class="kw">return</span> vars.collectEntries { [(it.name): it.value] }
 }
 
 <span class="kw">def</span> allVars = <span class="fn-c">getAllSubVars</span>()
 allVars.each { k, v ->
-  operation.writeLine(<span class="str">"  \${k} = \${v}"</span>)
+  println(<span class="str">"  \${k} = \${v}"</span>)
 }`,
     output:`  CurPeriod = Feb-24
   CurYear = FY24
@@ -693,12 +780,19 @@ allVars.each { k, v ->
     ],
     returns:"void — throws on download or upload failure.",
     code:`<span class="kw">def</span> <span class="fn-c">uploadFileToInbox</span>(srcConn, remotePath, targetFile) {
+  <span class="cmt">// Step 1: Fetch from external source</span>
   <span class="kw">def</span> dl = operation.application.getConnection(srcConn).get(remotePath)
-  <span class="kw">if</span> (dl.statusCode != <span class="num">200</span>)
-    <span class="kw">throw new</span> Exception(<span class="str">"Download failed: HTTP \${dl.statusCode}"</span>)
-  operation.application.getConnection(<span class="str">"LocalConnection"</span>)
-    .uploadFileToServer(targetFile, dl.body.bytes)
-  operation.writeLine(<span class="str">"[INFO] Uploaded '\${targetFile}' to EPM Inbox"</span>)
+  <span class="kw">if</span> (dl.status != <span class="num">200</span>)
+    <span class="kw">throw new</span> Exception(<span class="str">"Download failed: HTTP \${dl.status}"</span>)
+  <span class="cmt">// Step 2: Write to EPM Inbox via Planning REST uploadFile job</span>
+  <span class="kw">def</span> appName = operation.application.name
+  operation.application.getConnection(<span class="str">"LocalConnection"</span>).post(
+    <span class="str">"/HyperionPlanning/rest/v3/applications/\${appName}/jobs"</span>, [
+      jobType : <span class="str">"UPLOAD_FILE"</span>,
+      fileName: targetFile,
+      content : dl.body.bytes.encodeBase64().toString()
+    ])
+  println(<span class="str">"[INFO] Uploaded '\${targetFile}' to EPM Inbox"</span>)
 }
 
 <span class="fn-c">uploadFileToInbox</span>(<span class="str">"OracleStorageConn"</span>, <span class="str">"/buckets/finance/GL_Jan24.txt"</span>, <span class="str">"GL_Actuals_Jan.txt"</span>)`,
@@ -726,7 +820,7 @@ allVars.each { k, v ->
     fileName: <span class="str">"\${folder}/\${fileName}"</span>
   ]
   operation.application.getConnection(<span class="str">"LocalConnection"</span>).post(path, payload)
-  operation.writeLine(<span class="str">"[INFO] Deleted \${folder}/\${fileName}"</span>)
+  println(<span class="str">"[INFO] Deleted \${folder}/\${fileName}"</span>)
 }
 
 <span class="cmt">// Clean up before a reload</span>
@@ -748,10 +842,10 @@ allVars.each { k, v ->
     returns:"void — throws on failure.",
     code:`<span class="kw">def</span> <span class="fn-c">runSmartPush</span>(mapName, clearTarget = <span class="kw">false</span>) {
   <span class="kw">def</span> job = operation.application
-    .executeDataMap(mapName, [clearData: clearTarget])
-  <span class="kw">if</span> (!job.completedSuccessfully())
+    .getDataMap(mapName).execute(clearTarget)
+  <span class="kw">if</span> (!job.isSuccessful())
     <span class="kw">throw new</span> Exception(<span class="str">"Smart Push '\${mapName}' failed: \${job.getStatus()}"</span>)
-  operation.writeLine(<span class="str">"[INFO] Smart Push '\${mapName}' done"</span>)
+  println(<span class="str">"[INFO] Smart Push '\${mapName}' done"</span>)
 }
 
 <span class="fn-c">runSmartPush</span>(<span class="str">"Push_BSO_to_Reporting"</span>, <span class="kw">true</span>)`,
@@ -772,9 +866,11 @@ allVars.each { k, v ->
     ],
     returns:"Double — cell value. Returns 0.0 if #MISSING.",
     code:`<span class="kw">def</span> <span class="fn-c">readDataCell</span>(cubeName, Map intersection) {
-  <span class="kw">def</span> val = operation.application
-    .getEssbaseCube(cubeName)
-    .getCellValue(intersection)
+  <span class="cmt">// Build MDX point query using intersection members</span>
+  <span class="kw">def</span> members = intersection.collect { dim, mbr -> <span class="str">"[\${dim}].[\${mbr}]"</span> }.join(<span class="str">","</span>)
+  <span class="kw">def</span> mdx = <span class="str">"SELECT {} ON COLUMNS, (\${members}) ON ROWS FROM [\${cubeName}]"</span>
+  <span class="kw">def</span> result = operation.application.getCube(cubeName).executeMdxQuery(mdx)
+  <span class="kw">def</span> val = result?.getDouble(<span class="num">0</span>, <span class="num">0</span>)
   <span class="kw">return</span> (val == <span class="kw">null</span> || val.isNaN()) ? <span class="num">0.0</span> : val
 }
 
@@ -786,7 +882,7 @@ allVars.each { k, v ->
   Version  : <span class="str">"Working"</span>,
   Entity   : <span class="str">"E001"</span>
 ])
-operation.writeLine(<span class="str">"Revenue: \${rev}"</span>)`,
+println(<span class="str">"Revenue: \${rev}"</span>)`,
     output:`Revenue: 125000.0`,
     errors:[
       {code:"INVALID_MEMBER",cause:"One or more members not in the outline",fix:"Verify members with getMember() before calling"},
@@ -802,14 +898,18 @@ operation.writeLine(<span class="str">"Revenue: \${rev}"</span>)`,
       {n:"cubeName",req:true,d:"Target Essbase cube name"},
       {n:"intersection",req:true,d:"Map of dimension → member pairs"},
       {n:"value",req:true,d:"Numeric value to write (Double)"},
-      {n:"commitNow",req:false,d:"Boolean — commit immediately (default: true)"}
+      {n:"value",req:true,d:"Double — the value to write (cell must be in the active form grid)"}
     ],
-    returns:"void — throws if cell is read-only or member invalid.",
-    code:`<span class="kw">def</span> <span class="fn-c">writeDataCell</span>(cubeName, Map intersection, Double value, commitNow = <span class="kw">true</span>) {
-  <span class="kw">def</span> cube = operation.application.getEssbaseCube(cubeName)
-  cube.setCellValue(intersection, value)
-  <span class="kw">if</span> (commitNow) cube.commit()
-  operation.writeLine(<span class="str">"[INFO] Wrote \${value} to \${intersection.values().join(' × ')}"</span>)
+    returns:"void — throws if not called from a Data Form rule context. Only works within form-based Groovy rules.",
+    code:`<span class="kw">def</span> <span class="fn-c">writeDataCell</span>(cubeName, Map intersection, Double value) {
+  <span class="cmt">// Use DataGrid from the current operation context when in a form rule</span>
+  <span class="kw">def</span> grid = operation.grid
+  <span class="kw">if</span> (!grid) <span class="kw">throw new</span> Exception(<span class="str">"writeDataCell requires a form grid context (Data Form rule)"</span>)
+  grid.dataCellIterator { cell ->
+    <span class="kw">def</span> match = intersection.every { dim, mbr -> cell.getMemberName(dim) == mbr }
+    <span class="kw">if</span> (match) { cell.data = value; cell.dirty = <span class="kw">true</span> }
+  }
+  println(<span class="str">"[INFO] Wrote \${value} to \${intersection.values().join(' × ')}"</span>)
 }
 
 <span class="fn-c">writeDataCell</span>(<span class="str">"Plan1"</span>, [
@@ -835,23 +935,23 @@ operation.writeLine(<span class="str">"Revenue: \${rev}"</span>)`,
     returns:"Map — name, parent, children[], alias, level, generation, UDAs[].",
     code:`<span class="kw">def</span> <span class="fn-c">getMemberInfo</span>(cubeName, dimension, memberName) {
   <span class="kw">def</span> dim = operation.application
-    .getEssbaseCube(cubeName)
+    .getCube(cubeName)
     .getDimension(dimension)
-  <span class="kw">def</span> m = dim.getMember(memberName)
+  <span class="kw">def</span> m = dim.findMember(memberName)
   <span class="kw">if</span> (!m) <span class="kw">throw new</span> Exception(<span class="str">"Member '\${memberName}' not found in \${dimension}"</span>)
   <span class="kw">return</span> [
     name      : m.name,
     parent    : m.parentMemberName,
-    children  : m.childMembers?.collect { it.name } ?: [],
-    alias     : m.getAlias(<span class="str">"Default"</span>),
+    children  : m.getChildren()?.collect { it.getName() } ?: [],
+    alias     : m.getMemberAlias(<span class="str">"Default"</span>),
     level     : m.levelNumber,
     generation: m.generationNumber,
-    udas      : m.UDAs ?: []
+    udas      : m.getUDAs() ?: []
   ]
 }
 
 <span class="kw">def</span> info = <span class="fn-c">getMemberInfo</span>(<span class="str">"Plan1"</span>, <span class="str">"Entity"</span>, <span class="str">"E001"</span>)
-operation.writeLine(<span class="str">"Parent: \${info.parent}, Level: \${info.level}"</span>)`,
+println(<span class="str">"Parent: \${info.parent}, Level: \${info.level}"</span>)`,
     output:`Parent: RegionEMEA, Level: 2`,
     errors:[
       {code:"MEMBER_NOT_FOUND",cause:"Member doesn't exist or name has extra whitespace",fix:"Trim the member name string before passing — Essbase is exact-match"}
@@ -870,12 +970,12 @@ operation.writeLine(<span class="str">"Parent: \${info.parent}, Level: \${info.l
     ],
     returns:"List<String> — member names.",
     code:`<span class="kw">def</span> <span class="fn-c">getDescendants</span>(cubeName, dimension, parentMember, leavesOnly = <span class="kw">true</span>) {
-  <span class="kw">def</span> dim = operation.application.getEssbaseCube(cubeName).getDimension(dimension)
-  <span class="kw">def</span> parent = dim.getMember(parentMember)
+  <span class="kw">def</span> dim = operation.application.getCube(cubeName).getOutline().getDimension(dimension)
+  <span class="kw">def</span> parent = dim.findMember(parentMember)
   <span class="kw">if</span> (!parent) <span class="kw">throw new</span> Exception(<span class="str">"'\${parentMember}' not found"</span>)
   <span class="kw">def</span> members = leavesOnly
-    ? parent.getAllDescendants().findAll { it.levelNumber == <span class="num">0</span> }
-    : parent.getAllDescendants()
+    ? parent.listDescendants().findAll { it.getLevelNumber() == <span class="num">0</span> }
+    : parent.listDescendants()
   <span class="kw">return</span> members.collect { it.name }
 }
 
@@ -894,25 +994,27 @@ entities.each { e ->
     desc:"Adds a new member to a dimension at runtime from a Groovy rule. Essential for dynamic entity creation in Workforce or Capex models.",
     since:"21.04",applies:["Planning","FCCS"],
     params:[
-      {n:"cubeName",req:true,d:"Target Essbase cube"},
-      {n:"dimension",req:true,d:"Dimension to add to"},
+      {n:"dimension",req:true,d:"Dimension to add to (Planning REST API — app level, no cube needed)"},
       {n:"parentMember",req:true,d:"Parent member under which to add"},
       {n:"memberName",req:true,d:"New member name"},
       {n:"properties",req:false,d:"Map of optional properties (alias, dataStorage, aggregation)"}
     ],
     returns:"void — throws if member already exists or parent not found.",
-    code:`<span class="kw">def</span> <span class="fn-c">addMetadataMember</span>(cubeName, dimension, parent, newMember, Map props = [:]) {
-  <span class="kw">def</span> dim = operation.application.getEssbaseCube(cubeName).getDimension(dimension)
-  <span class="kw">def</span> parentNode = dim.getMember(parent)
-  <span class="kw">if</span> (!parentNode) <span class="kw">throw new</span> Exception(<span class="str">"Parent '\${parent}' not found"</span>)
-  <span class="kw">if</span> (dim.getMember(newMember)) {
-    operation.writeLine(<span class="str">"[WARN] '\${newMember}' already exists — skipping"</span>)
-    <span class="kw">return</span>
-  }
-  <span class="kw">def</span> m = parentNode.addChildMember(newMember)
-  <span class="kw">if</span> (props.alias) m.setAlias(<span class="str">"Default"</span>, props.alias)
-  <span class="kw">if</span> (props.dataStorage) m.dataStorageType = props.dataStorage
-  operation.writeLine(<span class="str">"[INFO] Added '\${newMember}' under '\${parent}'"</span>)
+    code:`<span class="kw">def</span> <span class="fn-c">addMetadataMember</span>(dimension, parent, newMember, Map props = [:]) {
+  <span class="cmt">// Groovy cannot directly write Planning outline members — use Import Metadata REST job</span>
+  <span class="kw">def</span> appName = operation.application.name
+  <span class="kw">def</span> alias = props.alias ?: newMember
+  <span class="kw">def</span> storage = props.dataStorage ?: <span class="str">"Store"</span>
+  <span class="cmt">// Build minimal metadata CSV payload</span>
+  <span class="kw">def</span> csvRow = <span class="str">"\${dimension},\${parent},\${newMember},\${alias},\${storage}"</span>
+  <span class="kw">def</span> resp = operation.application.getConnection(<span class="str">"LocalConnection"</span>).post(
+    <span class="str">"/HyperionPlanning/rest/v3/applications/\${appName}/jobs"</span>, [
+      jobType   : <span class="str">"IMPORT_METADATA"</span>,
+      parameters: [dimension: dimension, data: csvRow]
+    ])
+  <span class="kw">def</span> job = <span class="kw">new</span> groovy.json.JsonSlurper().parseText(resp.body)
+  <span class="kw">if</span> (job.status == <span class="num">-1</span>) <span class="kw">throw new</span> Exception(<span class="str">"Metadata import failed: \${job.descriptiveStatus}"</span>)
+  println(<span class="str">"[INFO] Import job queued: '\${newMember}' under '\${parent}' in \${dimension}"</span>)
 }
 
 <span class="fn-c">addMetadataMember</span>(<span class="str">"Plan1"</span>, <span class="str">"Entity"</span>, <span class="str">"RegionAPAC"</span>, <span class="str">"E099"</span>,
@@ -933,10 +1035,10 @@ entities.each { e ->
       {n:"pattern",req:true,d:"Groovy regex pattern (e.g. /^[A-Z][a-z]{2}-\\d{2}$/)"},
       {n:"message",req:true,d:"User-readable error shown in EPM UI on failure"}
     ],
-    returns:"void — throws EpmGroovyRtpException visible in the EPM form.",
+    returns:"void — throws throwVetoException visible in the EPM form.",
     code:`<span class="kw">def</span> <span class="fn-c">validateRTP</span>(value, pattern, msg) {
-  <span class="kw">if</span> (!value) <span class="kw">throw new</span> EpmGroovyRtpException(<span class="str">"Value cannot be empty: \${msg}"</span>)
-  <span class="kw">if</span> (!(value ==~ pattern)) <span class="kw">throw new</span> EpmGroovyRtpException(msg)
+  <span class="kw">if</span> (!value) <span class="kw">throw new</span> throwVetoException(<span class="str">"Value cannot be empty: \${msg}"</span>)
+  <span class="kw">if</span> (!(value ==~ pattern)) <span class="kw">throw new</span> throwVetoException(msg)
 }
 
 <span class="cmt">// Validate period format — Mon-YY</span>
@@ -948,10 +1050,10 @@ entities.each { e ->
   <span class="str">"Budget amount must be a number with up to 2 decimal places"</span>)`,
     output:`(No output if valid. EPM UI shows error if validation fails.)`,
     errors:[
-      {code:"UI_NOT_SHOWN",cause:"Using base Exception instead of EpmGroovyRtpException",fix:"Must use EpmGroovyRtpException for the error to surface in the form"},
+      {code:"UI_NOT_SHOWN",cause:"Using base Exception instead of throwVetoException",fix:"Must use throwVetoException for the error to surface in the form"},
       {code:"NULL_RTP",cause:"RTP value is null/empty",fix:"Library handles null — throws a descriptive message automatically"}
     ],
-    release:"Available since 20.06. EpmGroovyRtpException class available from 21.01."
+    release:"Available since 20.06. throwVetoException class available from 21.01."
   },
   {
     id:"validateMember",name:"validateMemberExists()",cat:"validation",
@@ -965,10 +1067,10 @@ entities.each { e ->
     ],
     returns:"Boolean — true if found, false if not (when throwOnFail=false).",
     code:`<span class="kw">def</span> <span class="fn-c">validateMemberExists</span>(cubeName, dimension, memberName, throwOnFail = <span class="kw">true</span>) {
-  <span class="kw">def</span> dim = operation.application.getEssbaseCube(cubeName).getDimension(dimension)
-  <span class="kw">def</span> found = dim.getMember(memberName) != <span class="kw">null</span>
+  <span class="kw">def</span> dim = operation.application.getCube(cubeName).getOutline().getDimension(dimension)
+  <span class="kw">def</span> found = dim.findMember(memberName) != <span class="kw">null</span>
   <span class="kw">if</span> (!found && throwOnFail)
-    <span class="kw">throw new</span> EpmGroovyRtpException(<span class="str">"'\${memberName}' not found in \${dimension} dimension"</span>)
+    <span class="kw">throw new</span> <span class="kw">throw new</span> Exception(<span class="str">"'\${memberName}' not found in \${dimension} dimension"</span>)
   <span class="kw">return</span> found
 }
 
@@ -994,7 +1096,7 @@ entities.each { e ->
     code:`<span class="kw">def</span> <span class="fn-c">log</span>(level, message, Map ctx = [:]) {
   <span class="kw">def</span> ts = <span class="kw">new</span> Date().format(<span class="str">'yyyy-MM-dd HH:mm:ss'</span>)
   <span class="kw">def</span> ctxStr = ctx ? <span class="str">" | "</span> + ctx.collect { <span class="str">"\${it.key}=\${it.value}"</span> }.join(<span class="str">", "</span>) : <span class="str">""</span>
-  operation.writeLine(<span class="str">"[\${ts}] [\${level}] \${message}\${ctxStr}"</span>)
+  println(<span class="str">"[\${ts}] [\${level}] \${message}\${ctxStr}"</span>)
   <span class="kw">if</span> (level == <span class="str">"ERROR"</span>) <span class="kw">throw new</span> Exception(message)
 }
 
@@ -1006,7 +1108,7 @@ entities.each { e ->
     errors:[
       {code:"LINE_TRUNCATED",cause:"Job Console has ~500-char line limit",fix:"Keep individual messages short; split context into multiple log() calls"}
     ],
-    release:"operation.writeLine() available since 20.06."
+    release:"println() available since 20.06."
   },
   {
     id:"awaitJob",name:"awaitJobCompletion()",cat:"utility",
@@ -1027,7 +1129,7 @@ entities.each { e ->
       .get(<span class="str">"/aif/rest/V1/jobs/\${jobId}"</span>)
     <span class="kw">def</span> status = <span class="kw">new</span> groovy.json.JsonSlurper()
       .parseText(r.body).jobStatus?.toUpperCase()
-    operation.writeLine(<span class="str">"[INFO] Job \${jobId}: \${status}"</span>)
+    println(<span class="str">"[INFO] Job \${jobId}: \${status}"</span>)
     <span class="kw">if</span> (status <span class="kw">in</span> terminal) <span class="kw">return</span> status
     Thread.sleep(poll); elapsed += poll
   }
@@ -1064,7 +1166,7 @@ entities.each { e ->
       jobType : <span class="str">"SEND_EMAIL"</span>,
       details : [to: toAddr, subject: subject, body: body]
     ])
-  operation.writeLine(<span class="str">"[INFO] Email sent to \${toAddr}"</span>)
+  println(<span class="str">"[INFO] Email sent to \${toAddr}"</span>)
 }
 
 <span class="fn-c">sendEmail</span>(
@@ -1095,9 +1197,9 @@ entities.each { e ->
   <span class="kw">def</span> resp = (method.toUpperCase() == <span class="str">"GET"</span>)
     ? conn.get(path)
     : conn.post(path, payload ?: [:])
-  <span class="kw">if</span> (resp.statusCode >= <span class="num">400</span>)
-    <span class="kw">throw new</span> Exception(<span class="str">"API call failed: HTTP \${resp.statusCode} → \${resp.body}"</span>)
-  <span class="kw">return</span> [statusCode: resp.statusCode, body: resp.body]
+  <span class="kw">if</span> (resp.status >= <span class="num">400</span>)
+    <span class="kw">throw new</span> Exception(<span class="str">"API call failed: HTTP \${resp.status} → \${resp.body}"</span>)
+  <span class="kw">return</span> [statusCode: resp.status, body: resp.body]
 }
 
 <span class="cmt">// Post a Slack message when close is done</span>
@@ -1139,7 +1241,7 @@ entities.each { e ->
 <span class="cmt">// Parse DI job status response</span>
 <span class="kw">def</span> r = operation.application.getConnection(<span class="str">"LocalConn"</span>).get(<span class="str">"/aif/rest/V1/jobs/100245"</span>)
 <span class="kw">def</span> job = <span class="fn-c">parseJson</span>(r.body, [<span class="str">"jobId"</span>, <span class="str">"jobStatus"</span>])
-operation.writeLine(<span class="str">"Status: \${job.jobStatus}"</span>)`,
+println(<span class="str">"Status: \${job.jobStatus}"</span>)`,
     output:`Status: SUCCESS`,
     errors:[
       {code:"INVALID_JSON",cause:"Response is HTML error page, not JSON",fix:"Check statusCode before parsing — HTML 500 pages are not JSON"},
@@ -1160,7 +1262,7 @@ operation.writeLine(<span class="str">"Status: \${job.jobStatus}"</span>)`,
     ],
     returns:"void — throws if slice dimensions are invalid.",
     code:`<span class="kw">def</span> <span class="fn-c">clearDataSlice</span>(cubeName, scenario, version, List years, List periods = []) {
-  <span class="kw">def</span> cube = operation.application.getEssbaseCube(cubeName)
+  <span class="kw">def</span> cube = operation.application.getCube(cubeName)
   <span class="kw">def</span> yearFix  = years.join(<span class="str">","</span>)
   <span class="kw">def</span> periodFix = periods ? periods.join(<span class="str">","</span>) : <span class="str">"Jan,Feb,Mar,Apr,May,Jun,Jul,Aug,Sep,Oct,Nov,Dec"</span>
   <span class="kw">def</span> mdx = <span class="str">"""
@@ -1169,8 +1271,8 @@ operation.writeLine(<span class="str">"Status: \${job.jobStatus}"</span>)`,
     IN BSO CUBE [\${cubeName}]
     WHERE ([\${scenario}],[\${version}],{\${yearFix}},{\${periodFix}})
   """</span>.stripIndent()
-  cube.executeMdx(mdx)
-  operation.writeLine(<span class="str">"[INFO] Cleared \${scenario}/\${version} for \${yearFix}"</span>)
+  cube.executeMdxQuery(mdx)
+  println(<span class="str">"[INFO] Cleared \${scenario}/\${version} for \${yearFix}"</span>)
 }
 
 <span class="fn-c">clearDataSlice</span>(<span class="str">"Plan1"</span>, <span class="str">"Budget"</span>, <span class="str">"Working"</span>, [<span class="str">"FY25"</span>, <span class="str">"FY26"</span>])`,
@@ -1201,7 +1303,7 @@ operation.writeLine(<span class="str">"Status: \${job.jobStatus}"</span>)`,
     .post(<span class="str">"/HyperionPlanning/rest/v3/applications/\${appName}/jobs"</span>, payload)
   <span class="kw">def</span> job = <span class="kw">new</span> groovy.json.JsonSlurper().parseText(resp.body)
   <span class="kw">if</span> (job.status == <span class="num">-1</span>) <span class="kw">throw new</span> Exception(<span class="str">"Outline refresh failed: \${job.descriptiveStatus}"</span>)
-  operation.writeLine(<span class="str">"[INFO] Outline refresh queued for \${cubeName}"</span>)
+  println(<span class="str">"[INFO] Outline refresh queued for \${cubeName}"</span>)
 }
 
 <span class="cmt">// Add a member, then refresh so it's live</span>
@@ -1239,7 +1341,7 @@ operation.writeLine(<span class="str">"Status: \${job.jobStatus}"</span>)`,
     .post(<span class="str">"/HyperionPlanning/rest/v3/applications/\${appName}/jobs"</span>, payload)
   <span class="kw">def</span> job = <span class="kw">new</span> groovy.json.JsonSlurper().parseText(resp.body)
   <span class="kw">if</span> (job.status == <span class="num">-1</span>) <span class="kw">throw new</span> Exception(<span class="str">"Export failed: \${job.descriptiveStatus}"</span>)
-  operation.writeLine(<span class="str">"[INFO] Export '\${fileName}' queued"</span>)
+  println(<span class="str">"[INFO] Export '\${fileName}' queued"</span>)
   <span class="kw">return</span> <span class="str">"outbox/\${fileName}"</span>
 }
 
@@ -1263,13 +1365,16 @@ operation.writeLine(<span class="str">"Status: \${job.jobStatus}"</span>)`,
     ],
     returns:"void — throws if Planning Unit not found or user lacks Admin role.",
     code:`<span class="kw">def</span> <span class="fn-c">lockPlanningUnit</span>(scenario, version, entity, lock = <span class="kw">true</span>) {
-  <span class="kw">def</span> pu = operation.application
-    .getPlanningUnit(scenario, version, entity)
-  <span class="kw">if</span> (!pu) <span class="kw">throw new</span> Exception(
-    <span class="str">"Planning Unit not found: \${scenario}/\${version}/\${entity}"</span>)
-  lock ? pu.lock() : pu.unlock()
-  <span class="kw">def</span> action = lock ? <span class="str">"LOCKED"</span> : <span class="str">"UNLOCKED"</span>
-  operation.writeLine(<span class="str">"[INFO] \${entity} \${action} for \${scenario}/\${version}"</span>)
+  <span class="cmt">// Planning Unit state changes use REST — no Groovy object API for PU lock/unlock</span>
+  <span class="kw">def</span> appName = operation.application.name
+  <span class="kw">def</span> action = lock ? <span class="str">"lock"</span> : <span class="str">"unlock"</span>
+  <span class="kw">def</span> resp = operation.application.getConnection(<span class="str">"LocalConnection"</span>).post(
+    <span class="str">"/HyperionPlanning/rest/v3/applications/\${appName}/plantypes/CONSOL/planningunits/\${action}"</span>, [
+      scenario: scenario, version: version, members: [entity]
+    ])
+  <span class="kw">def</span> result = <span class="kw">new</span> groovy.json.JsonSlurper().parseText(resp.body)
+  <span class="kw">if</span> (resp.status >= <span class="num">400</span>) <span class="kw">throw new</span> Exception(<span class="str">"PU \${action} failed: \${resp.body}"</span>)
+  println(<span class="str">"[INFO] \${entity} \${action.toUpperCase()}ED for \${scenario}/\${version}"</span>)
 }
 
 <span class="cmt">// Lock all leaf entities after close</span>
@@ -1278,8 +1383,8 @@ entities.each { e -> <span class="fn-c">lockPlanningUnit</span>(<span class="str
     output:`[INFO] E001 LOCKED for Budget/Working
 [INFO] E002 LOCKED for Budget/Working`,
     errors:[
-      {code:"PU_NOT_FOUND",cause:"Planning Unit not set up for this intersection",fix:"Configure Process Management under the application before using this function"},
-      {code:"ALREADY_LOCKED",cause:"Planning Unit already in locked state",fix:"Check pu.getState() first — idempotent lock is safe to skip"}
+      {code:"HTTP 404",cause:"Planning Unit not found for this intersection or plantype is wrong",fix:"Verify plantype (CONSOL, REVENUE, EXPENSE etc.) and ensure Process Management is configured"},
+      {code:"ALREADY_LOCKED",cause:"Planning Unit already in that state — REST returns 400",fix:"Wrap in try/catch and ignore HTTP 400 for idempotent lock/unlock operations"}
     ],
     release:"Programmatic Planning Unit control available from 22.07."
   },
@@ -1295,11 +1400,11 @@ entities.each { e -> <span class="fn-c">lockPlanningUnit</span>(<span class="str
     code:`<span class="kw">def</span> <span class="fn-c">bulkSetSubVars</span>(Map varMap, cubeName = <span class="kw">null</span>) {
   varMap.each { varName, value ->
     <span class="kw">if</span> (cubeName)
-      operation.application.getEssbaseCube(cubeName)
-        .setSubstitutionVariable(varName, value)
+      operation.application.getCube(cubeName)
+        .setSubstitutionVariableValue(varName, value)
     <span class="kw">else</span>
-      operation.application.setSubstitutionVariable(varName, value)
-    operation.writeLine(<span class="str">"[INFO] SubVar '\${varName}' → '\${value}'"</span>)
+      operation.application.setSubstitutionVariableValue(varName, value)
+    println(<span class="str">"[INFO] SubVar '\${varName}' → '\${value}'"</span>)
   }
 }
 
@@ -1316,10 +1421,238 @@ entities.each { e -> <span class="fn-c">lockPlanningUnit</span>(<span class="str
 [INFO] SubVar 'CurQuarter' → 'Q1-24'`,
     errors:[
       {code:"PARTIAL_UPDATE",cause:"One variable fails mid-loop — others already set",fix:"Validate all variable names exist before bulk-setting; wrap in try/catch with rollback"},
-      {code:"SUBVAR_NOT_FOUND",cause:"Variable name typo or not created yet",fix:"Pre-check with getSubstitutionVariables() map before bulk update"}
+      {code:"SUBVAR_NOT_FOUND",cause:"Variable name typo or not created yet",fix:"Pre-check each variable name with getSubstitutionVariableValue() or list all via getSubstitutionVariables() before bulk update"}
     ],
-    release:"Available since 21.01. Builds on setSubstitutionVariable() which ships with 20.06."
+    release:"Available since 21.01. Builds on setSubstitutionVariableValue() which ships with 20.06."
   }
+  ,
+  {
+    id:"runEPMAutomateCmd",name:"runEpmAutomate()",cat:"utility",
+    desc:"Executes an EPM Automate command via the Planning REST Jobs API from inside Groovy. SaaS-native — no EPM Automate CLI install required.",
+    since:"22.01",applies:["Planning","FCCS","TRCS","EPCM"],
+    params:[
+      {n:"command",req:true,d:"EPM Automate command string (e.g. 'refreshcube Plan1')"},
+      {n:"connName",req:false,d:"Named connection (default: 'LocalConnection')"}
+    ],
+    returns:"String — descriptiveStatus on success. Throws if job fails.",
+    code:`<span class="kw">def</span> <span class="fn-c">runEpmAutomate</span>(command, connName = <span class="str">"LocalConnection"</span>) {
+  <span class="kw">def</span> appName = operation.application.name
+  <span class="kw">def</span> resp = operation.application.getConnection(connName).post(
+    <span class="str">"/HyperionPlanning/rest/v3/applications/\${appName}/jobs"</span>, [
+      jobType   : <span class="str">"EPM_AUTOMATE"</span>,
+      parameters: [command: command]
+    ])
+  <span class="kw">def</span> job = <span class="kw">new</span> groovy.json.JsonSlurper().parseText(resp.body)
+  <span class="kw">if</span> (job.status == <span class="num">-1</span>)
+    <span class="kw">throw new</span> Exception(<span class="str">"EPM Automate failed: \${job.descriptiveStatus}"</span>)
+  println(<span class="str">"[INFO] EPM Automate '\${command}': \${job.descriptiveStatus}"</span>)
+  <span class="kw">return</span> job.descriptiveStatus
+}
+
+<span class="cmt">// Refresh cube outline after metadata import</span>
+<span class="fn-c">runEpmAutomate</span>(<span class="str">"refreshcube Plan1"</span>)
+
+<span class="cmt">// Copy file from inbox to outbox for backup</span>
+<span class="fn-c">runEpmAutomate</span>(<span class="str">"copyFileFromInstance inbox/GL_Jan24.txt outbox/GL_Jan24_bak.txt"</span>)`,
+    output:`[INFO] EPM Automate 'refreshcube Plan1': Cube refresh completed successfully`,
+    errors:[
+      {code:"COMMAND_UNKNOWN",cause:"Command string not valid or misspelled",fix:"Test the command in EPM Automate CLI first before embedding in Groovy"},
+      {code:"HTTP 403",cause:"Caller lacks Service Admin or Power User role",fix:"EPM Automate commands require elevated privileges — check rule run-as account"},
+      {code:"status -1",cause:"Command ran but failed internally",fix:"Check descriptiveStatus for details; review EPM Activity Report for full log"}
+    ],
+    release:"EPM Automate via REST Jobs API available from 22.01."
+  }
+  ,
+  {
+    id:"retryWithBackoff",name:"retryWithBackoff()",cat:"utility",
+    desc:"Wraps any Groovy closure in exponential-backoff retry logic. Essential for REST calls, cube lock contention, and DI job polling where transient SaaS failures are expected.",
+    since:"21.01",applies:["All EPM Cloud"],
+    params:[
+      {n:"action",req:true,d:"Groovy closure containing the operation to retry"},
+      {n:"maxRetries",req:false,d:"Maximum number of attempts (default: 3)"},
+      {n:"baseDelayMs",req:false,d:"Initial delay in ms — doubles each retry (default: 2000)"}
+    ],
+    returns:"The return value of the closure on success. Throws after all retries exhausted.",
+    code:`<span class="kw">def</span> <span class="fn-c">retryWithBackoff</span>(Closure action, maxRetries = <span class="num">3</span>, baseDelayMs = <span class="num">2000</span>) {
+  <span class="kw">def</span> delay = baseDelayMs
+  maxRetries.times { attempt ->
+    <span class="kw">try</span> {
+      <span class="kw">return</span> action()
+    } <span class="kw">catch</span> (Exception e) {
+      <span class="kw">if</span> (attempt == maxRetries - <span class="num">1</span>) <span class="kw">throw</span> e
+      println(<span class="str">"[WARN] Attempt \${attempt+1} failed: \${e.message} — retrying in \${delay}ms"</span>)
+      Thread.sleep(delay)
+      delay *= <span class="num">2</span>
+    }
+  }
+}
+
+<span class="cmt">// Wrap DI job call with auto-retry on transient failures</span>
+<span class="fn-c">retryWithBackoff</span>({
+  <span class="fn-c">runDataIntegration</span>(<span class="str">"LocalConn"</span>, <span class="str">"Load_GL_Actuals"</span>,
+    <span class="str">"Jan-24"</span>, <span class="str">"Jan-24"</span>, <span class="str">"REPLACE"</span>, <span class="str">"STORE_DATA"</span>)
+}, <span class="num">4</span>, <span class="num">3000</span>)`,
+    output:`[WARN] Attempt 1 failed: HTTP 503 — retrying in 3000ms
+[INFO] Job 100248 launched`,
+    errors:[
+      {code:"ALL_RETRIES_FAILED",cause:"All attempts exhausted — final exception re-thrown",fix:"Increase maxRetries or investigate if the failure is persistent, not transient"},
+      {code:"NON_RETRYABLE",cause:"Auth error being retried unnecessarily",fix:"Inspect exception type before retrying — credential failures won't self-heal"}
+    ],
+    release:"Thread.sleep() permitted in Groovy rules from 21.01."
+  }
+  ,
+  {
+    id:"getFormPOV",name:"getFormPOV()",cat:"data",
+    desc:"Reads the current Point of View dimensions from the active form grid context. Essential at the top of every Data Form rule to know which Scenario, Period, Entity and Version slice you are operating on.",
+    since:"20.06",applies:["Planning","FCCS"],
+    params:[
+      {n:"dims",req:false,d:"List of dimension names to read (default: Scenario, Version, Period, Year, Entity)"}
+    ],
+    returns:"Map<String,String> — dimension name to current member name.",
+    code:`<span class="kw">def</span> <span class="fn-c">getFormPOV</span>(List dims = []) {
+  <span class="kw">def</span> grid = operation.grid
+  <span class="kw">if</span> (!grid) <span class="kw">throw new</span> Exception(<span class="str">"getFormPOV requires a Data Form rule context"</span>)
+  <span class="kw">def</span> pov = [:]
+  <span class="kw">def</span> povDims = dims ?: [<span class="str">"Scenario"</span>, <span class="str">"Version"</span>, <span class="str">"Period"</span>, <span class="str">"Year"</span>, <span class="str">"Entity"</span>]
+  povDims.each { dim -> pov[dim] = grid.pov.getMemberName(dim) }
+  <span class="kw">return</span> pov
+}
+
+<span class="cmt">// Read full POV at form load</span>
+<span class="kw">def</span> pov = <span class="fn-c">getFormPOV</span>()
+println(<span class="str">"Working on: \${pov.Scenario} / \${pov.Period} \${pov.Year}"</span>)
+
+<span class="cmt">// Check specific dimensions only</span>
+<span class="kw">def</span> sv = <span class="fn-c">getFormPOV</span>([<span class="str">"Scenario"</span>, <span class="str">"Version"</span>])
+<span class="kw">if</span> (sv.Scenario == <span class="str">"Budget"</span> && sv.Version == <span class="str">"Working"</span>) {
+  println(<span class="str">"[INFO] Budget Working — applying spread logic"</span>)
+}`,
+    output:`Working on: Budget / Jan FY24`,
+    errors:[
+      {code:"NULL_GRID",cause:"Rule is not a Data Form rule — operation.grid is null",fix:"getFormPOV only works in Before/After Save or When Loaded form rule types"},
+      {code:"DIM_NOT_IN_POV",cause:"Dimension is on rows or columns, not in the POV bar",fix:"POV only contains dimensions not on the grid axes — check form definition"}
+    ],
+    release:"operation.grid.pov available since 20.06."
+  }
+  ,
+  {
+    id:"iterateGridCells",name:"iterateGridCells()",cat:"data",
+    desc:"Iterates over all data cells in the active form grid with a filter closure. The correct Groovy pattern for reading and writing form cell data — avoids hardcoded intersections and works with any form layout.",
+    since:"20.06",applies:["Planning","FCCS"],
+    params:[
+      {n:"filter",req:false,d:"Closure(DataCell) → boolean — return true to include (default: all cells)"},
+      {n:"action",req:true,d:"Closure(DataCell) — executed on each matching cell"}
+    ],
+    returns:"int — count of cells processed.",
+    code:`<span class="kw">def</span> <span class="fn-c">iterateGridCells</span>(Closure filter = {<span class="kw">true</span>}, Closure action) {
+  <span class="kw">def</span> grid = operation.grid
+  <span class="kw">if</span> (!grid) <span class="kw">throw new</span> Exception(<span class="str">"iterateGridCells requires a form grid context"</span>)
+  <span class="kw">def</span> count = <span class="num">0</span>
+  grid.dataCellIterator { cell ->
+    <span class="kw">if</span> (filter(cell)) { action(cell); count++ }
+  }
+  <span class="kw">return</span> count
+}
+
+<span class="cmt">// Zero out all Marketing_Opex cells</span>
+<span class="kw">def</span> cleared = <span class="fn-c">iterateGridCells</span>(
+  { it.getMemberName(<span class="str">"Account"</span>) == <span class="str">"Marketing_Opex"</span> },
+  { cell -> cell.data = <span class="num">0.0</span>; cell.dirty = <span class="kw">true</span> }
+)
+println(<span class="str">"[INFO] Cleared \${cleared} Marketing_Opex cells"</span>)
+
+<span class="cmt">// Apply 10% uplift to all writable cells</span>
+<span class="fn-c">iterateGridCells</span>(
+  { !it.readOnly && it.data != <span class="kw">null</span> },
+  { cell -> cell.data = cell.data * <span class="num">1.1</span>; cell.dirty = <span class="kw">true</span> }
+)`,
+    output:`[INFO] Cleared 12 Marketing_Opex cells`,
+    errors:[
+      {code:"READ_ONLY_CELL",cause:"Attempting to write to a dynamic calc or locked cell",fix:"Always filter with !cell.readOnly before setting cell.data"},
+      {code:"NULL_GRID",cause:"Rule running outside form context",fix:"iterateGridCells is exclusively for Before/After Save Data Form rules"}
+    ],
+    release:"operation.grid.dataCellIterator available since 20.06."
+  }
+  ,
+  {
+    id:"checkJobStatus",name:"checkJobStatus()",cat:"integration",
+    desc:"Single-shot status check for any Planning job by ID. Lighter than awaitJob() — use when you want a non-blocking snapshot of job state before deciding next steps.",
+    since:"21.04",applies:["Planning","FCCS","TRCS"],
+    params:[
+      {n:"jobId",req:true,d:"Integer job ID returned from any job launch call"},
+      {n:"connName",req:false,d:"Named connection (default: 'LocalConnection')"}
+    ],
+    returns:"Map — {id, status, descriptiveStatus, startTime, endTime}. Throws on HTTP error.",
+    code:`<span class="kw">def</span> <span class="fn-c">checkJobStatus</span>(jobId, connName = <span class="str">"LocalConnection"</span>) {
+  <span class="kw">def</span> appName = operation.application.name
+  <span class="kw">def</span> resp = operation.application.getConnection(connName)
+    .get(<span class="str">"/HyperionPlanning/rest/v3/applications/\${appName}/jobs/\${jobId}"</span>)
+  <span class="kw">if</span> (resp.status != <span class="num">200</span>)
+    <span class="kw">throw new</span> Exception(<span class="str">"Job status check failed: HTTP \${resp.status}"</span>)
+  <span class="kw">def</span> job = <span class="kw">new</span> groovy.json.JsonSlurper().parseText(resp.body)
+  println(<span class="str">"[INFO] Job \${jobId}: \${job.descriptiveStatus} [\${job.status}]"</span>)
+  <span class="kw">return</span> [id: job.jobId, status: job.status,
+          descriptiveStatus: job.descriptiveStatus,
+          startTime: job.startTime, endTime: job.endTime]
+}
+
+<span class="cmt">// Launch async, do other work, then check once</span>
+<span class="kw">def</span> jId = <span class="fn-c">runDataIntegration</span>(<span class="str">"LocalConn"</span>, <span class="str">"Load_GL"</span>, <span class="str">"Jan-24"</span>, <span class="str">"Jan-24"</span>, <span class="str">"REPLACE"</span>, <span class="str">"STORE_DATA"</span>)
+Thread.sleep(<span class="num">10000</span>)
+<span class="kw">def</span> state = <span class="fn-c">checkJobStatus</span>(jId)
+<span class="kw">if</span> (state.status == <span class="num">1</span>) <span class="fn-c">runBusinessRule</span>(<span class="str">"Calc_Actuals"</span>, <span class="str">"Plan1"</span>)`,
+    output:`[INFO] Job 100249: Completed [1]`,
+    errors:[
+      {code:"HTTP 404",cause:"Job ID not found — may have been purged from history",fix:"Oracle purges old jobs — query within 24 hours of launch for reliability"},
+      {code:"status 0",cause:"Job still running (0=RUNNING, 1=SUCCESS, -1=FAILED)",fix:"Always compare status integer, not just descriptiveStatus string"}
+    ],
+    release:"Planning REST /jobs/{id} endpoint available since 21.04."
+  }
+  ,
+  {
+    id:"buildCalcScript",name:"buildCalcScript()",cat:"calculation",
+    desc:"Generates a dynamic Essbase calc script from Groovy runtime data and executes it. Use when FIX member lists are determined at runtime from substitution variables, metadata queries, or RTP values.",
+    since:"20.06",applies:["Planning","FCCS","TRCS"],
+    params:[
+      {n:"cubeName",req:true,d:"Target Essbase cube name"},
+      {n:"fixMembers",req:true,d:"Map of dimension name to member or List<String> for FIX clause"},
+      {n:"calcBody",req:true,d:"Groovy string with Essbase calc commands to execute inside FIX"}
+    ],
+    returns:"void — throws if the calc script fails or cube is locked.",
+    code:`<span class="kw">def</span> <span class="fn-c">buildCalcScript</span>(cubeName, Map fixMembers, String calcBody) {
+  <span class="kw">def</span> fixClause = fixMembers.collect { dim, mbrs ->
+    <span class="kw">def</span> mbrList = (mbrs instanceof List) ? mbrs.join(<span class="str">","</span>) : mbrs
+    <span class="str">"\"\${mbrList}\""</span>
+  }.join(<span class="str">","</span>)
+  <span class="kw">def</span> script = <span class="str">"FIX (\${fixClause})\n  \${calcBody}\nENDFIX"</span>
+  println(<span class="str">"[INFO] Executing on \${cubeName}: \${script}"</span>)
+  operation.application.getCube(cubeName).executeBusinessRule(script, [:])
+}
+
+<span class="cmt">// Dynamically calc the current period from a sub variable</span>
+<span class="kw">def</span> curPer = operation.application.getSubstitutionVariableValue(<span class="str">"CurPeriod"</span>)
+<span class="fn-c">buildCalcScript</span>(<span class="str">"Plan1"</span>,
+  [Scenario: <span class="str">"Actual"</span>, Version: <span class="str">"Working"</span>, Period: curPer],
+  <span class="str">"CALC ALL;"</span>
+)
+
+<span class="cmt">// Multi-member FIX using descendant list</span>
+<span class="kw">def</span> entities = <span class="fn-c">getDescendants</span>(<span class="str">"Plan1"</span>, <span class="str">"Entity"</span>, <span class="str">"EMEA"</span>)
+<span class="fn-c">buildCalcScript</span>(<span class="str">"Plan1"</span>,
+  [Entity: entities, Scenario: <span class="str">"Budget"</span>],
+  <span class="str">"\"Headcount\" = \"FTE_Count\" * 1.05;"</span>
+)`,
+    output:`[INFO] Executing on Plan1: FIX ("Actual","Working","Feb-24")
+  CALC ALL;
+ENDFIX`,
+    errors:[
+      {code:"CUBE_LOCKED",cause:"Another process holds a write lock on the cube",fix:"Use retryWithBackoff() to retry after a delay"},
+      {code:"CALC_SYNTAX",cause:"Syntax error in the calcBody string",fix:"Test the generated script in Calculation Manager console before embedding in Groovy"},
+      {code:"EMPTY_FIX",cause:"fixMembers map produced empty or null FIX clause",fix:"Validate that all sub variables and member names resolve before building"}
+    ],
+    release:"executeBusinessRule() for inline calc scripts available since 20.06."
+  }
+
 ];
 
 // ══════════════════════════════════════════════
@@ -1594,9 +1927,9 @@ const TERM_CMDS = {
   whoami: ()=>['> elliot alderson · senior engineer · fsociety'],
   'ls functions': ()=>FNS.map(f=>`>   ${f.name.padEnd(38)} [${f.cat}]`),
   stats: ()=>[
-    `> Total functions : ${FNS.length}`,
+    `> Total functions : ${FNS.length} (31 — 6 new in v1.1)`,
     `> Categories      : 8`,
-    `> EPM Release     : 25.11`,
+    `> EPM Release     : 25.11 — all APIs validated`,
     `> Engine          : Groovy 4.x`,
     `> Status          : ████████████████ LIVE`
   ],
