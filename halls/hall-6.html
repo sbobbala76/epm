@@ -617,16 +617,17 @@
     <div class="hero-eyebrow">Hall 6 of the FCCS EPM Cloud Study Tour</div>
     <h1>Journals &amp; <em>Adjustments</em></h1>
     <p class="hero-desc">
-      Two journal types, one data separation principle, and a five-day close window
-      where every posting decision has a consequence. Journals live in their own data
-      source lane — completely insulated from Data Integration loads. Understanding
-      that separation, the Enterprise Journal workflow, and exactly what happens to
-      entity status after posting is what the exam tests and what close cycles punish
-      when you get wrong.
+      Two fundamentally different journal types — Consolidation Journals that stay inside
+      FCCS, and Enterprise Journals that post to the ERP General Ledger and reload back
+      into FCCS like any other GL data. FCCS owns the governance process for Enterprise
+      Journals (who creates, who approves, when, in what format) but not the final data
+      store. Understanding this distinction, the Consolidation Journal data separation
+      principle, and what happens to entity status after posting is what the exam tests
+      and what close cycles punish when you get wrong.
     </p>
     <div class="hero-meta">
-      <span class="hero-badge b-sky">Standard Journals</span>
-      <span class="hero-badge b-purple">Enterprise Journals</span>
+      <span class="hero-badge b-sky">Consolidation Journals</span>
+      <span class="hero-badge b-purple">Enterprise Journals → ERP GL</span>
       <span class="hero-badge b-teal">FCCS_Journal Input Lane</span>
       <span class="hero-badge b-gold">Impacted Status After Post</span>
       <span class="hero-badge b-rose">Locked Period Handling</span>
@@ -654,71 +655,260 @@
  
       <div class="section">
         <div class="section-title"><span class="icon">📒</span> What Journals Are For in FCCS</div>
-        <div class="section-sub">Post-load adjustments that belong in the consolidation layer, not the source ERP</div>
+        <div class="section-sub">Two types with fundamentally different destinations — one stays in FCCS, one flows to ERP</div>
         <p>
-          FCCS journals are not a general ledger. They exist for one purpose: to post
-          <strong>consolidation-layer adjustments</strong> that cannot or should not be made
-          in source systems. Unrealised profit eliminations, intercompany reclassifications,
-          period-end allocation adjustments, and group-level statutory entries all belong here.
+          FCCS supports two journal types that serve opposite architectural purposes.
+          <strong>Consolidation Journals</strong> post adjustments directly within FCCS and stay there —
+          they affect consolidated results but never flow back to ERP. <strong>Enterprise Journals</strong>
+          are different: FCCS controls the creation and approval process, but the actual posting
+          goes to the <strong>ERP General Ledger</strong>. From there, the data reloads into FCCS
+          through the normal Data Integration pipeline — just like any other GL data.
         </p>
         <p>
-          The critical architectural fact is that <strong>journal data occupies a completely
-          separate data source from loaded trial balance data</strong>. FCCS stores journals in
-          <code>FCCS_Journal Input</code> — a distinct data source from <code>FCCS_Managed Data</code>
-          where Data Integration loads land. A Replace-mode data load never touches
-          <code>FCCS_Journal Input</code>. You cannot accidentally overwrite an approved
-          journal by reloading trial balance data.
+          The critical architectural distinction: Consolidation Journals write to
+          <code>FCCS_Journal Input</code> — a data source permanently protected from Data Integration
+          loads. Enterprise Journals write to the ERP GL and then land in
+          <code>FCCS_Managed Data</code> on the next DI load cycle. FCCS does not keep Enterprise
+          Journal data separately in its consolidation cube.
         </p>
         <div class="callout co-sky">
-          <div class="callout-label">🔑 The Separation Principle</div>
-          <p>Replace mode on a Data Integration load operates only on <code>FCCS_Managed Data</code>.
-          It does not clear, overwrite, or interact with <code>FCCS_Journal Input</code> in any way.
-          This means <strong>approved journals are protected from data reloads</strong> —
-          a deliberate design choice that supports concurrent close activity.</p>
+          <div class="callout-label">🔑 Why Enterprise Journals live in FCCS</div>
+          <p>FCCS owns the <em>process</em>, not the posting destination. Enterprise Journals solve
+          a governance and close-control problem: finance teams identify adjustments needed during
+          consolidation review, and rather than phoning the ERP team, they create, approve, and
+          push those adjustments through a controlled workflow in FCCS — which then posts to the
+          ERP GL and flows back in on the next load. One journal framework across ERP + EPM,
+          rather than fragmented processes and reconciliation headaches.</p>
         </div>
       </div>
  
       <!-- TWO JOURNAL TYPES -->
       <div class="section">
         <div class="section-title"><span class="icon">⚖️</span> Two Journal Types</div>
-        <div class="section-sub">Standard for routine speed, Enterprise for governance and documentation</div>
- 
+        <div class="section-sub">Consolidation Journals stay in FCCS — Enterprise Journals post to ERP GL then reload back</div>
+
         <div class="jtype-grid">
           <div class="jtype-card standard">
             <div class="jtype-header">
-              <div class="jtype-name">Standard Journal</div>
-              <div class="jtype-tag">Optional approval · flexible · faster</div>
+              <div class="jtype-name">Consolidation Journal</div>
+              <div class="jtype-tag">FCCS-only · stays in FCCS_Journal Input · optional approval</div>
             </div>
             <div class="jtype-body">
-              <p>Straightforward posting tool for routine adjustments. Approval workflow is optional — configured per journal class. Can be posted directly by a user with sufficient access.</p>
-              <div class="jtype-bullet">No mandatory documentation requirement — supporting files are optional.</div>
-              <div class="jtype-bullet">Suitable for single-entity reclassifications that repeat each period with a known, low-risk amount.</div>
+              <p>Adjustments made directly within FCCS that affect consolidated results but do <strong>not</strong> flow back to ERP. Used for consolidation-specific entries: reclassifications, eliminations, top-side adjustments, and group-level statutory entries.</p>
+              <div class="jtype-bullet">Data destination: <code>FCCS_Journal Input</code> — a separate data source permanently protected from DI Replace-mode loads.</div>
+              <div class="jtype-bullet">Approval workflow is optional — configured per journal class. Single-level approve/reject.</div>
               <div class="jtype-bullet">Can be auto-reversed to the next period — useful for accruals that reverse automatically.</div>
-              <div class="jtype-bullet">Approval, if enabled, follows a single-level approve/reject step.</div>
-              <div class="jtype-verdict">Use for: routine reclassifications, period accruals, low-materiality single-entity adjustments</div>
+              <div class="jtype-bullet">ERP is <em>not</em> updated — the adjustment exists only in the consolidation layer in FCCS.</div>
+              <div class="jtype-verdict">Use for: IC eliminations, unrealised profit, top-side reclassifications, consolidation-only statutory entries</div>
             </div>
           </div>
           <div class="jtype-card enterprise">
             <div class="jtype-header">
               <div class="jtype-name">Enterprise Journal</div>
-              <div class="jtype-tag">Mandatory workflow · SOX-compliant · documented</div>
+              <div class="jtype-tag">Posts to ERP GL → reloads into FCCS · governed in FCCS · SOX-compliant</div>
             </div>
             <div class="jtype-body">
-              <p>Full governance workflow. Mandatory in any SOX environment, for cross-entity entries, or for material amounts requiring documented justification and a named approver.</p>
-              <div class="jtype-bullet">Five-stage mandatory workflow: Create → Validate → Submit → Approve/Reject → Post. Cannot skip stages.</div>
-              <div class="jtype-bullet">Documentation attachment is mandatory at Submit — the journal cannot be posted without supporting files.</div>
-              <div class="jtype-bullet">Full audit trail: who created, who submitted, who approved, timestamp at every stage.</div>
-              <div class="jtype-bullet">Rejection returns the journal to the submitter with comments — the cycle restarts from Validate.</div>
-              <div class="jtype-verdict">Use for: cross-entity entries, SOX environments, material eliminations, any amount requiring sign-off</div>
+              <p>FCCS owns the <strong>process</strong> (creation, approval, validation, posting control) but the data destination is the <strong>ERP General Ledger</strong>. After posting, the data reloads into <code>FCCS_Managed Data</code> via the normal DI pipeline. FCCS does not store Enterprise Journal data separately in its consolidation cube.</p>
+              <div class="jtype-bullet">Purpose: push FCCS-identified adjustments back to the ERP ledger of record — keeping ERP and FCCS aligned and auditors reconciled.</div>
+              <div class="jtype-bullet">Five-stage mandatory workflow: Create → Validate → Submit → Approve/Reject → Post (to ERP GL). Cannot skip stages.</div>
+              <div class="jtype-bullet">Documentation attachment mandatory at Submit. Full audit trail: creator, submitter, approver, timestamps at every stage.</div>
+              <div class="jtype-bullet">After ERP GL posting, the data reloads into <code>FCCS_Managed Data</code> on the next DI run — like any other GL source data.</div>
+              <div class="jtype-verdict">Use for: adjustments that must be reflected in the ERP ledger of record — ensuring ERP and FCCS stay reconciled</div>
             </div>
           </div>
         </div>
+
+        <div class="callout co-purple">
+          <div class="callout-label">⚠️ The Common Confusion</div>
+          <p>Both journal types have approval workflows inside FCCS. The critical difference is the
+          <strong>data destination</strong>. Consolidation Journals stay in FCCS forever in
+          <code>FCCS_Journal Input</code>. Enterprise Journals are posted to the ERP GL — FCCS
+          is the governance and control interface, not the data store. After an Enterprise Journal
+          posts to ERP, the only way it appears in FCCS is via the next DI load from the GL.</p>
+        </div>
       </div>
  
+      <!-- ENTERPRISE JOURNAL ERP FLOW -->
+      <div class="section">
+        <div class="section-title"><span class="icon">🔀</span> Enterprise Journal — The Full Data Flow</div>
+        <div class="section-sub">FCCS owns the process · ERP GL is the system of record · data reloads back into FCCS for consolidation</div>
+
+        <!-- ── EJ Flow Diagram ───────────────────────────────── -->
+        <div style="
+          background:var(--surface-2);
+          border:1px solid var(--border);
+          border-radius:var(--radius-lg);
+          padding:2rem 1.5rem 1.75rem;
+          margin-bottom:1.3rem;
+          overflow-x:auto;
+        ">
+          <div style="
+            display:flex;
+            align-items:center;
+            gap:0;
+            min-width:640px;
+          ">
+
+            <!-- ① FCCS circle -->
+            <div style="display:flex;flex-direction:column;align-items:center;flex-shrink:0;width:120px;">
+              <div style="
+                width:96px;height:96px;border-radius:50%;
+                background:linear-gradient(145deg,#1a3a6e,#0d2247);
+                border:2px solid rgba(56,189,248,0.4);
+                display:flex;flex-direction:column;align-items:center;justify-content:center;
+                box-shadow:0 0 24px rgba(14,165,233,0.15);
+              ">
+                <svg width="32" height="32" viewBox="0 0 32 32" fill="none" style="margin-bottom:4px">
+                  <rect x="4" y="4" width="10" height="10" rx="2" fill="rgba(56,189,248,0.7)"/>
+                  <rect x="18" y="4" width="10" height="10" rx="2" fill="rgba(56,189,248,0.45)"/>
+                  <rect x="4" y="18" width="10" height="10" rx="2" fill="rgba(56,189,248,0.45)"/>
+                  <rect x="18" y="18" width="10" height="10" rx="2" fill="rgba(56,189,248,0.25)"/>
+                </svg>
+                <span style="font-family:'DM Mono',monospace;font-size:0.72rem;font-weight:600;color:#fff;letter-spacing:0.06em;">FCCS</span>
+              </div>
+              <div style="margin-top:0.6rem;font-family:'DM Mono',monospace;font-size:0.6rem;color:var(--accent-2);letter-spacing:0.06em;text-transform:uppercase;text-align:center;">Owns the<br>Process</div>
+            </div>
+
+            <!-- arrow → -->
+            <div style="flex:0 0 32px;display:flex;align-items:center;justify-content:center;margin-top:-20px;">
+              <svg width="32" height="18" viewBox="0 0 32 18" fill="none">
+                <path d="M0 9 L26 9" stroke="rgba(148,163,184,0.5)" stroke-width="1.5"/>
+                <path d="M22 4 L30 9 L22 14" stroke="rgba(148,163,184,0.5)" stroke-width="1.5" fill="none" stroke-linejoin="round"/>
+              </svg>
+            </div>
+
+            <!-- ② Governance box -->
+            <div style="
+              flex:0 0 190px;
+              background:var(--surface-3);
+              border:1px solid rgba(56,189,248,0.25);
+              border-radius:var(--radius);
+              overflow:hidden;
+            ">
+              <div style="
+                padding:0.55rem 0.85rem;
+                border-bottom:1px solid rgba(56,189,248,0.18);
+                font-family:'DM Mono',monospace;font-size:0.62rem;
+                font-weight:600;letter-spacing:0.07em;text-transform:uppercase;
+                color:var(--accent-2);
+                background:rgba(14,165,233,0.07);
+              ">Enterprise Journals<br>Governance</div>
+              <div style="padding:0.6rem 0.85rem;display:flex;flex-direction:column;gap:0.38rem;">
+                <div style="display:flex;align-items:center;gap:0.5rem;font-size:0.79rem;color:var(--text-dim);">
+                  <span style="color:var(--accent-2);font-size:0.85rem;">👤</span> Who Creates
+                </div>
+                <div style="display:flex;align-items:center;gap:0.5rem;font-size:0.79rem;color:var(--text-dim);">
+                  <span style="color:var(--accent-green);font-size:0.85rem;">✅</span> Who Approves
+                </div>
+                <div style="display:flex;align-items:center;gap:0.5rem;font-size:0.79rem;color:var(--text-dim);">
+                  <span style="color:var(--accent-gold);font-size:0.85rem;">📅</span> When Allowed
+                </div>
+                <div style="display:flex;align-items:center;gap:0.5rem;font-size:0.79rem;color:var(--text-dim);">
+                  <span style="color:var(--accent-purple);font-size:0.85rem;">📋</span> What Format
+                </div>
+                <div style="display:flex;align-items:center;gap:0.5rem;font-size:0.79rem;color:var(--text-dim);">
+                  <span style="color:var(--accent-teal);font-size:0.85rem;">📤</span> What Gets Posted
+                </div>
+              </div>
+            </div>
+
+            <!-- arrow → with "Post to ERP" label above -->
+            <div style="flex:0 0 64px;display:flex;flex-direction:column;align-items:center;justify-content:center;margin-top:-20px;">
+              <span style="font-family:'DM Mono',monospace;font-size:0.58rem;color:var(--accent-2);letter-spacing:0.06em;text-transform:uppercase;margin-bottom:6px;white-space:nowrap;">Post to ERP</span>
+              <svg width="56" height="18" viewBox="0 0 56 18" fill="none">
+                <path d="M0 9 L50 9" stroke="rgba(56,189,248,0.6)" stroke-width="1.8"/>
+                <path d="M44 4 L54 9 L44 14" stroke="rgba(56,189,248,0.6)" stroke-width="1.8" fill="none" stroke-linejoin="round"/>
+              </svg>
+            </div>
+
+            <!-- ③ ERP GL cylinder -->
+            <div style="display:flex;flex-direction:column;align-items:center;flex-shrink:0;width:120px;">
+              <!-- cylinder shape via CSS -->
+              <div style="position:relative;width:80px;height:88px;">
+                <!-- cylinder body -->
+                <div style="
+                  position:absolute;bottom:0;left:0;right:0;height:76px;
+                  background:linear-gradient(180deg,#3a5068 0%,#243648 100%);
+                  border-radius:0 0 6px 6px;
+                  border:1px solid rgba(148,163,184,0.3);
+                  border-top:none;
+                "></div>
+                <!-- top ellipse -->
+                <div style="
+                  position:absolute;top:0;left:0;right:0;height:22px;
+                  background:linear-gradient(180deg,#4a6882,#3a5068);
+                  border-radius:50%;
+                  border:1px solid rgba(148,163,184,0.4);
+                  display:flex;align-items:center;justify-content:center;
+                "></div>
+                <!-- label -->
+                <div style="
+                  position:absolute;top:0;left:0;right:0;bottom:0;
+                  display:flex;flex-direction:column;align-items:center;justify-content:center;
+                  padding-top:12px;
+                ">
+                  <span style="font-family:'DM Mono',monospace;font-size:0.75rem;font-weight:700;color:#fff;letter-spacing:0.04em;">ERP</span>
+                  <span style="font-family:'Inter',sans-serif;font-size:0.67rem;color:rgba(255,255,255,0.75);text-align:center;line-height:1.3;margin-top:2px;">General<br>Ledger (GL)</span>
+                </div>
+              </div>
+              <div style="margin-top:0.5rem;font-family:'DM Mono',monospace;font-size:0.58rem;color:var(--text-muted);letter-spacing:0.05em;text-transform:uppercase;text-align:center;font-style:italic;">System of Record</div>
+            </div>
+
+            <!-- arrow → with "Load Back Into FCCS" label above -->
+            <div style="flex:0 0 72px;display:flex;flex-direction:column;align-items:center;justify-content:center;margin-top:-20px;">
+              <span style="font-family:'DM Mono',monospace;font-size:0.56rem;color:var(--accent-teal);letter-spacing:0.05em;text-transform:uppercase;margin-bottom:6px;white-space:nowrap;text-align:center;line-height:1.4;">Load Back<br>into FCCS</span>
+              <svg width="60" height="18" viewBox="0 0 60 18" fill="none">
+                <path d="M0 9 L54 9" stroke="rgba(20,184,166,0.6)" stroke-width="1.8"/>
+                <path d="M48 4 L58 9 L48 14" stroke="rgba(20,184,166,0.6)" stroke-width="1.8" fill="none" stroke-linejoin="round"/>
+              </svg>
+            </div>
+
+            <!-- ④ FCCS database (reload destination) -->
+            <div style="display:flex;flex-direction:column;align-items:center;flex-shrink:0;width:120px;">
+              <!-- stacked database discs -->
+              <div style="position:relative;width:72px;height:78px;">
+                <!-- disc 3 (bottom) -->
+                <div style="
+                  position:absolute;bottom:0;left:0;right:0;height:22px;
+                  background:linear-gradient(180deg,#243040,#1a2432);
+                  border-radius:50%;
+                  border:1px solid rgba(20,184,166,0.35);
+                "></div>
+                <!-- disc 2 (mid) -->
+                <div style="
+                  position:absolute;bottom:22px;left:0;right:0;height:22px;
+                  background:linear-gradient(180deg,#2d3e52,#243040);
+                  border-radius:50%;
+                  border:1px solid rgba(20,184,166,0.45);
+                "></div>
+                <!-- disc 1 (top) -->
+                <div style="
+                  position:absolute;bottom:44px;left:0;right:0;height:22px;
+                  background:linear-gradient(180deg,#3a5470,#2d3e52);
+                  border-radius:50%;
+                  border:1px solid rgba(20,184,166,0.6);
+                  display:flex;align-items:center;justify-content:center;
+                ">
+                  <span style="font-family:'DM Mono',monospace;font-size:0.58rem;color:rgba(20,184,166,0.9);letter-spacing:0.04em;">FCCS</span>
+                </div>
+              </div>
+              <div style="margin-top:0.5rem;font-family:'DM Mono',monospace;font-size:0.6rem;color:var(--accent-teal);letter-spacing:0.05em;text-transform:uppercase;text-align:center;line-height:1.4;">For<br>Consolidation</div>
+            </div>
+
+          </div><!-- /flex row -->
+        </div><!-- /diagram box -->
+
+        <div class="callout co-orange">
+          <div class="callout-label">📌 Key Implication — Timing Gap &amp; Posting Methods</div>
+          <p>After an Enterprise Journal posts to ERP, there is a window before the next DI load where the adjustment is in ERP but not yet in FCCS — unlike a Consolidation Journal, which is instantly visible on post to <code>FCCS_Journal Input</code>.</p>
+          <p style="margin-top:0.55rem"><strong>Three EJ posting methods (Oracle documented):</strong> ① Direct connector to Oracle Cloud Financials (pre-built, automated); ② Enterprise Journals APIs for direct posting to other ERP systems; ③ File-based via EPM Automate <code>exportEJJournals</code> command for any ERP. The method is configured per Target definition — not all posting is automatic or real-time.</p>
+        </div>
+      </div>
+
       <!-- ENTERPRISE JOURNAL WORKFLOW -->
       <div class="section">
         <div class="section-title"><span class="icon">🔁</span> Enterprise Journal Workflow</div>
-        <div class="section-sub">Mandatory five-stage sequence — no stage can be skipped</div>
+        <div class="section-sub">Mandatory five-stage sequence — posts to ERP GL at the final stage, not to FCCS_Journal Input</div>
  
         <div class="workflow">
           <div class="wf-step create">
@@ -751,7 +941,7 @@
           <div class="wf-step post">
             <div class="wf-circle">🏦</div>
             <div class="wf-label">Post</div>
-            <div class="wf-sub">Writes to FCCS_Journal Input</div>
+            <div class="wf-sub">Posts to ERP GL (direct for Oracle Cloud Financials; EPM Automate for others)</div>
           </div>
         </div>
  
@@ -759,7 +949,7 @@
           <div class="callout-label">⚠️ Rejection Loop</div>
           <p>When an approver <strong>rejects</strong> an Enterprise Journal, it does not disappear.
           It is returned to the submitter with the approver's rejection comments attached.
-          The submitter must correct the journal and revalidate before resubmitting.
+          The journal returns to <strong>Working</strong> status. The submitter corrects and resubmits.
           The approval clock resets — the approver sees it as a fresh submission.
           This loop is fully audited: every rejection event is timestamped in the journal history.</p>
         </div>
@@ -768,7 +958,7 @@
       <!-- DATA SOURCE SEPARATION -->
       <div class="section">
         <div class="section-title"><span class="icon">🗂️</span> Data Source Separation</div>
-        <div class="section-sub">Why FCCS_Journal Input and FCCS_Managed Data never collide</div>
+        <div class="section-sub">Consolidation Journals are protected from DI loads — Enterprise Journal data flows through FCCS_Managed Data</div>
  
         <div class="ds-diagram">
           <div class="ds-lane managed">
@@ -779,13 +969,14 @@
               <div class="ds-item"><div class="ds-dot"></div>Replace mode clears &amp; reloads this lane</div>
               <div class="ds-item"><div class="ds-dot"></div>Accumulate mode adds to this lane</div>
               <div class="ds-item"><div class="ds-dot"></div>Overwritten by every new DI load run</div>
+              <div class="ds-item"><div class="ds-dot"></div>Enterprise Journal data reloads here after ERP GL posting</div>
             </div>
           </div>
           <div class="ds-lane journal">
             <div class="ds-lane-header">FCCS_Journal Input</div>
             <div class="ds-lane-body">
-              <div class="ds-item"><div class="ds-dot"></div>Approved Standard &amp; Enterprise Journals</div>
-              <div class="ds-item"><div class="ds-dot"></div>Written only via the Journals workflow</div>
+              <div class="ds-item"><div class="ds-dot"></div>Approved Consolidation Journals</div>
+              <div class="ds-item"><div class="ds-dot"></div>Written only via the Consolidation Journal workflow</div>
               <div class="ds-item"><div class="ds-dot"></div>DI Replace mode does NOT touch this lane</div>
               <div class="ds-item"><div class="ds-dot"></div>Cleared only by unposting the journal</div>
               <div class="ds-item"><div class="ds-dot"></div>Protected across all DI load cycles</div>
@@ -797,8 +988,10 @@
           When the consolidation engine reads an entity's data, it aggregates <em>both</em>
           data sources together. The P&amp;L and Balance Sheet visible in reports is
           <code>FCCS_Managed Data</code> + <code>FCCS_Journal Input</code> combined.
-          Neither source is "more correct" — they serve different purposes and coexist in the
-          same dimensional space, partitioned by the Data Source dimension member.
+          <code>FCCS_Journal Input</code> holds <strong>Consolidation Journal</strong> data only.
+          Enterprise Journal data, after reloading from the ERP GL, appears in
+          <code>FCCS_Managed Data</code> alongside regular trial balance figures — it is not
+          separately identifiable by data source after the DI reload.
         </p>
       </div>
  
@@ -808,9 +1001,9 @@
         <div class="section-sub">The consolidation re-run requirement and the locked period trap</div>
  
         <p>
-          Posting any journal — Standard or Enterprise — to an entity that is currently at
-          <strong>Consolidated (status 2)</strong> immediately moves that entity back to
-          <strong>Impacted (status 6)</strong>. The system has detected that the data has
+          Posting any Consolidation Journal to an entity that is currently at
+          <strong>OK (Consolidated)</strong> immediately moves that entity back to
+          <strong>Impacted</strong>. The system has detected that the data has
           changed since the last consolidation run. The consolidated figures stored at the
           parent level no longer reflect the posted journal.
         </p>
@@ -820,23 +1013,23 @@
             <span class="impact-icon">📒</span>
             <div class="impact-content">
               <div class="impact-title">Journal posted to entity at Consolidated status</div>
-              <div class="impact-desc">Entity flips from Consolidated (2) to Impacted (6). The parent's consolidated balance no longer includes the journal. Consolidation must be rerun to incorporate the adjustment.</div>
+              <div class="impact-desc">Entity flips from OK (Consolidated) to Impacted. The parent's consolidated balance no longer includes the journal. Consolidation must be rerun to incorporate the adjustment.</div>
             </div>
-            <span class="impact-badge ib-warn">→ Impacted (6)</span>
+            <span class="impact-badge ib-warn">→ Impacted</span>
           </div>
           <div class="impact-row">
             <span class="impact-icon">🔄</span>
             <div class="impact-content">
               <div class="impact-title">Consolidation rerun after journal post</div>
-              <div class="impact-desc">The engine picks up both FCCS_Managed Data and FCCS_Journal Input. Consolidated figures now include the journal entry. Entity returns to Consolidated (2).</div>
+              <div class="impact-desc">The engine aggregates FCCS_Managed Data and FCCS_Journal Input. For Consolidation Journals the entry is read from FCCS_Journal Input. For Enterprise Journal data it is already in FCCS_Managed Data after the DI reload. Entity returns to OK (Consolidated).</div>
             </div>
-            <span class="impact-badge ib-ok">→ Consolidated (2)</span>
+            <span class="impact-badge ib-ok">→ OK (Consolidated)</span>
           </div>
           <div class="impact-row">
             <span class="impact-icon">🔒</span>
             <div class="impact-content">
               <div class="impact-title">Attempting to post a journal to a locked period</div>
-              <div class="impact-desc">FCCS blocks the post. The journal cannot write to FCCS_Journal Input while the period is locked. The period must be unlocked by an admin, the journal posted, consolidation rerun, and the period re-locked. This is a deliberate governance gate.</div>
+              <div class="impact-desc">FCCS blocks the post. For Consolidation Journals, the period lock prevents writing to FCCS_Journal Input. For Enterprise Journals, the period lock in FCCS prevents the posting action from reaching the ERP GL. In both cases the procedure is the same: admin unlocks, journal is posted, consolidation reruns, period re-locked.</div>
             </div>
             <span class="impact-badge ib-error">Blocked — period locked</span>
           </div>
@@ -870,10 +1063,68 @@
     ════════════════════════════════════════════════ -->
     <div class="tab-panel" id="tab-technical">
  
+      <!-- JOURNAL TYPE COMPARISON TABLE -->
+      <div class="section">
+        <div class="section-title"><span class="icon">📋</span> FCCS Journal Types — Comparison Table</div>
+        <div class="section-sub">Enterprise Journals vs Consolidation Journals — architecture, destination, and governance role</div>
+
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Feature</th>
+              <th>Enterprise Journals</th>
+              <th>Consolidation Journals</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Purpose</strong></td>
+              <td>Governance of journal creation, approval, and posting to ERP</td>
+              <td>Adjustments within FCCS for consolidation reporting</td>
+            </tr>
+            <tr>
+              <td><strong>Where Created</strong></td>
+              <td>FCCS (via Enterprise Journals module)</td>
+              <td>FCCS (within the consolidation cube)</td>
+            </tr>
+            <tr>
+              <td><strong>Where Posted</strong></td>
+              <td><em style="color:var(--accent-purple)">ERP General Ledger</em></td>
+              <td><em style="color:var(--accent-2)">FCCS Consolidation Cube</em></td>
+            </tr>
+            <tr>
+              <td><strong>Governance Role of FCCS</strong></td>
+              <td>Controls who, when, what, and how journals are posted</td>
+              <td>Controls how adjustments affect consolidated results</td>
+            </tr>
+            <tr>
+              <td><strong>Storage in FCCS</strong></td>
+              <td>Not stored in cube; posted to ERP and reloaded as GL data into <code>FCCS_Managed Data</code></td>
+              <td>Stored directly in FCCS cube via <code>FCCS_Journal Input</code></td>
+            </tr>
+            <tr>
+              <td><strong>Audit Trail</strong></td>
+              <td>Full workflow, approvals, and audit trail in FCCS + ERP</td>
+              <td>Audit trail within FCCS journal module</td>
+            </tr>
+            <tr>
+              <td><strong>Impact on Consolidation</strong></td>
+              <td>Indirect — via GL load post-ERP (DI reload required)</td>
+              <td>Direct — impacts consolidation results immediately on post</td>
+            </tr>
+            <tr>
+              <td><strong>Use Case</strong></td>
+              <td>ERP-aligned journal governance during close</td>
+              <td>Top-side adjustments, reclassifications, IC eliminations</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
       <!-- DECISION MATRIX -->
       <div class="section">
         <div class="section-title"><span class="icon">🧭</span> Journal Type Decision Matrix</div>
-        <div class="section-sub">When to use Standard vs Enterprise — and when to use neither</div>
+        <div class="section-sub">When to use Consolidation Journal vs Enterprise Journal — and when to use neither</div>
  
         <table class="data-table">
           <thead>
@@ -887,25 +1138,31 @@
           <tbody>
             <tr>
               <td>Routine reclassification, same amount, same entity, repeats monthly</td>
-              <td><em>Standard Journal</em></td>
-              <td>Low risk, no cross-entity impact, optional approval sufficient</td>
+              <td><em>Consolidation Journal</em></td>
+              <td>Consolidation-layer only, low risk, optional approval sufficient — stays in FCCS_Journal Input</td>
               <td>BritEdge monthly depreciation reclassification</td>
             </tr>
             <tr>
               <td>Cross-entity elimination that does not recur systematically</td>
-              <td><em>Enterprise Journal</em></td>
-              <td>Cross-entity impact, documentation required, named approver needed</td>
+              <td><em>Consolidation Journal</em></td>
+              <td>Consolidation-layer adjustment — stays in FCCS, does not need to flow back to ERP</td>
               <td>DeutschWerk → BritEdge unrealised profit Q1</td>
             </tr>
             <tr>
-              <td>Material one-off statutory adjustment, SOX environment</td>
+              <td>FCCS-identified adjustment that must also appear in the ERP GL ledger of record</td>
               <td><em>Enterprise Journal</em></td>
-              <td>SOX requires documented approval trail, mandatory attachment</td>
-              <td>GlobalMerge group goodwill impairment entry</td>
+              <td>ERP and FCCS must stay aligned — FCCS governs the process, ERP GL receives the posting</td>
+              <td>Late audit adjustment that auditors also need reflected in Oracle ERP Cloud</td>
+            </tr>
+            <tr>
+              <td>Material one-off statutory adjustment, SOX environment, consolidation layer only</td>
+              <td><em>Consolidation Journal</em></td>
+              <td>Stays in FCCS_Journal Input. For SOX, use documented approval workflow on Consolidation Journal</td>
+              <td>GlobalMerge group goodwill impairment entry (consolidation-only)</td>
             </tr>
             <tr>
               <td>Period-end accrual that auto-reverses next period</td>
-              <td><em>Standard Journal (auto-reverse)</em></td>
+              <td><em>Consolidation Journal (auto-reverse)</em></td>
               <td>Auto-reverse feature eliminates manual reversal risk</td>
               <td>AsiaLink intercompany management fee accrual</td>
             </tr>
@@ -943,15 +1200,15 @@
           </li>
           <li>
             <span class="step-num">02</span>
-            <span class="step-text"><strong>Admin unlocks the period</strong> via Approvals → Period Status. The entity-period combination is moved from Locked (10) to a reopened state. Document the reason for unlock in the system.</span>
+            <span class="step-text"><strong>Admin unlocks the period</strong> via Approvals → Period Status. The entity-period combination is moved from Locked to a reopened state. Document the reason for unlock in the system.</span>
           </li>
           <li>
             <span class="step-num">03</span>
-            <span class="step-text"><strong>Post the late journal</strong> — Standard or Enterprise depending on materiality and SOX requirements. For an auditor-required adjustment, Enterprise Journal with the auditor communication attached is mandatory.</span>
+            <span class="step-text"><strong>Post the late journal</strong> — Consolidation Journal if the adjustment stays within FCCS; Enterprise Journal if it must also be reflected in the ERP GL (e.g. auditor-required entries). For auditor adjustments, Enterprise Journal with the auditor communication attached is appropriate.</span>
           </li>
           <li>
             <span class="step-num">04</span>
-            <span class="step-text"><strong>Entity status is now Impacted (6)</strong> following the journal post. Run Consolidation for the affected entity and all parent entities up to GlobalMerge.</span>
+            <span class="step-text"><strong>Entity status is now Impacted</strong> following the journal post. Run Consolidation for the affected entity and all parent entities up to GlobalMerge.</span>
           </li>
           <li>
             <span class="step-num">05</span>
@@ -959,18 +1216,19 @@
           </li>
           <li>
             <span class="step-num">06</span>
-            <span class="step-text"><strong>Re-lock the period</strong> via Approvals → Period Status. Document the re-lock with reference to the late journal. The full unlock/adjust/relock cycle is audited.</span>
+            <span class="step-text"><strong>Re-lock the period</strong> via Home → Approvals → Change Status → Lock. Note: re-locking requires the entity to be at OK status — consolidation must be complete before locking. Document the re-lock with reference to the late journal. The full cycle is audited.</span>
           </li>
         </ol>
  
         <div class="callout co-purple">
-          <div class="callout-label">💡 The DeutschWerk Proportionalization Effect</div>
-          <p>If a late journal is posted to DeutschWerk (80% owned), the Consolidation rerun will
-          apply Proportionalization — only 80% of the adjustment flows into the GlobalMerge
-          consolidated P&amp;L. If the journal is for <strong>€100,000</strong>, the consolidated
-          impact is <strong>€80,000</strong> plus any NCI elimination. The Finance Controller must
-          communicate the gross vs net impact to the CFO clearly — the journal amount and the
-          consolidated impact are different numbers.</p>
+          <div class="callout-label">💡 The DeutschWerk Full Consolidation Effect — 100% Not 80%</div>
+          <p>DeutschWerk uses Full Consolidation (PCON = 100%). When a late journal is posted and
+          Consolidation reruns, <strong>100% of the journal amount</strong> flows into GlobalMerge's
+          consolidated P&amp;L — not 80%. The 20% NCI is calculated separately as an elimination entry
+          based on POWN%. For a <strong>€100,000</strong> journal: the gross consolidated line shows
+          €100,000; the NCI elimination removes €20,000; the net controlling interest impact is €80,000.
+          The Finance Controller must communicate these three numbers to the CFO — journal amount,
+          gross consolidated line, and net controlling interest figure are all different.</p>
         </div>
       </div>
  
@@ -992,25 +1250,25 @@
             <div class="tl-dot"></div>
             <div class="tl-day">Day 1</div>
             <div class="tl-title">ERP close + initial data loads</div>
-            <div class="tl-desc">BritEdge Oracle ERP closes. OIC adapter triggers overnight load to FCCS_Managed Data. DeutschWerk SAP extract prepared. First intercompany journals created (Standard) for known routine reclassifications.</div>
+            <div class="tl-desc">BritEdge Oracle ERP closes. OIC adapter triggers overnight load to FCCS_Managed Data. DeutschWerk SAP extract prepared. First intercompany Consolidation Journals created for known routine reclassifications.</div>
           </div>
           <div class="tl-item d2">
             <div class="tl-dot"></div>
             <div class="tl-day">Day 2</div>
             <div class="tl-title">Subsidiary loads + IC journal submission</div>
-            <div class="tl-desc">DeutschWerk CSV loaded via Data Management. AsiaLink REST API push runs. Enterprise Journal for DeutschWerk → BritEdge unrealised profit created and submitted for approval. Journal sits in FCCS_Journal Input; DI loads run safely in parallel in FCCS_Managed Data.</div>
+            <div class="tl-desc">DeutschWerk CSV loaded via Data Management. AsiaLink REST API push runs. Consolidation Journal for DeutschWerk → BritEdge unrealised profit elimination created and submitted for approval. Journal sits in FCCS_Journal Input; DI loads run safely in parallel in FCCS_Managed Data.</div>
           </div>
           <div class="tl-item d3">
             <div class="tl-dot"></div>
             <div class="tl-day">Day 3</div>
             <div class="tl-title">Journal approvals + first consolidation run</div>
-            <div class="tl-desc">Finance Controller approves outstanding Enterprise Journals. First consolidation run for all entities. IC matching check — BritEdge/DeutschWerk should be within tolerance. Any mismatches generate Day 3 correction journals.</div>
+            <div class="tl-desc">Finance Controller approves outstanding Consolidation Journals. First consolidation run for all entities. IC matching check — BritEdge/DeutschWerk should be within tolerance. Any mismatches generate Day 3 correction journals.</div>
           </div>
           <div class="tl-item d4">
             <div class="tl-dot"></div>
             <div class="tl-day">Day 4</div>
             <div class="tl-title">Review + late adjustments</div>
-            <div class="tl-desc">CFO review of consolidated P&amp;L. Any material late adjustments posted as Enterprise Journals — still within the unlocked window. Consolidation reruns after each approved journal to keep consolidated figures current.</div>
+            <div class="tl-desc">CFO review of consolidated P&amp;L. Any material late adjustments posted — Consolidation Journals for FCCS-only entries, Enterprise Journals if the adjustment must also appear in the ERP GL. Consolidation reruns after each approved journal to keep consolidated figures current.</div>
           </div>
           <div class="tl-item d5">
             <div class="tl-dot"></div>
@@ -1031,13 +1289,15 @@
  
       <div class="section">
         <div class="section-title"><span class="icon">🔬</span> Lab Scenario — DeutschWerk/BritEdge Unrealised Profit</div>
-        <div class="section-sub">Full Enterprise Journal workflow from creation to post-consolidation verification</div>
+        <div class="section-sub">Full Consolidation Journal workflow from creation to post-consolidation verification</div>
  
         <p>
           DeutschWerk sold components to BritEdge during Q1. At period end, BritEdge holds
           <strong>€30,000 of unrealised profit</strong> in closing inventory (DeutschWerk's 25%
           margin on €120,000 of unsold components). The Finance Controller has confirmed this
-          is a Q1-specific situation requiring an Enterprise Journal — not a systematic rule.
+          is a Q1-specific situation requiring a <strong>Consolidation Journal</strong> — not a systematic rule.
+          This adjustment stays entirely within FCCS (<code>FCCS_Journal Input</code>); it is a
+          consolidation-layer elimination that does not need to flow back to the ERP GL.
           The journal must eliminate the unrealised profit from consolidated inventory and
           retained earnings.
         </p>
@@ -1050,12 +1310,12 @@
  
       <!-- EXERCISE 1: CREATE & VALIDATE -->
       <div class="section">
-        <div class="section-title"><span class="icon">1️⃣</span> Exercise 1 — Create and Validate the Enterprise Journal</div>
+        <div class="section-title"><span class="icon">1️⃣</span> Exercise 1 — Create and Validate the Consolidation Journal</div>
         <div class="section-sub">Estimated time: 15 minutes</div>
  
         <ol class="step-list">
           <li><span class="step-num">01</span>
-            <span class="step-text">Navigate to <strong>Journals → New Journal</strong>. Set Type = <strong>Enterprise Journal</strong>. Set Status will show <em>Working</em> — the journal does not exist until saved.</span>
+            <span class="step-text">Navigate to <strong>Journals → New Journal</strong>. Set Type = <strong>Consolidation Journal</strong>. Set Status will show <em>Working</em> — the journal does not exist until saved.</span>
           </li>
           <li><span class="step-num">02</span>
             <span class="step-text">Set the header POV: <strong>Scenario = Actual · Year = FY2025 · Period = Q1 · Entity = BritEdge</strong>. Double-check Scenario — selecting Budget here would post silently to the wrong slice with no error.</span>
@@ -1067,7 +1327,7 @@
             <span class="step-text">Enter the journal lines as shown in the entry mockup below. Ensure <code>ICP_DeutschWerk</code> is tagged on the Inventory line to identify the intercompany source.</span>
           </li>
           <li><span class="step-num">05</span>
-            <span class="step-text">Click <strong>Validate</strong>. FCCS checks: (a) Dr = Cr total, (b) all dimension members exist, (c) journal is not posted to a locked period. Resolve any validation errors before proceeding.</span>
+            <span class="step-text">Click <strong>Validate</strong>. FCCS checks: (a) Dr = Cr balance if Balance Type = Balanced (unbalanced journals are also supported when the Unbalanced Journals feature is enabled), (b) all dimension members are valid, (c) journal is not posted to a locked period.</span>
           </li>
         </ol>
  
@@ -1075,10 +1335,10 @@
         <div class="journal-entry">
           <div class="je-header">
             <div>
-              <div class="je-title">Enterprise Journal — Q1 FY2025 Unrealised Profit Elimination</div>
+              <div class="je-title">Consolidation Journal — Q1 FY2025 Unrealised Profit Elimination</div>
             </div>
             <div class="je-badges">
-              <span class="je-badge jb-purple">Enterprise</span>
+              <span class="je-badge jb-sky">Consolidation</span>
               <span class="je-badge jb-sky">Actual · Q1 · FY2025</span>
               <span class="je-badge jb-gold">BritEdge</span>
               <span class="je-badge jb-teal">Working → Validated</span>
@@ -1136,7 +1396,7 @@
  
       <!-- EXERCISE 2: SUBMIT & APPROVE -->
       <div class="section">
-        <div class="section-title"><span class="icon">2️⃣</span> Exercise 2 — Submit for Approval and Post</div>
+        <div class="section-title"><span class="icon">2️⃣</span> Exercise 2 — Submit for Approval and Post (Consolidation Journal)</div>
         <div class="section-sub">Estimated time: 15 minutes</div>
  
         <ol class="step-list">
@@ -1153,16 +1413,16 @@
             <span class="step-text">Click <strong>Approve</strong>. Add an approval comment: <em>"Confirmed against Q1 inventory schedule. Unsold DeutschWerk components at 25% margin rate."</em> Status moves to <em>Approved</em>.</span>
           </li>
           <li><span class="step-num">05</span>
-            <span class="step-text">Click <strong>Post</strong>. The journal writes to <code>FCCS_Journal Input</code>. Status moves to <em>Posted</em>. Confirm the post timestamp appears in the journal history.</span>
+            <span class="step-text">Click <strong>Post</strong>. The Consolidation Journal writes to <code>FCCS_Journal Input</code>. Status moves to <em>Posted</em>. (Note: this is correct for Consolidation Journals — unlike Enterprise Journals which post to the ERP GL.) Confirm the post timestamp appears in the journal history.</span>
           </li>
           <li><span class="step-num">06</span>
-            <span class="step-text"><strong>Check entity status immediately after posting</strong>. Navigate to Consolidation → System Check. BritEdge should now show <strong>Impacted (6)</strong> — confirming the journal post has invalidated the previously consolidated figures.</span>
+            <span class="step-text"><strong>Check entity status immediately after posting</strong>. Navigate to Consolidation → System Check. BritEdge should now show <strong>Impacted</strong> — confirming the journal post has invalidated the previously consolidated figures.</span>
           </li>
         </ol>
  
         <div class="callout co-teal">
           <div class="callout-label">💡 What the Status Change Means</div>
-          <p>BritEdge moving to <strong>Impacted (6)</strong> is the expected and correct outcome.
+          <p>BritEdge moving to <strong>Impacted</strong> is the expected and correct outcome.
           It is not an error — it is FCCS confirming that the consolidated figures stored at the
           GlobalMerge parent level no longer include the €30,000 elimination. The system is
           telling you: <em>run Consolidation to incorporate this change.</em></p>
@@ -1179,7 +1439,7 @@
             <span class="step-text">From Consolidation → Consolidate, select <strong>BritEdge · Actual · Q1 · FY2025</strong>. Run Consolidation. Wait for completion.</span>
           </li>
           <li><span class="step-num">02</span>
-            <span class="step-text">System Check: BritEdge should return to <strong>Consolidated (2)</strong>. Also check GlobalMerge parent — it should also show Consolidated, incorporating the elimination.</span>
+            <span class="step-text">System Check: BritEdge should return to <strong>OK (Consolidated)</strong>. Also check GlobalMerge parent — it should also show Consolidated, incorporating the elimination.</span>
           </li>
           <li><span class="step-num">03</span>
             <span class="step-text">Open a data form for BritEdge, Actual, Q1. Filter by Data Source = <code>FCCS_Journal Input</code>. Confirm the Inventory Cr 30,000 and RetainedEarnings Dr 30,000 appear in this data source partition.</span>
@@ -1194,7 +1454,7 @@
  
         <div class="callout co-green">
           <div class="callout-label">✅ Expected Outcomes</div>
-          <p>BritEdge at Consolidated (2) · GlobalMerge consolidated FCCS_Inventory reduced by the GBP-equivalent of €30,000 at the Q1 closing rate · FCCS_Managed Data unchanged by the journal · FCCS_Journal Input unchanged by the DI reload · Full audit trail in the journal history showing Create → Validate → Submit → Approve → Post with timestamps and named approver.</p>
+          <p>BritEdge at OK (Consolidated) · GlobalMerge consolidated FCCS_Inventory reduced by the GBP-equivalent of €30,000 at the Q1 closing rate · FCCS_Managed Data unchanged by the journal · FCCS_Journal Input unchanged by the DI reload · Full audit trail in the journal history showing Create → Validate → Submit → Approve → Post with timestamps and named approver.</p>
         </div>
       </div>
  
@@ -1210,9 +1470,7 @@
         <div class="section-title"><span class="icon">📝</span> Exam Preparation</div>
         <div class="section-sub">Journals &amp; Adjustments — Oracle FCCS Implementation Specialist objectives</div>
         <p>
-          Journals are a reliable exam topic area. Questions focus on the Enterprise Journal
-          workflow sequence, the data source separation principle, what happens to status after
-          posting, the locked period procedure, and the silent wrong-Scenario trap. Expect
+          Journals are a reliable exam topic area. Questions focus on the distinction between Consolidation Journals and Enterprise Journals, the Enterprise Journal workflow and status model, the data source separation principle, entity status after posting, the locked period procedure, and the silent wrong-Scenario trap. Expect
           scenario-based questions with plausible wrong answers.
         </p>
       </div>
@@ -1247,7 +1505,7 @@
       <div class="exam-q">
         <div class="exam-q-label">Question 2 of 8 · Data Source Separation</div>
         <div class="exam-q-text">
-          A Finance team member posts an Enterprise Journal to BritEdge for Q1 Actual.
+          A Finance team member posts a Consolidation Journal to BritEdge for Q1 Actual.
           An hour later, the data team reruns the BritEdge data load rule in Replace mode
           to correct a trial balance error. What happens to the posted journal?
         </div>
@@ -1260,10 +1518,11 @@
         <button class="reveal-btn" onclick="toggleReveal(this)">Reveal Answer</button>
         <div class="exam-reveal">
           <div class="exam-answer-box">
-            <strong>Correct: C.</strong> FCCS separates journal data into <code>FCCS_Journal Input</code>
+            <strong>Correct: C.</strong> FCCS separates Consolidation Journal data into <code>FCCS_Journal Input</code>
             and trial balance data into <code>FCCS_Managed Data</code>. Data Integration Replace mode
             clears and reloads <code>FCCS_Managed Data</code> only. It has no access to and no effect on
-            <code>FCCS_Journal Input</code>. Approved journals are fully protected from all DI load operations.
+            <code>FCCS_Journal Input</code>. Approved Consolidation Journals are fully protected from all DI load operations.
+            Note: Enterprise Journal data, by contrast, lands in <code>FCCS_Managed Data</code> after reloading from the ERP GL — it <em>is</em> subject to Replace-mode clears on the next DI run.
           </div>
         </div>
       </div>
@@ -1272,21 +1531,21 @@
       <div class="exam-q">
         <div class="exam-q-label">Question 3 of 8 · Status After Journal Post</div>
         <div class="exam-q-text">
-          BritEdge is currently at status Consolidated (2). An Enterprise Journal is approved
+          BritEdge is currently at status OK (Consolidated). A Consolidation Journal is approved
           and posted to BritEdge Q1 Actual. What is BritEdge's status immediately after posting,
           and what action is required next?
         </div>
         <ul class="exam-options">
-          <li class="exam-option"><span class="opt-key">A</span>BritEdge remains Consolidated (2) — journals are designed not to affect consolidation status.</li>
-          <li class="exam-option correct"><span class="opt-key">B</span>BritEdge moves to Impacted (6) — the posted journal changed the entity's data, so Consolidation must be rerun to incorporate it.</li>
-          <li class="exam-option"><span class="opt-key">C</span>BritEdge moves to No Data (4) — posting resets the entity to a pre-data state.</li>
-          <li class="exam-option"><span class="opt-key">D</span>BritEdge moves to Locked (10) — the journal post triggers an automatic period lock.</li>
+          <li class="exam-option"><span class="opt-key">A</span>BritEdge remains OK (Consolidated) — journals are designed not to affect consolidation status.</li>
+          <li class="exam-option correct"><span class="opt-key">B</span>BritEdge moves to Impacted — the posted journal changed the entity's data, so Consolidation must be rerun to incorporate it.</li>
+          <li class="exam-option"><span class="opt-key">C</span>BritEdge moves to No Data — posting resets the entity to a pre-data state.</li>
+          <li class="exam-option"><span class="opt-key">D</span>BritEdge moves to Locked — the journal post triggers an automatic period lock.</li>
         </ul>
         <button class="reveal-btn" onclick="toggleReveal(this)">Reveal Answer</button>
         <div class="exam-reveal">
           <div class="exam-answer-box">
-            <strong>Correct: B.</strong> Posting any journal to an entity that is at Consolidated (2)
-            immediately moves it to Impacted (6). The system has detected that entity data has changed
+            <strong>Correct: B.</strong> Posting any journal to an entity that is at OK (Consolidated)
+            immediately moves it to Impacted. The system has detected that entity data has changed
             since the last consolidation run. The parent's consolidated figures no longer include the
             journal entry. Consolidation must be rerun to pick up the journal from <code>FCCS_Journal Input</code>
             and produce updated consolidated results.
@@ -1328,7 +1587,7 @@
           requests a €15,000 reclassification entry to DeutschWerk. What is the correct sequence?
         </div>
         <ul class="exam-options">
-          <li class="exam-option"><span class="opt-key">A</span>Post the entry as a Standard Journal — locked periods block Enterprise Journals but allow Standard Journals.</li>
+          <li class="exam-option"><span class="opt-key">A</span>Post the entry as a Consolidation Journal — locked periods only block Enterprise Journals, not Consolidation Journals.</li>
           <li class="exam-option"><span class="opt-key">B</span>Defer the adjustment to Q2 — locked periods cannot be reopened under any circumstances.</li>
           <li class="exam-option correct"><span class="opt-key">C</span>Admin unlocks the period → post the journal (Enterprise, given auditor origin) → rerun Consolidation → re-lock the period with documented reason.</li>
           <li class="exam-option"><span class="opt-key">D</span>Post the entry to Q2 with a prior period adjustment flag — FCCS automatically backdates it to Q1.</li>
@@ -1336,38 +1595,34 @@
         <button class="reveal-btn" onclick="toggleReveal(this)">Reveal Answer</button>
         <div class="exam-reveal">
           <div class="exam-answer-box">
-            <strong>Correct: C.</strong> Locked periods block all journal posts — both Standard and
-            Enterprise. The correct post-lock procedure is: Admin unlocks the entity-period via
-            Approvals → Period Status (with documented reason) → post the journal → entity moves to
-            Impacted → rerun Consolidation → re-lock. The auditor adjustment should use an Enterprise
-            Journal with the auditor communication as mandatory attachment, given its external origin
-            and SOX implications.
+            <strong>Correct: C.</strong> Locked periods in FCCS block all journal posts — both Consolidation Journals and Enterprise Journals. The correct post-lock procedure is: Admin unlocks via Home → Approvals → Change Status → Unlock (documented reason) → post the journal → entity moves to Impacted → rerun Consolidation until status is OK → re-lock. An auditor-requested reclassification that must appear in the ERP GL should use an Enterprise Journal with the auditor communication as mandatory attachment.
           </div>
         </div>
       </div>
  
       <!-- Q6 -->
       <div class="exam-q">
-        <div class="exam-q-label">Question 6 of 8 · Standard vs Enterprise — Decision</div>
+        <div class="exam-q-label">Question 6 of 8 · Consolidation Journal vs Enterprise Journal — Decision</div>
         <div class="exam-q-text">
           GlobalMerge operates in a SOX-regulated environment. BritEdge posts a monthly
           depreciation reclassification of GBP 5,000 — the same amount every period, single
-          entity, no cross-entity impact. Which journal type is most appropriate?
+          entity, no cross-entity impact, and the adjustment does not need to flow back to ERP.
+          Which journal type is most appropriate?
         </div>
         <ul class="exam-options">
           <li class="exam-option"><span class="opt-key">A</span>Enterprise Journal — SOX environments require Enterprise Journals for all entries regardless of materiality.</li>
-          <li class="exam-option correct"><span class="opt-key">B</span>Standard Journal — the entry is routine, single-entity, low-materiality, and the optional approval on a Standard Journal is sufficient for this risk profile.</li>
-          <li class="exam-option"><span class="opt-key">C</span>Neither — recurring same-amount entries should always be automated as Consolidation Rules in Hall 5.</span></li>
-          <li class="exam-option"><span class="opt-key">D</span>Standard Journal with mandatory documentation — SOX requires documentation even for Standard Journals.</li>
+          <li class="exam-option correct"><span class="opt-key">B</span>Consolidation Journal — the entry is routine, single-entity, low-materiality, consolidation-layer only, and the optional approval on a Consolidation Journal is sufficient for this risk profile.</li>
+          <li class="exam-option"><span class="opt-key">C</span>Neither — recurring same-amount entries should always be automated as Consolidation Rules in Hall 5.</li>
+          <li class="exam-option"><span class="opt-key">D</span>Enterprise Journal — because any SOX-environment entry must flow back to the ERP GL for audit purposes.</li>
         </ul>
         <button class="reveal-btn" onclick="toggleReveal(this)">Reveal Answer</button>
         <div class="exam-reveal">
           <div class="exam-answer-box">
-            <strong>Correct: B.</strong> SOX environments require Enterprise Journals for cross-entity,
-            material, or high-risk entries — not universally for every entry. A routine, single-entity,
-            fixed-amount reclassification is appropriate for a Standard Journal with optional approval
-            configured per journal class. Mandating Enterprise Journal workflow for every entry in a
-            SOX environment would create administrative overhead without proportionate governance benefit.
+            <strong>Correct: B.</strong> A routine, single-entity, fixed-amount reclassification that
+            does not need to flow to the ERP GL is appropriate for a Consolidation Journal with optional
+            approval configured per journal class. Enterprise Journals are for adjustments that must be
+            reflected in the ERP ledger of record — not required here. SOX environments require
+            documented approval trails, which Consolidation Journals support via configurable approval workflow.
           </div>
         </div>
       </div>
@@ -1384,7 +1639,7 @@
           <li class="exam-option"><span class="opt-key">A</span>€100,000 — journals bypass Proportionalization and flow at 100% regardless of ownership.</li>
           <li class="exam-option"><span class="opt-key">B</span>€80,000 — the journal is subject to PCON% = 80% Proportionalization in Stage 3.</li>
           <li class="exam-option correct"><span class="opt-key">C</span>€100,000 — DeutschWerk has PCON = 100% (full consolidation method), so 100% of the journal flows to the parent. The 20% NCI is calculated separately from POWN%, not by reducing the journal amount.</li>
-          <li class="exam-option"><span class="opt-key">D</span>€0 — journals post to FCCS_Journal Input which is excluded from the consolidation calculation.</li>
+          <li class="exam-option"><span class="opt-key">D</span>€0 — Enterprise Journal data is stored in FCCS_Journal Input, which is excluded from the PCON% calculation.</li>
         </ul>
         <button class="reveal-btn" onclick="toggleReveal(this)">Reveal Answer</button>
         <div class="exam-reveal">
@@ -1417,10 +1672,7 @@
           <div class="exam-answer-box">
             <strong>Correct: C.</strong> Rejection returns the Enterprise Journal to the preparer
             with the rejection reason attached in the journal history. The journal status moves to
-            Rejected. The preparer must correct the issue (add the ICP tag), revalidate the corrected
-            journal, and resubmit. The approval cycle restarts — the approver sees it as a fresh
-            submission. The full rejection event is audited: rejector identity, timestamp, and
-            rejection comment are permanently recorded in the journal history.
+            Rejected. The journal returns to <strong>Open with Preparer</strong> (Working) status. The preparer corrects the issue (add the ICP tag) and resubmits — the approval cycle restarts from the beginning. The full rejection event is permanently audited: rejector identity, timestamp, and rejection comment recorded in the journal history.
           </div>
         </div>
       </div>
@@ -1445,8 +1697,8 @@
         <div class="tg-messages" id="tgMessages">
           <div class="tg-msg bot">
             Welcome to Hall 6 — Journals &amp; Adjustments. Ask me about
-            Standard vs Enterprise journals, the approval workflow,
-            data source separation, status after posting, or locked periods.
+            Consolidation vs Enterprise Journals, the approval workflows,
+            data source separation, entity status after posting, or locked period procedure.
           </div>
         </div>
         <div class="tg-input-wrap">
@@ -1456,7 +1708,7 @@
           <button class="tg-send" onclick="sendTourMessage()">→</button>
         </div>
         <div class="tg-quick">
-          <button class="tg-quick-btn" onclick="askQuick('What is the difference between Standard and Enterprise journals?')">Standard vs Enterprise?</button>
+          <button class="tg-quick-btn" onclick="askQuick('What is the difference between Consolidation Journals and Enterprise Journals in FCCS?')">Consolidation vs Enterprise?</button>
           <button class="tg-quick-btn" onclick="askQuick('Why does posting a journal change entity status to Impacted?')">Why does status become Impacted?</button>
           <button class="tg-quick-btn" onclick="askQuick('What happens if I post to the wrong Scenario?')">Wrong Scenario — what happens?</button>
           <button class="tg-quick-btn" onclick="askQuick('How do I post a journal to a locked period?')">Posting to a locked period?</button>
@@ -1466,27 +1718,28 @@
  
     <!-- Enterprise Journal Workflow -->
     <div class="side-card">
-      <div class="side-card-title">Enterprise Journal Stages</div>
+      <div class="side-card-title">Enterprise Journal Stages (posts to ERP GL)</div>
       <div class="kv-row"><span class="kv-key">1 · Create</span><span class="kv-val sky">Lines + POV + desc</span></div>
       <div class="kv-row"><span class="kv-key">2 · Validate</span><span class="kv-val gold">Dr=Cr, valid members</span></div>
       <div class="kv-row"><span class="kv-key">3 · Submit</span><span class="kv-val purple">Attach docs → queue</span></div>
       <div class="kv-row"><span class="kv-key">4 · Approve/Reject</span><span class="kv-val green">Named approver</span></div>
-      <div class="kv-row"><span class="kv-key">5 · Post</span><span class="kv-val teal">→ FCCS_Journal Input</span></div>
+      <div class="kv-row"><span class="kv-key">5 · Post</span><span class="kv-val purple">→ ERP General Ledger</span></div>
     </div>
  
     <!-- Data Source Lanes -->
     <div class="side-card">
       <div class="side-card-title">Data Source Lanes</div>
-      <div class="kv-row"><span class="kv-key">FCCS_Managed Data</span><span class="kv-val sky">DI loads · Replace clears</span></div>
-      <div class="kv-row"><span class="kv-key">FCCS_Journal Input</span><span class="kv-val teal">Journals · DI-protected</span></div>
-      <div class="kv-row"><span class="kv-key">Replace mode scope</span><span class="kv-val rose">Managed only</span></div>
+      <div class="kv-row"><span class="kv-key">FCCS_Managed Data</span><span class="kv-val sky">DI loads · Ent. Journal reloads</span></div>
+      <div class="kv-row"><span class="kv-key">FCCS_Journal Input</span><span class="kv-val teal">Consolidation Journals only</span></div>
+      <div class="kv-row"><span class="kv-key">Enterprise Journals</span><span class="kv-val purple">→ ERP GL → DI reload</span></div>
+      <div class="kv-row"><span class="kv-key">Replace mode scope</span><span class="kv-val rose">Managed Data only</span></div>
     </div>
  
     <!-- Status Quick Reference -->
     <div class="side-card">
       <div class="side-card-title">Status After Journal Actions</div>
-      <div class="kv-row"><span class="kv-key">Journal posted</span><span class="kv-val gold">→ Impacted (6)</span></div>
-      <div class="kv-row"><span class="kv-key">Consolidation rerun</span><span class="kv-val green">→ Consolidated (2)</span></div>
+      <div class="kv-row"><span class="kv-key">Journal posted</span><span class="kv-val gold">→ Impacted</span></div>
+      <div class="kv-row"><span class="kv-key">Consolidation rerun</span><span class="kv-val green">→ OK (Consolidated)</span></div>
       <div class="kv-row"><span class="kv-key">Period locked</span><span class="kv-val rose">→ Post blocked</span></div>
       <div class="kv-row"><span class="kv-key">Wrong Scenario</span><span class="kv-val gold">Silent wrong-slice</span></div>
     </div>
@@ -1602,7 +1855,7 @@
           model: 'claude-sonnet-4-20250514',
         max_tokens: 1000,
         //system: systemPrompt, // <--- Add the system prompt here!
-        system: `You are a sharp, concise tour guide for Hall 6 of the FCCS EPM Cloud Study Tour. FCCS Journals & Adjustments. Standard Journals (optional approval, flexible, routine). Enterprise Journals (mandatory Create→Validate→Submit→Approve/Reject→Post workflow, mandatory documentation, SOX-compliant). Data source separation: FCCS_Journal Input vs FCCS_Managed Data — Replace mode DI load never touches journals. After journal post: entity moves to Impacted (6), Consolidation must rerun. Wrong Scenario POV: posts silently to wrong slice, no error. Locked period: blocks all journal posts — admin must unlock, post, rerun consolidation, re-lock. GlobalMerge Corp: BritEdge GBP 100%, DeutschWerk EUR 80%, AsiaLink SGD 50% JV, NovaTech USD 30% equity. 5-day close: journals run Days 1–4 concurrently with DI loads, protected in FCCS_Journal Input lane.
+        system: `You are a sharp, concise tour guide for Hall 6 of the FCCS EPM Cloud Study Tour. FCCS Journals & Adjustments. TWO JOURNAL TYPES: (1) Consolidation Journals — stay entirely within FCCS in FCCS_Journal Input; used for IC eliminations, unrealised profit, top-side reclassifications; approval optional; data never flows to ERP. (2) Enterprise Journals — FCCS owns the governance process (Create→Validate→Submit→Approve/Reject→Post) but the POSTING goes to the ERP General Ledger; data then reloads into FCCS_Managed Data via normal DI pipeline; FCCS does NOT keep Enterprise Journal data in FCCS_Journal Input. KEY DISTINCTION: Consolidation Journals solve a data problem (consolidation adjustments); Enterprise Journals solve a governance and ERP-alignment problem (ensuring adjustments are reflected in the ERP ledger of record). Data source separation: FCCS_Journal Input (Consolidation Journals only, DI-protected) vs FCCS_Managed Data (DI loads + Enterprise Journal data after ERP reload). After Consolidation Journal post: entity moves to Impacted (FCCS Cloud status name, not a numeric code), Consolidation must rerun to status OK. Wrong Scenario POV: posts silently to wrong slice, no error, no warning. Locked period: blocks ALL journal posts (both types) — admin unlocks via Home > Approvals > Change Status, posts journal, runs consolidation until OK, re-locks. EJ posting methods: (1) direct to Oracle Cloud Financials; (2) EJ APIs for other ERP; (3) EPM Automate exportEJJournals for file-based. Rejection returns Consolidation Journal to Working status, not Validated. Unbalanced journals supported when feature enabled. GlobalMerge Corp: BritEdge GBP 100%, DeutschWerk EUR 80%, AsiaLink SGD 50% JV, NovaTech USD 30% equity. 5-day close: Consolidation Journals run Days 1–4 concurrently with DI loads, protected in FCCS_Journal Input lane.
  
 STRICT RESPONSE RULES:
 - Maximum 2-4 sentences per answer. Never more.
