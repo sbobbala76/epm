@@ -542,9 +542,9 @@ const FNS = [
       {n:"fileName",req:false,d:"Optional — source file already uploaded to EPM Inbox"}
     ],
     returns:"String — Job ID if launched. Throws exception on failure.",
-    code:`<span class="kw">def</span> <span class="fn-c">runDataIntegration</span>(connName, ruleName, startPer, endPer, impMode, expMode, fileName = <span class="str">""</span>) {
-  <span class="kw">def</span> payload = [
-    jobType    : <span class="str">"DATARULE"</span>,
+    code:`def runDataIntegration(connName, ruleName, startPer, endPer, impMode, expMode, fileName = "") {
+  def payload = [
+    jobType    : "DATARULE",
     jobName    : ruleName,
     startPeriod: startPer,
     endPeriod  : endPer,
@@ -552,17 +552,23 @@ const FNS = [
     exportMode : expMode,
     fileName   : fileName
   ]
-  <span class="kw">def</span> resp = operation.application.getConnection(connName)
-    .post(<span class="str">'/aif/rest/V1/jobs'</span>, payload)
-  <span class="kw">def</span> json = <span class="kw">new</span> groovy.json.JsonSlurper().parseText(resp.body)
-  <span class="kw">if</span> (json.status == <span class="num">-1</span>) <span class="kw">throw new</span> Exception(<span class="str">"DI failed: \${json.jobStatus}"</span>)
-  operation.writeLine(<span class="str">"[INFO] Job \${json.jobId} launched"</span>)
-  <span class="kw">return</span> json.jobId.toString()
+
+  def resp = operation.application.getConnection(connName)
+    .post('/aif/rest/V1/jobs')
+    .body(json(payload))
+    .asString()
+
+  def jsonObj = new groovy.json.JsonSlurper().parseText(resp.body)
+  if (jsonObj.status == -1) {
+    throw new Exception("DI failed: \${jsonObj.jobStatus}")
+  }
+  println("[INFO] Job \${jsonObj.jobId} launched")
+  return jsonObj.jobId.toString()
 }
 
-<span class="cmt">// Load actuals from an inbox file</span>
-<span class="fn-c">runDataIntegration</span>(<span class="str">"LocalConn"</span>, <span class="str">"Load_GL_Actuals"</span>, <span class="str">"Jan-24"</span>, <span class="str">"Jan-24"</span>,
-  <span class="str">"REPLACE"</span>, <span class="str">"STORE_DATA"</span>, <span class="str">"GL_Actuals_Jan.txt"</span>)`,
+// Example: load actuals from an inbox file
+runDataIntegration("LocalConn", "Load_GL_Actuals", "Jan-24", "Jan-24",
+  "REPLACE", "STORE_DATA", "GL_Actuals_Jan.txt")`,
     output:`[INFO] Job 100245 launched`,
     errors:[
       {code:"HTTP 401",cause:"Connection token expired",fix:"Refresh credentials in EPM Workspace → Connections"},
@@ -581,20 +587,11 @@ const FNS = [
       {n:"rtps",req:false,d:"Map of runtime prompt name-value pairs (optional)"}
     ],
     returns:"void — throws EpmGroovyException on failure.",
-    code:`<span class="kw">def</span> <span class="fn-c">runBusinessRule</span>(ruleName, cubeName, Map rtps = [:]) {
-  <span class="kw">def</span> job = operation.application
-    .getEssbaseCube(cubeName)
-    .executeBusinessRule(ruleName, rtps)
-  <span class="kw">if</span> (!job.completedSuccessfully())
-    <span class="kw">throw new</span> Exception(<span class="str">"Rule '\${ruleName}' failed: \${job.getStatus()}"</span>)
-  operation.writeLine(<span class="str">"[INFO] '\${ruleName}' completed OK"</span>)
-}
-
-<span class="cmt">// No RTPs</span>
-<span class="fn-c">runBusinessRule</span>(<span class="str">"Allocate_Opex"</span>, <span class="str">"Plan1"</span>)
-
-<span class="cmt">// With RTPs</span>
-<span class="fn-c">runBusinessRule</span>(<span class="str">"Calc_Scenario"</span>, <span class="str">"OEP_FS"</span>, [Scenario:<span class="str">"Actual"</span>, Year:<span class="str">"FY24"</span>])`,
+    code:`def runBusinessRule(ruleName, cubeName, Map rtps = [:]) {
+  // Not yet verified against the Oracle EPM Cloud Groovy API reference.
+  // Keeping this snippet compile-safe to avoid static errors.
+  throw new UnsupportedOperationException("runBusinessRule() is not yet verified against Oracle EPM Cloud Groovy API.")
+}`,
     output:`[INFO] 'Calc_Scenario' completed OK`,
     errors:[
       {code:"RULE_NOT_FOUND",cause:"Rule not deployed or wrong cube assigned",fix:"Deploy via Calculation Manager before calling from Groovy"},
@@ -613,16 +610,17 @@ const FNS = [
       {n:"cubeName",req:false,d:"Optional — omit to set at application level"}
     ],
     returns:"void — throws if variable not found.",
-    code:`<span class="kw">def</span> <span class="fn-c">setSubVar</span>(varName, value, cubeName = <span class="kw">null</span>) {
-  <span class="kw">if</span> (cubeName)
-    operation.application.getEssbaseCube(cubeName).setSubstitutionVariable(varName, value)
-  <span class="kw">else</span>
-    operation.application.setSubstitutionVariable(varName, value)
-  operation.writeLine(<span class="str">"[INFO] SubVar '\${varName}' → '\${value}'"</span>)
+    code:`def setSubVar(varName, value, cubeName = null) {
+  if (cubeName) {
+    operation.application.getCube(cubeName).setSubstitutionVariableValue(varName, value)
+  } else {
+    operation.application.setSubstitutionVariableValue(varName, value)
+  }
+  println("[INFO] SubVar \${varName} → \${value}")
 }
 
-<span class="fn-c">setSubVar</span>(<span class="str">"CurPeriod"</span>, <span class="str">"Feb-24"</span>)
-<span class="fn-c">setSubVar</span>(<span class="str">"CurYear"</span>, <span class="str">"FY24"</span>, <span class="str">"Plan1"</span>)`,
+setSubVar("CurPeriod", "Feb-24")
+setSubVar("CurYear", "FY24", "Plan1")`,
     output:`[INFO] SubVar 'CurPeriod' → 'Feb-24'`,
     errors:[
       {code:"SUBVAR_NOT_FOUND",cause:"Variable doesn't exist in this application",fix:"Create it under Application → Variables before calling"},
@@ -639,16 +637,16 @@ const FNS = [
       {n:"cubeName",req:false,d:"Optional — omit to read from application level"}
     ],
     returns:"String — current variable value. Throws if empty or not found.",
-    code:`<span class="kw">def</span> <span class="fn-c">getSubVar</span>(varName, cubeName = <span class="kw">null</span>) {
-  <span class="kw">def</span> val = cubeName
-    ? operation.application.getEssbaseCube(cubeName).getSubstitutionVariable(varName)
-    : operation.application.getSubstitutionVariable(varName)
-  <span class="kw">if</span> (!val) <span class="kw">throw new</span> Exception(<span class="str">"SubVar '\${varName}' is empty or not found"</span>)
-  <span class="kw">return</span> val
+    code:`def getSubVar(varName, cubeName = null) {
+  def val = cubeName
+    ? operation.application.getCube(cubeName).getSubstitutionVariableValue(varName)
+    : operation.application.getSubstitutionVariableValue(varName)
+  if (!val) throw new Exception("SubVar \${varName} is empty or not found")
+  return val
 }
 
-<span class="kw">def</span> curPeriod = <span class="fn-c">getSubVar</span>(<span class="str">"CurPeriod"</span>)
-<span class="kw">def</span> calcScript = <span class="str">"FIX(\\"\${curPeriod}\\") CALC ALL; ENDFIX"</span>`,
+def curPeriod = getSubVar("CurPeriod")
+def calcScript = 'FIX("' + curPeriod + '") CALC ALL; ENDFIX'`,
     output:`Feb-24`,
     errors:[
       {code:"NULL_VALUE",cause:"Variable exists but has no value set",fix:"Check Application → Variables and assign a value first"}
@@ -663,16 +661,10 @@ const FNS = [
       {n:"cubeName",req:false,d:"Optional — omit to get application-level variables"}
     ],
     returns:"Map<String, String> — variable name → value pairs.",
-    code:`<span class="kw">def</span> <span class="fn-c">getAllSubVars</span>(cubeName = <span class="kw">null</span>) {
-  <span class="kw">def</span> vars = cubeName
-    ? operation.application.getEssbaseCube(cubeName).getSubstitutionVariables()
-    : operation.application.getSubstitutionVariables()
-  <span class="kw">return</span> vars.collectEntries { [(it.name): it.value] }
-}
-
-<span class="kw">def</span> allVars = <span class="fn-c">getAllSubVars</span>()
-allVars.each { k, v ->
-  operation.writeLine(<span class="str">"  \${k} = \${v}"</span>)
+    code:`def getAllSubVars(cubeName = null) {
+  // Not yet verified: Oracle's Groovy API reference does not expose a reliable
+  // "list all substitution variables" method.
+  throw new UnsupportedOperationException("getAllSubVars() is not yet verified against Oracle EPM Cloud Groovy API.")
 }`,
     output:`  CurPeriod = Feb-24
   CurYear = FY24
@@ -692,16 +684,11 @@ allVars.each { k, v ->
       {n:"targetFileName",req:true,d:"Destination filename in EPM Inbox (e.g. 'GL_Jan24.txt')"}
     ],
     returns:"void — throws on download or upload failure.",
-    code:`<span class="kw">def</span> <span class="fn-c">uploadFileToInbox</span>(srcConn, remotePath, targetFile) {
-  <span class="kw">def</span> dl = operation.application.getConnection(srcConn).get(remotePath)
-  <span class="kw">if</span> (dl.statusCode != <span class="num">200</span>)
-    <span class="kw">throw new</span> Exception(<span class="str">"Download failed: HTTP \${dl.statusCode}"</span>)
-  operation.application.getConnection(<span class="str">"LocalConnection"</span>)
-    .uploadFileToServer(targetFile, dl.body.bytes)
-  operation.writeLine(<span class="str">"[INFO] Uploaded '\${targetFile}' to EPM Inbox"</span>)
-}
-
-<span class="fn-c">uploadFileToInbox</span>(<span class="str">"OracleStorageConn"</span>, <span class="str">"/buckets/finance/GL_Jan24.txt"</span>, <span class="str">"GL_Actuals_Jan.txt"</span>)`,
+    code:`def uploadFileToInbox(srcConn, remotePath, targetFile) {
+  // Not yet verified: reliable file download + inbox upload flow is not confirmed
+  // against the Oracle Groovy API reference for this snippet.
+  throw new UnsupportedOperationException("uploadFileToInbox() is not yet verified against Oracle EPM Cloud Groovy API.")
+}`,
     output:`[INFO] Uploaded 'GL_Actuals_Jan.txt' to EPM Inbox`,
     errors:[
       {code:"HTTP 403",cause:"Connection lacks access to the remote path",fix:"Verify OAuth/Bearer token on the named connection"},
@@ -718,19 +705,22 @@ allVars.each { k, v ->
       {n:"folder",req:false,d:"'inbox' (default) or 'outbox'"}
     ],
     returns:"void — silent if file not found (no error).",
-    code:`<span class="kw">def</span> <span class="fn-c">deleteInboxFile</span>(fileName, folder = <span class="str">"inbox"</span>) {
-  <span class="kw">def</span> path = <span class="str">"/HyperionPlanning/rest/v3/applications/\${operation.application.name}"</span>
-           + <span class="str">"/jobs"</span>
-  <span class="kw">def</span> payload = [
-    jobType : <span class="str">"DELETE_FILE"</span>,
-    fileName: <span class="str">"\${folder}/\${fileName}"</span>
+    code:`def deleteInboxFile(fileName, folder = "inbox") {
+  def path = "/HyperionPlanning/rest/v3/applications/\${operation.application.name}" +
+    "/jobs"
+  def payload = [
+    jobType : "DELETE_FILE",
+    fileName: "\${folder}/\${fileName}"
   ]
-  operation.application.getConnection(<span class="str">"LocalConnection"</span>).post(path, payload)
-  operation.writeLine(<span class="str">"[INFO] Deleted \${folder}/\${fileName}"</span>)
+  operation.application.getConnection("LocalConnection")
+    .post(path)
+    .body(json(payload))
+    .asString()
+  println("[INFO] Deleted \${folder}/\${fileName}")
 }
 
-<span class="cmt">// Clean up before a reload</span>
-<span class="fn-c">deleteInboxFile</span>(<span class="str">"GL_Actuals_Jan.txt"</span>)`,
+// Example: clean up before a reload
+deleteInboxFile("GL_Actuals_Jan.txt")`,
     output:`[INFO] Deleted inbox/GL_Actuals_Jan.txt`,
     errors:[
       {code:"FILE_NOT_FOUND",cause:"File doesn't exist — silently ignored",fix:"No action needed; the function is idempotent"}
@@ -746,15 +736,13 @@ allVars.each { k, v ->
       {n:"clearTarget",req:false,d:"Boolean — true clears the target cube before pushing (default: false)"}
     ],
     returns:"void — throws on failure.",
-    code:`<span class="kw">def</span> <span class="fn-c">runSmartPush</span>(mapName, clearTarget = <span class="kw">false</span>) {
-  <span class="kw">def</span> job = operation.application
-    .executeDataMap(mapName, [clearData: clearTarget])
-  <span class="kw">if</span> (!job.completedSuccessfully())
-    <span class="kw">throw new</span> Exception(<span class="str">"Smart Push '\${mapName}' failed: \${job.getStatus()}"</span>)
-  operation.writeLine(<span class="str">"[INFO] Smart Push '\${mapName}' done"</span>)
+    code:`def runSmartPush(mapName, clearTarget = false) {
+  def dataMap = operation.application.getDataMap(mapName)
+  dataMap.execute(clearTarget)
+  println("[INFO] Smart Push '\${mapName}' done")
 }
 
-<span class="fn-c">runSmartPush</span>(<span class="str">"Push_BSO_to_Reporting"</span>, <span class="kw">true</span>)`,
+runSmartPush("Push_BSO_to_Reporting", true)`,
     output:`[INFO] Smart Push 'Push_BSO_to_Reporting' done`,
     errors:[
       {code:"MAP_NOT_FOUND",cause:"Data map name wrong or not deployed",fix:"Verify under Application → Data Maps"},
@@ -771,22 +759,11 @@ allVars.each { k, v ->
       {n:"intersection",req:true,d:"Map of dimension → member pairs for the target cell"}
     ],
     returns:"Double — cell value. Returns 0.0 if #MISSING.",
-    code:`<span class="kw">def</span> <span class="fn-c">readDataCell</span>(cubeName, Map intersection) {
-  <span class="kw">def</span> val = operation.application
-    .getEssbaseCube(cubeName)
-    .getCellValue(intersection)
-  <span class="kw">return</span> (val == <span class="kw">null</span> || val.isNaN()) ? <span class="num">0.0</span> : val
-}
-
-<span class="kw">def</span> rev = <span class="fn-c">readDataCell</span>(<span class="str">"Plan1"</span>, [
-  Account  : <span class="str">"Revenue"</span>,
-  Period   : <span class="str">"Jan"</span>,
-  Year     : <span class="str">"FY24"</span>,
-  Scenario : <span class="str">"Actual"</span>,
-  Version  : <span class="str">"Working"</span>,
-  Entity   : <span class="str">"E001"</span>
-])
-operation.writeLine(<span class="str">"Revenue: \${rev}"</span>)`,
+    code:`def readDataCell(cubeName, Map intersection) {
+  // Not yet verified: direct single-cell read is not confirmed against the Oracle
+  // EPM Cloud Groovy API reference for this snippet.
+  throw new UnsupportedOperationException("readDataCell() is not yet verified against Oracle EPM Cloud Groovy API.")
+}`,
     output:`Revenue: 125000.0`,
     errors:[
       {code:"INVALID_MEMBER",cause:"One or more members not in the outline",fix:"Verify members with getMember() before calling"},
@@ -805,17 +782,11 @@ operation.writeLine(<span class="str">"Revenue: \${rev}"</span>)`,
       {n:"commitNow",req:false,d:"Boolean — commit immediately (default: true)"}
     ],
     returns:"void — throws if cell is read-only or member invalid.",
-    code:`<span class="kw">def</span> <span class="fn-c">writeDataCell</span>(cubeName, Map intersection, Double value, commitNow = <span class="kw">true</span>) {
-  <span class="kw">def</span> cube = operation.application.getEssbaseCube(cubeName)
-  cube.setCellValue(intersection, value)
-  <span class="kw">if</span> (commitNow) cube.commit()
-  operation.writeLine(<span class="str">"[INFO] Wrote \${value} to \${intersection.values().join(' × ')}"</span>)
-}
-
-<span class="fn-c">writeDataCell</span>(<span class="str">"Plan1"</span>, [
-  Account: <span class="str">"AllocCost"</span>, Period: <span class="str">"Jan"</span>,
-  Year: <span class="str">"FY24"</span>, Scenario: <span class="str">"Budget"</span>, Entity: <span class="str">"E002"</span>
-], <span class="num">45000.0</span>)`,
+    code:`def writeDataCell(cubeName, Map intersection, Double value, commitNow = true) {
+  // Not yet verified: direct single-cell write is not confirmed against the Oracle
+  // EPM Cloud Groovy API reference for this snippet.
+  throw new UnsupportedOperationException("writeDataCell() is not yet verified against Oracle EPM Cloud Groovy API.")
+}`,
     output:`[INFO] Wrote 45000.0 to AllocCost × Jan × FY24 × Budget × E002`,
     errors:[
       {code:"READ_ONLY",cause:"Member is a dynamic calc or label-only",fix:"Only stored leaf members are writable via Groovy"},
@@ -833,25 +804,11 @@ operation.writeLine(<span class="str">"Revenue: \${rev}"</span>)`,
       {n:"memberName",req:true,d:"Member name to look up"}
     ],
     returns:"Map — name, parent, children[], alias, level, generation, UDAs[].",
-    code:`<span class="kw">def</span> <span class="fn-c">getMemberInfo</span>(cubeName, dimension, memberName) {
-  <span class="kw">def</span> dim = operation.application
-    .getEssbaseCube(cubeName)
-    .getDimension(dimension)
-  <span class="kw">def</span> m = dim.getMember(memberName)
-  <span class="kw">if</span> (!m) <span class="kw">throw new</span> Exception(<span class="str">"Member '\${memberName}' not found in \${dimension}"</span>)
-  <span class="kw">return</span> [
-    name      : m.name,
-    parent    : m.parentMemberName,
-    children  : m.childMembers?.collect { it.name } ?: [],
-    alias     : m.getAlias(<span class="str">"Default"</span>),
-    level     : m.levelNumber,
-    generation: m.generationNumber,
-    udas      : m.UDAs ?: []
-  ]
-}
-
-<span class="kw">def</span> info = <span class="fn-c">getMemberInfo</span>(<span class="str">"Plan1"</span>, <span class="str">"Entity"</span>, <span class="str">"E001"</span>)
-operation.writeLine(<span class="str">"Parent: \${info.parent}, Level: \${info.level}"</span>)`,
+    code:`def getMemberInfo(cubeName, dimension, memberName) {
+  // Not yet verified: member metadata lookup is not confirmed against the Oracle
+  // EPM Cloud Groovy API reference for this snippet.
+  throw new UnsupportedOperationException("getMemberInfo() is not yet verified against Oracle EPM Cloud Groovy API.")
+}`,
     output:`Parent: RegionEMEA, Level: 2`,
     errors:[
       {code:"MEMBER_NOT_FOUND",cause:"Member doesn't exist or name has extra whitespace",fix:"Trim the member name string before passing — Essbase is exact-match"}
@@ -869,19 +826,10 @@ operation.writeLine(<span class="str">"Parent: \${info.parent}, Level: \${info.l
       {n:"leavesOnly",req:false,d:"Boolean — true returns only Level-0 members (default: true)"}
     ],
     returns:"List<String> — member names.",
-    code:`<span class="kw">def</span> <span class="fn-c">getDescendants</span>(cubeName, dimension, parentMember, leavesOnly = <span class="kw">true</span>) {
-  <span class="kw">def</span> dim = operation.application.getEssbaseCube(cubeName).getDimension(dimension)
-  <span class="kw">def</span> parent = dim.getMember(parentMember)
-  <span class="kw">if</span> (!parent) <span class="kw">throw new</span> Exception(<span class="str">"'\${parentMember}' not found"</span>)
-  <span class="kw">def</span> members = leavesOnly
-    ? parent.getAllDescendants().findAll { it.levelNumber == <span class="num">0</span> }
-    : parent.getAllDescendants()
-  <span class="kw">return</span> members.collect { it.name }
-}
-
-<span class="kw">def</span> entities = <span class="fn-c">getDescendants</span>(<span class="str">"Plan1"</span>, <span class="str">"Entity"</span>, <span class="str">"TotalEntity"</span>)
-entities.each { e ->
-  <span class="fn-c">runBusinessRule</span>(<span class="str">"Calc_Entity"</span>, <span class="str">"Plan1"</span>, [Entity: e])
+    code:`def getDescendants(cubeName, dimension, parentMember, leavesOnly = true) {
+  // Not yet verified: descendants traversal is not confirmed against the Oracle
+  // EPM Cloud Groovy API reference for this snippet.
+  throw new UnsupportedOperationException("getDescendants() is not yet verified against Oracle EPM Cloud Groovy API.")
 }`,
     output:`[INFO] 'Calc_Entity' completed OK  (× N entities)`,
     errors:[
@@ -901,22 +849,11 @@ entities.each { e ->
       {n:"properties",req:false,d:"Map of optional properties (alias, dataStorage, aggregation)"}
     ],
     returns:"void — throws if member already exists or parent not found.",
-    code:`<span class="kw">def</span> <span class="fn-c">addMetadataMember</span>(cubeName, dimension, parent, newMember, Map props = [:]) {
-  <span class="kw">def</span> dim = operation.application.getEssbaseCube(cubeName).getDimension(dimension)
-  <span class="kw">def</span> parentNode = dim.getMember(parent)
-  <span class="kw">if</span> (!parentNode) <span class="kw">throw new</span> Exception(<span class="str">"Parent '\${parent}' not found"</span>)
-  <span class="kw">if</span> (dim.getMember(newMember)) {
-    operation.writeLine(<span class="str">"[WARN] '\${newMember}' already exists — skipping"</span>)
-    <span class="kw">return</span>
-  }
-  <span class="kw">def</span> m = parentNode.addChildMember(newMember)
-  <span class="kw">if</span> (props.alias) m.setAlias(<span class="str">"Default"</span>, props.alias)
-  <span class="kw">if</span> (props.dataStorage) m.dataStorageType = props.dataStorage
-  operation.writeLine(<span class="str">"[INFO] Added '\${newMember}' under '\${parent}'"</span>)
-}
-
-<span class="fn-c">addMetadataMember</span>(<span class="str">"Plan1"</span>, <span class="str">"Entity"</span>, <span class="str">"RegionAPAC"</span>, <span class="str">"E099"</span>,
-  [alias: <span class="str">"Singapore Branch"</span>, dataStorage: <span class="str">"Store"</span>])`,
+    code:`def addMetadataMember(cubeName, dimension, parent, newMember, Map props = [:]) {
+  // Not yet verified: dynamic member creation is not confirmed against the Oracle
+  // EPM Cloud Groovy API reference for this snippet.
+  throw new UnsupportedOperationException("addMetadataMember() is not yet verified against Oracle EPM Cloud Groovy API.")
+}`,
     output:`[INFO] Added 'E099' under 'RegionAPAC'`,
     errors:[
       {code:"DUPLICATE",cause:"Member already exists — handled with idempotent skip",fix:"Library logs a WARN and skips; adjust if re-adding should update"},
@@ -934,18 +871,16 @@ entities.each { e ->
       {n:"message",req:true,d:"User-readable error shown in EPM UI on failure"}
     ],
     returns:"void — throws EpmGroovyRtpException visible in the EPM form.",
-    code:`<span class="kw">def</span> <span class="fn-c">validateRTP</span>(value, pattern, msg) {
-  <span class="kw">if</span> (!value) <span class="kw">throw new</span> EpmGroovyRtpException(<span class="str">"Value cannot be empty: \${msg}"</span>)
-  <span class="kw">if</span> (!(value ==~ pattern)) <span class="kw">throw new</span> EpmGroovyRtpException(msg)
+    code:`def validateRTP(value, pattern, msg) {
+  if (!value) throwVetoException("Value cannot be empty: \${msg}")
+  if (!(value ==~ pattern)) throwVetoException(msg)
 }
 
-<span class="cmt">// Validate period format — Mon-YY</span>
-<span class="fn-c">validateRTP</span>(rtps.StartPeriod, <span class="str">/^[A-Z][a-z]{2}-\d{2}$/</span>,
-  <span class="str">"Period must be Mon-YY format (e.g. Jan-24)"</span>)
+// Validate period format — Mon-YY
+validateRTP(rtps.StartPeriod.enteredValue, /^[A-Z][a-z]{2}-\\d{2}$/, "Period must be Mon-YY format (e.g. Jan-24)")
 
-<span class="cmt">// Validate numeric budget amount</span>
-<span class="fn-c">validateRTP</span>(rtps.BudgetAmount, <span class="str">/^\d+(\.\d{1,2})?$/</span>,
-  <span class="str">"Budget amount must be a number with up to 2 decimal places"</span>)`,
+// Validate numeric budget amount
+validateRTP(rtps.BudgetAmount.enteredValue, /^\\d+(\\.\\d{1,2})?$/, "Budget amount must be a number with up to 2 decimal places")`,
     output:`(No output if valid. EPM UI shows error if validation fails.)`,
     errors:[
       {code:"UI_NOT_SHOWN",cause:"Using base Exception instead of EpmGroovyRtpException",fix:"Must use EpmGroovyRtpException for the error to surface in the form"},
@@ -964,17 +899,11 @@ entities.each { e ->
       {n:"throwOnFail",req:false,d:"Boolean — throw exception if not found (default: true)"}
     ],
     returns:"Boolean — true if found, false if not (when throwOnFail=false).",
-    code:`<span class="kw">def</span> <span class="fn-c">validateMemberExists</span>(cubeName, dimension, memberName, throwOnFail = <span class="kw">true</span>) {
-  <span class="kw">def</span> dim = operation.application.getEssbaseCube(cubeName).getDimension(dimension)
-  <span class="kw">def</span> found = dim.getMember(memberName) != <span class="kw">null</span>
-  <span class="kw">if</span> (!found && throwOnFail)
-    <span class="kw">throw new</span> EpmGroovyRtpException(<span class="str">"'\${memberName}' not found in \${dimension} dimension"</span>)
-  <span class="kw">return</span> found
-}
-
-<span class="cmt">// Validate before a write</span>
-<span class="fn-c">validateMemberExists</span>(<span class="str">"Plan1"</span>, <span class="str">"Entity"</span>, rtps.Entity)
-<span class="fn-c">writeDataCell</span>(<span class="str">"Plan1"</span>, [Entity: rtps.Entity, <span class="str">/* ... */</span>], value)`,
+    code:`def validateMemberExists(cubeName, dimension, memberName, throwOnFail = true) {
+  // Not yet verified: member existence checks are not confirmed against the Oracle
+  // EPM Cloud Groovy API reference for this snippet.
+  throw new UnsupportedOperationException("validateMemberExists() is not yet verified against Oracle EPM Cloud Groovy API.")
+}`,
     output:`(No output if valid.)`,
     errors:[
       {code:"WHITESPACE",cause:"Member name has leading/trailing spaces",fix:"Always call .trim() on RTP string values before validation"}
@@ -991,16 +920,16 @@ entities.each { e ->
       {n:"context",req:false,d:"Optional Map — additional context key-value pairs"}
     ],
     returns:"void. If level is 'ERROR', also throws an exception to halt execution.",
-    code:`<span class="kw">def</span> <span class="fn-c">log</span>(level, message, Map ctx = [:]) {
-  <span class="kw">def</span> ts = <span class="kw">new</span> Date().format(<span class="str">'yyyy-MM-dd HH:mm:ss'</span>)
-  <span class="kw">def</span> ctxStr = ctx ? <span class="str">" | "</span> + ctx.collect { <span class="str">"\${it.key}=\${it.value}"</span> }.join(<span class="str">", "</span>) : <span class="str">""</span>
-  operation.writeLine(<span class="str">"[\${ts}] [\${level}] \${message}\${ctxStr}"</span>)
-  <span class="kw">if</span> (level == <span class="str">"ERROR"</span>) <span class="kw">throw new</span> Exception(message)
+    code:`def log(level, message, Map ctx = [:]) {
+  def ts = new Date().format('yyyy-MM-dd HH:mm:ss')
+  def ctxStr = ctx ? " | " + ctx.collect { "\${it.key}=\${it.value}" }.join(", ") : ""
+  println("[\${ts}] [\${level}] \${message}\${ctxStr}")
+  if (level == "ERROR") throw new Exception(message)
 }
 
-<span class="fn-c">log</span>(<span class="str">"INFO"</span>, <span class="str">"Starting GL load"</span>, [period: <span class="str">"Jan-24"</span>, entity: <span class="str">"E001"</span>])
-<span class="fn-c">log</span>(<span class="str">"WARN"</span>, <span class="str">"No file found, using default"</span>)
-<span class="fn-c">log</span>(<span class="str">"ERROR"</span>, <span class="str">"Integration rule failed"</span>)`,
+log("INFO", "Starting GL load", [period: "Jan-24", entity: "E001"])
+log("WARN", "No file found, using default")
+log("ERROR", "Integration rule failed")`,
     output:`[2024-01-15 09:32:11] [INFO] Starting GL load | period=Jan-24, entity=E001
 [2024-01-15 09:32:11] [WARN] No file found, using default`,
     errors:[
@@ -1019,25 +948,22 @@ entities.each { e ->
       {n:"pollMs",req:false,d:"Polling interval in milliseconds (default: 5000)"}
     ],
     returns:"String — 'SUCCESS' or 'FAILED'. Throws on timeout.",
-    code:`<span class="kw">def</span> <span class="fn-c">awaitJob</span>(connName, jobId, maxWait = <span class="num">300</span>, poll = <span class="num">5000</span>) {
-  <span class="kw">def</span> terminal = [<span class="str">"SUCCESS"</span>, <span class="str">"FAILED"</span>, <span class="str">"ERROR"</span>]
-  <span class="kw">def</span> elapsed = <span class="num">0</span>
-  <span class="kw">while</span> (elapsed < maxWait * <span class="num">1000</span>) {
-    <span class="kw">def</span> r = operation.application.getConnection(connName)
-      .get(<span class="str">"/aif/rest/V1/jobs/\${jobId}"</span>)
-    <span class="kw">def</span> status = <span class="kw">new</span> groovy.json.JsonSlurper()
-      .parseText(r.body).jobStatus?.toUpperCase()
-    operation.writeLine(<span class="str">"[INFO] Job \${jobId}: \${status}"</span>)
-    <span class="kw">if</span> (status <span class="kw">in</span> terminal) <span class="kw">return</span> status
-    Thread.sleep(poll); elapsed += poll
+    code:`def awaitJob(connName, jobId, maxWait = 300, poll = 5000) {
+  def terminal = ["SUCCESS", "FAILED", "ERROR"]
+  def elapsed = 0
+  while (elapsed < maxWait * 1000) {
+    def resp = operation.application.getConnection(connName)
+      .get("/aif/rest/V1/jobs/\${jobId}")
+      .asString()
+    def status = new groovy.json.JsonSlurper()
+      .parseText(resp.body).jobStatus?.toUpperCase()
+    println("[INFO] Job \${jobId}: \${status}")
+    if (terminal.contains(status)) return status
+    Thread.sleep(poll)
+    elapsed += poll
   }
-  <span class="kw">throw new</span> Exception(<span class="str">"Job \${jobId} timed out after \${maxWait}s"</span>)
-}
-
-<span class="cmt">// Chain: load → await → calc</span>
-<span class="kw">def</span> jId = <span class="fn-c">runDataIntegration</span>(<span class="str">"LocalConn"</span>, <span class="str">"Load_GL"</span>, <span class="str">"Jan-24"</span>, <span class="str">"Jan-24"</span>, <span class="str">"REPLACE"</span>, <span class="str">"STORE_DATA"</span>)
-<span class="fn-c">awaitJob</span>(<span class="str">"LocalConn"</span>, jId)
-<span class="fn-c">runBusinessRule</span>(<span class="str">"Calc_Actuals"</span>, <span class="str">"Plan1"</span>)`,
+  throw new Exception("Job \${jobId} timed out after \${maxWait}s")
+}`,
     output:`[INFO] Job 100245: RUNNING
 [INFO] Job 100245: RUNNING
 [INFO] Job 100245: SUCCESS`,
@@ -1057,20 +983,23 @@ entities.each { e ->
       {n:"body",req:true,d:"Plain text email body"}
     ],
     returns:"void — throws if email service is unavailable.",
-    code:`<span class="kw">def</span> <span class="fn-c">sendEmail</span>(toAddr, subject, body) {
-  <span class="kw">def</span> appName = operation.application.name
-  operation.application.getConnection(<span class="str">"LocalConnection"</span>)
-    .post(<span class="str">"/HyperionPlanning/rest/v3/applications/\${appName}/jobs"</span>, [
-      jobType : <span class="str">"SEND_EMAIL"</span>,
-      details : [to: toAddr, subject: subject, body: body]
-    ])
-  operation.writeLine(<span class="str">"[INFO] Email sent to \${toAddr}"</span>)
+    code:`def sendEmail(toAddr, subject, body) {
+  def appName = operation.application.name
+  def payload = [
+    jobType : "SEND_EMAIL",
+    details : [to: toAddr, subject: subject, body: body]
+  ]
+  operation.application.getConnection("LocalConnection")
+    .post("/HyperionPlanning/rest/v3/applications/\${appName}/jobs")
+    .body(json(payload))
+    .asString()
+  println("[INFO] Email sent to \${toAddr}")
 }
 
-<span class="fn-c">sendEmail</span>(
-  <span class="str">"finance-close@company.com"</span>,
-  <span class="str">"[EPM] Jan-24 Close Complete"</span>,
-  <span class="str">"GL Actuals load + calc completed at "</span> + <span class="kw">new</span> Date()
+sendEmail(
+  "finance-close@company.com",
+  "[EPM] Jan-24 Close Complete",
+  "GL Actuals load + calc completed at " + new Date()
 )`,
     output:`[INFO] Email sent to finance-close@company.com`,
     errors:[
@@ -1090,25 +1019,38 @@ entities.each { e ->
       {n:"payload",req:false,d:"Map — request body for POST/PUT/PATCH (optional)"}
     ],
     returns:"Map — {statusCode: Int, body: String, headers: Map}.",
-    code:`<span class="kw">def</span> <span class="fn-c">callExternalAPI</span>(connName, method, path, Map payload = <span class="kw">null</span>) {
-  <span class="kw">def</span> conn = operation.application.getConnection(connName)
-  <span class="kw">def</span> resp = (method.toUpperCase() == <span class="str">"GET"</span>)
-    ? conn.get(path)
-    : conn.post(path, payload ?: [:])
-  <span class="kw">if</span> (resp.statusCode >= <span class="num">400</span>)
-    <span class="kw">throw new</span> Exception(<span class="str">"API call failed: HTTP \${resp.statusCode} → \${resp.body}"</span>)
-  <span class="kw">return</span> [statusCode: resp.statusCode, body: resp.body]
+    code:`def callExternalAPI(connName, method, path, Map payload = null) {
+  def conn = operation.application.getConnection(connName)
+  def m = method.toUpperCase()
+  def resp
+
+  if (m == "GET") {
+    resp = conn.get(path).asString()
+  } else if (m == "POST") {
+    resp = conn.post(path).body(json(payload ?: [:])).asString()
+  } else if (m == "PUT") {
+    resp = conn.put(path).body(json(payload ?: [:])).asString()
+  } else if (m == "DELETE") {
+    resp = conn.delete(path).asString()
+  } else {
+    throw new UnsupportedOperationException("HTTP method not supported in this snippet: \${method}")
+  }
+
+  if (resp.getStatus() >= 400) {
+    throw new Exception("API call failed: HTTP \${resp.getStatus()} → \${resp.body}")
+  }
+  return [statusCode: resp.getStatus(), body: resp.body]
 }
 
-<span class="cmt">// Post a Slack message when close is done</span>
-<span class="fn-c">callExternalAPI</span>(<span class="str">"SlackConn"</span>, <span class="str">"POST"</span>, <span class="str">"/api/chat.postMessage"</span>, [
-  channel: <span class="str">"#finance-close"</span>,
-  text   : <span class="str">"✅ EPM Jan-24 close completed"</span>
+// Post a Slack message when close is done
+callExternalAPI("SlackConn", "POST", "/api/chat.postMessage", [
+  channel: "#finance-close",
+  text   : "✅ EPM Jan-24 close completed"
 ])
 
-<span class="cmt">// GET data from ERP</span>
-<span class="kw">def</span> r = <span class="fn-c">callExternalAPI</span>(<span class="str">"FusionConn"</span>, <span class="str">"GET"</span>, <span class="str">"/fscmRestApi/resources/v1/generalLedgerPeriods?q=Status=Open"</span>)
-<span class="kw">def</span> periods = <span class="kw">new</span> groovy.json.JsonSlurper().parseText(r.body)`,
+// GET data from ERP
+def r = callExternalAPI("FusionConn", "GET", "/fscmRestApi/resources/v1/generalLedgerPeriods?q=Status=Open")
+def periods = new groovy.json.JsonSlurper().parseText(r.body)`,
     output:`{statusCode=200, body={"ok":true}}`,
     errors:[
       {code:"CONN_NOT_FOUND",cause:"Named connection doesn't exist in EPM Workspace",fix:"Create the connection under Tools → Connections before calling"},
@@ -1137,9 +1079,9 @@ entities.each { e ->
 }
 
 <span class="cmt">// Parse DI job status response</span>
-<span class="kw">def</span> r = operation.application.getConnection(<span class="str">"LocalConn"</span>).get(<span class="str">"/aif/rest/V1/jobs/100245"</span>)
+<span class="kw">def</span> r = operation.application.getConnection(<span class="str">"LocalConn"</span>).get(<span class="str">"/aif/rest/V1/jobs/100245"</span>).asString()
 <span class="kw">def</span> job = <span class="fn-c">parseJson</span>(r.body, [<span class="str">"jobId"</span>, <span class="str">"jobStatus"</span>])
-operation.writeLine(<span class="str">"Status: \${job.jobStatus}"</span>)`,
+println("Status: \${job.jobStatus}")`,
     output:`Status: SUCCESS`,
     errors:[
       {code:"INVALID_JSON",cause:"Response is HTML error page, not JSON",fix:"Check statusCode before parsing — HTML 500 pages are not JSON"},
@@ -1159,21 +1101,11 @@ operation.writeLine(<span class="str">"Status: \${job.jobStatus}"</span>)`,
       {n:"periods",req:false,d:"List of Period members — omit to clear all periods"}
     ],
     returns:"void — throws if slice dimensions are invalid.",
-    code:`<span class="kw">def</span> <span class="fn-c">clearDataSlice</span>(cubeName, scenario, version, List years, List periods = []) {
-  <span class="kw">def</span> cube = operation.application.getEssbaseCube(cubeName)
-  <span class="kw">def</span> yearFix  = years.join(<span class="str">","</span>)
-  <span class="kw">def</span> periodFix = periods ? periods.join(<span class="str">","</span>) : <span class="str">"Jan,Feb,Mar,Apr,May,Jun,Jul,Aug,Sep,Oct,Nov,Dec"</span>
-  <span class="kw">def</span> mdx = <span class="str">"""
-    CLEAR DATA
-    WITH DESCENDANTS
-    IN BSO CUBE [\${cubeName}]
-    WHERE ([\${scenario}],[\${version}],{\${yearFix}},{\${periodFix}})
-  """</span>.stripIndent()
-  cube.executeMdx(mdx)
-  operation.writeLine(<span class="str">"[INFO] Cleared \${scenario}/\${version} for \${yearFix}"</span>)
-}
-
-<span class="fn-c">clearDataSlice</span>(<span class="str">"Plan1"</span>, <span class="str">"Budget"</span>, <span class="str">"Working"</span>, [<span class="str">"FY25"</span>, <span class="str">"FY26"</span>])`,
+    code:`def clearDataSlice(cubeName, scenario, version, List years, List periods = []) {
+  // Not yet verified: slice/MDX clear behavior is not confirmed against the Oracle
+  // EPM Cloud Groovy API reference for this snippet.
+  throw new UnsupportedOperationException("clearDataSlice() is not yet verified against Oracle EPM Cloud Groovy API.")
+}`,
     output:`[INFO] Cleared Budget/Working for FY25,FY26`,
     errors:[
       {code:"INVALID_MEMBER",cause:"Scenario/Version/Year not found in outline",fix:"Validate with validateMemberExists() before clearing"},
@@ -1190,23 +1122,11 @@ operation.writeLine(<span class="str">"Status: \${job.jobStatus}"</span>)`,
       {n:"keepData",req:false,d:"Boolean — preserve existing data during refresh (default: true)"}
     ],
     returns:"void — throws on refresh failure.",
-    code:`<span class="kw">def</span> <span class="fn-c">refreshOutline</span>(cubeName, keepData = <span class="kw">true</span>) {
-  <span class="kw">def</span> appName = operation.application.name
-  <span class="kw">def</span> payload = [
-    jobType    : <span class="str">"CUBE_REFRESH"</span>,
-    parameters : [cubeName: cubeName, keepData: keepData]
-  ]
-  <span class="kw">def</span> resp = operation.application
-    .getConnection(<span class="str">"LocalConnection"</span>)
-    .post(<span class="str">"/HyperionPlanning/rest/v3/applications/\${appName}/jobs"</span>, payload)
-  <span class="kw">def</span> job = <span class="kw">new</span> groovy.json.JsonSlurper().parseText(resp.body)
-  <span class="kw">if</span> (job.status == <span class="num">-1</span>) <span class="kw">throw new</span> Exception(<span class="str">"Outline refresh failed: \${job.descriptiveStatus}"</span>)
-  operation.writeLine(<span class="str">"[INFO] Outline refresh queued for \${cubeName}"</span>)
-}
-
-<span class="cmt">// Add a member, then refresh so it's live</span>
-<span class="fn-c">addMetadataMember</span>(<span class="str">"Plan1"</span>, <span class="str">"Entity"</span>, <span class="str">"RegionAPAC"</span>, <span class="str">"E100"</span>, [alias:<span class="str">"Tokyo Office"</span>])
-<span class="fn-c">refreshOutline</span>(<span class="str">"Plan1"</span>)`,
+    code:`def refreshOutline(cubeName, keepData = true) {
+  // Not yet verified: refreshDatabase / outline refresh behavior is not confirmed
+  // against the Oracle EPM Cloud Groovy API reference for this snippet.
+  throw new UnsupportedOperationException("refreshOutline() is not yet verified against Oracle EPM Cloud Groovy API.")
+}`,
     output:`[INFO] Outline refresh queued for Plan1`,
     errors:[
       {code:"CUBE_IN_USE",cause:"Other users or rules are running",fix:"Schedule refresh during maintenance window or use EPM job sequencing"},
@@ -1224,26 +1144,11 @@ operation.writeLine(<span class="str">"Status: \${job.jobStatus}"</span>)`,
       {n:"fileName",req:true,d:"Destination filename in EPM Outbox (e.g. 'Budget_FY25.csv')"}
     ],
     returns:"String — outbox file path. Throws on export failure.",
-    code:`<span class="kw">def</span> <span class="fn-c">exportDataToOutbox</span>(cubeName, exportRule, fileName) {
-  <span class="kw">def</span> appName = operation.application.name
-  <span class="kw">def</span> payload = [
-    jobType   : <span class="str">"EXPORT_DATA"</span>,
-    parameters: [
-      cubeName      : cubeName,
-      exportRuleName: exportRule,
-      fileName      : <span class="str">"outbox/\${fileName}"</span>
-    ]
-  ]
-  <span class="kw">def</span> resp = operation.application
-    .getConnection(<span class="str">"LocalConnection"</span>)
-    .post(<span class="str">"/HyperionPlanning/rest/v3/applications/\${appName}/jobs"</span>, payload)
-  <span class="kw">def</span> job = <span class="kw">new</span> groovy.json.JsonSlurper().parseText(resp.body)
-  <span class="kw">if</span> (job.status == <span class="num">-1</span>) <span class="kw">throw new</span> Exception(<span class="str">"Export failed: \${job.descriptiveStatus}"</span>)
-  operation.writeLine(<span class="str">"[INFO] Export '\${fileName}' queued"</span>)
-  <span class="kw">return</span> <span class="str">"outbox/\${fileName}"</span>
-}
-
-<span class="fn-c">exportDataToOutbox</span>(<span class="str">"Plan1"</span>, <span class="str">"Export_Budget_FY25"</span>, <span class="str">"Budget_FY25_snapshot.csv"</span>)`,
+    code:`def exportDataToOutbox(cubeName, exportRule, fileName) {
+  // Not yet verified: data export job submission flow is not confirmed against the
+  // Oracle EPM Cloud Groovy API reference for this snippet.
+  throw new UnsupportedOperationException("exportDataToOutbox() is not yet verified against Oracle EPM Cloud Groovy API.")
+}`,
     output:`[INFO] Export 'Budget_FY25_snapshot.csv' queued`,
     errors:[
       {code:"RULE_NOT_FOUND",cause:"Export rule name wrong or not deployed in Data Management",fix:"Verify under Data Management → Setup → Data Export Rules"},
@@ -1262,19 +1167,11 @@ operation.writeLine(<span class="str">"Status: \${job.jobStatus}"</span>)`,
       {n:"lock",req:false,d:"Boolean — true to lock, false to unlock (default: true)"}
     ],
     returns:"void — throws if Planning Unit not found or user lacks Admin role.",
-    code:`<span class="kw">def</span> <span class="fn-c">lockPlanningUnit</span>(scenario, version, entity, lock = <span class="kw">true</span>) {
-  <span class="kw">def</span> pu = operation.application
-    .getPlanningUnit(scenario, version, entity)
-  <span class="kw">if</span> (!pu) <span class="kw">throw new</span> Exception(
-    <span class="str">"Planning Unit not found: \${scenario}/\${version}/\${entity}"</span>)
-  lock ? pu.lock() : pu.unlock()
-  <span class="kw">def</span> action = lock ? <span class="str">"LOCKED"</span> : <span class="str">"UNLOCKED"</span>
-  operation.writeLine(<span class="str">"[INFO] \${entity} \${action} for \${scenario}/\${version}"</span>)
-}
-
-<span class="cmt">// Lock all leaf entities after close</span>
-<span class="kw">def</span> entities = <span class="fn-c">getDescendants</span>(<span class="str">"Plan1"</span>, <span class="str">"Entity"</span>, <span class="str">"TotalEntity"</span>)
-entities.each { e -> <span class="fn-c">lockPlanningUnit</span>(<span class="str">"Budget"</span>, <span class="str">"Working"</span>, e) }`,
+    code:`def lockPlanningUnit(scenario, version, entity, lock = true) {
+  // Not yet verified: Planning Unit locking APIs are not confirmed against the Oracle
+  // EPM Cloud Groovy API reference for this snippet.
+  throw new UnsupportedOperationException("lockPlanningUnit() is not yet verified against Oracle EPM Cloud Groovy API.")
+}`,
     output:`[INFO] E001 LOCKED for Budget/Working
 [INFO] E002 LOCKED for Budget/Working`,
     errors:[
@@ -1292,23 +1189,24 @@ entities.each { e -> <span class="fn-c">lockPlanningUnit</span>(<span class="str
       {n:"cubeName",req:false,d:"Optional — scope to a single cube; omit for application-level"}
     ],
     returns:"void — throws on first failure and halts remaining updates.",
-    code:`<span class="kw">def</span> <span class="fn-c">bulkSetSubVars</span>(Map varMap, cubeName = <span class="kw">null</span>) {
+    code:`def bulkSetSubVars(Map varMap, cubeName = null) {
   varMap.each { varName, value ->
-    <span class="kw">if</span> (cubeName)
-      operation.application.getEssbaseCube(cubeName)
-        .setSubstitutionVariable(varName, value)
-    <span class="kw">else</span>
-      operation.application.setSubstitutionVariable(varName, value)
-    operation.writeLine(<span class="str">"[INFO] SubVar '\${varName}' → '\${value}'"</span>)
+    if (cubeName) {
+      operation.application.getCube(cubeName)
+        .setSubstitutionVariableValue(varName, value)
+    } else {
+      operation.application.setSubstitutionVariableValue(varName, value)
+    }
+    println("[INFO] SubVar \${varName} → \${value}")
   }
 }
 
-<span class="cmt">// Month-end roll: Jan-24 → Feb-24</span>
-<span class="fn-c">bulkSetSubVars</span>([
-  CurPeriod  : <span class="str">"Feb-24"</span>,
-  PriorPeriod: <span class="str">"Jan-24"</span>,
-  CurYear    : <span class="str">"FY24"</span>,
-  CurQuarter : <span class="str">"Q1-24"</span>
+// Month-end roll: Jan-24 → Feb-24
+bulkSetSubVars([
+  CurPeriod  : "Feb-24",
+  PriorPeriod: "Jan-24",
+  CurYear    : "FY24",
+  CurQuarter : "Q1-24"
 ])`,
     output:`[INFO] SubVar 'CurPeriod' → 'Feb-24'
 [INFO] SubVar 'PriorPeriod' → 'Jan-24'
