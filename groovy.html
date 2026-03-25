@@ -1,0 +1,1227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EPM Groovy Library — BrainSpring Oracle Cloud EPM</title>
+<meta name="description" content="The definitive Oracle EPM Cloud Groovy function library. Production-ready, SaaS-standard functions for every EPM operation — integration, calculation, variables, data, validation, metadata, REST API. Built by BrainSpring.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Crimson+Pro:ital,wght@0,400;0,500;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#0d1b2e;--navy2:#112240;--navy3:#16304f;--navy4:#1e3f64;
+  --silver:#c8d4e0;--silver2:#8fa3b8;
+  --green:#4ade80;--green2:#22c55e;--green3:#16a34a;
+  --purple:#a855f7;--purple2:#7c3aed;
+  --teal:#2dd4bf;--amber:#fbbf24;--red:#f87171;--sky:#38bdf8;
+  --coral:#fb923c;--rose:#f472b6;--lime:#a3e635;
+  --white:#e8f0f8;--dim:#4a6080;
+  --border:rgba(200,212,224,.1);--border2:rgba(74,222,128,.14);
+  --r:10px
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Crimson Pro',serif;background:var(--navy);color:var(--white);min-height:100vh;overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;background-image:linear-gradient(rgba(74,222,128,.02) 1px,transparent 1px),linear-gradient(90deg,rgba(74,222,128,.02) 1px,transparent 1px);background-size:56px 56px}
+body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;background:radial-gradient(ellipse 80% 50% at 50% -10%,rgba(74,222,128,.07) 0%,transparent 70%)}
+#stars{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+.star{position:absolute;border-radius:50%;background:#4ade80;animation:twinkle var(--d,4s) infinite var(--delay,0s)}
+@keyframes twinkle{0%,100%{opacity:.02}50%{opacity:var(--op,.18)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@keyframes glow{0%,100%{text-shadow:0 0 40px rgba(74,222,128,.18)}50%{text-shadow:0 0 80px rgba(74,222,128,.42)}}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(74,222,128,.22)}50%{box-shadow:0 0 0 5px rgba(74,222,128,0)}}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+
+/* ── Topbar ── */
+#topbar{position:fixed;top:0;left:0;right:0;height:54px;background:rgba(13,27,46,.97);backdrop-filter:blur(20px);border-bottom:1px solid var(--border2);display:flex;align-items:center;padding:0 24px;gap:14px;z-index:200}
+.tb-shield{display:flex;align-items:center;gap:9px;text-decoration:none;flex-shrink:0}
+.tb-brand{font-family:'Rajdhani',sans-serif;font-size:16px;font-weight:700;letter-spacing:.03em}
+.tb-brain{color:var(--white)}.tb-spring{color:var(--green)}
+.tb-sep{color:var(--dim);font-size:13px}
+.tb-product{font-family:'Rajdhani',sans-serif;font-size:12px;font-weight:600;color:var(--silver2);letter-spacing:.07em;text-transform:uppercase}
+.tb-dot{width:7px;height:7px;border-radius:50%;background:var(--green);animation:pulse 2.5s infinite;flex-shrink:0}
+.tb-nav{display:flex;gap:5px;margin-left:auto;overflow-x:auto;align-items:center}
+.tb-nav::-webkit-scrollbar{display:none}
+.tb-link{padding:4px 10px;border-radius:6px;border:1px solid var(--border);color:var(--dim);font-family:'Rajdhani',sans-serif;font-size:10.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;text-decoration:none;white-space:nowrap;transition:all .15s}
+.tb-link:hover{border-color:var(--green);color:var(--green)}
+.tb-link.live{border-color:rgba(74,222,128,.3);color:var(--green)}
+.tb-link.current{border-color:rgba(74,222,128,.5);color:var(--green);background:rgba(74,222,128,.07)}
+.tb-live-dot{display:inline-block;width:5px;height:5px;border-radius:50%;background:var(--green);margin-right:4px;animation:pulse 2s infinite}
+
+/* ── Layout ── */
+.wrap{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:0 28px}
+@media(max-width:680px){.wrap{padding:0 16px}}
+
+/* ── Hero ── */
+.hero{padding:calc(54px + 52px) 0 44px;animation:fadeUp .6s ease both}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:8px;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.13em;color:rgba(74,222,128,.55);text-transform:uppercase;border:1px solid rgba(74,222,128,.14);border-radius:20px;padding:5px 16px;margin-bottom:22px}
+.hero-top{display:flex;align-items:flex-start;justify-content:space-between;gap:32px;flex-wrap:wrap}
+.hero-left{flex:1;min-width:280px}
+.hero-title{font-family:'Rajdhani',sans-serif;font-size:clamp(34px,5vw,56px);font-weight:700;line-height:1.06;margin-bottom:10px;animation:glow 5s infinite}
+.ht-sub{color:var(--silver2);font-weight:500;font-size:.48em;letter-spacing:.1em;text-transform:uppercase;display:block;margin-bottom:4px}
+.ht-main{color:var(--white)}
+.ht-accent{color:var(--green)}
+.hero-desc{font-size:15px;color:rgba(232,240,248,.45);font-style:italic;max-width:540px;margin:0 0 28px;line-height:1.8}
+.hero-cta{display:flex;gap:10px;flex-wrap:wrap}
+.btn{padding:10px 24px;font-family:'Rajdhani',sans-serif;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;border-radius:8px;text-decoration:none;transition:all .18s;display:inline-block;cursor:pointer;border:none}
+.btn-g{background:var(--green2);color:var(--navy)}
+.btn-g:hover{background:var(--green);transform:translateY(-1px);box-shadow:0 6px 28px rgba(74,222,128,.28)}
+.btn-o{background:transparent;color:var(--silver);border:1px solid rgba(200,212,224,.18)}
+.btn-o:hover{border-color:var(--silver);color:var(--white)}
+.btn-p{background:rgba(168,85,247,.15);color:var(--purple);border:1px solid rgba(168,85,247,.3)}
+.btn-p:hover{background:rgba(168,85,247,.22)}
+
+/* ── KPI Strip ── */
+.hero-right{display:flex;flex-direction:column;gap:10px;min-width:200px;align-self:flex-start;margin-top:36px}
+.kpi-strip{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.kpi{background:var(--navy2);border:1px solid var(--border);border-radius:10px;padding:14px 16px;text-align:center}
+.kpi-v{font-family:'Rajdhani',sans-serif;font-size:28px;font-weight:700;color:var(--green);display:block;line-height:1}
+.kpi-l{font-family:'JetBrains Mono',monospace;font-size:8.5px;color:var(--dim);letter-spacing:.1em;text-transform:uppercase;margin-top:3px;display:block}
+.kpi-wide{grid-column:span 2;background:rgba(74,222,128,.06);border-color:var(--border2)}
+.kpi-wide .kpi-v{font-size:13px;color:var(--green);letter-spacing:.04em}
+
+/* ── Section ── */
+.sec{padding:48px 0}
+.sec-lbl{font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:.16em;color:rgba(74,222,128,.45);text-transform:uppercase;margin-bottom:6px}
+.sec-h{font-family:'Rajdhani',sans-serif;font-size:clamp(20px,3vw,30px);font-weight:700;color:var(--white);margin-bottom:4px}
+.sec-sub{font-size:14px;color:rgba(232,240,248,.42);font-style:italic;line-height:1.7;max-width:640px;margin-bottom:24px}
+.sec-div{width:44px;height:2px;background:linear-gradient(90deg,var(--green),transparent);margin:10px 0 22px}
+.sdiv{height:1px;background:linear-gradient(90deg,transparent,var(--border2),transparent);margin:0 0 48px}
+
+/* ── Search + Filter ── */
+.search-wrap{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:18px}
+.search-input{flex:1;min-width:220px;padding:10px 16px;background:var(--navy2);border:1px solid var(--border);border-radius:8px;color:var(--white);font-family:'JetBrains Mono',monospace;font-size:12px;outline:none;transition:border-color .15s}
+.search-input::placeholder{color:var(--dim)}
+.search-input:focus{border-color:rgba(74,222,128,.35)}
+.filter-bar{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:18px}
+.fpill{font-family:'Rajdhani',sans-serif;font-size:10.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:5px 12px;border-radius:20px;border:1px solid var(--border);color:var(--dim);background:transparent;cursor:pointer;transition:all .15s}
+.fpill:hover,.fpill.active{border-color:rgba(74,222,128,.35);color:var(--green);background:rgba(74,222,128,.07)}
+.fpill[data-cat="integration"].active{border-color:rgba(56,189,248,.35);color:var(--sky);background:rgba(56,189,248,.07)}
+.fpill[data-cat="calculation"].active{border-color:rgba(74,222,128,.35);color:var(--green);background:rgba(74,222,128,.07)}
+.fpill[data-cat="variable"].active{border-color:rgba(251,191,36,.35);color:var(--amber);background:rgba(251,191,36,.07)}
+.fpill[data-cat="data"].active{border-color:rgba(168,85,247,.35);color:var(--purple);background:rgba(168,85,247,.07)}
+.fpill[data-cat="validation"].active{border-color:rgba(248,113,113,.35);color:var(--red);background:rgba(248,113,113,.07)}
+.fpill[data-cat="utility"].active{border-color:rgba(200,212,224,.25);color:var(--silver2);background:rgba(200,212,224,.06)}
+.fpill[data-cat="metadata"].active{border-color:rgba(45,212,191,.35);color:var(--teal);background:rgba(45,212,191,.07)}
+.fpill[data-cat="rest"].active{border-color:rgba(251,146,60,.35);color:var(--coral);background:rgba(251,146,60,.07)}
+
+/* ── Stats bar ── */
+.stats-bar{display:flex;gap:20px;flex-wrap:wrap;margin-bottom:24px;padding:11px 18px;background:rgba(74,222,128,.04);border:1px solid var(--border2);border-radius:10px}
+.stat{font-family:'JetBrains Mono',monospace;font-size:10.5px;color:var(--dim)}
+.stat strong{color:var(--green);font-weight:500}
+.stat-sep{color:rgba(74,96,128,.3)}
+
+/* ── Function Grid ── */
+.fn-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:14px}
+.fn-card{background:var(--navy2);border:1px solid var(--border);border-radius:14px;overflow:hidden;transition:all .2s;cursor:pointer}
+.fn-card:hover{transform:translateY(-2px);box-shadow:0 10px 36px rgba(0,0,0,.35)}
+.fn-card.open{border-color:rgba(74,222,128,.22);box-shadow:0 0 0 1px rgba(74,222,128,.1)}
+.card-accent{height:2px;width:100%}
+.card-head{padding:18px 20px 14px;display:flex;flex-direction:column;gap:8px}
+.card-top{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+.fn-name{font-family:'JetBrains Mono',monospace;font-size:12.5px;font-weight:500;color:var(--white);margin-bottom:3px}
+.fn-desc{font-size:12.5px;color:rgba(232,240,248,.48);line-height:1.6}
+.fn-badge{font-family:'JetBrains Mono',monospace;font-size:8px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:3px 9px;border-radius:10px;flex-shrink:0;white-space:nowrap}
+.badge-integration{background:rgba(56,189,248,.1);border:1px solid rgba(56,189,248,.22);color:var(--sky)}
+.badge-calculation{background:rgba(74,222,128,.08);border:1px solid rgba(74,222,128,.2);color:var(--green)}
+.badge-variable{background:rgba(251,191,36,.08);border:1px solid rgba(251,191,36,.2);color:var(--amber)}
+.badge-data{background:rgba(168,85,247,.1);border:1px solid rgba(168,85,247,.22);color:var(--purple)}
+.badge-validation{background:rgba(248,113,113,.08);border:1px solid rgba(248,113,113,.2);color:var(--red)}
+.badge-utility{background:rgba(200,212,224,.06);border:1px solid rgba(200,212,224,.14);color:var(--silver2)}
+.badge-metadata{background:rgba(45,212,191,.08);border:1px solid rgba(45,212,191,.2);color:var(--teal)}
+.badge-rest{background:rgba(251,146,60,.1);border:1px solid rgba(251,146,60,.22);color:var(--coral)}
+.card-meta{display:flex;gap:12px;align-items:center}
+.meta-item{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--dim);letter-spacing:.06em}
+.card-chevron{font-size:9px;color:var(--dim);margin-left:auto;transition:transform .2s}
+.fn-card.open .card-chevron{transform:rotate(180deg)}
+
+/* ── Card body ── */
+.card-body{display:none;border-top:1px solid var(--border)}
+.fn-card.open .card-body{display:block}
+.tab-nav{display:flex;background:rgba(0,0,0,.15);border-bottom:1px solid var(--border);overflow-x:auto}
+.tab-nav::-webkit-scrollbar{display:none}
+.tab-btn{font-family:'Rajdhani',sans-serif;font-size:10.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:9px 14px;border:none;background:transparent;color:var(--dim);cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;transition:all .15s}
+.tab-btn:hover{color:var(--silver)}
+.tab-btn.active{color:var(--green);border-bottom-color:var(--green)}
+.tab-pane{display:none;padding:16px 20px}
+.tab-pane.active{display:block}
+
+/* ── Tab content styles ── */
+.param-section-lbl{font-family:'JetBrains Mono',monospace;font-size:8.5px;letter-spacing:.14em;color:rgba(74,222,128,.45);text-transform:uppercase;margin-bottom:8px}
+.param-row{display:grid;grid-template-columns:150px 1fr;gap:8px;padding:7px 0;border-bottom:1px solid rgba(200,212,224,.05);font-size:12px;align-items:baseline}
+.param-row:last-child{border-bottom:none}
+.param-name{font-family:'JetBrains Mono',monospace;font-size:10.5px;color:var(--white)}
+.param-req{color:var(--red);font-size:9px;margin-left:2px}
+.param-opt{color:var(--dim);font-size:9px;margin-left:2px}
+.param-desc{color:rgba(232,240,248,.5);line-height:1.55}
+.return-box{margin-top:14px;background:rgba(74,222,128,.04);border:1px solid rgba(74,222,128,.12);border-radius:8px;padding:12px 14px}
+.return-lbl{font-family:'JetBrains Mono',monospace;font-size:8.5px;letter-spacing:.12em;color:rgba(74,222,128,.4);text-transform:uppercase;margin-bottom:5px}
+.return-val{font-size:12px;color:rgba(232,240,248,.6);font-family:'JetBrains Mono',monospace}
+
+pre.code{background:rgba(0,0,0,.3);border:1px solid rgba(200,212,224,.08);border-radius:8px;padding:14px 16px;font-size:11px;font-family:'JetBrains Mono',monospace;overflow-x:auto;line-height:1.8;white-space:pre;margin:8px 0}
+.kw{color:#a78bfa}.str{color:#4ade80}.cmt{color:#4a6080;font-style:italic}.fn-c{color:#7dd3fc}.num{color:#fbbf24}.op{color:#f87171}
+.output-box{background:rgba(0,0,0,.2);border:1px dashed rgba(200,212,224,.12);border-radius:8px;padding:11px 14px;font-family:'JetBrains Mono',monospace;font-size:10.5px;color:rgba(232,240,248,.45);margin-top:8px;line-height:1.7}
+.output-lbl{font-size:8.5px;color:var(--dim);letter-spacing:.1em;text-transform:uppercase;margin-bottom:5px}
+
+.error-grid{display:flex;flex-direction:column;gap:8px}
+.error-item{background:rgba(248,113,113,.04);border:1px solid rgba(248,113,113,.1);border-radius:8px;padding:11px 13px}
+.error-code{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:500;color:var(--red);margin-bottom:5px}
+.error-row{display:grid;grid-template-columns:50px 1fr;gap:6px;font-size:11.5px;margin-bottom:3px}
+.error-label{color:var(--dim);font-family:'JetBrains Mono',monospace;font-size:9.5px}
+.error-text{color:rgba(232,240,248,.5)}
+.error-fix{color:rgba(74,222,128,.65)}
+
+.release-block{background:rgba(56,189,248,.04);border-left:2px solid rgba(56,189,248,.3);padding:10px 14px;border-radius:0 8px 8px 0;margin-bottom:12px}
+.release-ver{font-family:'JetBrains Mono',monospace;font-size:9.5px;color:var(--sky);margin-bottom:4px}
+.release-text{font-size:12.5px;color:rgba(232,240,248,.5);line-height:1.65}
+.applies-chips{display:flex;gap:5px;flex-wrap:wrap;margin-top:12px}
+.apply-chip{font-family:'JetBrains Mono',monospace;font-size:9px;padding:3px 8px;border-radius:4px;border:1px solid var(--border);color:var(--dim)}
+
+.no-results{text-align:center;padding:48px 24px;color:var(--dim);font-family:'JetBrains Mono',monospace;font-size:12px}
+
+/* ── Breadcrumb ── */
+.breadcrumb{font-family:'JetBrains Mono',monospace;font-size:9.5px;color:var(--dim);display:flex;gap:8px;align-items:center;padding-top:calc(54px + 20px);margin-bottom:0}
+.breadcrumb a{color:var(--dim);text-decoration:none;transition:color .15s}
+.breadcrumb a:hover{color:var(--green)}
+.bc-sep{color:rgba(74,96,128,.4)}
+.bc-cur{color:rgba(74,222,128,.5)}
+
+/* ── Cheatsheet / table ── */
+.cheat-table{width:100%;border-collapse:collapse;font-size:12px}
+.cheat-table th{background:rgba(74,222,128,.05);color:var(--green);padding:9px 14px;text-align:left;font-family:'Rajdhani',sans-serif;font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;border-bottom:1px solid var(--border2)}
+.cheat-table td{padding:9px 14px;border-bottom:1px solid rgba(255,255,255,.03);color:rgba(232,240,248,.58);vertical-align:top}
+.cheat-table tr:last-child td{border-bottom:none}
+.cheat-table tr:hover td{background:rgba(255,255,255,.012)}
+.cheat-table td:first-child{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--white);white-space:nowrap}
+.tbl-wrap{overflow-x:auto;border-radius:12px;border:1px solid var(--border);margin-bottom:48px}
+
+/* ── Quick start ── */
+.qs-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px;margin-bottom:48px}
+.qs-card{background:var(--navy2);border:1px solid var(--border);border-radius:12px;padding:20px 22px}
+.qs-num{font-family:'Rajdhani',sans-serif;font-size:32px;font-weight:700;color:rgba(74,222,128,.15);line-height:1;margin-bottom:8px}
+.qs-title{font-family:'Rajdhani',sans-serif;font-size:15px;font-weight:700;color:var(--white);margin-bottom:6px}
+.qs-text{font-size:12.5px;color:rgba(232,240,248,.45);line-height:1.65}
+
+/* ── Free banner ── */
+.free-banner{background:linear-gradient(135deg,rgba(74,222,128,.07),rgba(34,197,94,.03));border:1px solid rgba(74,222,128,.18);border-radius:12px;padding:22px 28px;display:flex;align-items:center;gap:18px;margin-bottom:48px}
+.fb-icon{font-size:30px;flex-shrink:0;animation:float 3s infinite}
+.fb-title{font-family:'Rajdhani',sans-serif;font-size:16px;font-weight:700;color:var(--green);margin-bottom:3px}
+.fb-desc{font-size:12.5px;color:rgba(232,240,248,.48);line-height:1.65}
+@media(max-width:560px){.free-banner{flex-direction:column;text-align:center}}
+
+/* ── Footer ── */
+footer{border-top:1px solid var(--border);padding:32px 0;text-align:center;position:relative;z-index:1}
+.ft-b{font-family:'Rajdhani',sans-serif;font-size:15px;font-weight:700;margin-bottom:5px}
+.ft-br{color:var(--white)}.ft-sp{color:var(--green)}
+.ft-links{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin:12px 0}
+.ft-links a{font-size:11px;color:var(--dim);text-decoration:none;font-family:'Rajdhani',sans-serif;font-weight:600;letter-spacing:.04em;text-transform:uppercase;transition:color .15s}
+.ft-links a:hover{color:var(--green)}
+.ft-note{font-size:10px;color:rgba(74,96,128,.5);margin-top:8px;line-height:1.75}
+
+/* ── Copy button ── */
+.copy-btn{font-family:'JetBrains Mono',monospace;font-size:9px;padding:3px 8px;border-radius:5px;border:1px solid var(--border);color:var(--dim);background:transparent;cursor:pointer;float:right;margin-top:-2px;transition:all .15s}
+.copy-btn:hover{border-color:var(--green);color:var(--green)}
+.copy-btn.copied{color:var(--green);border-color:rgba(74,222,128,.35)}
+.pre-wrap{position:relative}
+.pre-wrap .copy-btn{position:absolute;top:10px;right:10px;margin:0;float:none}
+</style>
+</head>
+<body>
+<div id="stars"></div>
+
+<!-- ══ TOPBAR ══ -->
+<div id="topbar">
+  <a href="/" class="tb-shield" title="BrainSpring · Back to Hub">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 36" width="20" height="22">
+      <path d="M16 1L2 7v12c0 8.3 6 16 14 18 8-2 14-9.7 14-18V7L16 1z" fill="#0d1b2e" stroke="#4ade80" stroke-width="1.5"/>
+      <path d="M10 14c0-2 1.5-3.5 3-3.5s2.5 1 2.5 1V10h3v5c.4-.4 1-.7 1.5-.7 1.8 0 3 1.5 3 3.5s-1.2 3.5-3 3.5c-.5 0-1.1-.3-1.5-.7V23h-3v-.7s-1 .7-2.5.7-3-1.5-3-3.5z" fill="none" stroke="#4ade80" stroke-width="1.1" opacity=".9"/>
+      <circle cx="21" cy="27" r="2.2" fill="none" stroke="#4ade80" stroke-width=".9" opacity=".7"/>
+    </svg>
+    <span class="tb-brand"><span class="tb-brain">Brain</span><span class="tb-spring">Spring</span></span>
+  </a>
+  <span class="tb-sep">›</span>
+  <span class="tb-product">Groovy Library</span>
+  <span class="tb-dot"></span>
+  <nav class="tb-nav">
+    <a href="/halls/hall-1.html" class="tb-link live"><span class="tb-live-dot"></span>FCCS</a>
+    <a href="/epbcs/" class="tb-link live"><span class="tb-live-dot"></span>Planning</a>
+    <a href="/epmdi.html" class="tb-link live"><span class="tb-live-dot"></span>Data Integration</a>
+    <a href="/epcm/" class="tb-link live"><span class="tb-live-dot"></span>EPCM</a>
+    <a href="/groovy.html" class="tb-link current"><span class="tb-live-dot"></span>Groovy Library</a>
+    <a href="#modules" class="tb-link">All Modules</a>
+  </nav>
+</div>
+
+<!-- ══ HERO ══ -->
+<div class="wrap">
+  <div class="breadcrumb">
+    <a href="/">Home</a><span class="bc-sep">›</span>
+    <span class="bc-cur">EPM Groovy Library</span>
+  </div>
+  <section class="hero">
+    <div class="hero-top">
+      <div class="hero-left">
+        <div class="hero-eyebrow"><span class="tb-dot" style="width:6px;height:6px"></span>SaaS Standard · No EPM Automate Required · v1.0</div>
+        <h1 class="hero-title">
+          <span class="ht-sub">Oracle EPM Cloud</span>
+          <span class="ht-main">Groovy </span><span class="ht-accent">Function Library</span>
+        </h1>
+        <p class="hero-desc">Every EPM operation you'll ever need — from data loads to metadata writes — wrapped in clean, copy-paste-ready Groovy functions. Built for practitioners, not Oracle documentation.</p>
+        <div class="hero-cta">
+          <button class="btn btn-g" onclick="document.getElementById('library').scrollIntoView({behavior:'smooth'})">Browse the Library ↓</button>
+          <button class="btn btn-o" onclick="document.getElementById('quickstart').scrollIntoView({behavior:'smooth'})">Quick Start Guide</button>
+          <button class="btn btn-p" onclick="document.getElementById('cheatsheet').scrollIntoView({behavior:'smooth'})">Cheat Sheet</button>
+        </div>
+      </div>
+      <div class="hero-right">
+        <div class="kpi-strip">
+          <div class="kpi"><span class="kpi-v" id="fnCount">20</span><span class="kpi-l">Functions</span></div>
+          <div class="kpi"><span class="kpi-v">8</span><span class="kpi-l">Categories</span></div>
+          <div class="kpi"><span class="kpi-v">25.11</span><span class="kpi-l">EPM Release</span></div>
+          <div class="kpi"><span class="kpi-v">SaaS</span><span class="kpi-l">Standard</span></div>
+          <div class="kpi kpi-wide"><span class="kpi-v">Free · Open · No Login Required</span><span class="kpi-l">BrainSpring Community Library</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<div class="wrap"><div class="sdiv"></div></div>
+
+<!-- ══ QUICK START ══ -->
+<div class="wrap" id="quickstart">
+  <div class="sec-lbl">Getting Started</div>
+  <h2 class="sec-h">Four Things to Know Before You Code</h2>
+  <div class="sec-div"></div>
+  <p class="sec-sub">Groovy in Oracle EPM Cloud runs inside Calculation Manager as a business rule type. No installation — no IDE — no deployment pipeline beyond your browser.</p>
+  <div class="qs-grid">
+    <div class="qs-card" style="border-top:2px solid var(--green)">
+      <div class="qs-num">01</div>
+      <div class="qs-title">The operation Object</div>
+      <div class="qs-text">Every Groovy rule has access to <code style="color:var(--green);font-family:'JetBrains Mono',monospace;font-size:11px">operation</code> — the root API object. It gives you <code style="color:var(--green);font-family:'JetBrains Mono',monospace;font-size:11px">operation.application</code>, <code style="color:var(--green);font-family:'JetBrains Mono',monospace;font-size:11px">operation.grid</code>, and <code style="color:var(--green);font-family:'JetBrains Mono',monospace;font-size:11px">operation.writeLine()</code>. Start every function with this in mind.</div>
+    </div>
+    <div class="qs-card" style="border-top:2px solid var(--sky)">
+      <div class="qs-num">02</div>
+      <div class="qs-title">Named Connections</div>
+      <div class="qs-text">Functions that call REST endpoints (Data Integration, file ops, email) use a Named Connection defined in EPM Workspace. Always create a <code style="color:var(--sky);font-family:'JetBrains Mono',monospace;font-size:11px">LocalConnection</code> pointing to your own EPM URL before running integration functions.</div>
+    </div>
+    <div class="qs-card" style="border-top:2px solid var(--amber)">
+      <div class="qs-num">03</div>
+      <div class="qs-title">Error Handling Pattern</div>
+      <div class="qs-text">Always wrap top-level logic in <code style="color:var(--amber);font-family:'JetBrains Mono',monospace;font-size:11px">try/catch</code>. Use <code style="color:var(--amber);font-family:'JetBrains Mono',monospace;font-size:11px">operation.writeLine()</code> for the job console log and <code style="color:var(--amber);font-family:'JetBrains Mono',monospace;font-size:11px">EpmGroovyRtpException</code> for user-visible errors in forms.</div>
+    </div>
+    <div class="qs-card" style="border-top:2px solid var(--purple)">
+      <div class="qs-num">04</div>
+      <div class="qs-title">Monthly Cloud Updates</div>
+      <div class="qs-text">Oracle releases Cloud EPM updates monthly. After each update, run the Script Validator under Application → Overview → Actions → Validate Groovy Scripts to catch any API deprecations early.</div>
+    </div>
+  </div>
+</div>
+
+<div class="wrap"><div class="sdiv"></div></div>
+
+<!-- ══ LIBRARY ══ -->
+<div class="wrap" id="library">
+  <div class="sec-lbl">The Library</div>
+  <h2 class="sec-h">Standard Function Reference</h2>
+  <div class="sec-div"></div>
+  <p class="sec-sub">Click any function card to expand the full reference — parameters, example code, output, error handling, and release notes. Every function is production-ready and SaaS-compliant.</p>
+
+  <div class="search-wrap">
+    <input type="text" class="search-input" id="searchInput" placeholder="Search functions, operations, keywords..." oninput="filterCards()">
+  </div>
+  <div class="filter-bar" id="filterBar">
+    <button class="fpill active" data-cat="all" onclick="setFilter('all',this)">All</button>
+    <button class="fpill" data-cat="integration" onclick="setFilter('integration',this)">⚡ Integration</button>
+    <button class="fpill" data-cat="calculation" onclick="setFilter('calculation',this)">🧮 Calculation</button>
+    <button class="fpill" data-cat="variable" onclick="setFilter('variable',this)">📌 Variables</button>
+    <button class="fpill" data-cat="data" onclick="setFilter('data',this)">💾 Data</button>
+    <button class="fpill" data-cat="metadata" onclick="setFilter('metadata',this)">🌳 Metadata</button>
+    <button class="fpill" data-cat="validation" onclick="setFilter('validation',this)">🛡 Validation</button>
+    <button class="fpill" data-cat="utility" onclick="setFilter('utility',this)">🔧 Utility</button>
+    <button class="fpill" data-cat="rest" onclick="setFilter('rest',this)">🌐 REST / External</button>
+  </div>
+  <div class="stats-bar">
+    <span class="stat"><strong id="visCount">20</strong> functions shown</span>
+    <span class="stat-sep">·</span>
+    <span class="stat">Cloud EPM <strong>25.11</strong> compatible</span>
+    <span class="stat-sep">·</span>
+    <span class="stat">Groovy engine <strong>4.x</strong></span>
+    <span class="stat-sep">·</span>
+    <span class="stat"><strong>Copy</strong> any example instantly</span>
+  </div>
+  <div class="fn-grid" id="fnGrid"></div>
+  <div class="no-results" id="noResults" style="display:none">No functions matched. Try a different search term or category.</div>
+</div>
+
+<div class="wrap" style="margin-top:48px"><div class="sdiv"></div></div>
+
+<!-- ══ CHEAT SHEET ══ -->
+<div class="wrap" id="cheatsheet">
+  <div class="sec-lbl">Quick Reference</div>
+  <h2 class="sec-h">Groovy Function Cheat Sheet</h2>
+  <div class="sec-div"></div>
+  <p class="sec-sub">All 20 functions at a glance — name, category, what it does, and when to use it.</p>
+  <div class="tbl-wrap">
+    <table class="cheat-table" id="cheatTable"></table>
+  </div>
+</div>
+
+<!-- ══ FREE BANNER ══ -->
+<div class="wrap">
+  <div class="free-banner">
+    <div class="fb-icon">🧬</div>
+    <div>
+      <div class="fb-title">Part of the BrainSpring EPM Learning Ecosystem</div>
+      <p class="fb-desc">This Groovy library complements the Data Integration Course, Planning Quest, FCCS Tour, and EPCM Study Tour. Free, open, no login. If it helped you ship something, share it with someone who needs it.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ══ FOOTER ══ -->
+<div class="wrap">
+  <footer>
+    <div class="ft-b"><span class="ft-br">Brain</span><span class="ft-sp">Spring</span></div>
+    <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--dim);letter-spacing:.12em;margin-bottom:12px">BEYOND THE PROMPT · ORACLE EPM CLOUD LEARNING HUB</div>
+    <div class="ft-links">
+      <a href="/halls/hall-1.html">FCCS Tour</a>
+      <a href="/epbcs/">Planning Quest</a>
+      <a href="/epmdi.html">Data Integration</a>
+      <a href="/epcm/">EPCM Tour</a>
+      <a href="/groovy.html">Groovy Library</a>
+      <a href="/#modules">All Modules</a>
+      <a href="https://brainspring.ai" target="_blank">brainspring.ai</a>
+      <a href="https://www.oracle.com/performance-management/" target="_blank" rel="noopener">Oracle EPM</a>
+    </div>
+    <p class="ft-note">
+      Free educational resource · No registration required · Community-maintained Groovy reference<br>
+      Validated against Oracle Cloud EPM 25.11 documentation · Built with Claude AI · <a href="https://brainspring.ai" target="_blank" style="color:rgba(74,222,128,.35);text-decoration:none">brainspring.ai</a><br>
+      Oracle, Essbase, Groovy, Planning, FCCS and related names are trademarks of Oracle Corporation.<br>
+      BrainSpring is an independent educational resource and is not affiliated with or endorsed by Oracle Corporation.
+    </p>
+  </footer>
+</div>
+
+<script>
+// ══════════════════════════════════════════════
+// FUNCTION DATA
+// ══════════════════════════════════════════════
+const FNS = [
+  {
+    id:"runDataIntegration",name:"runDataIntegration()",cat:"integration",
+    desc:"Executes a Data Integration rule from inside a Groovy rule. The SaaS replacement for EPM Automate rundatarule — zero client install.",
+    since:"21.04",applies:["Planning","FCCS","TRCS"],
+    params:[
+      {n:"connName",req:true,d:"Named connection (e.g. 'LocalConnection') defined in EPM Workspace"},
+      {n:"ruleName",req:true,d:"Exact Data Integration rule name — case sensitive"},
+      {n:"startPeriod",req:true,d:"Start period string (e.g. 'Jan-24')"},
+      {n:"endPeriod",req:true,d:"End period string (e.g. 'Jan-24')"},
+      {n:"importMode",req:true,d:"'REPLACE', 'APPEND', or 'RECALCULATE'"},
+      {n:"exportMode",req:true,d:"'STORE_DATA', 'ADD_DATA', or 'SUBTRACT_DATA'"},
+      {n:"fileName",req:false,d:"Optional — source file already uploaded to EPM Inbox"}
+    ],
+    returns:"String — Job ID if launched. Throws exception on failure.",
+    code:`<span class="kw">def</span> <span class="fn-c">runDataIntegration</span>(connName, ruleName, startPer, endPer, impMode, expMode, fileName = <span class="str">""</span>) {
+  <span class="kw">def</span> payload = [
+    jobType    : <span class="str">"DATARULE"</span>,
+    jobName    : ruleName,
+    startPeriod: startPer,
+    endPeriod  : endPer,
+    importMode : impMode,
+    exportMode : expMode,
+    fileName   : fileName
+  ]
+  <span class="kw">def</span> resp = operation.application.getConnection(connName)
+    .post(<span class="str">'/aif/rest/V1/jobs'</span>, payload)
+  <span class="kw">def</span> json = <span class="kw">new</span> groovy.json.JsonSlurper().parseText(resp.body)
+  <span class="kw">if</span> (json.status == <span class="num">-1</span>) <span class="kw">throw new</span> Exception(<span class="str">"DI failed: ${json.jobStatus}"</span>)
+  operation.writeLine(<span class="str">"[INFO] Job ${json.jobId} launched"</span>)
+  <span class="kw">return</span> json.jobId.toString()
+}
+
+<span class="cmt">// Load actuals from an inbox file</span>
+<span class="fn-c">runDataIntegration</span>(<span class="str">"LocalConn"</span>, <span class="str">"Load_GL_Actuals"</span>, <span class="str">"Jan-24"</span>, <span class="str">"Jan-24"</span>,
+  <span class="str">"REPLACE"</span>, <span class="str">"STORE_DATA"</span>, <span class="str">"GL_Actuals_Jan.txt"</span>)`,
+    output:`[INFO] Job 100245 launched`,
+    errors:[
+      {code:"HTTP 401",cause:"Connection token expired",fix:"Refresh credentials in EPM Workspace → Connections"},
+      {code:"HTTP 404",cause:"Rule name not found in Data Integration",fix:"Verify exact rule name — case sensitive in the DI console"},
+      {code:"status -1",cause:"DI job ran but failed internally",fix:"Open DI → Process Details for the rule execution log"}
+    ],
+    release:"Available from 21.04. fileName became optional in 22.01."
+  },
+  {
+    id:"runBusinessRule",name:"runBusinessRule()",cat:"calculation",
+    desc:"Executes any deployed Calculation Manager business rule synchronously. Supports runtime prompts via a clean Map syntax.",
+    since:"20.06",applies:["Planning","FCCS","TRCS","EPCM"],
+    params:[
+      {n:"ruleName",req:true,d:"Exact name of the deployed business rule"},
+      {n:"cubeName",req:true,d:"Target Essbase cube (e.g. 'Plan1', 'OEP_FS')"},
+      {n:"rtps",req:false,d:"Map of runtime prompt name-value pairs (optional)"}
+    ],
+    returns:"void — throws EpmGroovyException on failure.",
+    code:`<span class="kw">def</span> <span class="fn-c">runBusinessRule</span>(ruleName, cubeName, Map rtps = [:]) {
+  <span class="kw">def</span> job = operation.application
+    .getEssbaseCube(cubeName)
+    .executeBusinessRule(ruleName, rtps)
+  <span class="kw">if</span> (!job.completedSuccessfully())
+    <span class="kw">throw new</span> Exception(<span class="str">"Rule '${ruleName}' failed: ${job.getStatus()}"</span>)
+  operation.writeLine(<span class="str">"[INFO] '${ruleName}' completed OK"</span>)
+}
+
+<span class="cmt">// No RTPs</span>
+<span class="fn-c">runBusinessRule</span>(<span class="str">"Allocate_Opex"</span>, <span class="str">"Plan1"</span>)
+
+<span class="cmt">// With RTPs</span>
+<span class="fn-c">runBusinessRule</span>(<span class="str">"Calc_Scenario"</span>, <span class="str">"OEP_FS"</span>, [Scenario:<span class="str">"Actual"</span>, Year:<span class="str">"FY24"</span>])`,
+    output:`[INFO] 'Calc_Scenario' completed OK`,
+    errors:[
+      {code:"RULE_NOT_FOUND",cause:"Rule not deployed or wrong cube assigned",fix:"Deploy via Calculation Manager before calling from Groovy"},
+      {code:"RTP_MISSING",cause:"Required runtime prompt not passed",fix:"Include all required RTPs in the Map parameter"},
+      {code:"CUBE_LOCK",cause:"Cube locked by a concurrent process",fix:"Add retry logic with Thread.sleep() before re-executing"}
+    ],
+    release:"Available from 20.06. Guaranteed synchronous execution from 21.09."
+  },
+  {
+    id:"setSubVar",name:"setSubstitutionVariable()",cat:"variable",
+    desc:"Sets a substitution variable value at application or cube level. The standard way to roll periods at the end of a close process.",
+    since:"20.06",applies:["Planning","FCCS","TRCS"],
+    params:[
+      {n:"varName",req:true,d:"Name of the substitution variable (e.g. 'CurPeriod')"},
+      {n:"value",req:true,d:"New string value to assign"},
+      {n:"cubeName",req:false,d:"Optional — omit to set at application level"}
+    ],
+    returns:"void — throws if variable not found.",
+    code:`<span class="kw">def</span> <span class="fn-c">setSubVar</span>(varName, value, cubeName = <span class="kw">null</span>) {
+  <span class="kw">if</span> (cubeName)
+    operation.application.getEssbaseCube(cubeName).setSubstitutionVariable(varName, value)
+  <span class="kw">else</span>
+    operation.application.setSubstitutionVariable(varName, value)
+  operation.writeLine(<span class="str">"[INFO] SubVar '${varName}' → '${value}'"</span>)
+}
+
+<span class="fn-c">setSubVar</span>(<span class="str">"CurPeriod"</span>, <span class="str">"Feb-24"</span>)
+<span class="fn-c">setSubVar</span>(<span class="str">"CurYear"</span>, <span class="str">"FY24"</span>, <span class="str">"Plan1"</span>)`,
+    output:`[INFO] SubVar 'CurPeriod' → 'Feb-24'`,
+    errors:[
+      {code:"SUBVAR_NOT_FOUND",cause:"Variable doesn't exist in this application",fix:"Create it under Application → Variables before calling"},
+      {code:"PERMISSION_DENIED",cause:"Caller doesn't have Service Admin role",fix:"Ensure the rule runs as a Service Administrator"}
+    ],
+    release:"Available since 20.06. Cube-level scope added in 21.01."
+  },
+  {
+    id:"getSubVar",name:"getSubstitutionVariable()",cat:"variable",
+    desc:"Reads the current value of any substitution variable. Use for dynamic period logic and conditional calc script generation.",
+    since:"20.06",applies:["Planning","FCCS","TRCS"],
+    params:[
+      {n:"varName",req:true,d:"Substitution variable name to read"},
+      {n:"cubeName",req:false,d:"Optional — omit to read from application level"}
+    ],
+    returns:"String — current variable value. Throws if empty or not found.",
+    code:`<span class="kw">def</span> <span class="fn-c">getSubVar</span>(varName, cubeName = <span class="kw">null</span>) {
+  <span class="kw">def</span> val = cubeName
+    ? operation.application.getEssbaseCube(cubeName).getSubstitutionVariable(varName)
+    : operation.application.getSubstitutionVariable(varName)
+  <span class="kw">if</span> (!val) <span class="kw">throw new</span> Exception(<span class="str">"SubVar '${varName}' is empty or not found"</span>)
+  <span class="kw">return</span> val
+}
+
+<span class="kw">def</span> curPeriod = <span class="fn-c">getSubVar</span>(<span class="str">"CurPeriod"</span>)
+<span class="kw">def</span> calcScript = <span class="str">"FIX(\\"${curPeriod}\\") CALC ALL; ENDFIX"</span>`,
+    output:`Feb-24`,
+    errors:[
+      {code:"NULL_VALUE",cause:"Variable exists but has no value set",fix:"Check Application → Variables and assign a value first"}
+    ],
+    release:"Available since 20.06."
+  },
+  {
+    id:"getAllSubVars",name:"getAllSubstitutionVariables()",cat:"variable",
+    desc:"Returns a Map of all substitution variables in the application (or cube). Useful for logging state before a close run or doing bulk updates.",
+    since:"21.01",applies:["Planning","FCCS","TRCS"],
+    params:[
+      {n:"cubeName",req:false,d:"Optional — omit to get application-level variables"}
+    ],
+    returns:"Map<String, String> — variable name → value pairs.",
+    code:`<span class="kw">def</span> <span class="fn-c">getAllSubVars</span>(cubeName = <span class="kw">null</span>) {
+  <span class="kw">def</span> vars = cubeName
+    ? operation.application.getEssbaseCube(cubeName).getSubstitutionVariables()
+    : operation.application.getSubstitutionVariables()
+  <span class="kw">return</span> vars.collectEntries { [(it.name): it.value] }
+}
+
+<span class="kw">def</span> allVars = <span class="fn-c">getAllSubVars</span>()
+allVars.each { k, v ->
+  operation.writeLine(<span class="str">"  ${k} = ${v}"</span>)
+}`,
+    output:`  CurPeriod = Feb-24
+  CurYear = FY24
+  PriorPeriod = Jan-24`,
+    errors:[
+      {code:"EMPTY_MAP",cause:"Application has no substitution variables defined",fix:"Returns empty Map — not an error. Check for this before iterating."}
+    ],
+    release:"Available since 21.01."
+  },
+  {
+    id:"uploadFile",name:"uploadFileToInbox()",cat:"integration",
+    desc:"Downloads a file from an external source (object storage, SFTP, HTTP) and places it in the EPM Inbox, ready for a Data Integration load.",
+    since:"21.07",applies:["Planning","FCCS","TRCS"],
+    params:[
+      {n:"srcConnName",req:true,d:"Named connection to the external file source"},
+      {n:"remotePath",req:true,d:"URL or file path on the external source"},
+      {n:"targetFileName",req:true,d:"Destination filename in EPM Inbox (e.g. 'GL_Jan24.txt')"}
+    ],
+    returns:"void — throws on download or upload failure.",
+    code:`<span class="kw">def</span> <span class="fn-c">uploadFileToInbox</span>(srcConn, remotePath, targetFile) {
+  <span class="kw">def</span> dl = operation.application.getConnection(srcConn).get(remotePath)
+  <span class="kw">if</span> (dl.statusCode != <span class="num">200</span>)
+    <span class="kw">throw new</span> Exception(<span class="str">"Download failed: HTTP ${dl.statusCode}"</span>)
+  operation.application.getConnection(<span class="str">"LocalConnection"</span>)
+    .uploadFileToServer(targetFile, dl.body.bytes)
+  operation.writeLine(<span class="str">"[INFO] Uploaded '${targetFile}' to EPM Inbox"</span>)
+}
+
+<span class="fn-c">uploadFileToInbox</span>(<span class="str">"OracleStorageConn"</span>, <span class="str">"/buckets/finance/GL_Jan24.txt"</span>, <span class="str">"GL_Actuals_Jan.txt"</span>)`,
+    output:`[INFO] Uploaded 'GL_Actuals_Jan.txt' to EPM Inbox`,
+    errors:[
+      {code:"HTTP 403",cause:"Connection lacks access to the remote path",fix:"Verify OAuth/Bearer token on the named connection"},
+      {code:"INBOX_QUOTA",cause:"EPM Inbox storage limit reached",fix:"Delete old inbox files first — use deleteInboxFile()"}
+    ],
+    release:"Stable from 21.07. Binary file support added in 22.04."
+  },
+  {
+    id:"deleteInboxFile",name:"deleteInboxFile()",cat:"data",
+    desc:"Deletes a named file from the EPM Inbox or Outbox. Essential for inbox housekeeping before large recurring loads.",
+    since:"21.04",applies:["Planning","FCCS","TRCS"],
+    params:[
+      {n:"fileName",req:true,d:"Exact filename to delete from the EPM Inbox"},
+      {n:"folder",req:false,d:"'inbox' (default) or 'outbox'"}
+    ],
+    returns:"void — silent if file not found (no error).",
+    code:`<span class="kw">def</span> <span class="fn-c">deleteInboxFile</span>(fileName, folder = <span class="str">"inbox"</span>) {
+  <span class="kw">def</span> path = <span class="str">"/HyperionPlanning/rest/v3/applications/${operation.application.name}"</span>
+           + <span class="str">"/jobs"</span>
+  <span class="kw">def</span> payload = [
+    jobType : <span class="str">"DELETE_FILE"</span>,
+    fileName: <span class="str">"${folder}/${fileName}"</span>
+  ]
+  operation.application.getConnection(<span class="str">"LocalConnection"</span>).post(path, payload)
+  operation.writeLine(<span class="str">"[INFO] Deleted ${folder}/${fileName}"</span>)
+}
+
+<span class="cmt">// Clean up before a reload</span>
+<span class="fn-c">deleteInboxFile</span>(<span class="str">"GL_Actuals_Jan.txt"</span>)`,
+    output:`[INFO] Deleted inbox/GL_Actuals_Jan.txt`,
+    errors:[
+      {code:"FILE_NOT_FOUND",cause:"File doesn't exist — silently ignored",fix:"No action needed; the function is idempotent"}
+    ],
+    release:"Available from 21.04."
+  },
+  {
+    id:"smartPush",name:"runSmartPush()",cat:"data",
+    desc:"Executes a Smart Push data map to push data from a BSO Planning cube to an ASO reporting cube. Runs synchronously, blocking until complete.",
+    since:"21.01",applies:["Planning","FCCS"],
+    params:[
+      {n:"mapName",req:true,d:"Exact name of the Smart Push data map"},
+      {n:"clearTarget",req:false,d:"Boolean — true clears the target cube before pushing (default: false)"}
+    ],
+    returns:"void — throws on failure.",
+    code:`<span class="kw">def</span> <span class="fn-c">runSmartPush</span>(mapName, clearTarget = <span class="kw">false</span>) {
+  <span class="kw">def</span> job = operation.application
+    .executeDataMap(mapName, [clearData: clearTarget])
+  <span class="kw">if</span> (!job.completedSuccessfully())
+    <span class="kw">throw new</span> Exception(<span class="str">"Smart Push '${mapName}' failed: ${job.getStatus()}"</span>)
+  operation.writeLine(<span class="str">"[INFO] Smart Push '${mapName}' done"</span>)
+}
+
+<span class="fn-c">runSmartPush</span>(<span class="str">"Push_BSO_to_Reporting"</span>, <span class="kw">true</span>)`,
+    output:`[INFO] Smart Push 'Push_BSO_to_Reporting' done`,
+    errors:[
+      {code:"MAP_NOT_FOUND",cause:"Data map name wrong or not deployed",fix:"Verify under Application → Data Maps"},
+      {code:"CUBE_LOCK",cause:"Source or target cube locked",fix:"Check for concurrent rule executions; implement retry"}
+    ],
+    release:"Available from 21.01. clearData option added in 21.07."
+  },
+  {
+    id:"readCell",name:"readDataCell()",cat:"data",
+    desc:"Reads the value of a single Essbase cell using a fully-qualified member intersection. Returns 0.0 for #MISSING cells.",
+    since:"20.06",applies:["Planning","FCCS"],
+    params:[
+      {n:"cubeName",req:true,d:"Essbase cube name (e.g. 'Plan1', 'OEP_FS')"},
+      {n:"intersection",req:true,d:"Map of dimension → member pairs for the target cell"}
+    ],
+    returns:"Double — cell value. Returns 0.0 if #MISSING.",
+    code:`<span class="kw">def</span> <span class="fn-c">readDataCell</span>(cubeName, Map intersection) {
+  <span class="kw">def</span> val = operation.application
+    .getEssbaseCube(cubeName)
+    .getCellValue(intersection)
+  <span class="kw">return</span> (val == <span class="kw">null</span> || val.isNaN()) ? <span class="num">0.0</span> : val
+}
+
+<span class="kw">def</span> rev = <span class="fn-c">readDataCell</span>(<span class="str">"Plan1"</span>, [
+  Account  : <span class="str">"Revenue"</span>,
+  Period   : <span class="str">"Jan"</span>,
+  Year     : <span class="str">"FY24"</span>,
+  Scenario : <span class="str">"Actual"</span>,
+  Version  : <span class="str">"Working"</span>,
+  Entity   : <span class="str">"E001"</span>
+])
+operation.writeLine(<span class="str">"Revenue: ${rev}"</span>)`,
+    output:`Revenue: 125000.0`,
+    errors:[
+      {code:"INVALID_MEMBER",cause:"One or more members not in the outline",fix:"Verify members with getMember() before calling"},
+      {code:"NaN",cause:"Cell is #MISSING in Essbase",fix:"Library returns 0.0 by default — adjust if 0 is a valid value"}
+    ],
+    release:"Available since 20.06. NaN handling improved in 22.07."
+  },
+  {
+    id:"writeCell",name:"writeDataCell()",cat:"data",
+    desc:"Writes a numeric value directly to an Essbase stored cell. Bypasses form save validations — use only for computed results and allocations.",
+    since:"20.06",applies:["Planning","FCCS"],
+    params:[
+      {n:"cubeName",req:true,d:"Target Essbase cube name"},
+      {n:"intersection",req:true,d:"Map of dimension → member pairs"},
+      {n:"value",req:true,d:"Numeric value to write (Double)"},
+      {n:"commitNow",req:false,d:"Boolean — commit immediately (default: true)"}
+    ],
+    returns:"void — throws if cell is read-only or member invalid.",
+    code:`<span class="kw">def</span> <span class="fn-c">writeDataCell</span>(cubeName, Map intersection, Double value, commitNow = <span class="kw">true</span>) {
+  <span class="kw">def</span> cube = operation.application.getEssbaseCube(cubeName)
+  cube.setCellValue(intersection, value)
+  <span class="kw">if</span> (commitNow) cube.commit()
+  operation.writeLine(<span class="str">"[INFO] Wrote ${value} to ${intersection.values().join(' × ')}"</span>)
+}
+
+<span class="fn-c">writeDataCell</span>(<span class="str">"Plan1"</span>, [
+  Account: <span class="str">"AllocCost"</span>, Period: <span class="str">"Jan"</span>,
+  Year: <span class="str">"FY24"</span>, Scenario: <span class="str">"Budget"</span>, Entity: <span class="str">"E002"</span>
+], <span class="num">45000.0</span>)`,
+    output:`[INFO] Wrote 45000.0 to AllocCost × Jan × FY24 × Budget × E002`,
+    errors:[
+      {code:"READ_ONLY",cause:"Member is a dynamic calc or label-only",fix:"Only stored leaf members are writable via Groovy"},
+      {code:"UNCOMMITTED",cause:"commit() not called — data lost at rule end",fix:"Always commitNow=true unless batch-writing for performance"}
+    ],
+    release:"Available since 20.06."
+  },
+  {
+    id:"getMember",name:"getMemberInfo()",cat:"metadata",
+    desc:"Retrieves metadata about any dimension member — alias, parent, children, level, generation, UDAs, and attribute values. Foundation for dynamic outline traversal.",
+    since:"20.06",applies:["Planning","FCCS","TRCS","EPCM"],
+    params:[
+      {n:"cubeName",req:true,d:"Essbase cube name"},
+      {n:"dimension",req:true,d:"Dimension name (e.g. 'Account', 'Entity')"},
+      {n:"memberName",req:true,d:"Member name to look up"}
+    ],
+    returns:"Map — name, parent, children[], alias, level, generation, UDAs[].",
+    code:`<span class="kw">def</span> <span class="fn-c">getMemberInfo</span>(cubeName, dimension, memberName) {
+  <span class="kw">def</span> dim = operation.application
+    .getEssbaseCube(cubeName)
+    .getDimension(dimension)
+  <span class="kw">def</span> m = dim.getMember(memberName)
+  <span class="kw">if</span> (!m) <span class="kw">throw new</span> Exception(<span class="str">"Member '${memberName}' not found in ${dimension}"</span>)
+  <span class="kw">return</span> [
+    name      : m.name,
+    parent    : m.parentMemberName,
+    children  : m.childMembers?.collect { it.name } ?: [],
+    alias     : m.getAlias(<span class="str">"Default"</span>),
+    level     : m.levelNumber,
+    generation: m.generationNumber,
+    udas      : m.UDAs ?: []
+  ]
+}
+
+<span class="kw">def</span> info = <span class="fn-c">getMemberInfo</span>(<span class="str">"Plan1"</span>, <span class="str">"Entity"</span>, <span class="str">"E001"</span>)
+operation.writeLine(<span class="str">"Parent: ${info.parent}, Level: ${info.level}"</span>)`,
+    output:`Parent: RegionEMEA, Level: 2`,
+    errors:[
+      {code:"MEMBER_NOT_FOUND",cause:"Member doesn't exist or name has extra whitespace",fix:"Trim the member name string before passing — Essbase is exact-match"}
+    ],
+    release:"Available since 20.06. UDA access improved in 22.01."
+  },
+  {
+    id:"getDescendants",name:"getDescendants()",cat:"metadata",
+    desc:"Returns all leaf (base-level) descendants of a parent member. Use for dynamic FIX blocks, batch processing, or generating entity loops.",
+    since:"20.06",applies:["Planning","FCCS","TRCS"],
+    params:[
+      {n:"cubeName",req:true,d:"Essbase cube name"},
+      {n:"dimension",req:true,d:"Dimension name"},
+      {n:"parentMember",req:true,d:"Parent member whose descendants you want"},
+      {n:"leavesOnly",req:false,d:"Boolean — true returns only Level-0 members (default: true)"}
+    ],
+    returns:"List<String> — member names.",
+    code:`<span class="kw">def</span> <span class="fn-c">getDescendants</span>(cubeName, dimension, parentMember, leavesOnly = <span class="kw">true</span>) {
+  <span class="kw">def</span> dim = operation.application.getEssbaseCube(cubeName).getDimension(dimension)
+  <span class="kw">def</span> parent = dim.getMember(parentMember)
+  <span class="kw">if</span> (!parent) <span class="kw">throw new</span> Exception(<span class="str">"'${parentMember}' not found"</span>)
+  <span class="kw">def</span> members = leavesOnly
+    ? parent.getAllDescendants().findAll { it.levelNumber == <span class="num">0</span> }
+    : parent.getAllDescendants()
+  <span class="kw">return</span> members.collect { it.name }
+}
+
+<span class="kw">def</span> entities = <span class="fn-c">getDescendants</span>(<span class="str">"Plan1"</span>, <span class="str">"Entity"</span>, <span class="str">"TotalEntity"</span>)
+entities.each { e ->
+  <span class="fn-c">runBusinessRule</span>(<span class="str">"Calc_Entity"</span>, <span class="str">"Plan1"</span>, [Entity: e])
+}`,
+    output:`[INFO] 'Calc_Entity' completed OK  (× N entities)`,
+    errors:[
+      {code:"LARGE_LIST",cause:"Parent has thousands of descendants — loop is slow",fix:"Use native Essbase calc FIX instead for large populations"}
+    ],
+    release:"Available since 20.06. Performance improved in 22.04."
+  },
+  {
+    id:"addMember",name:"addMetadataMember()",cat:"metadata",
+    desc:"Adds a new member to a dimension at runtime from a Groovy rule. Essential for dynamic entity creation in Workforce or Capex models.",
+    since:"21.04",applies:["Planning","FCCS"],
+    params:[
+      {n:"cubeName",req:true,d:"Target Essbase cube"},
+      {n:"dimension",req:true,d:"Dimension to add to"},
+      {n:"parentMember",req:true,d:"Parent member under which to add"},
+      {n:"memberName",req:true,d:"New member name"},
+      {n:"properties",req:false,d:"Map of optional properties (alias, dataStorage, aggregation)"}
+    ],
+    returns:"void — throws if member already exists or parent not found.",
+    code:`<span class="kw">def</span> <span class="fn-c">addMetadataMember</span>(cubeName, dimension, parent, newMember, Map props = [:]) {
+  <span class="kw">def</span> dim = operation.application.getEssbaseCube(cubeName).getDimension(dimension)
+  <span class="kw">def</span> parentNode = dim.getMember(parent)
+  <span class="kw">if</span> (!parentNode) <span class="kw">throw new</span> Exception(<span class="str">"Parent '${parent}' not found"</span>)
+  <span class="kw">if</span> (dim.getMember(newMember)) {
+    operation.writeLine(<span class="str">"[WARN] '${newMember}' already exists — skipping"</span>)
+    <span class="kw">return</span>
+  }
+  <span class="kw">def</span> m = parentNode.addChildMember(newMember)
+  <span class="kw">if</span> (props.alias) m.setAlias(<span class="str">"Default"</span>, props.alias)
+  <span class="kw">if</span> (props.dataStorage) m.dataStorageType = props.dataStorage
+  operation.writeLine(<span class="str">"[INFO] Added '${newMember}' under '${parent}'"</span>)
+}
+
+<span class="fn-c">addMetadataMember</span>(<span class="str">"Plan1"</span>, <span class="str">"Entity"</span>, <span class="str">"RegionAPAC"</span>, <span class="str">"E099"</span>,
+  [alias: <span class="str">"Singapore Branch"</span>, dataStorage: <span class="str">"Store"</span>])`,
+    output:`[INFO] Added 'E099' under 'RegionAPAC'`,
+    errors:[
+      {code:"DUPLICATE",cause:"Member already exists — handled with idempotent skip",fix:"Library logs a WARN and skips; adjust if re-adding should update"},
+      {code:"RESERVED_NAME",cause:"Member name conflicts with Essbase reserved words",fix:"Avoid names like 'Year', 'Period', 'Scenario' — they conflict"}
+    ],
+    release:"Available from 21.04. Alias write support confirmed in 22.01."
+  },
+  {
+    id:"validateRTP",name:"validateRuntimePrompt()",cat:"validation",
+    desc:"Validates a runtime prompt against a regex pattern. Throws a user-visible error in the EPM form UI if it fails — not just a job log entry.",
+    since:"20.06",applies:["Planning","FCCS","TRCS","EPCM"],
+    params:[
+      {n:"rtpValue",req:true,d:"The RTP value (from rtps.PromptName)"},
+      {n:"pattern",req:true,d:"Groovy regex pattern (e.g. /^[A-Z][a-z]{2}-\\d{2}$/)"},
+      {n:"message",req:true,d:"User-readable error shown in EPM UI on failure"}
+    ],
+    returns:"void — throws EpmGroovyRtpException visible in the EPM form.",
+    code:`<span class="kw">def</span> <span class="fn-c">validateRTP</span>(value, pattern, msg) {
+  <span class="kw">if</span> (!value) <span class="kw">throw new</span> EpmGroovyRtpException(<span class="str">"Value cannot be empty: ${msg}"</span>)
+  <span class="kw">if</span> (!(value ==~ pattern)) <span class="kw">throw new</span> EpmGroovyRtpException(msg)
+}
+
+<span class="cmt">// Validate period format — Mon-YY</span>
+<span class="fn-c">validateRTP</span>(rtps.StartPeriod, <span class="str">/^[A-Z][a-z]{2}-\d{2}$/</span>,
+  <span class="str">"Period must be Mon-YY format (e.g. Jan-24)"</span>)
+
+<span class="cmt">// Validate numeric budget amount</span>
+<span class="fn-c">validateRTP</span>(rtps.BudgetAmount, <span class="str">/^\d+(\.\d{1,2})?$/</span>,
+  <span class="str">"Budget amount must be a number with up to 2 decimal places"</span>)`,
+    output:`(No output if valid. EPM UI shows error if validation fails.)`,
+    errors:[
+      {code:"UI_NOT_SHOWN",cause:"Using base Exception instead of EpmGroovyRtpException",fix:"Must use EpmGroovyRtpException for the error to surface in the form"},
+      {code:"NULL_RTP",cause:"RTP value is null/empty",fix:"Library handles null — throws a descriptive message automatically"}
+    ],
+    release:"Available since 20.06. EpmGroovyRtpException class available from 21.01."
+  },
+  {
+    id:"validateMember",name:"validateMemberExists()",cat:"validation",
+    desc:"Validates that a member exists in a given dimension before executing a calc. Prevents cryptic Essbase errors by catching bad member names early.",
+    since:"20.06",applies:["Planning","FCCS","TRCS"],
+    params:[
+      {n:"cubeName",req:true,d:"Essbase cube name"},
+      {n:"dimension",req:true,d:"Dimension name"},
+      {n:"memberName",req:true,d:"Member to validate"},
+      {n:"throwOnFail",req:false,d:"Boolean — throw exception if not found (default: true)"}
+    ],
+    returns:"Boolean — true if found, false if not (when throwOnFail=false).",
+    code:`<span class="kw">def</span> <span class="fn-c">validateMemberExists</span>(cubeName, dimension, memberName, throwOnFail = <span class="kw">true</span>) {
+  <span class="kw">def</span> dim = operation.application.getEssbaseCube(cubeName).getDimension(dimension)
+  <span class="kw">def</span> found = dim.getMember(memberName) != <span class="kw">null</span>
+  <span class="kw">if</span> (!found && throwOnFail)
+    <span class="kw">throw new</span> EpmGroovyRtpException(<span class="str">"'${memberName}' not found in ${dimension} dimension"</span>)
+  <span class="kw">return</span> found
+}
+
+<span class="cmt">// Validate before a write</span>
+<span class="fn-c">validateMemberExists</span>(<span class="str">"Plan1"</span>, <span class="str">"Entity"</span>, rtps.Entity)
+<span class="fn-c">writeDataCell</span>(<span class="str">"Plan1"</span>, [Entity: rtps.Entity, <span class="str">/* ... */</span>], value)`,
+    output:`(No output if valid.)`,
+    errors:[
+      {code:"WHITESPACE",cause:"Member name has leading/trailing spaces",fix:"Always call .trim() on RTP string values before validation"}
+    ],
+    release:"Available since 20.06."
+  },
+  {
+    id:"logToConsole",name:"logToJobConsole()",cat:"utility",
+    desc:"Structured logging to the EPM Job Console with levels (INFO, WARN, ERROR) and timestamps. Makes your job logs readable, not a wall of println text.",
+    since:"20.06",applies:["All EPM Cloud"],
+    params:[
+      {n:"level",req:true,d:"'INFO', 'WARN', or 'ERROR'"},
+      {n:"message",req:true,d:"Message string to log"},
+      {n:"context",req:false,d:"Optional Map — additional context key-value pairs"}
+    ],
+    returns:"void. If level is 'ERROR', also throws an exception to halt execution.",
+    code:`<span class="kw">def</span> <span class="fn-c">log</span>(level, message, Map ctx = [:]) {
+  <span class="kw">def</span> ts = <span class="kw">new</span> Date().format(<span class="str">'yyyy-MM-dd HH:mm:ss'</span>)
+  <span class="kw">def</span> ctxStr = ctx ? <span class="str">" | "</span> + ctx.collect { <span class="str">"${it.key}=${it.value}"</span> }.join(<span class="str">", "</span>) : <span class="str">""</span>
+  operation.writeLine(<span class="str">"[${ts}] [${level}] ${message}${ctxStr}"</span>)
+  <span class="kw">if</span> (level == <span class="str">"ERROR"</span>) <span class="kw">throw new</span> Exception(message)
+}
+
+<span class="fn-c">log</span>(<span class="str">"INFO"</span>, <span class="str">"Starting GL load"</span>, [period: <span class="str">"Jan-24"</span>, entity: <span class="str">"E001"</span>])
+<span class="fn-c">log</span>(<span class="str">"WARN"</span>, <span class="str">"No file found, using default"</span>)
+<span class="fn-c">log</span>(<span class="str">"ERROR"</span>, <span class="str">"Integration rule failed"</span>)`,
+    output:`[2024-01-15 09:32:11] [INFO] Starting GL load | period=Jan-24, entity=E001
+[2024-01-15 09:32:11] [WARN] No file found, using default`,
+    errors:[
+      {code:"LINE_TRUNCATED",cause:"Job Console has ~500-char line limit",fix:"Keep individual messages short; split context into multiple log() calls"}
+    ],
+    release:"operation.writeLine() available since 20.06."
+  },
+  {
+    id:"awaitJob",name:"awaitJobCompletion()",cat:"utility",
+    desc:"Polls a running EPM job by ID until success or failure. The essential building block for reliable multi-step automation chains.",
+    since:"21.04",applies:["Planning","FCCS","TRCS"],
+    params:[
+      {n:"connName",req:true,d:"Named connection used to launch the job"},
+      {n:"jobId",req:true,d:"Job ID returned from the launch call"},
+      {n:"maxWaitSec",req:false,d:"Max polling time in seconds (default: 300)"},
+      {n:"pollMs",req:false,d:"Polling interval in milliseconds (default: 5000)"}
+    ],
+    returns:"String — 'SUCCESS' or 'FAILED'. Throws on timeout.",
+    code:`<span class="kw">def</span> <span class="fn-c">awaitJob</span>(connName, jobId, maxWait = <span class="num">300</span>, poll = <span class="num">5000</span>) {
+  <span class="kw">def</span> terminal = [<span class="str">"SUCCESS"</span>, <span class="str">"FAILED"</span>, <span class="str">"ERROR"</span>]
+  <span class="kw">def</span> elapsed = <span class="num">0</span>
+  <span class="kw">while</span> (elapsed < maxWait * <span class="num">1000</span>) {
+    <span class="kw">def</span> r = operation.application.getConnection(connName)
+      .get(<span class="str">"/aif/rest/V1/jobs/${jobId}"</span>)
+    <span class="kw">def</span> status = <span class="kw">new</span> groovy.json.JsonSlurper()
+      .parseText(r.body).jobStatus?.toUpperCase()
+    operation.writeLine(<span class="str">"[INFO] Job ${jobId}: ${status}"</span>)
+    <span class="kw">if</span> (status <span class="kw">in</span> terminal) <span class="kw">return</span> status
+    Thread.sleep(poll); elapsed += poll
+  }
+  <span class="kw">throw new</span> Exception(<span class="str">"Job ${jobId} timed out after ${maxWait}s"</span>)
+}
+
+<span class="cmt">// Chain: load → await → calc</span>
+<span class="kw">def</span> jId = <span class="fn-c">runDataIntegration</span>(<span class="str">"LocalConn"</span>, <span class="str">"Load_GL"</span>, <span class="str">"Jan-24"</span>, <span class="str">"Jan-24"</span>, <span class="str">"REPLACE"</span>, <span class="str">"STORE_DATA"</span>)
+<span class="fn-c">awaitJob</span>(<span class="str">"LocalConn"</span>, jId)
+<span class="fn-c">runBusinessRule</span>(<span class="str">"Calc_Actuals"</span>, <span class="str">"Plan1"</span>)`,
+    output:`[INFO] Job 100245: RUNNING
+[INFO] Job 100245: RUNNING
+[INFO] Job 100245: SUCCESS`,
+    errors:[
+      {code:"TIMEOUT",cause:"Job runs longer than maxWait",fix:"Increase maxWait or restructure as async EPM job"},
+      {code:"INFINITE_LOOP",cause:"Job stuck in RUNNING with no terminal transition",fix:"Always include 'ERROR' in terminal list — Oracle occasionally uses it"}
+    ],
+    release:"Polling pattern stable from 21.04. Thread.sleep() permitted in Groovy from 21.01."
+  },
+  {
+    id:"sendEmail",name:"sendEmailNotification()",cat:"utility",
+    desc:"Sends an email from inside a Groovy rule using EPM's notification system. Use it to alert finance teams when a close process completes — or fails.",
+    since:"22.01",applies:["Planning","FCCS","TRCS"],
+    params:[
+      {n:"toAddress",req:true,d:"Recipient address or semicolon-separated list"},
+      {n:"subject",req:true,d:"Email subject line"},
+      {n:"body",req:true,d:"Plain text email body"}
+    ],
+    returns:"void — throws if email service is unavailable.",
+    code:`<span class="kw">def</span> <span class="fn-c">sendEmail</span>(toAddr, subject, body) {
+  <span class="kw">def</span> appName = operation.application.name
+  operation.application.getConnection(<span class="str">"LocalConnection"</span>)
+    .post(<span class="str">"/HyperionPlanning/rest/v3/applications/${appName}/jobs"</span>, [
+      jobType : <span class="str">"SEND_EMAIL"</span>,
+      details : [to: toAddr, subject: subject, body: body]
+    ])
+  operation.writeLine(<span class="str">"[INFO] Email sent to ${toAddr}"</span>)
+}
+
+<span class="fn-c">sendEmail</span>(
+  <span class="str">"finance-close@company.com"</span>,
+  <span class="str">"[EPM] Jan-24 Close Complete"</span>,
+  <span class="str">"GL Actuals load + calc completed at "</span> + <span class="kw">new</span> Date()
+)`,
+    output:`[INFO] Email sent to finance-close@company.com`,
+    errors:[
+      {code:"EMAIL_DISABLED",cause:"Outbound email turned off in EPM env",fix:"Check Application → Settings → Notifications"},
+      {code:"INVALID_ADDR",cause:"Malformed email address",fix:"Validate format with a simple regex before calling"}
+    ],
+    release:"Available from 22.01. Multi-recipient semicolon list added in 22.07."
+  },
+  {
+    id:"callExternalApi",name:"callExternalRestAPI()",cat:"rest",
+    desc:"Makes an authenticated REST call to any external system (ERP, Jira, Slack, ServiceNow) from inside a Groovy rule using a named connection.",
+    since:"21.07",applies:["Planning","FCCS","TRCS","EPCM"],
+    params:[
+      {n:"connName",req:true,d:"Named connection configured in EPM Workspace"},
+      {n:"method",req:true,d:"HTTP method: 'GET', 'POST', 'PUT', 'PATCH', 'DELETE'"},
+      {n:"path",req:true,d:"URL path relative to the connection's base URL"},
+      {n:"payload",req:false,d:"Map — request body for POST/PUT/PATCH (optional)"}
+    ],
+    returns:"Map — {statusCode: Int, body: String, headers: Map}.",
+    code:`<span class="kw">def</span> <span class="fn-c">callExternalAPI</span>(connName, method, path, Map payload = <span class="kw">null</span>) {
+  <span class="kw">def</span> conn = operation.application.getConnection(connName)
+  <span class="kw">def</span> resp = (method.toUpperCase() == <span class="str">"GET"</span>)
+    ? conn.get(path)
+    : conn.post(path, payload ?: [:])
+  <span class="kw">if</span> (resp.statusCode >= <span class="num">400</span>)
+    <span class="kw">throw new</span> Exception(<span class="str">"API call failed: HTTP ${resp.statusCode} → ${resp.body}"</span>)
+  <span class="kw">return</span> [statusCode: resp.statusCode, body: resp.body]
+}
+
+<span class="cmt">// Post a Slack message when close is done</span>
+<span class="fn-c">callExternalAPI</span>(<span class="str">"SlackConn"</span>, <span class="str">"POST"</span>, <span class="str">"/api/chat.postMessage"</span>, [
+  channel: <span class="str">"#finance-close"</span>,
+  text   : <span class="str">"✅ EPM Jan-24 close completed"</span>
+])
+
+<span class="cmt">// GET data from ERP</span>
+<span class="kw">def</span> r = <span class="fn-c">callExternalAPI</span>(<span class="str">"FusionConn"</span>, <span class="str">"GET"</span>, <span class="str">"/fscmRestApi/resources/v1/generalLedgerPeriods?q=Status=Open"</span>)
+<span class="kw">def</span> periods = <span class="kw">new</span> groovy.json.JsonSlurper().parseText(r.body)`,
+    output:`{statusCode=200, body={"ok":true}}`,
+    errors:[
+      {code:"CONN_NOT_FOUND",cause:"Named connection doesn't exist in EPM Workspace",fix:"Create the connection under Tools → Connections before calling"},
+      {code:"HTTP 429",cause:"External API rate-limiting the EPM IP",fix:"Add Thread.sleep() between repeated calls; consider batching"},
+      {code:"SSL_ERROR",cause:"Certificate mismatch on external endpoint",fix:"Ensure the external API cert is trusted — contact Oracle Support for EPM cert store issues"}
+    ],
+    release:"Named connection REST calls stable from 21.07. PATCH method added in 23.01."
+  },
+  {
+    id:"parseJson",name:"parseJsonResponse()",cat:"rest",
+    desc:"Safely parses a JSON string from any REST response into a navigable Groovy Map or List. Handles nested structures and null-safety.",
+    since:"20.06",applies:["All EPM Cloud"],
+    params:[
+      {n:"jsonString",req:true,d:"Raw JSON string (typically from resp.body)"},
+      {n:"requiredKeys",req:false,d:"List<String> — keys that must exist in the parsed Map (optional)"}
+    ],
+    returns:"Map or List — parsed JSON object. Throws on invalid JSON or missing required keys.",
+    code:`<span class="kw">def</span> <span class="fn-c">parseJson</span>(jsonString, List requiredKeys = []) {
+  <span class="kw">if</span> (!jsonString) <span class="kw">throw new</span> Exception(<span class="str">"Empty JSON string"</span>)
+  <span class="kw">def</span> parsed = <span class="kw">new</span> groovy.json.JsonSlurper().parseText(jsonString)
+  requiredKeys.each { key ->
+    <span class="kw">if</span> (!parsed.containsKey(key))
+      <span class="kw">throw new</span> Exception(<span class="str">"Required key '${key}' missing from JSON response"</span>)
+  }
+  <span class="kw">return</span> parsed
+}
+
+<span class="cmt">// Parse DI job status response</span>
+<span class="kw">def</span> r = operation.application.getConnection(<span class="str">"LocalConn"</span>).get(<span class="str">"/aif/rest/V1/jobs/100245"</span>)
+<span class="kw">def</span> job = <span class="fn-c">parseJson</span>(r.body, [<span class="str">"jobId"</span>, <span class="str">"jobStatus"</span>])
+operation.writeLine(<span class="str">"Status: ${job.jobStatus}"</span>)`,
+    output:`Status: SUCCESS`,
+    errors:[
+      {code:"INVALID_JSON",cause:"Response is HTML error page, not JSON",fix:"Check statusCode before parsing — HTML 500 pages are not JSON"},
+      {code:"MISSING_KEY",cause:"API changed its response schema after an update",fix:"Add required keys so breaking changes surface as clear exceptions"}
+    ],
+    release:"groovy.json.JsonSlurper available since EPM Groovy engine launch (20.06)."
+  }
+];
+
+// ══════════════════════════════════════════════
+// RENDER ENGINE
+// ══════════════════════════════════════════════
+let activeFilter = 'all';
+let openCard = null;
+
+const CAT_COLORS = {
+  integration:'var(--sky)',calculation:'var(--green)',variable:'var(--amber)',
+  data:'var(--purple)',metadata:'var(--teal)',validation:'var(--red)',
+  utility:'var(--silver2)',rest:'var(--coral)'
+};
+
+function renderCards(list) {
+  const grid = document.getElementById('fnGrid');
+  const noRes = document.getElementById('noResults');
+  const vis = document.getElementById('visCount');
+  grid.innerHTML = '';
+  noRes.style.display = list.length ? 'none' : 'block';
+  vis.textContent = list.length;
+  list.forEach(fn => {
+    const color = CAT_COLORS[fn.cat] || 'var(--dim)';
+    const card = document.createElement('div');
+    card.className = 'fn-card';
+    card.id = 'card-' + fn.id;
+    card.innerHTML = `
+      <div class="card-accent" style="background:${color}"></div>
+      <div class="card-head" onclick="toggleCard('${fn.id}')">
+        <div class="card-top">
+          <div style="flex:1">
+            <div class="fn-name">${fn.name}</div>
+            <div class="fn-desc">${fn.desc}</div>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;flex-shrink:0;margin-left:8px">
+            <span class="fn-badge badge-${fn.cat}">${fn.cat}</span>
+          </div>
+        </div>
+        <div class="card-meta">
+          <span class="meta-item">since ${fn.since}</span>
+          <span class="meta-item" style="color:rgba(74,96,128,.4)">·</span>
+          <span class="meta-item">${fn.applies.join(' · ')}</span>
+          <span class="card-chevron" id="chev-${fn.id}">▼</span>
+        </div>
+      </div>
+      <div class="card-body" id="body-${fn.id}">
+        <div class="tab-nav" id="tabnav-${fn.id}">
+          <button class="tab-btn active" onclick="switchTab(event,'${fn.id}','params')">Parameters</button>
+          <button class="tab-btn" onclick="switchTab(event,'${fn.id}','code')">Example</button>
+          <button class="tab-btn" onclick="switchTab(event,'${fn.id}','errors')">Errors</button>
+          <button class="tab-btn" onclick="switchTab(event,'${fn.id}','release')">Release Notes</button>
+        </div>
+        <div class="tab-pane active" id="tp-${fn.id}-params">
+          <div class="param-section-lbl">Input parameters</div>
+          ${fn.params.map(p=>`
+            <div class="param-row">
+              <span class="param-name">${p.n}<span class="${p.req?'param-req':'param-opt'}">${p.req?'*':'?'}</span></span>
+              <span class="param-desc">${p.d}</span>
+            </div>`).join('')}
+          <div class="return-box">
+            <div class="return-lbl">Returns</div>
+            <div class="return-val">${fn.returns}</div>
+          </div>
+        </div>
+        <div class="tab-pane" id="tp-${fn.id}-code">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+            <span class="param-section-lbl" style="margin:0">Code example</span>
+            <button class="copy-btn" onclick="copyCode('${fn.id}',this)">copy</button>
+          </div>
+          <pre class="code" id="pre-${fn.id}">${fn.code}</pre>
+          <div class="output-lbl" style="margin-top:12px">Expected output</div>
+          <div class="output-box">${fn.output}</div>
+        </div>
+        <div class="tab-pane" id="tp-${fn.id}-errors">
+          <div class="error-grid">
+            ${fn.errors.map(e=>`
+              <div class="error-item">
+                <div class="error-code">${e.code}</div>
+                <div class="error-row"><span class="error-label">cause</span><span class="error-text">${e.cause}</span></div>
+                <div class="error-row"><span class="error-label">fix</span><span class="error-fix">${e.fix}</span></div>
+              </div>`).join('')}
+          </div>
+        </div>
+        <div class="tab-pane" id="tp-${fn.id}-release">
+          <div class="release-block">
+            <div class="release-ver">v${fn.since}+</div>
+            <div class="release-text">${fn.release}</div>
+          </div>
+          <div class="param-section-lbl" style="margin-top:14px">Applies to</div>
+          <div class="applies-chips">
+            ${fn.applies.map(a=>`<span class="apply-chip">${a}</span>`).join('')}
+          </div>
+          <div style="margin-top:14px;font-size:12px;color:rgba(232,240,248,.35);line-height:1.65">
+            Always test in a non-production EPM instance first. Run Application → Overview → Actions → Validate Groovy Scripts after each monthly Cloud EPM update.
+          </div>
+        </div>
+      </div>`;
+    grid.appendChild(card);
+  });
+}
+
+function toggleCard(id) {
+  if (openCard && openCard !== id) {
+    document.getElementById('card-'+openCard).classList.remove('open');
+    document.getElementById('chev-'+openCard).textContent = '▼';
+  }
+  const card = document.getElementById('card-'+id);
+  const chev = document.getElementById('chev-'+id);
+  const isOpen = card.classList.contains('open');
+  card.classList.toggle('open', !isOpen);
+  chev.textContent = isOpen ? '▼' : '▲';
+  openCard = isOpen ? null : id;
+}
+
+function switchTab(e, fnId, tab) {
+  e.stopPropagation();
+  document.querySelectorAll(`#tabnav-${fnId} .tab-btn`).forEach(b=>b.classList.remove('active'));
+  e.target.classList.add('active');
+  document.querySelectorAll(`[id^="tp-${fnId}-"]`).forEach(p=>p.classList.remove('active'));
+  document.getElementById(`tp-${fnId}-${tab}`).classList.add('active');
+}
+
+function setFilter(cat, el) {
+  activeFilter = cat;
+  document.querySelectorAll('.fpill').forEach(p=>p.classList.remove('active'));
+  el.classList.add('active');
+  applyFilters();
+}
+
+function filterCards() { applyFilters(); }
+
+function applyFilters() {
+  const q = document.getElementById('searchInput').value.toLowerCase().trim();
+  const filtered = FNS.filter(fn => {
+    const matchCat = activeFilter === 'all' || fn.cat === activeFilter;
+    const matchQ = !q || fn.name.toLowerCase().includes(q)
+      || fn.desc.toLowerCase().includes(q)
+      || fn.cat.toLowerCase().includes(q)
+      || fn.applies.join(' ').toLowerCase().includes(q)
+      || fn.returns.toLowerCase().includes(q);
+    return matchCat && matchQ;
+  });
+  renderCards(filtered);
+}
+
+function copyCode(fnId, btn) {
+  const pre = document.getElementById('pre-'+fnId);
+  const text = pre.innerText || pre.textContent;
+  navigator.clipboard.writeText(text).then(()=>{
+    btn.textContent = 'copied ✓';
+    btn.classList.add('copied');
+    setTimeout(()=>{ btn.textContent='copy'; btn.classList.remove('copied'); }, 1800);
+  });
+}
+
+// ══════════════════════════════════════════════
+// CHEAT SHEET
+// ══════════════════════════════════════════════
+function renderCheatSheet() {
+  const tbl = document.getElementById('cheatTable');
+  tbl.innerHTML = `<thead><tr>
+    <th>Function</th><th>Category</th><th>What it does</th><th>When to use</th>
+  </tr></thead><tbody>${FNS.map(fn=>`
+    <tr>
+      <td>${fn.name}</td>
+      <td><span class="fn-badge badge-${fn.cat}" style="display:inline">${fn.cat}</span></td>
+      <td>${fn.desc.split('.')[0]}.</td>
+      <td style="font-size:11px;color:rgba(232,240,248,.38)">${fn.applies.join(', ')}</td>
+    </tr>`).join('')}</tbody>`;
+}
+
+// ══════════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════════
+document.getElementById('fnCount').textContent = FNS.length;
+renderCards(FNS);
+renderCheatSheet();
+
+// Stars
+(function(){
+  var s=document.getElementById('stars');
+  for(var i=0;i<55;i++){
+    var d=document.createElement('div');d.className='star';
+    var sz=Math.random()*1.4+0.4;
+    d.style.cssText='width:'+sz+'px;height:'+sz+'px;top:'+Math.random()*100+'%;left:'+Math.random()*100+'%;--d:'+(3+Math.random()*5)+'s;--delay:'+Math.random()*6+'s;--op:'+(0.06+Math.random()*0.16);
+    s.appendChild(d);
+  }
+})();
+
+// Smooth scroll for anchor links
+document.querySelectorAll('a[href^="#"]').forEach(a=>{
+  a.addEventListener('click',e=>{
+    var el=document.getElementById(a.getAttribute('href').slice(1));
+    if(el){e.preventDefault();el.scrollIntoView({behavior:'smooth',block:'start'});}
+  });
+});
+</script>
+</body>
+</html>
