@@ -560,9 +560,9 @@ const FNS = [
 
   def jsonObj = new groovy.json.JsonSlurper().parseText(resp.body)
   if (jsonObj.status == -1) {
-    throw new Exception("DI failed: \${jsonObj.jobStatus}")
+    throw new Exception("DI failed: " + jsonObj.jobStatus)
   }
-  println("[INFO] Job \${jsonObj.jobId} launched")
+  println("[INFO] Job " + jsonObj.jobId + " launched")
   return jsonObj.jobId.toString()
 }
 
@@ -616,7 +616,7 @@ runDataIntegration("LocalConn", "Load_GL_Actuals", "Jan-24", "Jan-24",
   } else {
     operation.application.setSubstitutionVariableValue(varName, value)
   }
-  println("[INFO] SubVar \${varName} → \${value}")
+  println("[INFO] SubVar " + varName + " → " + value)
 }
 
 setSubVar("CurPeriod", "Feb-24")
@@ -641,7 +641,7 @@ setSubVar("CurYear", "FY24", "Plan1")`,
   def val = cubeName
     ? operation.application.getCube(cubeName).getSubstitutionVariableValue(varName)
     : operation.application.getSubstitutionVariableValue(varName)
-  if (!val) throw new Exception("SubVar \${varName} is empty or not found")
+  if (!val) throw new Exception("SubVar " + varName + " is empty or not found")
   return val
 }
 
@@ -706,17 +706,16 @@ def calcScript = 'FIX("' + curPeriod + '") CALC ALL; ENDFIX'`,
     ],
     returns:"void — silent if file not found (no error).",
     code:`def deleteInboxFile(fileName, folder = "inbox") {
-  def path = "/HyperionPlanning/rest/v3/applications/\${operation.application.name}" +
-    "/jobs"
+  def path = "/HyperionPlanning/rest/v3/applications/" + operation.application.name + "/jobs"
   def payload = [
     jobType : "DELETE_FILE",
-    fileName: "\${folder}/\${fileName}"
+    fileName: folder + '/' + fileName
   ]
   operation.application.getConnection("LocalConnection")
     .post(path)
     .body(json(payload))
     .asString()
-  println("[INFO] Deleted \${folder}/\${fileName}")
+  println("[INFO] Deleted " + folder + '/' + fileName)
 }
 
 // Example: clean up before a reload
@@ -739,7 +738,7 @@ deleteInboxFile("GL_Actuals_Jan.txt")`,
     code:`def runSmartPush(mapName, clearTarget = false) {
   def dataMap = operation.application.getDataMap(mapName)
   dataMap.execute(clearTarget)
-  println("[INFO] Smart Push '\${mapName}' done")
+  println("[INFO] Smart Push '" + mapName + "' done")
 }
 
 runSmartPush("Push_BSO_to_Reporting", true)`,
@@ -872,7 +871,7 @@ runSmartPush("Push_BSO_to_Reporting", true)`,
     ],
     returns:"void — throws EpmGroovyRtpException visible in the EPM form.",
     code:`def validateRTP(value, pattern, msg) {
-  if (!value) throwVetoException("Value cannot be empty: \${msg}")
+  if (!value) throwVetoException("Value cannot be empty: " + msg)
   if (!(value ==~ pattern)) throwVetoException(msg)
 }
 
@@ -922,8 +921,8 @@ validateRTP(rtps.BudgetAmount.enteredValue, /^\\d+(\\.\\d{1,2})?$/, "Budget amou
     returns:"void. If level is 'ERROR', also throws an exception to halt execution.",
     code:`def log(level, message, Map ctx = [:]) {
   def ts = new Date().format('yyyy-MM-dd HH:mm:ss')
-  def ctxStr = ctx ? " | " + ctx.collect { "\${it.key}=\${it.value}" }.join(", ") : ""
-  println("[\${ts}] [\${level}] \${message}\${ctxStr}")
+  def ctxStr = ctx ? " | " + ctx.collect { it.key + "=" + it.value }.join(", ") : ""
+  println("[" + ts + "] [" + level + "] " + message + ctxStr)
   if (level == "ERROR") throw new Exception(message)
 }
 
@@ -953,16 +952,16 @@ log("ERROR", "Integration rule failed")`,
   def elapsed = 0
   while (elapsed < maxWait * 1000) {
     def resp = operation.application.getConnection(connName)
-      .get("/aif/rest/V1/jobs/\${jobId}")
+      .get("/aif/rest/V1/jobs/" + jobId)
       .asString()
     def status = new groovy.json.JsonSlurper()
       .parseText(resp.body).jobStatus?.toUpperCase()
-    println("[INFO] Job \${jobId}: \${status}")
+    println("[INFO] Job " + jobId + ": " + status)
     if (terminal.contains(status)) return status
     Thread.sleep(poll)
     elapsed += poll
   }
-  throw new Exception("Job \${jobId} timed out after \${maxWait}s")
+  throw new Exception("Job " + jobId + " timed out after " + maxWait + "s")
 }`,
     output:`[INFO] Job 100245: RUNNING
 [INFO] Job 100245: RUNNING
@@ -990,10 +989,10 @@ log("ERROR", "Integration rule failed")`,
     details : [to: toAddr, subject: subject, body: body]
   ]
   operation.application.getConnection("LocalConnection")
-    .post("/HyperionPlanning/rest/v3/applications/\${appName}/jobs")
+    .post("/HyperionPlanning/rest/v3/applications/" + appName + "/jobs")
     .body(json(payload))
     .asString()
-  println("[INFO] Email sent to \${toAddr}")
+  println("[INFO] Email sent to " + toAddr)
 }
 
 sendEmail(
@@ -1033,11 +1032,11 @@ sendEmail(
   } else if (m == "DELETE") {
     resp = conn.delete(path).asString()
   } else {
-    throw new UnsupportedOperationException("HTTP method not supported in this snippet: \${method}")
+    throw new UnsupportedOperationException("HTTP method not supported in this snippet: " + method)
   }
 
   if (resp.getStatus() >= 400) {
-    throw new Exception("API call failed: HTTP \${resp.getStatus()} → \${resp.body}")
+    throw new Exception("API call failed: HTTP " + resp.getStatus() + " → " + resp.body)
   }
   return [statusCode: resp.getStatus(), body: resp.body]
 }
@@ -1081,7 +1080,7 @@ def periods = new groovy.json.JsonSlurper().parseText(r.body)`,
 <span class="cmt">// Parse DI job status response</span>
 <span class="kw">def</span> r = operation.application.getConnection(<span class="str">"LocalConn"</span>).get(<span class="str">"/aif/rest/V1/jobs/100245"</span>).asString()
 <span class="kw">def</span> job = <span class="fn-c">parseJson</span>(r.body, [<span class="str">"jobId"</span>, <span class="str">"jobStatus"</span>])
-println("Status: \${job.jobStatus}")`,
+println("Status: " + job.jobStatus)`,
     output:`Status: SUCCESS`,
     errors:[
       {code:"INVALID_JSON",cause:"Response is HTML error page, not JSON",fix:"Check statusCode before parsing — HTML 500 pages are not JSON"},
@@ -1197,7 +1196,7 @@ println("Status: \${job.jobStatus}")`,
     } else {
       operation.application.setSubstitutionVariableValue(varName, value)
     }
-    println("[INFO] SubVar \${varName} → \${value}")
+    println("[INFO] SubVar " + varName + " → " + value)
   }
 }
 
