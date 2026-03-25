@@ -335,6 +335,38 @@ body.hacker-mode .hero-title::after{content:attr(data-text);position:absolute;in
 /* fsociety watermark in hacker mode */
 body.hacker-mode #fsociety-mark{display:block!important}
 #fsociety-mark{display:none;position:fixed;bottom:22px;left:22px;font-family:'JetBrains Mono',monospace;font-size:9px;color:rgba(248,113,113,.18);letter-spacing:.2em;pointer-events:none;z-index:2;text-transform:uppercase}
+
+/* ══ TAB SHELL LAYOUT ══ */
+#page-shell{display:flex;min-height:calc(100vh - 54px);margin-top:54px;position:relative;z-index:1}
+#sidenav{width:200px;flex-shrink:0;background:rgba(13,27,46,.96);border-right:1px solid var(--border2);position:sticky;top:54px;height:calc(100vh - 54px);overflow-y:auto;padding:20px 0 40px;display:flex;flex-direction:column;gap:2px;scrollbar-width:none}
+#sidenav::-webkit-scrollbar{display:none}
+.snav-section{font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:.16em;color:rgba(74,222,128,.3);text-transform:uppercase;padding:14px 18px 5px;margin-top:6px}
+.snav-btn{display:flex;align-items:center;gap:9px;width:100%;padding:8px 18px;border:none;background:transparent;color:var(--dim);font-family:'Rajdhani',sans-serif;font-size:12px;font-weight:600;letter-spacing:.04em;text-align:left;cursor:pointer;transition:all .15s;border-left:2px solid transparent}
+.snav-btn:hover{color:var(--silver);background:rgba(200,212,224,.04)}
+.snav-btn.active{color:var(--green);background:rgba(74,222,128,.06);border-left-color:var(--green)}
+.snav-icon{font-size:13px;flex-shrink:0;opacity:.7}
+.snav-btn.active .snav-icon{opacity:1}
+.snav-badge{font-family:'JetBrains Mono',monospace;font-size:8px;padding:1px 5px;border-radius:3px;background:rgba(74,222,128,.1);color:var(--green);border:1px solid rgba(74,222,128,.2);margin-left:auto;flex-shrink:0}
+.snav-badge.red{background:rgba(248,113,113,.1);color:var(--red);border-color:rgba(248,113,113,.2)}
+.snav-badge.amber{background:rgba(251,191,36,.1);color:var(--amber);border-color:rgba(251,191,36,.2)}
+#content-area{flex:1;min-width:0}
+.tab-panel{display:none;padding:0 0 64px}
+.tab-panel.active{display:block}
+.panel-inner{max-width:1040px;margin:0 auto;padding:36px 32px 0}
+@media(max-width:780px){.panel-inner{padding:28px 18px 0}}
+#panel-home .panel-inner{padding-top:40px}
+#panel-home .hero{padding-top:16px}
+#panel-home .breadcrumb{padding-top:0;margin-bottom:16px}
+@media(max-width:700px){
+  #page-shell{flex-direction:column}
+  #sidenav{width:100%;height:auto;position:relative;top:0;flex-direction:row;flex-wrap:wrap;padding:8px 12px;gap:4px;border-right:none;border-bottom:1px solid var(--border2)}
+  .snav-section{display:none}
+  .snav-btn{width:auto;padding:5px 10px;border-left:none;border-bottom:2px solid transparent;font-size:10.5px}
+  .snav-btn.active{border-bottom-color:var(--green);border-left:none}
+}
+body.hacker-mode #sidenav{border-right-color:rgba(248,113,113,.25)!important}
+body.hacker-mode .snav-btn.active{color:#f87171!important;background:rgba(248,113,113,.06)!important;border-left-color:#f87171!important}
+body.hacker-mode .snav-section{color:rgba(248,113,113,.3)!important}
 </style>
 </head>
 <body>
@@ -387,13 +419,52 @@ body.hacker-mode #fsociety-mark{display:block!important}
     <a href="https://brainspring.ai/epmdi" class="tb-link live" target="_blank"><span class="tb-live-dot"></span>Data Integration</a>
     <a href="https://brainspring.ai/epcm" class="tb-link live" target="_blank"><span class="tb-live-dot"></span>EPCM</a>
     <a href="#" class="tb-link current"><span class="tb-live-dot"></span>Groovy Library</a>
-    <a href="#library" class="tb-link">All Modules</a>
-    <a href="#audit" class="tb-link" style="border-color:rgba(248,113,113,.25);color:rgba(248,113,113,.6)">⚑ Audit</a>
+    <a href="#quickstart" class="tb-link" onclick="event.preventDefault();showPanel('home',null)">Quick Start</a>
+    <a href="#library" class="tb-link" onclick="event.preventDefault();showPanel('library',null)">Library</a>
+    <a href="#cheatsheet" class="tb-link" onclick="event.preventDefault();showPanel('cheatsheet',null)">Cheat Sheet</a>
+    <a href="#changelog" class="tb-link" onclick="event.preventDefault();showPanel('changelog',null)">Changelog</a>
+    <a href="#audit" class="tb-link" onclick="event.preventDefault();showPanel('audit',null)" style="border-color:rgba(248,113,113,.25);color:rgba(248,113,113,.6)">⚑ Audit</a>
+    <a href="#performance" class="tb-link" onclick="event.preventDefault();showPanel('performance',null)" style="border-color:rgba(251,191,36,.25);color:rgba(251,191,36,.6)">⚡ 2026</a>
     <button class="tb-link" id="hackerToggle" onclick="toggleHackerMode()" style="cursor:pointer;border:1px solid rgba(248,113,113,.3);color:#f87171">☠ HACK</button>
   </nav>
 </div>
 
-<!-- ══ HERO ══ -->
+<!-- ══ PAGE SHELL ══ -->
+<div id="page-shell">
+
+<!-- Left sidebar navigation -->
+<nav id="sidenav">
+  <div class="snav-section">Navigate</div>
+  <button class="snav-btn active" onclick="showPanel('home',this)" id="snav-home">
+    <span class="snav-icon">⬡</span>Overview
+  </button>
+  <button class="snav-btn" onclick="showPanel('library',this)" id="snav-library">
+    <span class="snav-icon">⚡</span>Library
+    <span class="snav-badge" id="snavBadge">31</span>
+  </button>
+  <button class="snav-btn" onclick="showPanel('cheatsheet',this)" id="snav-cheatsheet">
+    <span class="snav-icon">⊞</span>Cheat Sheet
+  </button>
+  <div class="snav-section">Reference</div>
+  <button class="snav-btn" onclick="showPanel('changelog',this)" id="snav-changelog">
+    <span class="snav-icon">⊘</span>Fix Changelog
+  </button>
+  <button class="snav-btn" onclick="showPanel('audit',this)" id="snav-audit">
+    <span class="snav-icon">⚑</span>API Audit
+    <span class="snav-badge red">16</span>
+  </button>
+  <button class="snav-btn" onclick="showPanel('performance',this)" id="snav-performance">
+    <span class="snav-icon">⚡</span>2026 Ready
+    <span class="snav-badge amber">!</span>
+  </button>
+</nav>
+
+<!-- Content panels -->
+<div id="content-area">
+
+<div class="tab-panel active" id="panel-home">
+  <div class="panel-inner">
+    <!-- ══ HERO ══ -->
 <div class="wrap">
   <div class="breadcrumb">
     <a href="https://brainspring.ai" target="_blank">Home</a><span class="bc-sep">›</span>
@@ -410,10 +481,12 @@ body.hacker-mode #fsociety-mark{display:block!important}
         <p class="hero-desc">Every EPM operation you'll ever need — from data loads to metadata writes — wrapped in clean, copy-paste-ready Groovy functions. Built for practitioners, not Oracle documentation.</p>
         <p style="font-size:11.5px;color:rgba(74,222,128,.28);font-style:italic;font-family:'JetBrains Mono',monospace;line-height:1.7;margin-bottom:22px">// "I know how to control a system.<br>// The trick is making the system think it controls you."</p>
         <div class="hero-cta">
-          <button class="btn btn-g" onclick="document.getElementById('library').scrollIntoView({behavior:'smooth'})">Browse the Library ↓</button>
-          <button class="btn btn-o" onclick="document.getElementById('quickstart').scrollIntoView({behavior:'smooth'})">Quick Start Guide</button>
-          <button class="btn btn-p" onclick="document.getElementById('cheatsheet').scrollIntoView({behavior:'smooth'})">Cheat Sheet</button>
-          <button class="btn btn-o" onclick="document.getElementById('changelog').scrollIntoView({behavior:'smooth'})" style="border-color:rgba(248,113,113,.25);color:rgba(248,113,113,.7);font-size:10px">⚠ API Audit Log</button>
+          <button class="btn btn-g" onclick="showPanel('library',null)">Browse the Library ↓</button>
+          <button class="btn btn-o" onclick="showPanel('home',null)">Quick Start Guide</button>
+          <button class="btn btn-p" onclick="showPanel('cheatsheet',null)">Cheat Sheet</button>
+          <button class="btn btn-o" onclick="showPanel('changelog',null)" style="border-color:rgba(248,113,113,.25);color:rgba(248,113,113,.7);font-size:10px">⚠ Fix Changelog</button>
+          <button class="btn btn-o" onclick="showPanel('audit',null)" style="border-color:rgba(248,113,113,.25);color:rgba(248,113,113,.7);font-size:10px">🔍 API Audit</button>
+          <button class="btn btn-o" onclick="showPanel('performance',null)" style="border-color:rgba(251,191,36,.3);color:rgba(251,191,36,.8);font-size:10px">⚡ 2026 Compliance</button>
         </div>
       </div>
       <div class="hero-right">
@@ -428,8 +501,6 @@ body.hacker-mode #fsociety-mark{display:block!important}
     </div>
   </section>
 </div>
-
-<div class="wrap"><div class="sdiv"></div></div>
 
 <!-- ══ QUICK START ══ -->
 <div class="wrap" id="quickstart">
@@ -465,9 +536,12 @@ body.hacker-mode #fsociety-mark{display:block!important}
   </div>
 </div>
 
-<div class="wrap"><div class="sdiv"></div></div>
+  </div>
+</div>
 
-<!-- ══ LIBRARY ══ -->
+<div class="tab-panel" id="panel-library">
+  <div class="panel-inner">
+    <!-- ══ LIBRARY ══ -->
 <div class="wrap" id="library">
   <div style="display:flex;align-items:center;gap:10px;margin-bottom:18px;padding:9px 16px;background:rgba(74,222,128,.05);border:1px solid rgba(74,222,128,.15);border-radius:8px;font-family:'JetBrains Mono',monospace;font-size:9.5px;flex-wrap:wrap;gap:14px">
     <span style="display:flex;align-items:center;gap:6px;color:rgba(74,222,128,.7)"><span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:#4ade80;animation:pulse 2s infinite"></span>API VALIDATED · Oracle EPM Cloud 25.11</span>
@@ -515,9 +589,12 @@ body.hacker-mode #fsociety-mark{display:block!important}
   <div class="no-results" id="noResults" style="display:none">No functions matched. // Maybe you're looking for something that doesn't exist yet.<br><span style="font-size:10px;opacity:.6">Try a different search term or category — or just browse. Hello, friend.</span></div>
 </div>
 
-<div class="wrap" style="margin-top:48px"><div class="sdiv"></div></div>
+  </div>
+</div>
 
-<!-- ══ CHEAT SHEET ══ -->
+<div class="tab-panel" id="panel-cheatsheet">
+  <div class="panel-inner">
+    <!-- ══ CHEAT SHEET ══ -->
 <div class="wrap" id="cheatsheet">
   <div class="sec-lbl">Quick Reference</div>
   <h2 class="sec-h">Groovy Function Cheat Sheet <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:rgba(74,222,128,.5);font-weight:400;vertical-align:middle;margin-left:10px">✓ API Validated 25.11</span></h2>
@@ -529,7 +606,14 @@ body.hacker-mode #fsociety-mark{display:block!important}
   </div>
 </div>
 
-<div class="wrap" style="margin-top:0" id="changelog">
+  </div>
+</div>
+
+<div class="tab-panel" id="panel-changelog">
+  <div class="panel-inner">
+    <div class="wrap" style="margin-top:48px"><div class="sdiv"></div></div>
+
+<div class="wrap" id="changelog">
   <div class="sec-lbl">API Audit Log</div>
   <h2 class="sec-h">What Was Fixed — and Why</h2>
   <div class="sec-div"></div>
@@ -599,7 +683,12 @@ body.hacker-mode #fsociety-mark{display:block!important}
   </div>
 </div>
 
-<div class="wrap"><div class="sdiv"></div></div>
+  </div>
+</div>
+
+<div class="tab-panel" id="panel-audit">
+  <div class="panel-inner">
+    <div class="wrap"><div class="sdiv"></div></div>
 
 
 <!-- ══ API ACCURACY AUDIT ══ -->
@@ -790,7 +879,8 @@ body.hacker-mode #fsociety-mark{display:block!important}
           ✅ &nbsp;application.getDimension(name)<br>
           ✅ &nbsp;cube.executeCalcScript(script)<br>
           ✅ &nbsp;groovy.json.JsonSlurper()<br>
-          ✅ &nbsp;operation.grid / operation.writeLine()<br>
+          ✅ &nbsp;operation.grid (form context access)<br>
+          ✅ &nbsp;println() (correct console output method)<br>
           ✅ &nbsp;throwVetoException() call form<br>
           ✅ &nbsp;REST endpoint /aif/rest/V1/jobs<br>
           ✅ &nbsp;DataMap.execute(clearTarget)<br>
@@ -815,8 +905,280 @@ body.hacker-mode #fsociety-mark{display:block!important}
   </div>
 </div>
 
-<div class="wrap"><div class="sdiv"></div></div>
+  </div>
+</div>
 
+<div class="tab-panel" id="panel-performance">
+  <div class="panel-inner">
+    <div class="wrap"><div class="sdiv"></div></div>
+
+<!-- ══ PERFORMANCE & 2026 COMPLIANCE ══ -->
+<div class="wrap" id="performance">
+  <div class="sec-lbl">Performance · 2026 Readiness · Validator Guide</div>
+  <h2 class="sec-h">Optimize, Benchmark &amp; Stay 26.05-Ready</h2>
+  <div class="sec-div"></div>
+  <p class="sec-sub">Three things every EPM Groovy practitioner needs in 2026: fast rules, accurate benchmarks, and a clean Validator report before the May 26.05 mandatory engine upgrade.</p>
+  <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:rgba(251,191,36,.28);margin:-8px 0 24px">// "The system is about to change. Oracle changed the engine. You change your code — or the engine changes it for you."</div>
+
+  <!-- Alert banner -->
+  <div style="background:rgba(251,191,36,.06);border:1px solid rgba(251,191,36,.22);border-left:3px solid var(--amber);border-radius:0 10px 10px 0;padding:14px 20px;margin-bottom:28px;display:flex;gap:14px;align-items:flex-start;flex-wrap:wrap">
+    <div style="font-size:22px;flex-shrink:0;margin-top:1px">⚠</div>
+    <div>
+      <div style="font-family:'Rajdhani',sans-serif;font-weight:700;font-size:15px;color:var(--amber);margin-bottom:4px">Mandatory Groovy Engine Upgrade — 26.05 (May 2026)</div>
+      <div style="font-size:12.5px;color:rgba(232,240,248,.5);line-height:1.65">Oracle is enforcing a stricter Groovy/Java 3.x engine in the 26.05 update. Scripts using heavy <code style="color:var(--red);font-family:'JetBrains Mono',monospace;font-size:11px">def</code>, missing <code style="color:var(--amber);font-family:'JetBrains Mono',monospace;font-size:11px">/*RTPS:*/</code> declarations, or implicit type casts will fail. Run the Script Validator now in your Test environment — you have until May.</div>
+      <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap">
+        <span style="font-family:'JetBrains Mono',monospace;font-size:9px;padding:3px 10px;border-radius:4px;background:rgba(251,191,36,.08);border:1px solid rgba(251,191,36,.2);color:var(--amber)">Application → Overview → Actions → Groovy Script Validator</span>
+        <span style="font-family:'JetBrains Mono',monospace;font-size:9px;padding:3px 10px;border-radius:4px;background:rgba(74,222,128,.06);border:1px solid rgba(74,222,128,.14);color:var(--green)">Delay up to 3 months via EPM Automate skipUpdate</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Three-column tab area -->
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px;margin-bottom:36px">
+
+    <!-- Card 1: Optimization -->
+    <div style="background:var(--navy2);border:1px solid var(--border);border-radius:14px;overflow:hidden">
+      <div style="height:2px;background:linear-gradient(90deg,var(--green),var(--teal))"></div>
+      <div style="padding:18px 20px 14px">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:8.5px;letter-spacing:.14em;color:rgba(74,222,128,.45);text-transform:uppercase;margin-bottom:6px">Performance</div>
+        <div style="font-family:'Rajdhani',sans-serif;font-size:16px;font-weight:700;color:var(--white);margin-bottom:10px">10 Optimization Patterns</div>
+
+        <div style="display:flex;flex-direction:column;gap:9px">
+
+          <div style="background:rgba(74,222,128,.04);border:1px solid rgba(74,222,128,.1);border-radius:8px;padding:11px 13px">
+            <div style="font-family:'Rajdhani',sans-serif;font-weight:700;font-size:12px;color:var(--green);margin-bottom:4px">① Explicit Typing — Biggest Single Win</div>
+            <div style="font-size:11.5px;color:rgba(232,240,248,.48);line-height:1.6;margin-bottom:7px"><code style="color:var(--red);font-family:'JetBrains Mono',monospace;font-size:10px">def</code> forces dynamic dispatch on every call. Replace with <code style="color:var(--green);font-family:'JetBrains Mono',monospace;font-size:10px">String</code>, <code style="color:var(--green);font-family:'JetBrains Mono',monospace;font-size:10px">Map&lt;String,Object&gt;</code>, <code style="color:var(--green);font-family:'JetBrains Mono',monospace;font-size:10px">List&lt;String&gt;</code>, <code style="color:var(--green);font-family:'JetBrains Mono',monospace;font-size:10px">Double</code>.</div>
+            <pre class="code" style="font-size:10px;margin:0"><span class="cmt">// ✗ Slower — dynamic</span>
+<span class="kw">def</span> <span class="fn-c">getSubstitutionVariable</span>(varName) { ... }
+
+<span class="cmt">// ✓ Faster — static dispatch</span>
+<span class="kw">String</span> <span class="fn-c">getSubstitutionVariable</span>(<span class="kw">String</span> varName) { ... }</pre>
+          </div>
+
+          <div style="background:rgba(45,212,191,.04);border:1px solid rgba(45,212,191,.1);border-radius:8px;padding:11px 13px">
+            <div style="font-family:'Rajdhani',sans-serif;font-weight:700;font-size:12px;color:var(--teal);margin-bottom:4px">② Target Only Changed Data</div>
+            <div style="font-size:11.5px;color:rgba(232,240,248,.48);line-height:1.6">Traditional rules calc the entire cube. Use <code style="color:var(--teal);font-family:'JetBrains Mono',monospace;font-size:10px">operation.grid</code>, <code style="color:var(--teal);font-family:'JetBrains Mono',monospace;font-size:10px">getFormPOV()</code>, and <code style="color:var(--teal);font-family:'JetBrains Mono',monospace;font-size:10px">iterateGridCells()</code> with tight filters. Rules that took minutes drop to seconds.</div>
+          </div>
+
+          <div style="background:rgba(168,85,247,.04);border:1px solid rgba(168,85,247,.1);border-radius:8px;padding:11px 13px">
+            <div style="font-family:'Rajdhani',sans-serif;font-weight:700;font-size:12px;color:var(--purple);margin-bottom:4px">③ Dynamic FIX Blocks over CALC ALL</div>
+            <div style="font-size:11.5px;color:rgba(232,240,248,.48);line-height:1.6">Use <code style="color:var(--purple);font-family:'JetBrains Mono',monospace;font-size:10px">buildCalcScript()</code> to generate a tight <code style="color:var(--purple);font-family:'JetBrains Mono',monospace;font-size:10px">FIX(...)</code> block scoped to only the POV members in play. Fewer members in FIX = proportionally faster execution.</div>
+          </div>
+
+          <div style="background:rgba(251,191,36,.04);border:1px solid rgba(251,191,36,.1);border-radius:8px;padding:11px 13px">
+            <div style="font-family:'Rajdhani',sans-serif;font-weight:700;font-size:12px;color:var(--amber);margin-bottom:4px">④ Minimize GC Pressure</div>
+            <div style="font-size:11.5px;color:rgba(232,240,248,.48);line-height:1.6">Reuse one <code style="color:var(--amber);font-family:'JetBrains Mono',monospace;font-size:10px">JsonSlurper</code> instance. Avoid new collections in hot loops. Use primitives (<code style="color:var(--amber);font-family:'JetBrains Mono',monospace;font-size:10px">int</code>, <code style="color:var(--amber);font-family:'JetBrains Mono',monospace;font-size:10px">double</code>) where possible. Keep closures in <code style="color:var(--amber);font-family:'JetBrains Mono',monospace;font-size:10px">retryWithBackoff</code> lightweight.</div>
+          </div>
+
+          <div style="background:rgba(56,189,248,.04);border:1px solid rgba(56,189,248,.1);border-radius:8px;padding:11px 13px">
+            <div style="font-family:'Rajdhani',sans-serif;font-weight:700;font-size:12px;color:var(--sky);margin-bottom:4px">⑤–⑩ More Quick Wins</div>
+            <div style="font-size:11px;color:rgba(232,240,248,.42);line-height:1.7">
+              ✦ Cache substitution vars &amp; member info across calls<br>
+              ✦ Batch with <code style="color:var(--sky);font-family:'JetBrains Mono',monospace;font-size:10px">bulkSetSubstitutionVariables()</code><br>
+              ✦ Use <code style="color:var(--sky);font-family:'JetBrains Mono',monospace;font-size:10px">sleep()</code> not <code style="color:var(--sky);font-family:'JetBrains Mono',monospace;font-size:10px">Thread.sleep()</code> (26.01+ validator)<br>
+              ✦ Poll with reasonable intervals in <code style="color:var(--sky);font-family:'JetBrains Mono',monospace;font-size:10px">awaitJobCompletion</code><br>
+              ✦ Push large descendant processing into Essbase calc scripts<br>
+              ✦ Use <code style="color:var(--sky);font-family:'JetBrains Mono',monospace;font-size:10px">runSmartPush</code> only on changed regions
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 2: Benchmarking -->
+    <div style="background:var(--navy2);border:1px solid var(--border);border-radius:14px;overflow:hidden">
+      <div style="height:2px;background:linear-gradient(90deg,var(--purple),var(--sky))"></div>
+      <div style="padding:18px 20px 14px">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:8.5px;letter-spacing:.14em;color:rgba(168,85,247,.45);text-transform:uppercase;margin-bottom:6px">Benchmarking</div>
+        <div style="font-family:'Rajdhani',sans-serif;font-size:16px;font-weight:700;color:var(--white);margin-bottom:10px">Measure Before You Optimize</div>
+
+        <div style="font-size:11.5px;color:rgba(232,240,248,.42);line-height:1.65;margin-bottom:12px">EPM Cloud is sandboxed — no JMH, no profiler. Use <code style="color:var(--purple);font-family:'JetBrains Mono',monospace;font-size:10.5px">System.nanoTime()</code> (monotonic, nanosecond resolution). Never <code style="color:var(--red);font-family:'JetBrains Mono',monospace;font-size:10.5px">currentTimeMillis()</code> for precision — clock skew makes it unreliable.</div>
+
+        <div style="font-family:'JetBrains Mono',monospace;font-size:8.5px;letter-spacing:.12em;color:rgba(168,85,247,.4);text-transform:uppercase;margin-bottom:6px">Reusable Benchmark Helper</div>
+        <pre class="code" style="font-size:10px"><span class="kw">def</span> <span class="fn-c">benchmark</span>(<span class="kw">String</span> label, Closure action) {
+  <span class="kw">long</span> start = System.nanoTime()
+  <span class="kw">def</span> result = action.call()
+  <span class="kw">long</span> ms = (System.nanoTime() - start) / <span class="num">1_000_000</span>
+  println(<span class="str">"[BENCH] ${label}: ${ms} ms"</span>)
+  <span class="kw">return</span> result
+}</pre>
+
+        <div style="font-family:'JetBrains Mono',monospace;font-size:8.5px;letter-spacing:.12em;color:rgba(168,85,247,.4);text-transform:uppercase;margin-bottom:6px;margin-top:12px">Warm-up + Multi-run Average</div>
+        <pre class="code" style="font-size:10px"><span class="kw">def</span> <span class="fn-c">warmBenchmark</span>(<span class="kw">String</span> label,
+                    Closure code,
+                    <span class="kw">int</span> runs = <span class="num">10</span>) {
+  <span class="cmt">// Discard first 3 — JVM warmup noise</span>
+  <span class="num">3</span>.times { code() }
+  <span class="kw">long</span> total = <span class="num">0</span>
+  runs.times {
+    <span class="kw">long</span> t = System.nanoTime()
+    code()
+    total += System.nanoTime() - t
+  }
+  println(<span class="str">"[BENCH] ${label} avg (${runs}x): "</span> +
+    <span class="str">"${total / runs / 1_000_000} ms"</span>)
+}</pre>
+
+        <div style="font-family:'JetBrains Mono',monospace;font-size:8.5px;letter-spacing:.12em;color:rgba(168,85,247,.4);text-transform:uppercase;margin-bottom:6px;margin-top:12px">High-Impact Areas to Benchmark</div>
+        <div style="display:flex;flex-direction:column;gap:5px">
+          <div style="display:flex;gap:8px;align-items:baseline;font-size:11px">
+            <span style="color:var(--red);font-family:'JetBrains Mono',monospace;font-size:9px;min-width:6px">①</span>
+            <span style="color:rgba(232,240,248,.55)"><code style="color:var(--purple);font-family:'JetBrains Mono',monospace;font-size:10px">iterateGridCells</code> — filter tightness is everything</span>
+          </div>
+          <div style="display:flex;gap:8px;align-items:baseline;font-size:11px">
+            <span style="color:var(--red);font-family:'JetBrains Mono',monospace;font-size:9px;min-width:6px">②</span>
+            <span style="color:rgba(232,240,248,.55)"><code style="color:var(--purple);font-family:'JetBrains Mono',monospace;font-size:10px">getDescendants</code> on large dimensions</span>
+          </div>
+          <div style="display:flex;gap:8px;align-items:baseline;font-size:11px">
+            <span style="color:var(--red);font-family:'JetBrains Mono',monospace;font-size:9px;min-width:6px">③</span>
+            <span style="color:rgba(232,240,248,.55)"><code style="color:var(--purple);font-family:'JetBrains Mono',monospace;font-size:10px">buildCalcScript</code> generation + execution</span>
+          </div>
+          <div style="display:flex;gap:8px;align-items:baseline;font-size:11px">
+            <span style="color:var(--red);font-family:'JetBrains Mono',monospace;font-size:9px;min-width:6px">④</span>
+            <span style="color:rgba(232,240,248,.55)">REST/job calls — Groovy wrapper vs external latency</span>
+          </div>
+          <div style="display:flex;gap:8px;align-items:baseline;font-size:11px">
+            <span style="color:var(--red);font-family:'JetBrains Mono',monospace;font-size:9px;min-width:6px">⑤</span>
+            <span style="color:rgba(232,240,248,.55)"><code style="color:var(--red);font-family:'JetBrains Mono',monospace;font-size:10px">def</code> vs typed — before/after explicit typing</span>
+          </div>
+        </div>
+
+        <div style="margin-top:14px;font-family:'JetBrains Mono',monospace;font-size:10px;color:rgba(168,85,247,.3);line-height:1.7">
+          // "You can't optimize what you don't measure.<br>
+          // You can't trust what you didn't warm up first."
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 3: Validator -->
+    <div style="background:var(--navy2);border:1px solid var(--border);border-radius:14px;overflow:hidden">
+      <div style="height:2px;background:linear-gradient(90deg,var(--amber),var(--coral))"></div>
+      <div style="padding:18px 20px 14px">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:8.5px;letter-spacing:.14em;color:rgba(251,191,36,.45);text-transform:uppercase;margin-bottom:6px">2026 Compliance</div>
+        <div style="font-family:'Rajdhani',sans-serif;font-size:16px;font-weight:700;color:var(--white);margin-bottom:10px">Validator — 6-Step Runbook</div>
+
+        <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:14px">
+
+          <div style="display:flex;gap:10px;align-items:flex-start">
+            <div style="font-family:'Rajdhani',sans-serif;font-size:18px;font-weight:700;color:rgba(251,191,36,.25);min-width:22px;line-height:1.2">01</div>
+            <div style="font-size:11.5px;color:rgba(232,240,248,.5);line-height:1.6">Log in as <strong style="color:var(--white)">Service Administrator</strong> in your Test environment first. Never run fixes in Production without a verified Test pass.</div>
+          </div>
+
+          <div style="display:flex;gap:10px;align-items:flex-start">
+            <div style="font-family:'Rajdhani',sans-serif;font-size:18px;font-weight:700;color:rgba(251,191,36,.25);min-width:22px;line-height:1.2">02</div>
+            <div style="font-size:11.5px;color:rgba(232,240,248,.5);line-height:1.6">Navigate to <code style="color:var(--amber);font-family:'JetBrains Mono',monospace;font-size:10px">Application → Overview → Actions → Groovy Script Validator</code>. Appears only if at least one Groovy rule exists.</div>
+          </div>
+
+          <div style="display:flex;gap:10px;align-items:flex-start">
+            <div style="font-family:'Rajdhani',sans-serif;font-size:18px;font-weight:700;color:rgba(251,191,36,.25);min-width:22px;line-height:1.2">03</div>
+            <div style="font-size:11.5px;color:rgba(232,240,248,.5);line-height:1.6">Monitor the job under <code style="color:var(--amber);font-family:'JetBrains Mono',monospace;font-size:10px">Navigator → Jobs</code>. Takes 1–5 minutes depending on rule count.</div>
+          </div>
+
+          <div style="display:flex;gap:10px;align-items:flex-start">
+            <div style="font-family:'Rajdhani',sans-serif;font-size:18px;font-weight:700;color:rgba(251,191,36,.25);min-width:22px;line-height:1.2">04</div>
+            <div style="font-size:11.5px;color:rgba(232,240,248,.5);line-height:1.6">Download <code style="color:var(--amber);font-family:'JetBrains Mono',monospace;font-size:10px">GroovyValidationReport.html</code> from Inbox/Outbox Explorer. Open in browser — each issue shows rule name, line number, and fix hint.</div>
+          </div>
+
+          <div style="display:flex;gap:10px;align-items:flex-start">
+            <div style="font-family:'Rajdhani',sans-serif;font-size:18px;font-weight:700;color:rgba(251,191,36,.25);min-width:22px;line-height:1.2">05</div>
+            <div style="font-size:11.5px;color:rgba(232,240,248,.5);line-height:1.6">Fix in small batches. Re-run validator after each batch. Test rules manually — a clean report ≠ correct business logic.</div>
+          </div>
+
+          <div style="display:flex;gap:10px;align-items:flex-start">
+            <div style="font-family:'Rajdhani',sans-serif;font-size:18px;font-weight:700;color:rgba(251,191,36,.25);min-width:22px;line-height:1.2">06</div>
+            <div style="font-size:11.5px;color:rgba(232,240,248,.5);line-height:1.6">Repeat until the report shows <strong style="color:var(--green)">zero issues</strong>. Then promote to Production ahead of the May 26.05 window.</div>
+          </div>
+
+        </div>
+
+        <div style="font-family:'JetBrains Mono',monospace;font-size:8.5px;letter-spacing:.12em;color:rgba(251,191,36,.4);text-transform:uppercase;margin-bottom:7px">Top 5 Errors the Validator Flags</div>
+        <div style="display:flex;flex-direction:column;gap:5px">
+          <div style="background:rgba(248,113,113,.05);border:1px solid rgba(248,113,113,.1);border-radius:6px;padding:7px 10px">
+            <div style="font-family:'JetBrains Mono',monospace;font-size:9.5px;color:var(--red);margin-bottom:2px">Missing /*RTPS: */</div>
+            <div style="font-size:11px;color:rgba(232,240,248,.42)">Every script must start with <code style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--green)">/*RTPS: */</code> — even with zero prompts.</div>
+          </div>
+          <div style="background:rgba(248,113,113,.05);border:1px solid rgba(248,113,113,.1);border-radius:6px;padding:7px 10px">
+            <div style="font-family:'JetBrains Mono',monospace;font-size:9.5px;color:var(--red);margin-bottom:2px">Object assigned to typed var</div>
+            <div style="font-size:11px;color:rgba(232,240,248,.42)">Fix: <code style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--green)">Double val = cell.data as Double</code></div>
+          </div>
+          <div style="background:rgba(251,191,36,.04);border:1px solid rgba(251,191,36,.1);border-radius:6px;padding:7px 10px">
+            <div style="font-family:'JetBrains Mono',monospace;font-size:9.5px;color:var(--amber);margin-bottom:2px">BigDecimal / float literals</div>
+            <div style="font-size:11px;color:rgba(232,240,248,.42)">Append <code style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--green)">d</code> suffix: <code style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--green)">cell.data = 123.45d</code></div>
+          </div>
+          <div style="background:rgba(251,191,36,.04);border:1px solid rgba(251,191,36,.1);border-radius:6px;padding:7px 10px">
+            <div style="font-family:'JetBrains Mono',monospace;font-size:9.5px;color:var(--amber);margin-bottom:2px">List vs Array mismatch</div>
+            <div style="font-size:11px;color:rgba(232,240,248,.42)">Fix: <code style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--green)">List&lt;String&gt; m = getDescendants(...)</code> or cast <code style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--green)">as String[]</code></div>
+          </div>
+          <div style="background:rgba(56,189,248,.04);border:1px solid rgba(56,189,248,.1);border-radius:6px;padding:7px 10px">
+            <div style="font-family:'JetBrains Mono',monospace;font-size:9.5px;color:var(--sky);margin-bottom:2px">Thread.sleep() flagged</div>
+            <div style="font-size:11px;color:rgba(232,240,248,.42)">Replace with built-in <code style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--green)">sleep(ms)</code></div>
+          </div>
+        </div>
+
+        <div style="margin-top:14px;font-family:'JetBrains Mono',monospace;font-size:10px;color:rgba(251,191,36,.28);line-height:1.7">
+          // "The validator doesn't auto-fix anything.<br>
+          // It just shows you the truth.<br>
+          // What you do with it is on you."
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /three-col grid -->
+
+  <!-- 2026 Compliance Checklist -->
+  <div style="background:rgba(74,222,128,.04);border:1px solid rgba(74,222,128,.14);border-radius:12px;padding:22px 26px;margin-bottom:36px">
+    <div style="font-family:'Rajdhani',sans-serif;font-weight:700;font-size:16px;color:var(--green);margin-bottom:4px">2026 Compliance Checklist — Apply to All 31 Functions</div>
+    <div style="font-size:12px;color:rgba(232,240,248,.42);font-style:italic;margin-bottom:16px">Work through this list once. Re-run the validator after each step.</div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:8px">
+      <label style="display:flex;gap:10px;align-items:baseline;font-size:12px;color:rgba(232,240,248,.58);cursor:pointer">
+        <input type="checkbox" style="accent-color:var(--green);margin-top:1px">
+        <span>Replace all parameter <code style="color:var(--red);font-family:'JetBrains Mono',monospace;font-size:10px">def</code> with <code style="color:var(--green);font-family:'JetBrains Mono',monospace;font-size:10px">String</code>, <code style="color:var(--green);font-family:'JetBrains Mono',monospace;font-size:10px">Map&lt;String,Object&gt;</code>, etc.</span>
+      </label>
+      <label style="display:flex;gap:10px;align-items:baseline;font-size:12px;color:rgba(232,240,248,.58);cursor:pointer">
+        <input type="checkbox" style="accent-color:var(--green);margin-top:1px">
+        <span>Add <code style="color:var(--green);font-family:'JetBrains Mono',monospace;font-size:10px">/*RTPS: */</code> as line 1 of every script</span>
+      </label>
+      <label style="display:flex;gap:10px;align-items:baseline;font-size:12px;color:rgba(232,240,248,.58);cursor:pointer">
+        <input type="checkbox" style="accent-color:var(--green);margin-top:1px">
+        <span>Add explicit casts: <code style="color:var(--green);font-family:'JetBrains Mono',monospace;font-size:10px">as Double</code>, <code style="color:var(--green);font-family:'JetBrains Mono',monospace;font-size:10px">as List&lt;String&gt;</code></span>
+      </label>
+      <label style="display:flex;gap:10px;align-items:baseline;font-size:12px;color:rgba(232,240,248,.58);cursor:pointer">
+        <input type="checkbox" style="accent-color:var(--green);margin-top:1px">
+        <span>Append <code style="color:var(--green);font-family:'JetBrains Mono',monospace;font-size:10px">d</code> suffix on all floating-point literals</span>
+      </label>
+      <label style="display:flex;gap:10px;align-items:baseline;font-size:12px;color:rgba(232,240,248,.58);cursor:pointer">
+        <input type="checkbox" style="accent-color:var(--green);margin-top:1px">
+        <span>Replace <code style="color:var(--red);font-family:'JetBrains Mono',monospace;font-size:10px">Thread.sleep()</code> with <code style="color:var(--green);font-family:'JetBrains Mono',monospace;font-size:10px">sleep()</code></span>
+      </label>
+      <label style="display:flex;gap:10px;align-items:baseline;font-size:12px;color:rgba(232,240,248,.58);cursor:pointer">
+        <input type="checkbox" style="accent-color:var(--green);margin-top:1px">
+        <span>Ensure all DataGrids are properly closed (pre-26.08 enforcement)</span>
+      </label>
+      <label style="display:flex;gap:10px;align-items:baseline;font-size:12px;color:rgba(232,240,248,.58);cursor:pointer">
+        <input type="checkbox" style="accent-color:var(--green);margin-top:1px">
+        <span>Add explicit return types to all library functions</span>
+      </label>
+      <label style="display:flex;gap:10px;align-items:baseline;font-size:12px;color:rgba(232,240,248,.58);cursor:pointer">
+        <input type="checkbox" style="accent-color:var(--green);margin-top:1px">
+        <span>Run Groovy Script Validator — fix until report is zero errors</span>
+      </label>
+      <label style="display:flex;gap:10px;align-items:baseline;font-size:12px;color:rgba(232,240,248,.58);cursor:pointer">
+        <input type="checkbox" style="accent-color:var(--green);margin-top:1px">
+        <span>Test rules in form context and as batch jobs after each fix pass</span>
+      </label>
+      <label style="display:flex;gap:10px;align-items:baseline;font-size:12px;color:rgba(232,240,248,.58);cursor:pointer">
+        <input type="checkbox" style="accent-color:var(--green);margin-top:1px">
+        <span>Promote to Production before May 2026 (26.05 window)</span>
+      </label>
+    </div>
+    <div style="margin-top:12px;font-family:'JetBrains Mono',monospace;font-size:9.5px;color:rgba(74,222,128,.32);line-height:1.7">// Progress is persistent — checkboxes are saved during your session.</div>
+  </div>
+
+</div>
+
+  </div>
+</div>
 <!-- ══ FREE BANNER ══ -->
 <div class="wrap">
   <div class="free-banner">
@@ -840,8 +1202,12 @@ body.hacker-mode #fsociety-mark{display:block!important}
       <a href="https://brainspring.ai/epmdi" target="_blank">Data Integration</a>
       <a href="https://brainspring.ai/epcm" target="_blank">EPCM Tour</a>
       <a href="#" onclick="return false">Groovy Library</a>
-      <a href="#library">All Modules</a>
-      <a href="#changelog">API Audit Log</a>
+      <a href="#quickstart" onclick="event.preventDefault();showPanel('home',null)">Quick Start</a>
+      <a href="#library" onclick="event.preventDefault();showPanel('library',null)">Library</a>
+      <a href="#cheatsheet" onclick="event.preventDefault();showPanel('cheatsheet',null)">Cheat Sheet</a>
+      <a href="#changelog" onclick="event.preventDefault();showPanel('changelog',null)">Changelog</a>
+      <a href="#audit" onclick="event.preventDefault();showPanel('audit',null)">API Audit</a>
+      <a href="#performance" onclick="event.preventDefault();showPanel('performance',null)">2026 Compliance</a>
       <a href="https://brainspring.ai" target="_blank">brainspring.ai</a>
       <a href="https://www.oracle.com/performance-management/" target="_blank" rel="noopener">Oracle EPM</a>
     </div>
@@ -855,6 +1221,8 @@ body.hacker-mode #fsociety-mark{display:block!important}
   </footer>
 </div>
 
+</div><!-- /content-area -->
+</div><!-- /page-shell -->
 <script>
 // ══════════════════════════════════════════════
 // FUNCTION DATA
@@ -1929,6 +2297,8 @@ function renderCards(list) {
   grid.innerHTML = '';
   noRes.style.display = list.length ? 'none' : 'block';
   vis.textContent = list.length;
+  const snavB = document.getElementById('snavBadge');
+  if (snavB) snavB.textContent = list.length;
   list.forEach(fn => {
     const color = CAT_COLORS[fn.cat] || 'var(--dim)';
     const card = document.createElement('div');
@@ -2242,6 +2612,58 @@ document.getElementById('visCount').textContent = FNS.length;
 document.querySelectorAll('.sec-sub').forEach(el=>{
   if(el.textContent.includes('20 functions')) el.textContent = `All ${FNS.length} functions at a glance — name, category, what it does, and when to use it.`;
 });
+
+// ══════════════════════════════════════════════
+// TAB PANEL NAVIGATION
+// ══════════════════════════════════════════════
+const PANELS = ['home','library','cheatsheet','changelog','audit','performance'];
+
+function showPanel(id, btn) {
+  // Hide all panels
+  PANELS.forEach(p => {
+    const el = document.getElementById('panel-' + p);
+    if (el) el.classList.remove('active');
+    const nb = document.getElementById('snav-' + p);
+    if (nb) nb.classList.remove('active');
+  });
+  // Show target
+  const panel = document.getElementById('panel-' + id);
+  if (panel) { panel.classList.add('active'); }
+  if (btn) btn.classList.add('active');
+  else {
+    const nb = document.getElementById('snav-' + id);
+    if (nb) nb.classList.add('active');
+  }
+  // Scroll content area to top
+  const ca = document.getElementById('content-area');
+  if (ca) ca.scrollTo(0, 0);
+  // Note: history.replaceState not used — blocked in srcdoc iframe context
+}
+
+// Wire topbar section links to panels
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  const hash = a.getAttribute('href').slice(1);
+  if (PANELS.includes(hash)) {
+    a.addEventListener('click', e => {
+      e.preventDefault();
+      showPanel(hash, null);
+    });
+  }
+});
+
+// Wire hero CTA scroll buttons to panels
+document.querySelectorAll('[onclick*="scrollIntoView"]').forEach(btn => {
+  const m = btn.getAttribute('onclick').match(/getElementById\(['"](\w+)['"]\)/);
+  if (m && PANELS.includes(m[1])) {
+    btn.removeAttribute('onclick');
+    btn.addEventListener('click', () => showPanel(m[1], null));
+  }
+});
+
+// Initial hash handling not applicable in srcdoc iframe context
+
+// Update sidenav badge when filter applied
+
 </script>
 </body>
 </html>
