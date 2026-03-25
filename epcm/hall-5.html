@@ -1242,7 +1242,7 @@ function showVariant(key){
   v.code.forEach(function(l){ html+='<div>'+l+'</div>'; });
   html+='</div>';
   v.result.forEach(function(r){
-    html+='<div class="result-line '+(r.cls||'")">'+r.text+'</div>';
+    html+='<div class="result-line'+(r.cls?' '+r.cls:'')+'">'+r.text+'</div>';
   });
   document.getElementById('pg-result').innerHTML=html;
 }
