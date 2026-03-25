@@ -1286,16 +1286,9 @@ ES,SqFt,2100</pre>
 
 <script src="constants.js"></script>
 <script>
-// ── CONSTANTS FROM NP DATA ──
-const NP = window.NP || {
-  company: { name: 'NovaPrism Group', tagline: '$134M indirect cost challenge' },
-  divisions: ['DS','IS','CL','ES'],
-  costPools: { IT: { amount: 52000000 }, Facilities: { amount: 38000000 }, Finance: { amount: 28000000 }, HR: { amount: 16000000 } }
-};
-
 // ── SIDEBAR COMPANY ──
-document.getElementById('sb-company-name').textContent = NP.company?.name || 'NovaPrism Group';
-document.getElementById('sb-company-desc').textContent = NP.company?.tagline || '$134M indirect cost challenge';
+document.getElementById('sb-company-name').textContent = NP.company.name;
+document.getElementById('sb-company-desc').textContent = NP.company.type || '$134M indirect cost challenge';
 
 // ── STARS ──
 (function(){
