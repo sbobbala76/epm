@@ -622,12 +622,9 @@ body::after {
       <a href="hall-1.html" class="tb-link">Foundations</a>
       <a href="hall-2.html" class="tb-link">Dimensions</a>
       <a href="hall-3.html" class="tb-link">Models</a>
-      <a href="hall-4.html" class="tb-link">Logic</a>
+      <a href="hall-4.html" class="tb-link">Hall of Logic</a>
       <a href="hall-5.html" class="tb-link">Workshop</a>
-      <a href="hall-6.html" class="tb-link current">Control</a>
-      <a href="hall-7.html" class="tb-link">Observatory</a>
-      <a href="hall-8.html" class="tb-link">Pipeline</a>
-      <a href="hall-9.html" class="tb-link">Exam Hall</a>
+      <a href="hall-6.html" class="tb-link current">Control Tower</a>
     </nav>
     <span class="tb-hall-badge">Hall 6 of 9 · Control Tower</span>
     <button class="tb-hamburger" onclick="toggleSidebar()" aria-label="Menu">
@@ -780,7 +777,7 @@ body::after {
 
           <div class="infobox note">
             <div class="infobox-icon">📋</div>
-            <div class="infobox-body"><strong>Auto-purge behaviour:</strong> EPCM automatically purges old calculation records when the volume exceeds certain thresholds. If you need to retain a longer history — for audit, for trend analysis, for month-over-month runtime comparisons — use the <strong>Export to Excel</strong> option on the Calculation Analysis page to archive calculation runs before they're purged.</div>
+            <div class="infobox-body"><strong>Auto-purge behaviour:</strong> EPCM automatically purges old calculation records when volume grows to exceed system thresholds — there is no documented fixed retention period (not 30 days, not 90 days). Records can disappear after any maintenance window. Treat every calculation record as temporary. Use the <strong>Export to Excel</strong> option on the Calculation Analysis page to archive any run you may need for audit, trend analysis, or before/after comparison — do this <em>before</em> making tuning changes, not after.</div>
           </div>
         </section>
 
@@ -809,7 +806,7 @@ body::after {
                 <div class="pc-when">Use when: Deep-dive troubleshooting</div>
               </div>
               <div class="pc-body">
-                <div class="pc-desc">The Diagnostics report provides additional rule execution detail useful for diagnosing performance issues. It's delivered as an Excel file with two worksheets: <strong>Job Statistics</strong> (overall run metadata) and <strong>Rule Statistics</strong> (per-rule breakdown with script counts, cell updates, and timing). Use this when the Summary report shows a problem but doesn't show the cause.</div>
+                <div class="pc-desc">The Diagnostics report provides additional rule execution detail useful for diagnosing performance issues. It's delivered as an Excel file with two worksheets: <strong>Job Statistics</strong> (overall run metadata) and <strong>Rule Statistics</strong> (per-rule breakdown with script counts, cell updates, and timing). Use this when the Summary report shows a problem but doesn't show the cause. Note: Oracle documentation describes the Diagnostics report as Excel format — verify in your specific release if the format options differ from the Summary report.</div>
                 <div class="pc-tip"><strong>Key insight:</strong> The "Scripts" column tells you how many Essbase calc scripts EPCM generated for a rule. High script counts on Custom Calc rules often indicate missing FIX scoping.</div>
               </div>
             </div>
@@ -944,6 +941,7 @@ body::after {
               <div class="pc-body">
                 <div class="pc-desc">When enabled (default), EPCM runs Essbase aggregations on the reporting cube after a calculation completes. This significantly boosts query and report performance — data is pre-aggregated along hierarchies. If you run multiple concurrent calculation jobs, only the <strong>last job to complete</strong> performs the aggregation, avoiding redundant work.</div>
                 <div class="pc-tip"><strong>Best practice:</strong> Keep this enabled for production models. Only disable it during rapid iterative testing when you don't need reporting performance.</div>
+                <div class="pc-trap"><strong>Exam trap — "Disable Optimize for Reporting to meet the close SLA."</strong> FALSE. Disabling it shaves a few seconds off calculation time but leaves PCM_REP aggregations stale — rolled-up report values will be wrong until the cube is manually aggregated. Never disable in production unless you have an explicit post-calculation aggregation step in your EPM Automate pipeline. The SLA risk from stale reporting far outweighs any calculation time saved.</div>
               </div>
             </div>
             <div class="pattern-card">
@@ -1052,7 +1050,7 @@ body::after {
                 <div class="ba-stat"><span class="ba-stat-label">Seq:10 Rule 1</span><span class="ba-stat-val">0:04</span></div>
                 <div class="ba-stat"><span class="ba-stat-label">Scripts Generated</span><span class="ba-stat-val">3</span></div>
                 <div class="ba-stat"><span class="ba-stat-label">SLA Status</span><span class="ba-stat-val">PASSED</span></div>
-                <div class="ba-note">Same result. 31× faster. FIX + NONEMPTYTUPLE + Parallel restructure.</div>
+                <div class="ba-note">Same result. 32× faster. FIX + NONEMPTYTUPLE + Parallel restructure. (47:12 = 2,832s ÷ 1:28 = 88s = 32.2×. The bottleneck rule itself improved ~750× — the full model improvement is lower because the other rules were already fast.)</div>
               </div>
             </div>
           </div>
@@ -1190,7 +1188,7 @@ body::after {
 
           <div id="quiz-container"></div>
           <div class="quiz-score" id="quiz-score">
-            <div class="quiz-score-num" id="quiz-score-num">0/5</div>
+            <div class="quiz-score-num" id="quiz-score-num">0/6</div>
             <div class="quiz-score-label">Your Score</div>
             <div class="quiz-score-msg" id="quiz-score-msg"></div>
           </div>
@@ -1212,9 +1210,26 @@ body::after {
                 <li><strong>Optimize for Reporting</strong> runs Essbase aggregations after calculation — keep it enabled for production</li>
                 <li><strong>Multi-POV calculations</strong> can apply rules from one POV against data from multiple POVs</li>
                 <li>A high <strong>Scripts Generated</strong> count on a Custom Calc rule indicates missing FIX scoping</li>
-                <li>EPCM <strong>auto-purges</strong> old calculation records — archive important runs via Export to Excel</li>
+                <li>EPCM <strong>auto-purges</strong> old calculation records with no fixed retention period — archive important runs via Export to Excel <em>before</em> tuning, not after</li>
               </ul>
             </div>
+          </div>
+
+          <div class="tbl-wrap" style="margin-top:28px">
+            <table class="tbl">
+              <thead><tr><th>Concept</th><th>Exam answer</th><th>Implementation reality</th></tr></thead>
+              <tbody>
+                <tr><td>Where Calculation Analysis lives</td><td>Home → Modeling → Calculation Analysis</td><td>First thing you bookmark after go-live. Every support call for a slow model starts here</td></tr>
+                <tr><td>Summary report's unique feature</td><td>Top 10 Longest Running Rules, sorted by elapsed time descending</td><td>The #1 rule on this list is your tuning target. If it's a Custom Calc with thousands of Scripts — add FIX first</td></tr>
+                <tr><td>Diagnostics report format</td><td>Excel file — two worksheets: Job Statistics and Rule Statistics</td><td>The Scripts column in Rule Statistics is the smoking gun for unscoped rules. 14,200 scripts for a 3-cell rule is unmistakable</td></tr>
+                <tr><td>Comparison report purpose</td><td>Side-by-side comparison of two calculation records — before/after a change, or Q1 vs Q2</td><td>Archive the "before" record before you touch the model. You cannot compare if the pre-change record was purged</td></tr>
+                <tr><td>High Scripts Generated on Custom Calc</td><td>Missing FIX statement — EPCM iterating every cell in the cube</td><td>NovaPrism's 14,200 vs expected ~3 is a 4,700× overshoot. One FIX statement fixes it</td></tr>
+                <tr><td>Logical vs Physical Clear</td><td>Logical is the EPCM default — faster, marks cells cleared without deleting them</td><td>Never switch to Physical without a restructure plan. Physical is for specific maintenance scenarios only</td></tr>
+                <tr><td>Optimize for Reporting disabled</td><td>PCM_REP aggregations go stale — report totals wrong until manual aggregation runs</td><td>The trap: saves seconds on calc but breaks reports silently. Always enabled in production</td></tr>
+                <tr><td>Run Express Calculation</td><td>No statistics record generated — cannot be analysed in Calculation Analysis</td><td>Development only. Any run you cannot diagnose is a run you cannot trust in production</td></tr>
+                <tr><td>Auto-purge behaviour</td><td>No fixed retention period — purged when volume exceeds thresholds</td><td>Export to Excel before every tuning session, not after. Once purged, the baseline is gone</td></tr>
+              </tbody>
+            </table>
           </div>
         </section>
 
@@ -1429,14 +1444,16 @@ var scenarios={
       {text:'#4  seq:10 Rules 1-3 (Serial)             0:08   9.1%', cls:'result-good'},
       {text:'#5  seq:20 Rules 1-3 (Parallel)           0:06   6.8%', cls:'result-good'},
       {text:''},
-      {text:'TOTAL IMPROVEMENT: 47:12 → 1:28 (31× faster)', cls:'result-good'},
+      {text:'TOTAL IMPROVEMENT: 47:12 → 1:28 (32× faster)', cls:'result-good'},
       {text:'SLA STATUS: PASSED (under 2-minute target)', cls:'result-good'}
     ]
   }
 };
+var scenarioBtnMap={untuned:'btn-v1',step1:'btn-v2',step2:'btn-v3',final:'btn-v4'};
 function showScenario(id){
   document.querySelectorAll('.pg-btn').forEach(function(b){b.classList.remove('active');});
-  event.target.classList.add('active');
+  var btn=document.getElementById(scenarioBtnMap[id]);
+  if(btn) btn.classList.add('active');
   var result=document.getElementById('pg-result');
   var scenario=scenarios[id];
   result.innerHTML=scenario.lines.map(function(l){
@@ -1505,7 +1522,19 @@ var quizData=[
       'A database corruption occurred — restore from backup and enable high availability to prevent future data loss'
     ],
     correct:1,
-    explanation:'EPCM <strong>automatically purges old calculation run records</strong> when the volume of runs or statistics grows to exceed certain thresholds. This is by design to maintain responsiveness on the Calculation Analysis page. To retain a longer history, the best practice is to <strong>frequently use the Export to Excel option</strong> on the Calculation Analysis page to archive calculation runs before they\'re purged.'
+    explanation:'EPCM <strong>automatically purges old calculation run records</strong> when the volume of runs or statistics grows to exceed certain thresholds — there is no documented fixed retention period. This is by design to maintain responsiveness on the Calculation Analysis page. Best practice: use <strong>Export to Excel</strong> before every tuning session and before any monthly maintenance window. Archive the baseline <em>before</em> making changes, not after.'
+  },
+  {
+    diff:'practitioner',qnum:'Q6',
+    stem:'A NovaPrism developer runs a model using the "Run Express Calculation" option on the Execution Control page to quickly test a rule change. The next day, the Finance Controller asks for the calculation statistics to review the runtime. What is the problem?',
+    options:[
+      'Express Calculation statistics are only available for 24 hours before being purged',
+      'Run Express Calculation does not generate a calculation statistics record — there is nothing to review in Calculation Analysis',
+      'Express Calculation records are stored in a separate archive and must be retrieved via Export to Excel',
+      'The Finance Controller needs the Service Administrator role to view Express Calculation records'
+    ],
+    correct:1,
+    explanation:'<strong>Run Express Calculation</strong> executes the model without generating a calculation statistics record. It is faster because EPCM skips the statistics logging overhead — but the trade-off is zero visibility. Nothing appears in Calculation Analysis, no report can be generated, and no comparison is possible. Use Express Calculation only during iterative development testing. For any run that stakeholders may need to review — including all production close runs — use the standard Calculate option.'
   }
 ];
 
@@ -1574,7 +1603,7 @@ var HALL_SYSTEM_EXTENSION=[
   'M01 untuned: 47:12 total, seq:10 Rule 1 = 43:08 (91%), 14,200 scripts generated.',
   'Root cause: Missing FIX statement in Custom Calc rule.',
   'M01 tuned: 1:28 total after FIX + NONEMPTYTUPLE + Parallel rule set restructure.',
-  'Improvement: 31× faster, SLA met.',
+  'Improvement: 32× faster, SLA met.',
   '',
   'COMMON BOTTLENECK PATTERNS:',
   '- Unscoped Custom Calc: High elapsed time + high scripts count = missing FIX.',
@@ -1603,7 +1632,7 @@ function buildSystemPrompt(){
     'M01 Performance Case Study:',
     'Untuned: 47:12 total runtime. seq:10 Rule 1 (IT GL Aggregation) = 43:08 (91% of total).',
     'Root cause: Custom Calc rule missing FIX statement. 14,200 scripts generated instead of ~3.',
-    'Tuned: 1:28 total runtime after FIX + NONEMPTYTUPLE + Parallel restructure. 31× improvement.',
+    'Tuned: 1:28 total runtime after FIX + NONEMPTYTUPLE + Parallel restructure. 32× improvement (full model; the bottleneck rule itself improved ~750×).',
     '',
     'RULES: Connect every answer to NovaPrism. Name exam answer AND implementation reality when they differ.',
     'Never invent product behaviour. For out-of-scope topics, name the hall that covers them.',
