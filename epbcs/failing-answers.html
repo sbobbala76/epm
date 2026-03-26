@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<base href="/epbcs/">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EPBCS Interview — What Loses the Job · The Planning Quest</title>
+<meta name="description" content="The exact phrases, terminology mistakes, and missing signals that immediately mark an EPBCS candidate as not ready. Every weak answer pattern interviewers see.">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Crimson+Pro:ital,wght@0,400;0,500;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#07090e;--bg2:#0c0f18;--bg3:#111520;--bg4:#161c2a;
+  --gold:#d4a017;--goldLt:#f0c040;--goldDim:#5c4108;
+  --teal:#1fb8a8;--tealLt:#4dd9c8;
+  --purple:#7c3aed;--purpleLt:#a855f7;
+  --emerald:#059669;--emeraldLt:#10b981;
+  --sky:#0ea5e9;--skyLt:#38bdf8;
+  --red:#c0392b;--redLt:#e74c3c;
+  --amber:#d97706;--amberLt:#fbbf24;
+  --border:rgba(212,160,23,.15);--white:#f0ead6;--dim:#5a6478;--r:10px
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Crimson Pro',serif;background:var(--bg);color:var(--white);min-height:100vh;overflow-x:hidden}
+#stars{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+.star{position:absolute;border-radius:50%;background:white;animation:twinkle var(--d,3s) infinite var(--delay,0s)}
+@keyframes twinkle{0%,100%{opacity:.05}50%{opacity:var(--op,.6)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+p{font-size:15px;line-height:1.82;color:rgba(240,234,214,.78);margin-bottom:10px}
+code{font-family:'JetBrains Mono',monospace;font-size:12px;background:rgba(255,255,255,.06);padding:2px 6px;border-radius:4px;color:var(--tealLt)}
+h2{font-family:'Cinzel',serif;font-size:16px;font-weight:600;color:var(--goldLt);margin:28px 0 14px;letter-spacing:.03em}
+
+/* Topbar */
+#topbar-fa{position:fixed;top:0;left:0;right:0;height:54px;background:rgba(7,9,14,.97);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 20px;gap:12px;z-index:200;overflow:hidden}
+.tb-dot{width:8px;height:8px;border-radius:50%;background:var(--tealLt);animation:pulse 2s infinite;flex-shrink:0}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(31,184,168,.3)}50%{box-shadow:0 0 0 6px rgba(31,184,168,0)}}
+
+/* Shell */
+#fa-shell{display:flex;padding-top:54px;min-height:100vh}
+#fa-sb{width:260px;background:var(--bg2);border-right:1px solid var(--border);position:fixed;top:54px;bottom:0;overflow-y:auto;z-index:100}
+#fa-sb::-webkit-scrollbar{width:3px}
+#fa-sb::-webkit-scrollbar-thumb{background:var(--goldDim);border-radius:2px}
+#fa-main{margin-left:260px;flex:1;min-width:0;position:relative;z-index:1}
+.fa-wrap{max-width:840px;padding:36px 44px 100px;margin:0 auto;animation:fadeUp .3s ease}
+
+/* Sidebar */
+.sb-hdr{padding:10px 14px 6px;font-family:'Cinzel',serif;font-size:9px;font-weight:700;color:var(--goldDim);letter-spacing:.1em;text-transform:uppercase;border-bottom:1px solid rgba(255,255,255,.04)}
+.sb-link{display:block;padding:8px 14px;font-size:11.5px;color:rgba(240,234,214,.4);text-decoration:none;transition:all .12s;border-left:2px solid transparent;cursor:pointer}
+.sb-link:hover,.sb-link.active{color:var(--goldLt);background:rgba(212,160,23,.05);border-left-color:var(--goldLt)}
+.sb-tool-link{padding:8px 14px;display:flex;align-items:center;gap:8px;font-size:11.5px;color:var(--dim);text-decoration:none;transition:all .12s;border-left:2px solid transparent}
+.sb-tool-link:hover{color:var(--tealLt);background:rgba(31,184,168,.04);border-left-color:var(--tealLt)}
+
+/* Hero */
+.fa-hero{margin-bottom:36px;padding-bottom:24px;border-bottom:1px solid var(--border)}
+.fa-badge{font-family:'Cinzel',serif;font-size:9.5px;font-weight:700;letter-spacing:.14em;color:var(--redLt);padding:4px 14px;border:1px solid rgba(192,57,43,.3);border-radius:20px;display:inline-block;margin-bottom:14px}
+.fa-title{font-family:'Cinzel',serif;font-size:30px;font-weight:900;color:var(--white);margin-bottom:8px;line-height:1.2}
+.fa-title span{color:var(--redLt)}
+.fa-sub{font-size:15px;color:var(--dim);font-style:italic;line-height:1.7}
+
+/* Category header */
+.cat-hdr{display:flex;align-items:center;gap:12px;margin:44px 0 20px;padding-bottom:12px;border-bottom:2px solid rgba(192,57,43,.15)}
+.cat-icon{font-size:22px}
+.cat-title{font-family:'Cinzel',serif;font-size:18px;font-weight:700;color:var(--white)}
+.cat-count{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--dim);background:var(--bg3);border:1px solid var(--border);padding:2px 8px;border-radius:10px}
+
+/* Fail card */
+.fail-card{background:var(--bg3);border:1px solid rgba(192,57,43,.2);border-left:4px solid var(--red);border-radius:var(--r);margin-bottom:16px;overflow:hidden;transition:border-color .15s}
+.fail-card:hover{border-color:rgba(192,57,43,.4)}
+.fail-header{display:flex;align-items:flex-start;gap:14px;padding:16px 18px;cursor:pointer;user-select:none}
+.fail-skull{font-size:16px;flex-shrink:0;margin-top:1px}
+.fail-q{font-family:'Cinzel',serif;font-size:13px;font-weight:600;color:rgba(240,234,214,.85);flex:1;line-height:1.45}
+.fail-badge{font-family:'Cinzel',serif;font-size:8px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;padding:3px 8px;border-radius:8px;flex-shrink:0;white-space:nowrap}
+.badge-term{background:rgba(192,57,43,.1);border:1px solid rgba(192,57,43,.3);color:var(--redLt)}
+.badge-depth{background:rgba(124,58,237,.1);border:1px solid rgba(124,58,237,.3);color:var(--purpleLt)}
+.badge-prod{background:rgba(217,119,6,.1);border:1px solid rgba(217,119,6,.3);color:var(--amberLt)}
+.badge-groovy{background:rgba(14,165,233,.1);border:1px solid rgba(14,165,233,.3);color:var(--skyLt)}
+.fail-chev{color:var(--dim);font-size:11px;transition:transform .2s;flex-shrink:0;margin-top:2px}
+.fail-card.open .fail-chev{transform:rotate(180deg)}
+
+/* Fail body */
+.fail-body{display:none;padding:0 18px 18px}
+.fail-card.open .fail-body{display:block}
+
+/* Wrong / Right boxes */
+.wr-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:12px 0}
+@media(max-width:640px){.wr-row{grid-template-columns:1fr}}
+.wrong-box{background:rgba(192,57,43,.06);border:1px solid rgba(192,57,43,.2);border-radius:8px;padding:14px 16px}
+.right-box{background:rgba(5,150,105,.06);border:1px solid rgba(5,150,105,.2);border-radius:8px;padding:14px 16px}
+.box-lbl{font-family:'Cinzel',serif;font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px}
+.wrong-lbl{color:var(--redLt)}
+.right-lbl{color:var(--emeraldLt)}
+.box-phrase{font-family:'JetBrains Mono',monospace;font-size:12px;padding:6px 10px;border-radius:6px;margin-bottom:6px;line-height:1.5}
+.wrong-phrase{background:rgba(192,57,43,.08);color:rgba(240,234,214,.7);border-left:2px solid var(--red)}
+.right-phrase{background:rgba(5,150,105,.08);color:rgba(240,234,214,.7);border-left:2px solid var(--emerald)}
+
+/* Why it fails */
+.why-box{background:rgba(7,9,14,.8);border:1px solid rgba(212,160,23,.12);border-radius:8px;padding:14px 16px;margin-top:10px}
+.why-lbl{font-family:'Cinzel',serif;font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--goldLt);margin-bottom:6px}
+.why-text{font-size:13.5px;color:rgba(240,234,214,.65);line-height:1.82}
+
+/* Signal box */
+.signal-box{background:rgba(124,58,237,.05);border:1px solid rgba(124,58,237,.2);border-radius:8px;padding:12px 16px;margin-top:10px}
+.signal-lbl{font-family:'Cinzel',serif;font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--purpleLt);margin-bottom:6px}
+.signal-text{font-size:13px;color:rgba(240,234,214,.6);line-height:1.75}
+
+/* Intro callout */
+.intro-box{background:linear-gradient(135deg,rgba(192,57,43,.05),rgba(7,9,14,.95));border:1px solid rgba(192,57,43,.2);border-left:4px solid var(--red);border-radius:var(--r);padding:18px 22px;margin-bottom:32px}
+.intro-box p{font-size:14px;color:rgba(240,234,214,.72);margin:0;line-height:1.82}
+
+/* Stats strip */
+.stats-strip{display:flex;gap:24px;flex-wrap:wrap;margin-bottom:32px;padding:18px 22px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r)}
+.ss-item{text-align:center}
+.ss-val{font-family:'Cinzel',serif;font-size:22px;font-weight:700;color:var(--redLt)}
+.ss-lbl{font-size:10px;color:var(--dim);letter-spacing:.06em;text-transform:uppercase;margin-top:2px}
+
+/* Quick ref table */
+.qr-table{width:100%;border-collapse:collapse;font-size:13px;margin:16px 0;border-radius:var(--r);overflow:hidden;border:1px solid var(--border)}
+.qr-table th{background:rgba(192,57,43,.08);color:var(--redLt);padding:10px 13px;text-align:left;font-family:'Cinzel',serif;font-size:10px;letter-spacing:.04em}
+.qr-table td{padding:10px 13px;border-bottom:1px solid rgba(255,255,255,.04);vertical-align:top;line-height:1.55;color:rgba(240,234,214,.65)}
+.qr-table tr:last-child td{border-bottom:none}
+.qr-table tr:hover td{background:rgba(255,255,255,.015)}
+.wrong-term{color:var(--redLt);font-family:'JetBrains Mono',monospace;font-size:11.5px}
+.right-term{color:var(--emeraldLt);font-family:'JetBrains Mono',monospace;font-size:11.5px}
+
+@media(max-width:860px){#fa-sb{display:none}#fa-main{margin-left:0}.fa-wrap{padding:24px 16px 80px}}
+</style>
+</head>
+<body>
+<div id="stars"></div>
+
+<div id="topbar-fa">
+  <a href="index.html" style="font-family:'Cinzel',serif;font-size:13px;font-weight:700;color:var(--goldLt);text-decoration:none;display:flex;align-items:center;gap:9px;flex-shrink:0"><span class="tb-dot"></span>The Planning Quest</a>
+  <span style="color:var(--goldDim)">›</span>
+  <span style="font-family:'Cinzel',serif;font-size:11px;color:var(--redLt);flex-shrink:0">Failing Answers</span>
+  <div style="flex:1"></div>
+  <div style="display:flex;gap:3px;overflow-x:auto;flex-shrink:0">
+    <a href="interview-prep.html" style="padding:4px 8px;border-radius:6px;border:1px solid rgba(212,160,23,.3);color:var(--goldLt);font-family:'Cinzel',serif;font-size:8.5px;font-weight:700;text-decoration:none;white-space:nowrap">🎯 Interview Prep</a>
+    <a href="parts-1-3.html" style="padding:4px 7px;border-radius:6px;border:1px solid var(--border);color:var(--dim);font-family:'Cinzel',serif;font-size:8px;font-weight:700;text-decoration:none;white-space:nowrap">📖 I–III</a>
+    <a href="groovy-ch1.html" style="padding:4px 7px;border-radius:6px;border:1px solid var(--border);color:var(--dim);font-family:'Cinzel',serif;font-size:8px;font-weight:700;text-decoration:none;white-space:nowrap">📘 Groovy</a>
+    <a href="quiz.html" style="padding:4px 7px;border-radius:6px;border:1px solid var(--border);color:var(--dim);font-family:'Cinzel',serif;font-size:8px;font-weight:700;text-decoration:none;white-space:nowrap">📝 Quiz</a>
+    <a href="search.html" style="padding:4px 7px;border-radius:6px;border:1px solid var(--border);color:var(--dim);font-family:'Cinzel',serif;font-size:8px;font-weight:700;text-decoration:none;white-space:nowrap">🔍</a>
+  </div>
+</div>
+
+<div id="fa-shell">
+<div id="fa-sb">
+  <div class="sb-hdr">Failing Answers</div>
+  <a href="javascript:void(0)" class="sb-link" onclick="scrollTo('terminology')">📛 Terminology (8)</a>
+  <a href="javascript:void(0)" class="sb-link" onclick="scrollTo('depth')">🕳 Depth Signals (7)</a>
+  <a href="javascript:void(0)" class="sb-link" onclick="scrollTo('groovy')">⚡ Groovy Fails (8)</a>
+  <a href="javascript:void(0)" class="sb-link" onclick="scrollTo('production')">🔥 Prod Blindspots (6)</a>
+  <a href="javascript:void(0)" class="sb-link" onclick="scrollTo('quickref')">📋 Quick Reference</a>
+  <div class="sb-hdr" style="margin-top:8px">Related</div>
+  <a class="sb-tool-link" href="interview-prep.html">🎯 Interview Prep (59 Qs)</a>
+  <a class="sb-tool-link" href="troubleshoot.html">🔧 Troubleshooting Guide</a>
+  <a class="sb-tool-link" href="groovy-ch1.html">📘 Groovy Chapter I</a>
+  <a class="sb-tool-link" href="groovy-ch2.html">⚡ Groovy Chapter II</a>
+  <a class="sb-tool-link" href="index.html">🏠 Quest Map</a>
+</div>
+
+<div id="fa-main">
+<div class="fa-wrap">
+
+  <div class="fa-hero">
+    <div class="fa-badge">💀 Interview Intelligence · EPM 25.06+ · Hiring Patterns</div>
+    <h1 class="fa-title">What <span>Loses</span> the Job</h1>
+    <p class="fa-sub">The exact phrases that signal a weak hire. Terminology mistakes that end interviews before the technical questions start. The production blindspots that tell a senior interviewer you've never owned a live environment. Study these as carefully as the model answers.</p>
+  </div>
+
+  <div class="stats-strip">
+    <div class="ss-item"><div class="ss-val">29</div><div class="ss-lbl">Failure Patterns</div></div>
+    <div class="ss-item"><div class="ss-val">4</div><div class="ss-lbl">Categories</div></div>
+    <div class="ss-item"><div class="ss-val">8</div><div class="ss-lbl">Terminology Traps</div></div>
+    <div class="ss-item"><div class="ss-val">8</div><div class="ss-lbl">Groovy Fails</div></div>
+  </div>
+
+  <div class="intro-box">
+    <p><strong style="color:var(--white)">How interviewers use this:</strong> Senior EPBCS interviewers often know within the first two minutes whether a candidate has real production experience. They're not listening for magic words — they're listening for the absence of precision. Saying "Data Management" instead of "Data Integration" doesn't mean you don't know the tool. It means you haven't used it in the last 18 months, and your knowledge may not reflect the current platform. Every pattern below is drawn from real interview feedback across EPM implementations.</p>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════ -->
+  <!-- SECTION 1: TERMINOLOGY                                -->
+  <!-- ══════════════════════════════════════════════════════ -->
+  <div id="terminology">
+    <div class="cat-hdr">
+      <span class="cat-icon">📛</span>
+      <span class="cat-title">Terminology Traps</span>
+      <span class="cat-count">8 patterns</span>
+    </div>
+    <p style="margin-bottom:20px;font-size:14px;color:var(--dim)">These are the fastest disqualifiers. A single wrong term in the first minute signals the candidate's knowledge stopped updating at a specific Oracle release. Interviewers know exactly which year each wrong term comes from.</p>
+
+    <!-- T1 -->
+    <div class="fail-card" id="t1">
+      <div class="fail-header" onclick="toggle(this)">
+        <span class="fail-skull">💀</span>
+        <span class="fail-q">"I use Data Management to load the actuals..."</span>
+        <span class="fail-badge badge-term">Terminology</span>
+        <span class="fail-chev">▼</span>
+      </div>
+      <div class="fail-body">
+        <div class="wr-row">
+          <div class="wrong-box"><div class="box-lbl wrong-lbl">❌ Weak Hire Says</div><div class="box-phrase wrong-phrase">"Data Management"</div><div class="box-phrase wrong-phrase">"FDMEE"</div><div class="box-phrase wrong-phrase">"the DM tool"</div></div>
+          <div class="right-box"><div class="box-lbl right-lbl">✓ Strong Hire Says</div><div class="box-phrase right-phrase">"Data Integration" (EPM 25.06+)</div><div class="box-phrase right-phrase">"Tools → Data Integration"</div><div class="box-phrase right-phrase">"the DI pipeline"</div></div>
+        </div>
+        <div class="why-box"><div class="why-lbl">Why It Fails</div><div class="why-text">Data Management was deprecated in 23.07. FDMEE is the on-premise predecessor from pre-cloud implementations. Using either term in a 2025/2026 interview signals the candidate's last hands-on EPM experience was 2022 or earlier, or they've been working on-premise environments. The product is now called <strong>Data Integration</strong>, accessed via <strong>Tools → Data Integration</strong> (not via Navigator). Strong candidates know the full evolution: FDMEE → Data Management → Data Integration.</div></div>
+        <div class="signal-box"><div class="signal-lbl">What It Tells the Interviewer</div><div class="signal-text">Candidate has not worked in a current EPM Cloud environment recently. May have studied from outdated materials or Oracle University courses that haven't been updated. The risk: they will use deprecated UI paths and miss new features (Pipelines, Quick Mode, parallel processing) that shipped post-23.07.</div></div>
+      </div>
+    </div>
+
+    <!-- T2 -->
+    <div class="fail-card" id="t2">
+      <div class="fail-header" onclick="toggle(this)">
+        <span class="fail-skull">💀</span>
+        <span class="fail-q">"I'd use Calc Manager to build the business rule..."</span>
+        <span class="fail-badge badge-term">Terminology</span>
+        <span class="fail-chev">▼</span>
+      </div>
+      <div class="fail-body">
+        <div class="wr-row">
+          <div class="wrong-box"><div class="box-lbl wrong-lbl">❌ Weak Hire Says</div><div class="box-phrase wrong-phrase">"Calc Manager"</div><div class="box-phrase wrong-phrase">"open Calc Manager"</div></div>
+          <div class="right-box"><div class="box-lbl right-lbl">✓ Strong Hire Says</div><div class="box-phrase right-phrase">"Calculation Manager"</div><div class="box-phrase right-phrase">"I'd write a Groovy business rule in Calculation Manager"</div></div>
+        </div>
+        <div class="why-box"><div class="why-lbl">Why It Fails</div><div class="why-text">The product is <strong>Calculation Manager</strong> — not "Calc Manager." This is the #2 most common abbreviation mistake after Data Management. Interviewers hear "Calc Manager" and immediately know the candidate is pattern-matching from on-premise Hyperion or from forum posts rather than from actual Oracle EPM Cloud UI experience. In the UI, the menu reads <em>Navigator → Create and Manage → Rules → Calculation Manager</em> or in newer releases it's directly under Application. The full name is never abbreviated in the product itself.</div></div>
+        <div class="signal-box"><div class="signal-lbl">What It Tells the Interviewer</div><div class="signal-text">Minor but consistent signal. When combined with other terminlogy shortcuts in the same answer, it builds a pattern of theoretical rather than hands-on knowledge.</div></div>
+      </div>
+    </div>
+
+    <!-- T3 -->
+    <div class="fail-card" id="t3">
+      <div class="fail-header" onclick="toggle(this)">
+        <span class="fail-skull">💀</span>
+        <span class="fail-q">"I'd use Financial Reporting Studio to build the P&L report..."</span>
+        <span class="fail-badge badge-term">Terminology</span>
+        <span class="fail-chev">▼</span>
+      </div>
+      <div class="fail-body">
+        <div class="wr-row">
+          <div class="wrong-box"><div class="box-lbl wrong-lbl">❌ Weak Hire Says</div><div class="box-phrase wrong-phrase">"Financial Reporting Studio"</div><div class="box-phrase wrong-phrase">"FRS"</div><div class="box-phrase wrong-phrase">"I'd build it in FR Studio"</div></div>
+          <div class="right-box"><div class="box-lbl right-lbl">✓ Strong Hire Says</div><div class="box-phrase right-phrase">"Oracle Reports" (EPM 25.06+)</div><div class="box-phrase right-phrase">"the modern Reports tool"</div><div class="box-phrase right-phrase">"FR Studio is de-supported as of 25.06 — I'd use Reports"</div></div>
+        </div>
+        <div class="why-box"><div class="why-lbl">Why It Fails</div><div class="why-text">Financial Reporting Studio was de-supported in EPM 25.06. New reports must be built in <strong>Oracle Reports</strong> (the browser-native tool). A candidate proposing FR Studio for new work is proposing a deprecated tool. The strong hire answer names Reports, knows it's different from the legacy FR Studio (different UI, different calc, no Java client required), and specifically mentions grid-level database suppression (25.07) and Dashboard 2.0 integration as current capabilities.</div></div>
+        <div class="signal-box"><div class="signal-lbl">What It Tells the Interviewer</div><div class="signal-text">Hard signal: candidate's hands-on experience predates 25.06. In client environments already on 25.10+, this candidate would build in a deprecated tool and require rework. Interviewers at consultancies specifically filter on this — it determines whether a candidate can bill at current-release rates.</div></div>
+      </div>
+    </div>
+
+    <!-- T4 -->
+    <div class="fail-card" id="t4">
+      <div class="fail-header" onclick="toggle(this)">
+        <span class="fail-skull">💀</span>
+        <span class="fail-q">"I'd schedule the nightly load using EPM Automate..."  <em style="font-size:11px;color:var(--dim)">(when asked about scheduling)</em></span>
+        <span class="fail-badge badge-term">Terminology</span>
+        <span class="fail-chev">▼</span>
+      </div>
+      <div class="fail-body">
+        <div class="wr-row">
+          <div class="wrong-box"><div class="box-lbl wrong-lbl">❌ Incomplete Answer</div><div class="box-phrase wrong-phrase">"Schedule it in EPM Automate"</div><div class="box-phrase wrong-phrase">"set up a cron job with epmautomate"</div></div>
+          <div class="right-box"><div class="box-lbl right-lbl">✓ Complete Answer</div><div class="box-phrase right-phrase">"Schedule the EPM Automate script via OS cron / Windows Task Scheduler"</div><div class="box-phrase right-phrase">"or use the EPM Platform Scheduler (25.09+) for DI jobs specifically"</div></div>
+        </div>
+        <div class="why-box"><div class="why-lbl">Why It Fails</div><div class="why-text">EPM Automate (the CLI tool <code>epmautomate</code>) doesn't schedule itself — it's a command-line utility that runs when invoked. You schedule the <em>shell script that calls epmautomate</em> via cron (Linux/Mac) or Windows Task Scheduler. Saying "schedule it in EPM Automate" reveals the candidate doesn't understand the full automation stack. Additionally, as of 25.09, Data Integration jobs should be scheduled via the EPM Platform Scheduler (not the old DI Job Scheduler, which was deprecated). The strong hire distinguishes between the CLI tool and the scheduling mechanism.</div></div>
+        <div class="signal-box"><div class="signal-lbl">What It Tells the Interviewer</div><div class="signal-text">The candidate has never actually set up nightly automation from scratch. They've inherited running scripts or followed a tutorial that skipped the OS scheduler step. This is a significant gap for any role involving EPM operations ownership.</div></div>
+      </div>
+    </div>
+
+    <!-- T5 -->
+    <div class="fail-card" id="t5">
+      <div class="fail-header" onclick="toggle(this)">
+        <span class="fail-skull">💀</span>
+        <span class="fail-q">"I can check the planning unit status in Manage Approvals..."  <em style="font-size:11px;color:var(--dim)">(no mention of Groovy access)</em></span>
+        <span class="fail-badge badge-term">Terminology</span>
+        <span class="fail-chev">▼</span>
+      </div>
+      <div class="fail-body">
+        <div class="wr-row">
+          <div class="wrong-box"><div class="box-lbl wrong-lbl">❌ UI-Only Answer</div><div class="box-phrase wrong-phrase">"Go to Manage Approvals and check the status"</div><div class="box-phrase wrong-phrase">"manually check each entity"</div></div>
+          <div class="right-box"><div class="box-lbl right-lbl">✓ Complete Answer</div><div class="box-phrase right-phrase">"Use Manage Approvals for manual admin actions"</div><div class="box-phrase right-phrase">"Use <code>cube.getPlanningContext().getPlanningUnitStatus()</code> in Groovy to guard rules programmatically"</div></div>
+        </div>
+        <div class="why-box"><div class="why-lbl">Why It Fails</div><div class="why-text">Any junior can navigate to Manage Approvals. The senior-level answer knows that approval status can also be read programmatically in Groovy via <code>cube.getPlanningContext().getPlanningUnitStatus(entity, scenario, year)</code>, enabling rules that automatically throw <code>RuleStoppedException</code> when a unit is Approved or Locked. This prevents admin-override mistakes, not just malicious edits. The UI-only answer signals the candidate operates at a functional level, not an architectural level.</div></div>
+      </div>
+    </div>
+
+    <!-- T6 -->
+    <div class="fail-card" id="t6">
+      <div class="fail-header" onclick="toggle(this)">
+        <span class="fail-skull">💀</span>
+        <span class="fail-q">"Smart View connects to EPBCS through the Smart View provider..."</span>
+        <span class="fail-badge badge-term">Terminology</span>
+        <span class="fail-chev">▼</span>
+      </div>
+      <div class="fail-body">
+        <div class="wr-row">
+          <div class="wrong-box"><div class="box-lbl wrong-lbl">❌ Outdated Answer</div><div class="box-phrase wrong-phrase">"Smart View Provider URL"</div><div class="box-phrase wrong-phrase">"Oracle Hyperion Smart View provider"</div></div>
+          <div class="right-box"><div class="box-lbl right-lbl">✓ Current Answer</div><div class="box-phrase right-phrase">"Smart View connects to EPM Cloud via the EPM Cloud Service URL"</div><div class="box-phrase right-phrase">"Forms 2.0 ad hoc requires the Smart View Forms 2.0 plugin (EPM 25.10+)"</div></div>
+        </div>
+        <div class="why-box"><div class="why-lbl">Why It Fails</div><div class="why-text">"Smart View Provider" is on-premise Hyperion terminology. In EPM Cloud, Smart View connects directly via the EPM Cloud service URL (no separate provider server). Additionally, since 25.10 (Forms 2.0 mandatory), ad hoc analysis from dashboard-embedded forms requires the Smart View Forms 2.0 plugin — a critical implementation detail most candidates miss.</div></div>
+      </div>
+    </div>
+
+    <!-- T7 -->
+    <div class="fail-card" id="t7">
+      <div class="fail-header" onclick="toggle(this)">
+        <span class="fail-skull">💀</span>
+        <span class="fail-q">"I'd use the Hyperion Planning REST API to automate this..."</span>
+        <span class="fail-badge badge-term">Terminology</span>
+        <span class="fail-chev">▼</span>
+      </div>
+      <div class="fail-body">
+        <div class="wr-row">
+          <div class="wrong-box"><div class="box-lbl wrong-lbl">❌ Wrong Product Name</div><div class="box-phrase wrong-phrase">"Hyperion Planning REST API"</div><div class="box-phrase wrong-phrase">"the Hyperion API"</div></div>
+          <div class="right-box"><div class="box-lbl right-lbl">✓ Correct</div><div class="box-phrase right-phrase">"Oracle EPM Cloud REST API"</div><div class="box-phrase right-phrase">"the Planning REST API at <code>/rest/v3/</code>"</div></div>
+        </div>
+        <div class="why-box"><div class="why-lbl">Why It Fails</div><div class="why-text">Hyperion Planning is the on-premise product with no REST API. Oracle EPM Cloud (EPBCS) has its own REST API at the <code>/rest/v3/</code> base path. Calling it "Hyperion" in a cloud context is the equivalent of calling AWS EC2 "Sun Microsystems" — it's not just outdated, it's the wrong product entirely. The REST API has expanded significantly since 25.06 with planning unit management, form operations, and Data Integration job triggers.</div></div>
+      </div>
+    </div>
+
+    <!-- T8 -->
+    <div class="fail-card" id="t8">
+      <div class="fail-header" onclick="toggle(this)">
+        <span class="fail-skull">💀</span>
+        <span class="fail-q">"For multi-currency I'd configure the exchange rate table in the application..."</span>
+        <span class="fail-badge badge-term">Terminology</span>
+        <span class="fail-chev">▼</span>
+      </div>
+      <div class="fail-body">
+        <div class="wr-row">
+          <div class="wrong-box"><div class="box-lbl wrong-lbl">❌ Vague / Outdated</div><div class="box-phrase wrong-phrase">"exchange rate table"</div><div class="box-phrase wrong-phrase">"FX rate configuration"</div></div>
+          <div class="right-box"><div class="box-lbl right-lbl">✓ Precise</div><div class="box-phrase right-phrase">"HSP_Rates cube in the OEP_FS plan type"</div><div class="box-phrase right-phrase">"Exchange Rate Types: Average, Ending, Historical"</div><div class="box-phrase right-phrase">"loaded via Data Integration from ERP FX master"</div></div>
+        </div>
+        <div class="why-box"><div class="why-lbl">Why It Fails</div><div class="why-text">Multi-currency in EPBCS stores exchange rates in the <strong>HSP_Rates cube</strong>, a system-generated plan type. The three exchange rate types — Average, Ending, Historical — map to different account types (Income Statement uses Average, Balance Sheet uses Ending, Equity accounts use Historical). A candidate who says "configure the exchange rate table" without naming HSP_Rates has never traced a currency translation discrepancy to its source. This surfaces in every global implementation interview.</div></div>
+      </div>
+    </div>
+
+  </div><!-- end terminology -->
+
+  <!-- ══════════════════════════════════════════════════════ -->
+  <!-- SECTION 2: DEPTH SIGNALS                              -->
+  <!-- ══════════════════════════════════════════════════════ -->
+  <div id="depth">
+    <div class="cat-hdr">
+      <span class="cat-icon">🕳</span>
+      <span class="cat-title">Depth Signal Failures</span>
+      <span class="cat-count">7 patterns</span>
+    </div>
+    <p style="margin-bottom:20px;font-size:14px;color:var(--dim)">These answers are technically not wrong — but they stop at the level a junior practitioner would stop. A senior interviewer will probe immediately. If the candidate can't go deeper, the hiring decision changes.</p>
+
+    <!-- D1 -->
+    <div class="fail-card" id="d1">
+      <div class="fail-header" onclick="toggle(this)">
+        <span class="fail-skull">🕳</span>
+        <span class="fail-q">"BSO is for planning, ASO is for reporting — you choose based on performance."</span>
+        <span class="fail-badge badge-depth">Depth</span>
+        <span class="fail-chev">▼</span>
+      </div>
+      <div class="fail-body">
+        <div class="why-box"><div class="why-lbl">What's Missing</div><div class="why-text">This is technically correct but stops at page 1. The strong hire answer goes to the <em>why</em>: BSO supports write-back because blocks are pre-allocated for input — planners can type into cells. ASO is read-only at the cell level because it uses a fundamentally different storage model (compressed bitmap indices, not blocks). The architectural question follows immediately: <em>"So when would you deploy both in the same application?"</em> Answer: BSO for all plan types where planners write (OEP_FS, OEP_WFP), optional ASO reporting cube that the BSO pushes to via Smart Push for fast consolidated reporting at total level. A candidate who can't articulate the push-to-ASO pattern has not architected a multi-cube EPBCS application.</div></div>
+        <div class="signal-box"><div class="signal-lbl">Probe Question Interviewers Use</div><div class="signal-text">"Vision Corp has 600 account members and 12 entities. The CFO dashboard with all entities loads in 45 seconds in BSO. What's your solution?" — Expected: ASO reporting cube + Smart Push. A BSO-only answer reveals the candidate has not solved this in production.</div></div>
+      </div>
+    </div>
+
+    <!-- D2 -->
+    <div class="fail-card" id="d2">
+      <div class="fail-header" onclick="toggle(this)">
+        <span class="fail-skull">🕳</span>
+        <span class="fail-q">"Forms 2.0 is the new version of forms — it's better and faster."</span>
+        <span class="fail-badge badge-depth">Depth</span>
+        <span class="fail-chev">▼</span>
+      </div>
+      <div class="fail-body">
+        <div class="why-box"><div class="why-lbl">What's Missing</div><div class="why-text">The vague "better and faster" answer misses what actually changed architecturally. Forms 2.0 is <strong>stateless</strong> — each save/load is an independent server request, unlike classic forms which maintained session state. This has real consequences: Apply Context (how one grid's selection propagates to another) is now explicit and must be configured, not assumed. The 12-component limit per dashboard is a hard constraint. RTPs that appear to bind across grids in classic forms may silently fail to propagate in Forms 2.0 if not explicitly mapped. A candidate who just says "better and faster" will configure a composite form incorrectly and not understand why a grid is showing stale data.</div></div>
+        <div class="signal-box"><div class="signal-lbl">Probe Question</div><div class="signal-text">"You have a composite form with a Year selector RTP. A planner selects FY2026 but Grid B still shows FY2025. Why?" — Expected: Grid B's RTP is not bound. In Forms 2.0, Apply Context must be explicitly configured per grid. Stateless architecture means nothing is inherited.</div></div>
+      </div>
+    </div>
+
+    <!-- D3 -->
+    <div class="fail-card" id="d3">
+      <div class="fail-header" onclick="toggle(this)">
+        <span class="fail-skull">🕳</span>
+        <span class="fail-q">"Valid Intersections prevents users from entering data in wrong cells."</span>
+        <span class="fail-badge badge-depth">Depth</span>
+        <span class="fail-chev">▼</span>
+      </div>
+      <div class="fail-body">
+        <div class="why-box"><div class="why-lbl">What's Missing</div><div class="why-text">Accurate but thin. The depth question is: <em>what actually happens at the Essbase level when a valid intersection rule is violated?</em> The answer: EPBCS suppresses the form cell entirely — the intersection doesn't render, not just grey out. More importantly, Valid Intersections also affects <strong>data loads via Data Integration</strong> — records that violate VI rules are rejected during the Export step, not loaded to Essbase. A candidate who doesn't know VI affects DI loads has misconfigured a production environment and spent hours wondering why actuals aren't appearing for specific entities. Additionally: VI rules have performance implications — large rule sets on high-dimension intersections slow form open times. The strong hire knows to keep VI rules to essential guardrails only.</div></div>
+      </div>
+    </div>
+
+    <!-- D4 -->
+    <div class="fail-card" id="d4">
+      <div class="fail-header" onclick="toggle(this)">
+        <span class="fail-skull">🕳</span>
+        <span class="fail-q">"Substitution variables let you use dynamic values in forms and rules."</span>
+        <span class="fail-badge badge-depth">Depth</span>
+        <span class="fail-chev">▼</span>
+      </div>
+      <div class="fail-body">
+        <div class="why-box"><div class="why-lbl">What's Missing</div><div class="why-text">Correct but junior-level. The senior question is: <em>"How do you advance CurPeriod from Mar to Apr at month-end without human intervention?"</em> Answer: EPM Automate <code>setSubstitutionVariable</code> command in the nightly script, scheduled to run on the first business day of each month. The strong hire answer also knows: (1) SubVars are application-level by default but can be cube-level; (2) reading a SubVar in Groovy uses <code>application.getSubstitutionVariableValue()</code> or <code>cube.getSubstitutionVariableValue()</code> — the method names include "Value" in full (a common Groovy mistake is calling the wrong method name); (3) SubVar changes immediately affect all forms and reports that reference them — no cache clearing needed. The advancing mechanism is the most operationally significant SubVar pattern and most candidates can't describe it end-to-end.</div></div>
+      </div>
+    </div>
+
+    <!-- D5 -->
+    <div class="fail-card" id="d5">
+      <div class="fail-header" onclick="toggle(this)">
+        <span class="fail-skull">🕳</span>
+        <span class="fail-q">"I'd run CALC ALL to recalculate after loading data."</span>
+        <span class="fail-badge badge-depth">Depth</span>
+        <span class="fail-chev">▼</span>
+      </div>
+      <div class="fail-body">
+        <div class="why-box"><div class="why-lbl">What's Missing</div><div class="why-text">Technically correct — but a senior interviewer immediately asks: <em>"What does CALC ALL actually do, in sequence?"</em> Most candidates can't answer this precisely. CALC ALL: (1) calculates all stored account member formulas bottom-up; (2) aggregates all parent members across all dimensions; (3) recalculates all Dense member formulas within each block. It does NOT run Dynamic Calc members — those are calculated on demand at query time. A candidate who treats CALC ALL as a black box "make numbers right" button will struggle to diagnose situations where a report shows stale data after a load that did run CALC ALL — because the specific account is Dynamic Calc and doesn't need CALC ALL, or because the FIX scope of a custom calc script doesn't cover the affected intersection.</div></div>
+      </div>
+    </div>
+
+    <!-- D6 -->
+    <div class="fail-card" id="d6">
+      <div class="fail-header" onclick="toggle(this)">
+        <span class="fail-skull">🕳</span>
+        <span class="fail-q">"Groovy is more powerful than calc scripts for EPBCS."</span>
+        <span class="fail-badge badge-depth">Depth</span>
+        <span class="fail-chev">▼</span>
+      </div>
+      <div class="fail-body">
+        <div class="why-box"><div class="why-lbl">What's Missing</div><div class="why-text">"More powerful" is an opinion, not an answer. The correct framing: Groovy and native calc scripts solve different problems. Native Essbase calc scripts (via Calculation Manager) operate <em>inside</em> the Essbase engine — they run block-by-block at the calculation layer and can use all Essbase functions (@SUMIF, DATACOPY, SET CREATENONMISSINGBLK). Groovy operates at the <em>Planning application layer</em>, calling the Essbase API from outside. For block creation, DATACOPY, and @CREATEBLOCK — you must use a native calc script. Groovy cannot create Essbase blocks. This distinction matters most when seeding new fiscal years: the correct architecture is a calc script (creates blocks via DATACOPY) followed by a Groovy rule (populates and adjusts values). Candidates who say "Groovy is more powerful" and propose Groovy-only solutions for block creation tasks are proposing architectures that silently fail.</div></div>
+      </div>
+    </div>
+
+    <!-- D7 -->
+    <div class="fail-card" id="d7">
+      <div class="fail-header" onclick="toggle(this)">
+        <span class="fail-skull">🕳</span>
+        <span class="fail-q">"I'd use a dimension map to translate SAP account codes to EPBCS accounts."</span>
+        <span class="fail-badge badge-depth">Depth</span>
+        <span class="fail-chev">▼</span>
+      </div>
+      <div class="fail-body">
+        <div class="why-box"><div class="why-lbl">What's Missing</div><div class="why-text">Correct — but stops before the hard part. The probe: <em>"SAP has 1,400 GL accounts. Walk me through how you'd structure the mapping rules."</em> Strong answer: (1) Between rules for numeric ranges (4000–4999 → Revenue); (2) In rules for discrete non-contiguous codes; (3) Explicit rules for exceptions; (4) <code>Unclassified_Actuals</code> catch-all account as the <em>last</em> explicit rule — any unmapped code lands here, not in an error state. This is the production pattern: zero unmapped records, all data loads, Finance investigates Unclassified_Actuals balance during close. Without the catch-all, new GL accounts added mid-year cause silent load failures. Candidates who describe mapping without mentioning the unmapped record strategy have not owned a DI integration in production.</div></div>
+      </div>
+    </div>
+
+  </div><!-- end depth -->
+
+  <!-- ══════════════════════════════════════════════════════ -->
+  <!-- SECTION 3: GROOVY FAILS                               -->
+  <!-- ══════════════════════════════════════════════════════ -->
+  <div id="groovy">
+    <div class="cat-hdr">
+      <span class="cat-icon">⚡</span>
+      <span class="cat-title">Groovy Fails</span>
+      <span class="cat-count">8 patterns</span>
+    </div>
+    <p style="margin-bottom:20px;font-size:14px;color:var(--dim)">These are the Groovy patterns that look right on paper but reveal fundamental misunderstandings of how EPM Groovy actually executes. Interviewers who know Groovy will spot these immediately.</p>
+
+    <!-- G1 -->
+    <div class="fail-card" id="g1">
+      <div class="fail-header" onclick="toggle(this)">
+        <span class="fail-skull">⚡</span>
+        <span class="fail-q">Writing a Groovy loop that calls <code>getCell()</code> and <code>setCell()</code> per entity.</span>
+        <span class="fail-badge badge-groovy">Groovy</span>
+        <span class="fail-chev">▼</span>
+      </div>
+      <div class="fail-body">
+        <div class="wr-row">
+          <div class="wrong-box"><div class="box-lbl wrong-lbl">❌ N Round-Trips</div><div class="box-phrase wrong-phrase">entities.each { e -><br>&nbsp;&nbsp;def rev = getCell(e, "Rev"...)<br>&nbsp;&nbsp;setCell(rev * 1.05, e, "Target"...)<br>}<br>// 12 entities = 24 network calls</div></div>
+          <div class="right-box"><div class="box-lbl right-lbl">✓ 2 Round-Trips Total</div><div class="box-phrase right-phrase">// 1 DataGridBuilder batch read<br>// Stage all writes in a list<br>// 1 setDataCellValues() call<br>// Always: 2 total, not N×2</div></div>
+        </div>
+        <div class="why-box"><div class="why-lbl">Why It Fails</div><div class="why-text">This is the single most common Groovy performance anti-pattern in EPBCS. Each <code>getCell()</code> call is a round-trip to the Essbase engine. For 12 entities, that's 12 reads + 12 writes = 24 network calls. For 200 cost centres: 400 calls. The production pattern: one <code>DataGridBuilder</code> batch read (all entities at once), stage all writes in a list, one <code>setDataCellValues()</code> call. Total: 2 round-trips regardless of entity count. A candidate proposing the loop pattern for a production allocation rule is proposing a rule that will time out at scale. Senior interviewers ask "how does this perform at 200 cost centres?" and expect the batch answer immediately.</div></div>
+      </div>
+    </div>
+
+    <!-- G2 -->
+    <div class="fail-card" id="g2">
+      <div class="fail-header" onclick="toggle(this)">
+        <span class="fail-skull">⚡</span>
+        <span class="fail-q">Not null-guarding <code>getCell()</code> results before arithmetic.</span>
+        <span class="fail-badge badge-groovy">Groovy</span>
+        <span class="fail-chev">▼</span>
+      </div>
+      <div class="fail-body">
+        <div class="wr-row">
+          <div class="wrong-box"><div class="box-lbl wrong-lbl">❌ NullPointerException</div><div class="box-phrase wrong-phrase">def rev = getCell(entity, "Revenue"...)<br>def allocated = pool * (rev / total)<br>// rev is null if block missing → NPE</div></div>
+          <div class="right-box"><div class="box-lbl right-lbl">✓ Elvis Operator</div><div class="box-phrase right-phrase">def rev = getCell(...) ?: 0<br>// null → 0, arithmetic safe<br>// standard pattern in all production rules</div></div>
+        </div>
+        <div class="why-box"><div class="why-lbl">Why It Fails</div><div class="why-text"><code>getCell()</code> returns <code>null</code> when the target intersection is <code>#MISSING</code> or when the block doesn't exist. Performing arithmetic on <code>null</code> throws a <code>NullPointerException</code> at runtime, which aborts the entire rule silently — no data is written, no error visible to the planner. The Elvis operator <code>?: 0</code> is the universal null-guard for EPM Groovy. A candidate's code that doesn't use it on every <code>getCell()</code> result has not debugged a production Groovy failure caused by sparse blocks. This is one of the first things any EPM Groovy reviewer checks when auditing a rule library.</div></div>
+      </div>
+    </div>
+
+    <!-- G3 -->
+    <div class="fail-card" id="g3">
+      <div class="fail-header" onclick="toggle(this)">
+        <span class="fail-skull">⚡</span>
+        <span class="fail-q">Proposing Groovy to create blocks for a new fiscal year seeding operation.</span>
+        <span class="fail-badge badge-groovy">Groovy</span>
+        <span class="fail-chev">▼</span>
+      </div>
+      <div class="fail-body">
+        <div class="why-box"><div class="why-lbl">Why It Fails</div><div class="why-text"><strong>Groovy cannot create Essbase blocks.</strong> A Groovy <code>setCell()</code> or <code>setDataCellValues()</code> call targeting a non-existent block silently fails — no exception, no error, no data written. The correct architecture: (1) run a native calc script with <code>DATACOPY</code> (if seeding from prior year) or <code>@CREATEBLOCK</code> (if zero-based) to create the blocks first; (2) then run the Groovy rule to populate values. This two-step pattern is one of the most important architectural facts in EPBCS. Any candidate who proposes "I'll write a Groovy rule to seed FY2026 from FY2025" without mentioning block creation first will deliver a solution that appears to run successfully but writes nothing.</div></div>
+        <div class="signal-box"><div class="signal-lbl">Probe</div><div class="signal-text">"Your Groovy seeding rule runs and reports success but FY2026 is empty. What do you check first?" — Expected: block existence. Check Application Statistics for FY2026/Budget block count. If 0, blocks were never created. Run DATACOPY first.</div></div>
+      </div>
+    </div>
+
+    <!-- G4 -->
+    <div class="fail-card" id="g4">
+      <div class="fail-header" onclick="toggle(this)">
+        <span class="fail-skull">⚡</span>
+        <span class="fail-q">Using <code>throw new RuleStoppedException()</code> syntax.</span>
+        <span class="fail-badge badge-groovy">Groovy</span>
+        <span class="fail-chev">▼</span>
+      </div>
+      <div class="fail-body">
+        <div class="wr-row">
+          <div class="wrong-box"><div class="box-lbl wrong-lbl">❌ Wrong — Class Doesn't Exist</div><div class="box-phrase wrong-phrase">throw new RuleStoppedException("msg")</div><div class="box-phrase wrong-phrase">throw new EpmGroovyRtpException("msg")</div></div>
+          <div class="right-box"><div class="box-lbl right-lbl">✓ Correct API</div><div class="box-phrase right-phrase">throwVetoException("message")</div><div class="box-phrase right-phrase">// No 'new', no import, no class<br>// Just the helper method directly</div></div>
+        </div>
+        <div class="why-box"><div class="why-lbl">Why It Fails</div><div class="why-text"><code>RuleStoppedException</code> is not a directly instantiable class in the EPM Groovy API. User-visible form errors use <code>throwVetoException(message)</code> — a helper method available in the Groovy context, called without <code>new</code> or any import. This is a common mistake because the conceptual pattern is "throw an exception to stop the rule" but the implementation is a method call, not a Java-style exception instantiation. Any candidate who writes Groovy validation rules must know this — it's the only mechanism to surface a message to the planner when data entry is blocked. Getting this wrong means the validation silently fails or throws an unhandled exception.</div></div>
+      </div>
+    </div>
+
+    <!-- G5 -->
+    <div class="fail-card" id="g5">
+      <div class="fail-header" onclick="toggle(this)">
+        <span class="fail-skull">⚡</span>
+        <span class="fail-q">Writing <code>println("log this")</code> without understanding where it goes.</span>
+        <span class="fail-badge badge-groovy">Groovy</span>
+        <span class="fail-chev">▼</span>
+      </div>
+      <div class="fail-body">
+        <div class="why-box"><div class="why-lbl">What's Missing</div><div class="why-text">Many candidates use <code>println()</code> but can't answer: <em>"Where does the println output appear?"</em> Answer: it routes to the EPM Job Console log, visible under Jobs → Job Details for the specific rule execution. It does NOT appear in the browser, does NOT go to a log file on disk, and does NOT trigger any notification. More importantly: <code>println()</code> output in a form rule (<code>beforeSave</code>, <code>afterSave</code>) is visible in the Job Console only — not to the user on the form. To show a message to the user on a form, use <code>throwVetoException()</code> (stops the save) or write to an annotation/supporting detail. A candidate debugging a form rule by looking at the browser console has wasted time — the output is in the Job Console.</div></div>
+      </div>
+    </div>
+
+    <!-- G6 -->
+    <div class="fail-card" id="g6">
+      <div class="fail-header" onclick="toggle(this)">
+        <span class="fail-skull">⚡</span>
+        <span class="fail-q">Calling <code>application.getEssbaseCube()</code> to get the cube object.</span>
+        <span class="fail-badge badge-groovy">Groovy</span>
+        <span class="fail-chev">▼</span>
+      </div>
+      <div class="fail-body">
+        <div class="wr-row">
+          <div class="wrong-box"><div class="box-lbl wrong-lbl">❌ Method Doesn't Exist</div><div class="box-phrase wrong-phrase">application.getEssbaseCube("Plan1")</div><div class="box-phrase wrong-phrase">operation.application.getEssbaseCube(name)</div></div>
+          <div class="right-box"><div class="box-lbl right-lbl">✓ Correct API</div><div class="box-phrase right-phrase">operation.application.getCube("Plan1")</div><div class="box-phrase right-phrase">// getCube(), not getEssbaseCube()</div></div>
+        </div>
+        <div class="why-box"><div class="why-lbl">Why It Fails</div><div class="why-text"><code>getEssbaseCube()</code> does not exist on the Application API. The correct method is <code>getCube(cubeName)</code>. This causes a <code>MissingMethodException</code> at runtime — not a compilation error, because Groovy is dynamically typed. The rule appears to save successfully in Calculation Manager (no static analysis), then fails silently when executed. This is particularly insidious because the cube reference is typically used early in a rule to access member hierarchies or run calculations. If the cube object is null, everything downstream silently fails. This is the #1 most common Groovy API mistake found in production rule libraries.</div></div>
+      </div>
+    </div>
+
+    <!-- G7 -->
+    <div class="fail-card" id="g7">
+      <div class="fail-header" onclick="toggle(this)">
+        <span class="fail-skull">⚡</span>
+        <span class="fail-q">Accessing dimension members with <code>cube.getDimension("Account")</code>.</span>
+        <span class="fail-badge badge-groovy">Groovy</span>
+        <span class="fail-chev">▼</span>
+      </div>
+      <div class="fail-body">
+        <div class="wr-row">
+          <div class="wrong-box"><div class="box-lbl wrong-lbl">❌ Wrong Path</div><div class="box-phrase wrong-phrase">cube.getDimension("Account")</div><div class="box-phrase wrong-phrase">dim.getMember("Total_Revenue")</div></div>
+          <div class="right-box"><div class="box-lbl right-lbl">✓ Correct Path</div><div class="box-phrase right-phrase">cube.getOutline().getDimension("Account")</div><div class="box-phrase right-phrase">dim.findMember("Total_Revenue")</div></div>
+        </div>
+        <div class="why-box"><div class="why-lbl">Why It Fails</div><div class="why-text">The Cube object in EPM Groovy does not expose <code>getDimension()</code> directly. Dimension access goes through the outline: <code>cube.getOutline().getDimension(name)</code>. Similarly, member lookup uses <code>findMember(name)</code>, not <code>getMember(name)</code>. Both wrong patterns compile without error (dynamic typing) and fail at runtime with NPE. These appear constantly in code posted on Oracle Community and in older Oracle documentation examples — the API was updated but the examples weren't. A candidate who has written production Groovy rules that traverse member hierarchies will know these correct paths because they had to debug the wrong ones at least once.</div></div>
+      </div>
+    </div>
+
+    <!-- G8 -->
+    <div class="fail-card" id="g8">
+      <div class="fail-header" onclick="toggle(this)">
+        <span class="fail-skull">⚡</span>
+        <span class="fail-q">Not handling the zero-division case in allocation rules.</span>
+        <span class="fail-badge badge-groovy">Groovy</span>
+        <span class="fail-chev">▼</span>
+      </div>
+      <div class="fail-body">
+        <div class="wr-row">
+          <div class="wrong-box"><div class="box-lbl wrong-lbl">❌ ArithmeticException</div><div class="box-phrase wrong-phrase">def share = entityRev / totalRev<br>// totalRev = 0 → division by zero<br>// Rule aborts, nothing allocated</div></div>
+          <div class="right-box"><div class="box-lbl right-lbl">✓ Guard First</div><div class="box-phrase right-phrase">if (totalRev == 0) {<br>&nbsp;&nbsp;println("No revenue — abort")<br>&nbsp;&nbsp;return<br>}<br>// Then divide safely</div></div>
+        </div>
+        <div class="why-box"><div class="why-lbl">Why It Fails</div><div class="why-text">Any allocation rule divides by a denominator (total revenue, total headcount, total cost base). In a new fiscal year, before any data is entered, that denominator is zero. A rule that doesn't guard for this will crash on first execution of the year — typically during testing or during a budget kick-off when the plan is empty. The guard pattern: check the denominator before dividing, log the zero-state to the Job Console, and return gracefully. This keeps the rule idempotent — it can be run at any time, including against empty data, without crashing. Candidates who don't include this guard have not seen a rule crash in production due to a new-year zero-data state.</div></div>
+      </div>
+    </div>
+
+  </div><!-- end groovy -->
+
+  <!-- ══════════════════════════════════════════════════════ -->
+  <!-- SECTION 4: PRODUCTION BLINDSPOTS                      -->
+  <!-- ══════════════════════════════════════════════════════ -->
+  <div id="production">
+    <div class="cat-hdr">
+      <span class="cat-icon">🔥</span>
+      <span class="cat-title">Production Blindspots</span>
+      <span class="cat-count">6 patterns</span>
+    </div>
+    <p style="margin-bottom:20px;font-size:14px;color:var(--dim)">These answers reveal a candidate who has worked in development or UAT environments but has not owned a production EPM system through a live budget cycle, close, or go-live.</p>
+
+    <!-- P1 -->
+    <div class="fail-card" id="p1">
+      <div class="fail-header" onclick="toggle(this)">
+        <span class="fail-skull">🔥</span>
+        <span class="fail-q">"I'd test the form migration to Forms 2.0 in production during a quiet period."</span>
+        <span class="fail-badge badge-prod">Production</span>
+        <span class="fail-chev">▼</span>
+      </div>
+      <div class="fail-body">
+        <div class="why-box"><div class="why-lbl">Why It Fails</div><div class="why-text">There is no such thing as a "quiet period" during an active planning cycle. The correct answer: never migrate forms during an active planning or close cycle. The Vision Corp Forms 2.0 migration pattern: Q1 FY2026 — all new forms built in Forms 2.0; Q2 — simple input forms migrated; Q3 — composite forms migrated after the July forecast cycle completes; Q4 — classic forms decommissioned. Oracle's own guidance: plan the migration between cycles, always test in a nonproduction clone first, and have a rollback plan (you can re-enable Forms 1.0 temporarily via Application Settings until 25.12). A candidate who says "test in production" for any system change has not worked in a governed enterprise EPM environment.</div></div>
+      </div>
+    </div>
+
+    <!-- P2 -->
+    <div class="fail-card" id="p2">
+      <div class="fail-header" onclick="toggle(this)">
+        <span class="fail-skull">🔥</span>
+        <span class="fail-q">"I'd restore from the last backup if the data load corrupted something."</span>
+        <span class="fail-badge badge-prod">Production</span>
+        <span class="fail-chev">▼</span>
+      </div>
+      <div class="fail-body">
+        <div class="why-box"><div class="why-lbl">Why It Fails</div><div class="why-text">Restoring from a full backup on EPM Cloud means restoring the entire application — losing all planning entries made since the backup. The production-grade answer: before any data load that modifies existing data (actuals overwrite, seeding, mass recalculation), export a data snapshot first via EPM Automate <code>exportData</code>. If the load corrupts data, you load the snapshot back — not restore the full application. Additionally, use <code>NOCOMMIT</code> export mode on Data Integration runs to validate all mappings before committing to Essbase. The snapshot-before-load and NOCOMMIT-before-commit pattern are how production EPM teams avoid needing full restores. A candidate who defaults to "restore from backup" for data issues has not designed a production data recovery strategy.</div></div>
+      </div>
+    </div>
+
+    <!-- P3 -->
+    <div class="fail-card" id="p3">
+      <div class="fail-header" onclick="toggle(this)">
+        <span class="fail-skull">🔥</span>
+        <span class="fail-q">"I'd clear the browser cache if users report unexpected form behaviour."</span>
+        <span class="fail-badge badge-prod">Production</span>
+        <span class="fail-chev">▼</span>
+      </div>
+      <div class="fail-body">
+        <div class="why-box"><div class="why-lbl">Why It Fails</div><div class="why-text">Browser cache is a single-user diagnostic, not a root cause fix. When multiple users report the same form behaviour simultaneously, the root cause is server-side — a calculation that hasn't run, a SubVar that hasn't been updated, a form definition that was saved in a broken state, or a business rule that errored silently. The production diagnostic sequence: (1) check if the issue affects all users or one; (2) check Job Console for recent rule failures; (3) check if CALC ALL ran after the last data change; (4) open the form in Administration and verify the member selection is what's expected; (5) check SubVar values if the form uses dynamic period selectors. Browser cache as the answer to a form issue signals the candidate troubleshoots by feel, not by systematic diagnosis.</div></div>
+      </div>
+    </div>
+
+    <!-- P4 -->
+    <div class="fail-card" id="p4">
+      <div class="fail-header" onclick="toggle(this)">
+        <span class="fail-skull">🔥</span>
+        <span class="fail-q">"I'd add more account members to the outline to handle the new reporting requirement."</span>
+        <span class="fail-badge badge-prod">Production</span>
+        <span class="fail-chev">▼</span>
+      </div>
+      <div class="fail-body">
+        <div class="why-box"><div class="why-lbl">Why It Fails</div><div class="why-text">Every account member added to a BSO cube increases block size. With 600 accounts and 25 periods, Vision Corp's block is already 120KB (within the 50–200KB optimal range). Adding 50 more accounts increases it to 130KB — acceptable. But if someone has been cavalier about adding accounts ("just add a row"), a 600-account cube can become 900 accounts: 144KB → starting to push toward the 200KB comfort ceiling. Interviewers ask: <em>"Before adding members to a live outline, what do you check?"</em> Strong answer: (1) check current block size in Application Statistics; (2) calculate new block size (new member count × 8 bytes per cell); (3) consider attribute dimensions instead of stored members for reporting-only categories; (4) consider if the account should be Dynamic Calc (no storage cost) vs Stored. Candidates who add members without checking block size impact will eventually cause performance degradation that appears unrelated to the schema change.</div></div>
+      </div>
+    </div>
+
+    <!-- P5 -->
+    <div class="fail-card" id="p5">
+      <div class="fail-header" onclick="toggle(this)">
+        <span class="fail-skull">🔥</span>
+        <span class="fail-q">"Security is mostly set up at the start — I wouldn't expect to change it much."</span>
+        <span class="fail-badge badge-prod">Production</span>
+        <span class="fail-chev">▼</span>
+      </div>
+      <div class="fail-body">
+        <div class="why-box"><div class="why-lbl">Why It Fails</div><div class="why-text">In a live enterprise environment, security changes continuously — new joiners, leavers, role changes, entity restructures, new scenarios. The production answer: security provisioning should be automated via EPM Automate <code>addUsers</code> / <code>assignRole</code> commands, triggered by HR system events or run as a batch from a provisioning CSV export. Ad hoc manual security changes in a 50+ user environment are an audit risk (SOX requirement: access changes must be documented and approved). A candidate who treats security as "set it and forget it" has not managed an EPM system through a year-end when Finance reorganises entities and half the planner group changes. The strong answer mentions automated provisioning, quarterly access reviews, and audit log export via EPM Automate.</div></div>
+      </div>
+    </div>
+
+    <!-- P6 -->
+    <div class="fail-card" id="p6">
+      <div class="fail-header" onclick="toggle(this)">
+        <span class="fail-skull">🔥</span>
+        <span class="fail-q">"I'd upgrade Java to test against the new EPM Automate release."</span>
+        <span class="fail-badge badge-prod">Production</span>
+        <span class="fail-chev">▼</span>
+      </div>
+      <div class="fail-body">
+        <div class="why-box"><div class="why-lbl">Why It Fails</div><div class="why-text">From EPM 25.06, EPM Automate on Linux/Unix/macOS requires <strong>Java 17</strong>. Java 8 is discontinued. A candidate who says "upgrade Java" without knowing which version is required, or who doesn't know that Windows is unaffected (EPM Automate Windows ships its own JRE), will either break their automation server or spend time on a problem that doesn't apply to them. The production-aware answer: Java 17 requirement on non-Windows only; Windows users are unaffected; the upgrade path is: install Java 17, set JAVA_HOME, test epmautomate login in a non-production environment first. More broadly: knowing which EPM Automate changes require server-side action (Java upgrade) vs which are transparent (CLI command additions) is an operational awareness question that separates practitioners from consultants who hand off after go-live.</div></div>
+      </div>
+    </div>
+
+  </div><!-- end production -->
+
+  <!-- ══════════════════════════════════════════════════════ -->
+  <!-- QUICK REFERENCE TABLE                                 -->
+  <!-- ══════════════════════════════════════════════════════ -->
+  <div id="quickref">
+    <div class="cat-hdr">
+      <span class="cat-icon">📋</span>
+      <span class="cat-title">Quick Reference — Terminology</span>
+      <span class="cat-count">Say This, Not That</span>
+    </div>
+    <p style="margin-bottom:16px;font-size:14px;color:var(--dim)">Print this. Study this before any EPBCS interview. Every wrong term here has a specific Oracle release that caused the change — knowing the why is as important as knowing the what.</p>
+
+    <table class="qr-table">
+      <thead><tr><th>❌ Never Say</th><th>✓ Always Say</th><th>Why / When Changed</th></tr></thead>
+      <tbody>
+        <tr><td><span class="wrong-term">Data Management</span></td><td><span class="right-term">Data Integration</span></td><td>Deprecated 23.07. New features ship only in Data Integration.</td></tr>
+        <tr><td><span class="wrong-term">FDMEE</span></td><td><span class="right-term">Data Integration</span></td><td>On-premise legacy product. Not available in EPM Cloud at all.</td></tr>
+        <tr><td><span class="wrong-term">Calc Manager</span></td><td><span class="right-term">Calculation Manager</span></td><td>Always full name. No official abbreviation.</td></tr>
+        <tr><td><span class="wrong-term">Financial Reporting Studio / FRS</span></td><td><span class="right-term">Oracle Reports</span></td><td>FR Studio de-supported EPM 25.06. New reports use Oracle Reports tool.</td></tr>
+        <tr><td><span class="wrong-term">Hyperion Planning REST API</span></td><td><span class="right-term">Oracle EPM Cloud REST API</span></td><td>Hyperion is on-premise. EPM Cloud REST API is at /rest/v3/.</td></tr>
+        <tr><td><span class="wrong-term">Smart View Provider</span></td><td><span class="right-term">EPM Cloud Service URL</span></td><td>Provider URL is on-premise Hyperion. Cloud connects directly.</td></tr>
+        <tr><td><span class="wrong-term">exchange rate table</span></td><td><span class="right-term">HSP_Rates cube</span></td><td>Specific system plan type. Know: Average, Ending, Historical types.</td></tr>
+        <tr><td><span class="wrong-term">getEssbaseCube()</span></td><td><span class="right-term">getCube()</span></td><td>Groovy API. getEssbaseCube() does not exist — NPE at runtime.</td></tr>
+        <tr><td><span class="wrong-term">cube.getDimension()</span></td><td><span class="right-term">cube.getOutline().getDimension()</span></td><td>Must go through outline object. Direct access throws NPE.</td></tr>
+        <tr><td><span class="wrong-term">throw new RuleStoppedException()</span></td><td><span class="right-term">throwVetoException("msg")</span></td><td>Helper method, not a class. No 'new', no import required.</td></tr>
+        <tr><td><span class="wrong-term">getSubstitutionVariable()</span></td><td><span class="right-term">getSubstitutionVariableValue()</span></td><td>Full method name with 'Value' suffix. Short form returns null.</td></tr>
+        <tr><td><span class="wrong-term">BSO is slower than ASO</span></td><td><span class="right-term">BSO supports write-back; ASO is read-only but faster for aggregation</span></td><td>Not a speed ranking — different storage models for different use cases.</td></tr>
+        <tr><td><span class="wrong-term">Groovy can create blocks</span></td><td><span class="right-term">Groovy cannot create blocks — use DATACOPY or @CREATEBLOCK</span></td><td>Groovy writes to existing blocks only. Block creation requires calc script.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div style="margin-top:40px;padding:20px 24px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);text-align:center">
+    <p style="font-family:'Cinzel',serif;font-size:13px;color:var(--goldLt);margin-bottom:8px">Ready to Practice?</p>
+    <p style="font-size:13px;color:var(--dim);margin-bottom:14px">Use the Interview Prep page to test your answers against all 59 questions with AI evaluation.</p>
+    <a href="interview-prep.html" style="display:inline-block;padding:10px 28px;background:linear-gradient(135deg,var(--teal),var(--sky));color:var(--bg);font-family:'Cinzel',serif;font-size:11px;font-weight:700;letter-spacing:.06em;text-decoration:none;border-radius:8px">🎯 Open Interview Prep →</a>
+  </div>
+
+</div></div>
+</div>
+
+<script>
+(function(){var s=document.getElementById('stars');for(var i=0;i<80;i++){var d=document.createElement('div');d.className='star';var sz=Math.random()*2+0.4;d.style.cssText='width:'+sz+'px;height:'+sz+'px;top:'+Math.random()*100+'%;left:'+Math.random()*100+'%;--d:'+(2+Math.random()*4)+'s;--delay:'+Math.random()*5+'s;--op:'+(0.15+Math.random()*0.4);s.appendChild(d);}})();
+
+function toggle(hdr) {
+  var card = hdr.closest('.fail-card');
+  card.classList.toggle('open');
+}
+
+function scrollTo(id) {
+  var el = document.getElementById(id);
+  if (el) el.scrollIntoView({behavior:'smooth', block:'start'});
+}
+</script>
+<script src="branding.js"></script>
+</body>
+</html>

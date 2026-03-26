@@ -1,0 +1,1054 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<base href="/epbcs/">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EPBCS Troubleshooting Guide · The Planning Quest</title>
+<meta name="description" content="The definitive EPBCS troubleshooting reference. Symptom → Root Cause → Fix for every common production issue. Forms, data loads, Groovy, performance, approvals, currency.">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Crimson+Pro:ital,wght@0,400;0,500;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#07090e;--bg2:#0c0f18;--bg3:#111520;--bg4:#161c2a;
+  --gold:#d4a017;--goldLt:#f0c040;--goldDim:#5c4108;
+  --teal:#1fb8a8;--tealLt:#4dd9c8;
+  --purple:#7c3aed;--purpleLt:#a855f7;
+  --emerald:#059669;--emeraldLt:#10b981;
+  --sky:#0ea5e9;--skyLt:#38bdf8;
+  --red:#c0392b;--redLt:#e74c3c;
+  --amber:#d97706;--amberLt:#fbbf24;
+  --border:rgba(212,160,23,.15);--white:#f0ead6;--dim:#5a6478;--r:10px
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Crimson Pro',serif;background:var(--bg);color:var(--white);min-height:100vh;overflow-x:hidden}
+#stars{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+.star{position:absolute;border-radius:50%;background:white;animation:twinkle var(--d,3s) infinite var(--delay,0s)}
+@keyframes twinkle{0%,100%{opacity:.05}50%{opacity:var(--op,.6)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(31,184,168,.3)}50%{box-shadow:0 0 0 6px rgba(31,184,168,0)}}
+p{font-size:15px;line-height:1.82;color:rgba(240,234,214,.78);margin-bottom:10px}
+code{font-family:'JetBrains Mono',monospace;font-size:12px;background:rgba(255,255,255,.06);padding:2px 6px;border-radius:4px;color:var(--tealLt)}
+strong{color:var(--white);font-weight:500}
+
+/* Topbar */
+#topbar-ts{position:fixed;top:0;left:0;right:0;height:54px;background:rgba(7,9,14,.97);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 20px;gap:12px;z-index:200;overflow:hidden}
+.tb-dot{width:8px;height:8px;border-radius:50%;background:var(--tealLt);animation:pulse 2s infinite;flex-shrink:0}
+
+/* Shell */
+#ts-shell{display:flex;padding-top:54px;min-height:100vh}
+#ts-sb{width:268px;background:var(--bg2);border-right:1px solid var(--border);position:fixed;top:54px;bottom:0;overflow-y:auto;z-index:100}
+#ts-sb::-webkit-scrollbar{width:3px}
+#ts-sb::-webkit-scrollbar-thumb{background:var(--goldDim);border-radius:2px}
+#ts-main{margin-left:268px;flex:1;min-width:0;position:relative;z-index:1}
+.ts-wrap{max-width:880px;padding:36px 44px 100px;margin:0 auto;animation:fadeUp .3s ease}
+
+/* Sidebar */
+.sb-hdr{padding:10px 14px 6px;font-family:'Cinzel',serif;font-size:9px;font-weight:700;color:var(--goldDim);letter-spacing:.1em;text-transform:uppercase;border-bottom:1px solid rgba(255,255,255,.04)}
+.sb-link{display:block;padding:7px 14px;font-size:11px;color:rgba(240,234,214,.4);text-decoration:none;transition:all .12s;border-left:2px solid transparent;cursor:pointer;line-height:1.4}
+.sb-link:hover,.sb-link.active{color:var(--tealLt);background:rgba(31,184,168,.04);border-left-color:var(--tealLt)}
+.sb-tool-link{padding:8px 14px;display:flex;align-items:center;gap:8px;font-size:11.5px;color:var(--dim);text-decoration:none;transition:all .12s;border-left:2px solid transparent}
+.sb-tool-link:hover{color:var(--tealLt);background:rgba(31,184,168,.04);border-left-color:var(--tealLt)}
+.sb-cat{padding:5px 14px;font-size:10px;color:var(--dim);font-style:italic}
+
+/* Hero */
+.ts-hero{margin-bottom:36px;padding-bottom:24px;border-bottom:1px solid var(--border)}
+.ts-badge{font-family:'Cinzel',serif;font-size:9.5px;font-weight:700;letter-spacing:.14em;color:var(--teal);padding:4px 14px;border:1px solid rgba(31,184,168,.25);border-radius:20px;display:inline-block;margin-bottom:14px}
+.ts-title{font-family:'Cinzel',serif;font-size:30px;font-weight:900;color:var(--goldLt);margin-bottom:8px;line-height:1.15}
+.ts-sub{font-size:15px;color:var(--dim);font-style:italic;line-height:1.7}
+
+/* Search */
+.ts-search{display:flex;gap:10px;margin-bottom:28px}
+.ts-search-input{flex:1;padding:12px 16px;background:var(--bg3);border:1px solid rgba(255,255,255,.08);border-radius:8px;color:var(--white);font-family:'Crimson Pro',serif;font-size:15px;outline:none;transition:border-color .15s}
+.ts-search-input:focus{border-color:var(--teal)}
+.ts-search-input::placeholder{color:var(--dim)}
+
+/* Category header */
+.cat-section{margin-bottom:48px}
+.cat-hdr{display:flex;align-items:center;gap:12px;margin-bottom:20px;padding:14px 18px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);position:sticky;top:60px;z-index:10;backdrop-filter:blur(8px)}
+.cat-icon{font-size:22px}
+.cat-title{font-family:'Cinzel',serif;font-size:17px;font-weight:700;color:var(--goldLt);flex:1}
+.cat-count{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--dim);background:rgba(0,0,0,.4);border:1px solid var(--border);padding:2px 8px;border-radius:10px}
+
+/* Issue card */
+.issue{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);margin-bottom:12px;overflow:hidden;transition:border-color .15s}
+.issue:hover{border-color:rgba(31,184,168,.2)}
+.issue[data-hidden="true"]{display:none}
+.issue-hdr{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:start;padding:15px 18px;cursor:pointer;user-select:none}
+.issue-sev{width:6px;height:6px;border-radius:50%;margin-top:6px;flex-shrink:0}
+.sev-critical{background:var(--red);box-shadow:0 0 6px rgba(192,57,43,.5)}
+.sev-high{background:var(--amber);box-shadow:0 0 6px rgba(217,119,6,.4)}
+.sev-medium{background:var(--teal);box-shadow:0 0 6px rgba(31,184,168,.3)}
+.issue-symptom{font-family:'Cinzel',serif;font-size:13px;font-weight:600;color:rgba(240,234,214,.9);line-height:1.45}
+.issue-tags{display:flex;gap:5px;align-items:center;flex-shrink:0;flex-wrap:wrap;justify-content:flex-end}
+.tag{font-family:'Cinzel',serif;font-size:7.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:2px 7px;border-radius:6px}
+.tag-forms{background:rgba(14,165,233,.1);border:1px solid rgba(14,165,233,.2);color:var(--skyLt)}
+.tag-data{background:rgba(31,184,168,.1);border:1px solid rgba(31,184,168,.2);color:var(--tealLt)}
+.tag-groovy{background:rgba(124,58,237,.1);border:1px solid rgba(124,58,237,.2);color:var(--purpleLt)}
+.tag-perf{background:rgba(217,119,6,.1);border:1px solid rgba(217,119,6,.2);color:var(--amberLt)}
+.tag-approval{background:rgba(212,160,23,.1);border:1px solid rgba(212,160,23,.2);color:var(--goldLt)}
+.tag-calc{background:rgba(16,185,129,.1);border:1px solid rgba(16,185,129,.2);color:var(--emeraldLt)}
+.tag-security{background:rgba(190,24,93,.1);border:1px solid rgba(190,24,93,.2);color:#f472b6}
+.tag-currency{background:rgba(99,102,241,.1);border:1px solid rgba(99,102,241,.2);color:#a5b4fc}
+.issue-chev{color:var(--dim);font-size:10px;transition:transform .2s;margin-top:3px;flex-shrink:0}
+.issue.open .issue-chev{transform:rotate(180deg)}
+
+/* Issue body */
+.issue-body{display:none;padding:0 18px 18px}
+.issue.open .issue-body{display:block}
+
+/* Diagnosis flow */
+.diag-flow{display:flex;flex-direction:column;gap:10px;margin:12px 0}
+.diag-step{display:flex;gap:12px;align-items:flex-start}
+.diag-num{width:24px;height:24px;border-radius:50%;background:rgba(31,184,168,.1);border:1px solid rgba(31,184,168,.2);color:var(--tealLt);font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px}
+.diag-content{flex:1;font-size:13.5px;color:rgba(240,234,214,.72);line-height:1.75}
+.diag-content strong{color:var(--white)}
+
+/* Root cause / Fix boxes */
+.rf-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:12px 0}
+@media(max-width:640px){.rf-row{grid-template-columns:1fr}}
+.root-box{background:rgba(192,57,43,.05);border:1px solid rgba(192,57,43,.18);border-radius:8px;padding:13px 15px}
+.fix-box{background:rgba(5,150,105,.05);border:1px solid rgba(5,150,105,.18);border-radius:8px;padding:13px 15px}
+.box-lbl{font-family:'Cinzel',serif;font-size:8.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:7px}
+.root-lbl{color:var(--redLt)}
+.fix-lbl{color:var(--emeraldLt)}
+.box-content{font-size:13.5px;color:rgba(240,234,214,.7);line-height:1.75}
+
+/* Code snippet */
+.ts-code{background:#090d14;border:1px solid rgba(255,255,255,.07);border-radius:8px;padding:14px 18px;font-family:'JetBrains Mono',monospace;font-size:11.5px;line-height:1.75;color:#a8d8ea;overflow-x:auto;white-space:pre;margin:10px 0;position:relative}
+.copy-btn{position:absolute;top:8px;right:8px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:6px;padding:3px 10px;font-family:'Cinzel',serif;font-size:8px;color:var(--dim);cursor:pointer;transition:all .15s}
+.copy-btn:hover{background:rgba(31,184,168,.1);border-color:var(--teal);color:var(--tealLt)}
+.copy-btn.copied{color:var(--emeraldLt)}
+
+/* Warning box */
+.warn-box{background:rgba(217,119,6,.06);border:1px solid rgba(217,119,6,.22);border-radius:8px;padding:12px 16px;margin:10px 0;font-size:13.5px;color:rgba(240,234,214,.7);line-height:1.75}
+.warn-lbl{font-family:'Cinzel',serif;font-size:8.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--amberLt);margin-bottom:5px}
+
+/* Intro callout */
+.intro-box{background:rgba(31,184,168,.03);border:1px solid rgba(31,184,168,.15);border-left:4px solid var(--teal);border-radius:var(--r);padding:16px 20px;margin-bottom:28px;font-size:14px;color:rgba(240,234,214,.7);line-height:1.82}
+
+/* Stats */
+.stats-strip{display:flex;gap:24px;flex-wrap:wrap;margin-bottom:24px;padding:16px 20px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r)}
+.ss-item{text-align:center}
+.ss-val{font-family:'Cinzel',serif;font-size:20px;font-weight:700;color:var(--tealLt)}
+.ss-lbl{font-size:10px;color:var(--dim);letter-spacing:.05em;text-transform:uppercase;margin-top:2px}
+
+@media(max-width:860px){#ts-sb{display:none}#ts-main{margin-left:0}.ts-wrap{padding:24px 16px 80px}.cat-hdr{top:55px}}
+</style>
+</head>
+<body>
+<div id="stars"></div>
+
+<div id="topbar-ts">
+  <a href="index.html" style="font-family:'Cinzel',serif;font-size:13px;font-weight:700;color:var(--goldLt);text-decoration:none;display:flex;align-items:center;gap:9px;flex-shrink:0"><span class="tb-dot"></span>The Planning Quest</a>
+  <span style="color:var(--goldDim)">›</span>
+  <span style="font-family:'Cinzel',serif;font-size:11px;color:var(--teal);flex-shrink:0">Troubleshooting Guide</span>
+  <div style="flex:1"></div>
+  <div style="display:flex;gap:3px;overflow-x:auto;flex-shrink:0">
+    <a href="parts-1-3.html" style="padding:4px 7px;border-radius:6px;border:1px solid var(--border);color:var(--dim);font-family:'Cinzel',serif;font-size:8px;font-weight:700;text-decoration:none;white-space:nowrap">📖 I–III</a>
+    <a href="groovy-ch1.html" style="padding:4px 7px;border-radius:6px;border:1px solid var(--border);color:var(--dim);font-family:'Cinzel',serif;font-size:8px;font-weight:700;text-decoration:none;white-space:nowrap">📘 Groovy</a>
+    <a href="essbase-kernel.html" style="padding:4px 7px;border-radius:6px;border:1px solid rgba(212,160,23,.2);color:var(--goldLt);font-family:'Cinzel',serif;font-size:8px;font-weight:700;text-decoration:none;white-space:nowrap">⚙ Kernel</a>
+    <a href="interview-prep.html" style="padding:4px 7px;border-radius:6px;border:1px solid var(--border);color:var(--dim);font-family:'Cinzel',serif;font-size:8px;font-weight:700;text-decoration:none;white-space:nowrap">🎯 Prep</a>
+    <a href="search.html" style="padding:4px 7px;border-radius:6px;border:1px solid var(--border);color:var(--dim);font-family:'Cinzel',serif;font-size:8px;font-weight:700;text-decoration:none;white-space:nowrap">🔍</a>
+  </div>
+</div>
+
+<div id="ts-shell">
+<div id="ts-sb">
+  <div class="sb-hdr">Troubleshooting</div>
+  <span class="sb-cat">By category</span>
+  <a href="javascript:void(0)" class="sb-link" onclick="filterCat('all',this)">All Issues (47)</a>
+  <a href="javascript:void(0)" class="sb-link" onclick="filterCat('forms',this)">📋 Forms & Dashboards (9)</a>
+  <a href="javascript:void(0)" class="sb-link" onclick="filterCat('data',this)">🔗 Data Loads & DI (9)</a>
+  <a href="javascript:void(0)" class="sb-link" onclick="filterCat('groovy',this)">⚡ Groovy Rules (9)</a>
+  <a href="javascript:void(0)" class="sb-link" onclick="filterCat('calc',this)">🧮 Calculations (6)</a>
+  <a href="javascript:void(0)" class="sb-link" onclick="filterCat('perf',this)">⚡ Performance (5)</a>
+  <a href="javascript:void(0)" class="sb-link" onclick="filterCat('approval',this)">✅ Approvals (4)</a>
+  <a href="javascript:void(0)" class="sb-link" onclick="filterCat('security',this)">🔒 Security (3)</a>
+  <a href="javascript:void(0)" class="sb-link" onclick="filterCat('currency',this)">💱 Currency (2)</a>
+  <div class="sb-hdr" style="margin-top:8px">Related</div>
+  <a class="sb-tool-link" href="essbase-kernel.html">⚙ Essbase Kernel</a>
+  <a class="sb-tool-link" href="groovy-ch1.html">📘 Groovy Chapter I</a>
+  <a class="sb-tool-link" href="groovy-ch2.html">⚡ Groovy Chapter II</a>
+  <a class="sb-tool-link" href="failing-answers.html">💀 Failing Answers</a>
+  <a class="sb-tool-link" href="interview-prep.html">🎯 Interview Prep</a>
+  <a class="sb-tool-link" href="index.html">🏠 Quest Map</a>
+</div>
+
+<div id="ts-main">
+<div class="ts-wrap">
+
+  <div class="ts-hero">
+    <div class="ts-badge">🔧 Production Reference · EPM 25.06+ · 47 Issues</div>
+    <h1 class="ts-title">EPBCS Troubleshooting Guide</h1>
+    <p class="ts-sub">Symptom → Root Cause → Fix. Every common production issue, organised by what you see first. Search by symptom or browse by category. Built from real implementation war stories.</p>
+  </div>
+
+  <input class="ts-search-input" id="ts-search" placeholder="🔍  Search by symptom, e.g. 'empty after seeding' or 'form shows wrong data'..." oninput="searchIssues(this.value)" style="width:100%;margin-bottom:28px">
+
+  <div class="stats-strip">
+    <div class="ss-item"><div class="ss-val">47</div><div class="ss-lbl">Issues</div></div>
+    <div class="ss-item"><div class="ss-val">8</div><div class="ss-lbl">Categories</div></div>
+    <div class="ss-item"><div class="ss-val">12</div><div class="ss-lbl">Critical</div></div>
+    <div class="ss-item"><div class="ss-val">EPM 25.11</div><div class="ss-lbl">Verified</div></div>
+  </div>
+
+  <div class="intro-box">
+    <strong style="color:var(--tealLt)">How to use this guide:</strong> Search for what you're seeing — e.g. "form empty", "data not loading", "Groovy silent fail", "approval stuck". Each card shows the diagnostic steps, the root cause, and the fix. Critical issues (red dot) are those that cause data loss or block the close cycle. Start there.
+  </div>
+
+  <!-- ═══════════════════════ FORMS ═══════════════════════ -->
+  <div class="cat-section" id="cat-forms">
+  <div class="cat-hdr">
+    <span class="cat-icon">📋</span>
+    <span class="cat-title">Forms & Dashboards</span>
+    <span class="cat-count">9 issues</span>
+  </div>
+
+  <div class="issue" data-cat="forms" data-keywords="form empty seeding new year fiscal year budget blank">
+    <div class="issue-hdr" onclick="toggle(this)">
+      <div class="issue-sev sev-critical"></div>
+      <div class="issue-symptom">Form shows empty cells after a seeding/copy rule ran successfully.</div>
+      <div class="issue-tags"><span class="tag tag-forms">Forms</span><span class="tag tag-calc">Calc</span><span class="issue-chev">▼</span></div>
+    </div>
+    <div class="issue-body">
+      <div class="rf-row">
+        <div class="root-box"><div class="box-lbl root-lbl">Root Cause</div><div class="box-content">Target blocks don't exist. Groovy <code>setDataCellValues()</code> calls targeting non-existent blocks silently fail — no error thrown. New fiscal year, new scenario, or new version has never had data written to it, so no blocks exist at those sparse intersections.</div></div>
+        <div class="fix-box"><div class="box-lbl fix-lbl">Fix</div><div class="box-content">Run a block creation step <em>before</em> the Groovy rule: either <code>DATACOPY FY2025 -&gt; FY2026</code> (calc script, copies blocks + data) or a <code>@CREATEBLOCK</code> FIX for zero-based seeding. Check block count in Application → Statistics before and after.</div></div>
+      </div>
+      <div class="diag-flow">
+        <div class="diag-step"><div class="diag-num">1</div><div class="diag-content"><strong>Check Application Statistics</strong> — Application → Overview → Statistics. Find block count for the target Scenario/Year. If count is 0, blocks were never created.</div></div>
+        <div class="diag-step"><div class="diag-num">2</div><div class="diag-content"><strong>Manual test</strong> — type a value of 0 into one target cell and Save. Re-run the seeding rule. If it now works for that entity, it's a block creation issue, not logic.</div></div>
+        <div class="diag-step"><div class="diag-num">3</div><div class="diag-content"><strong>Add DATACOPY or @CREATEBLOCK</strong> as Step 1 in your rule chain. Block creation must precede any Groovy write to new sparse intersections.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="issue" data-cat="forms" data-keywords="grid wrong data stale old year period form composite rtp">
+    <div class="issue-hdr" onclick="toggle(this)">
+      <div class="issue-sev sev-critical"></div>
+      <div class="issue-symptom">In a composite form, Grid B shows the wrong year/period even after the user changes the selector.</div>
+      <div class="issue-tags"><span class="tag tag-forms">Forms 2.0</span><span class="issue-chev">▼</span></div>
+    </div>
+    <div class="issue-body">
+      <div class="rf-row">
+        <div class="root-box"><div class="box-lbl root-lbl">Root Cause</div><div class="box-content">In Forms 2.0, Apply Context must be explicitly configured. The stateless architecture means nothing propagates between grids automatically — unlike classic forms. Grid B's RTP binding is missing or mapped to a different variable than Grid A's selector.</div></div>
+        <div class="fix-box"><div class="box-lbl fix-lbl">Fix</div><div class="box-content">In Form Designer → Grid B → Member Selection → Apply Context. Explicitly map each grid's period/year to the same RTP variable as the composite form's selector. Test every grid independently after configuring.</div></div>
+      </div>
+      <div class="diag-flow">
+        <div class="diag-step"><div class="diag-num">1</div><div class="diag-content"><strong>Open each grid's RTP mapping</strong> — in Form Designer, click Grid B → the RTP bindings panel. Verify the Year/Period RTP is mapped and points to the same variable used by the selector grid.</div></div>
+        <div class="diag-step"><div class="diag-num">2</div><div class="diag-content"><strong>Check the 12-component limit</strong> — if the dashboard has 12+ components, Forms 2.0 silently drops the overflow ones. Count all grids, charts, text boxes, and selectors.</div></div>
+      </div>
+      <div class="warn-box"><div class="warn-lbl">⚠ Common Trap</div>This is the #1 Forms 2.0 support ticket in production. A form that worked perfectly in classic Forms may show this behaviour after migration to Forms 2.0, even if the RTP logic appeared identical. Always test every grid's RTP binding explicitly after migration.</div>
+    </div>
+  </div>
+
+  <div class="issue" data-cat="forms" data-keywords="dashboard form not loading slow timeout spinner">
+    <div class="issue-hdr" onclick="toggle(this)">
+      <div class="issue-sev sev-high"></div>
+      <div class="issue-symptom">Dashboard or form takes 45+ seconds to load or times out.</div>
+      <div class="issue-tags"><span class="tag tag-forms">Forms</span><span class="tag tag-perf">Performance</span><span class="issue-chev">▼</span></div>
+    </div>
+    <div class="issue-body">
+      <div class="rf-row">
+        <div class="root-box"><div class="box-lbl root-lbl">Root Cause (Top 3)</div><div class="box-content">1. BSO cube queried for a consolidated view (all entities) — 600 accounts × 12 entities = large block scan. 2. Dynamic Calc accounts re-evaluating on every cell access. 3. Valid Intersections rule set too large, evaluated on every cell render.</div></div>
+        <div class="fix-box"><div class="box-lbl fix-lbl">Fix</div><div class="box-content">For total-entity reporting: use Smart Push to ASO reporting cube — consolidation queries hit ASO (fast) not BSO. For Dynamic Calc: check if the account can be stored instead. For VI: reduce rule count to essential guardrails only.</div></div>
+      </div>
+      <div class="diag-flow">
+        <div class="diag-step"><div class="diag-num">1</div><div class="diag-content"><strong>Check what the form queries</strong> — open the form in Administration. Are Total members (dynamic aggregations) on the rows? If yes, every open triggers a full aggregation scan.</div></div>
+        <div class="diag-step"><div class="diag-num">2</div><div class="diag-content"><strong>Check block count</strong> — Application Statistics. High block count + large block size = slow opens. Target 50–200KB block size.</div></div>
+        <div class="diag-step"><div class="diag-num">3</div><div class="diag-content"><strong>Enable database suppression</strong> (Oracle Reports) — suppresses zero rows at the Essbase level. Vision Corp P&L report dropped from 45 seconds to 8 seconds with this setting.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="issue" data-cat="forms" data-keywords="form not saving save error data entry planner cannot save">
+    <div class="issue-hdr" onclick="toggle(this)">
+      <div class="issue-sev sev-high"></div>
+      <div class="issue-symptom">Planner cannot save data — form save button does nothing or shows a generic error.</div>
+      <div class="issue-tags"><span class="tag tag-forms">Forms</span><span class="tag tag-groovy">Groovy</span><span class="issue-chev">▼</span></div>
+    </div>
+    <div class="issue-body">
+      <div class="rf-row">
+        <div class="root-box"><div class="box-lbl root-lbl">Root Cause</div><div class="box-content">Most likely: a <code>beforeSave</code> Groovy rule threw an unhandled exception, or a <code>throwVetoException()</code> was triggered by a validation guard. Less likely: valid intersection violation blocking the write. Rare: planning unit is Locked or Approved.</div></div>
+        <div class="fix-box"><div class="box-lbl fix-lbl">Fix</div><div class="box-content">Check Jobs → Job Console for the failed rule — the error message is there even though it's invisible on the form. For veto exceptions, the message should appear in the form. For VI violations, the cell won't render at all.</div></div>
+      </div>
+      <div class="diag-flow">
+        <div class="diag-step"><div class="diag-num">1</div><div class="diag-content"><strong>Jobs → Job Console</strong> — filter to the time of the save attempt. Groovy exceptions appear here even when no message shows on the form.</div></div>
+        <div class="diag-step"><div class="diag-num">2</div><div class="diag-content"><strong>Check approval status</strong> — if the planning unit is Approved or Locked, data entry is blocked. Admin can check via Application → Manage Approvals.</div></div>
+        <div class="diag-step"><div class="diag-num">3</div><div class="diag-content"><strong>Test without the business rule</strong> — temporarily detach the <code>beforeSave</code> rule and retry. If save works, the rule is throwing. Isolate with a minimal test.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="issue" data-cat="forms" data-keywords="supporting detail cell text notes missing forms 2.0">
+    <div class="issue-hdr" onclick="toggle(this)">
+      <div class="issue-sev sev-medium"></div>
+      <div class="issue-symptom">Supporting Detail or cell annotations are not visible after migrating to Forms 2.0.</div>
+      <div class="issue-tags"><span class="tag tag-forms">Forms 2.0</span><span class="issue-chev">▼</span></div>
+    </div>
+    <div class="issue-body">
+      <div class="rf-row">
+        <div class="root-box"><div class="box-lbl root-lbl">Root Cause</div><div class="box-content">Forms 2.0 supporting detail has limited formatting options vs classic. Cell-level annotations are supported from EPM 25.09+. If the environment is pre-25.09, annotations don't render in Forms 2.0.</div></div>
+        <div class="fix-box"><div class="box-lbl fix-lbl">Fix</div><div class="box-content">Verify EPM release is 25.09+. Enable Supporting Detail in the form properties. For critical forms relying on complex Supporting Detail formatting, keep on classic until 25.12+ or use cell annotations as the alternative.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="issue" data-cat="forms" data-keywords="drill-through not working form cell blank arrow missing">
+    <div class="issue-hdr" onclick="toggle(this)">
+      <div class="issue-sev sev-medium"></div>
+      <div class="issue-symptom">Drill-through from a form cell to ERP transaction detail is not available or returns no results.</div>
+      <div class="issue-tags"><span class="tag tag-forms">Forms</span><span class="tag tag-data">Data</span><span class="issue-chev">▼</span></div>
+    </div>
+    <div class="issue-body">
+      <div class="rf-row">
+        <div class="root-box"><div class="box-lbl root-lbl">Root Cause (Top 3)</div><div class="box-content">1. Drill Through not enabled in the Data Integration application options. 2. The data was loaded using Quick Mode — Quick Mode bypasses TDATASEG, so no drill anchor exists. 3. User not logged into ERP before drilling — ERP requires separate authentication.</div></div>
+        <div class="fix-box"><div class="box-lbl fix-lbl">Fix</div><div class="box-content">1. Enable in DI → Application → Options → Drill Through = Yes. 2. For Quick Mode loads: switch to Full workflow mode for actuals that need drill-back. 3. Instruct users to log into ERP first. 4. If Drill URL is wrong: delete and recreate the ERP Source System — the new DI UI auto-sets it correctly.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="issue" data-cat="forms" data-keywords="dashboard kpi wrong number different form report mismatch">
+    <div class="issue-hdr" onclick="toggle(this)">
+      <div class="issue-sev sev-high"></div>
+      <div class="issue-symptom">Dashboard KPI shows a different number than the FRS/Reports P&L for the same cell.</div>
+      <div class="issue-tags"><span class="tag tag-forms">Forms</span><span class="tag tag-calc">Calc</span><span class="issue-chev">▼</span></div>
+    </div>
+    <div class="issue-body">
+      <div class="rf-row">
+        <div class="root-box"><div class="box-lbl root-lbl">Root Cause (Top 3)</div><div class="box-content">1. Different POV — dashboard may show Working version, report may show Approved. 2. Data loaded but CALC ALL not re-run — derived members are stale. 3. Dashboard form queries BSO, report queries an ASO cube that hasn't had Smart Push run since the latest data change.</div></div>
+        <div class="fix-box"><div class="box-lbl fix-lbl">Fix</div><div class="box-content">1. Open both in Admin view and compare the exact POV (Scenario, Version, Year, Entity). 2. Run CALC ALL and refresh both. 3. If using ASO reporting cube, run Smart Push and check the timestamp. 4. Check if a Groovy rule wrote to a different Version than expected.</div></div>
+      </div>
+      <div class="diag-flow">
+        <div class="diag-step"><div class="diag-num">1</div><div class="diag-content"><strong>Compare exact intersection</strong> — identify the precise Scenario/Version/Year/Entity/Period/Account combination in both surfaces. Differences are almost always in Version (Working vs Approved) or Entity (Total vs leaf).</div></div>
+        <div class="diag-step"><div class="diag-num">2</div><div class="diag-content"><strong>Check calc timestamp</strong> — Application → Statistics shows last calculation time. If data was loaded after the last calc run, all derived accounts are stale.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="issue" data-cat="forms" data-keywords="form dependency dropdown cascading member selector partial">
+    <div class="issue-hdr" onclick="toggle(this)">
+      <div class="issue-sev sev-medium"></div>
+      <div class="issue-symptom">Dependent dropdown (cascading member selector) doesn't filter correctly after the parent selection changes.</div>
+      <div class="issue-tags"><span class="tag tag-forms">Forms 2.0</span><span class="issue-chev">▼</span></div>
+    </div>
+    <div class="issue-body">
+      <div class="rf-row">
+        <div class="root-box"><div class="box-lbl root-lbl">Root Cause</div><div class="box-content">Forms 2.0 supports some dependent dropdown chains but not all dependency configurations from classic forms. Complex multi-level cascades (e.g. Region → Country → Entity → Cost Centre) may have partial support depending on the EPM release.</div></div>
+        <div class="fix-box"><div class="box-lbl fix-lbl">Fix</div><div class="box-content">Test on latest EPM release (25.11+). For complex chains not supported in Forms 2.0: keep the specific form on classic (via Application Settings temporarily) and log an SR with Oracle. Oracle is actively closing Forms 2.0 feature gaps.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="issue" data-cat="forms" data-keywords="smart view ad hoc not working cannot connect forms 2.0 dashboard">
+    <div class="issue-hdr" onclick="toggle(this)">
+      <div class="issue-sev sev-medium"></div>
+      <div class="issue-symptom">Smart View ad hoc analysis from a Dashboard 2.0 form isn't available or the "Open in Smart View" menu item is missing.</div>
+      <div class="issue-tags"><span class="tag tag-forms">Forms 2.0</span><span class="issue-chev">▼</span></div>
+    </div>
+    <div class="issue-body">
+      <div class="rf-row">
+        <div class="root-box"><div class="box-lbl root-lbl">Root Cause</div><div class="box-content">Dashboard 2.0 forms require the Smart View Forms 2.0 plugin (introduced EPM 25.10). Without it, right-click context menu options "Open in Smart View" and "Analyze" don't appear. The plugin is separate from the standard Smart View install.</div></div>
+        <div class="fix-box"><div class="box-lbl fix-lbl">Fix</div><div class="box-content">Install the Smart View Forms 2.0 plugin from EPM Cloud → Smart View → Downloads. Requires Smart View 23.200+ on the client. After install, the "Analyze", "Open in Smart View", and "Spreadsheet Export" context menu options appear on Dashboard 2.0 form grids.</div></div>
+      </div>
+    </div>
+  </div>
+
+  </div><!-- end forms -->
+
+  <!-- ═══════════════════════ DATA LOADS ═══════════════════ -->
+  <div class="cat-section" id="cat-data">
+  <div class="cat-hdr">
+    <span class="cat-icon">🔗</span>
+    <span class="cat-title">Data Loads & Data Integration</span>
+    <span class="cat-count">9 issues</span>
+  </div>
+
+  <div class="issue" data-cat="data" data-keywords="data load not loading actuals wrong number SAP nightly load missing data">
+    <div class="issue-hdr" onclick="toggle(this)">
+      <div class="issue-sev sev-critical"></div>
+      <div class="issue-symptom">Nightly actuals load appears to succeed but EPBCS shows different March numbers than SAP at 9am.</div>
+      <div class="issue-tags"><span class="tag tag-data">Data</span><span class="tag tag-calc">Calc</span><span class="issue-chev">▼</span></div>
+    </div>
+    <div class="issue-body">
+      <div class="rf-row">
+        <div class="root-box"><div class="box-lbl root-lbl">Root Cause (Top 3)</div><div class="box-content">1. CALC ALL not run after load — parent aggregations and derived accounts are stale. 2. Unmapped GL accounts landing in <code>Unclassified_Actuals</code> instead of correct EPBCS accounts. 3. POV mismatch — report shows different Scenario/Version than what the DI rule targeted.</div></div>
+        <div class="fix-box"><div class="box-lbl fix-lbl">Fix</div><div class="box-content">1. Ensure CALC ALL runs after every DI load in the nightly EPM Automate script. 2. Check DI Process Details for unmapped record count — any balance in Unclassified_Actuals needs investigation. 3. Verify the exact Scenario/Version/Period the DI rule targeted matches what the report POV shows.</div></div>
+      </div>
+      <div class="diag-flow">
+        <div class="diag-step"><div class="diag-num">1</div><div class="diag-content"><strong>Check job sequence in EPM Automate log</strong> — did <code>runDataRule</code> complete before <code>runBusinessRule "CALC ALL"</code> was called? Verify timestamps — calc must run after load, not in parallel.</div></div>
+        <div class="diag-step"><div class="diag-num">2</div><div class="diag-content"><strong>Open DI Workbench</strong> — Data Integration → Process Details → click the run → Workbench shows source-to-target mapping for every record. Filter for unmapped records.</div></div>
+        <div class="diag-step"><div class="diag-num">3</div><div class="diag-content"><strong>Compare total loaded records vs SAP</strong> — DI Process Details shows row count per step. If Import count ≠ Export count, some rows were rejected at Validate step (usually mapping failures).</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="issue" data-cat="data" data-keywords="data doubled duplicate load accumulate merge replace wrong mode">
+    <div class="issue-hdr" onclick="toggle(this)">
+      <div class="issue-sev sev-critical"></div>
+      <div class="issue-symptom">Actuals data has doubled — every value is exactly 2× what it should be.</div>
+      <div class="issue-tags"><span class="tag tag-data">Data</span><span class="issue-chev">▼</span></div>
+    </div>
+    <div class="issue-body">
+      <div class="rf-row">
+        <div class="root-box"><div class="box-lbl root-lbl">Root Cause</div><div class="box-content">Data Integration was run with <code>ACCUMULATE</code> (Merge) export mode instead of <code>REPLACE</code>. The load added new values on top of existing values. Second most common: the DI rule was run twice — once manually and once by the nightly automation.</div></div>
+        <div class="fix-box"><div class="box-lbl fix-lbl">Fix</div><div class="box-content">1. Change export mode to <code>REPLACE</code> for all actuals loads. 2. Re-run the DI rule with REPLACE — it will clear the intersection and reload correctly. 3. Check job history to confirm the rule wasn't run twice. For prevention: REPLACE is mandatory for actuals; ACCUMULATE is only for additive scenarios (budget adjustments).</div></div>
+      </div>
+      <div class="warn-box"><div class="warn-lbl">⚠ Prevention</div>Make REPLACE the default export mode for all actuals DI rules. Document this as a standard and include it in your DI runbook. Use <code>NOCOMMIT</code> export mode first to validate — if the row counts look correct, then re-run with <code>COMMIT</code>.</div>
+    </div>
+  </div>
+
+  <div class="issue" data-cat="data" data-keywords="DI connection failed 401 403 HTTP timeout ERP connection refused">
+    <div class="issue-hdr" onclick="toggle(this)">
+      <div class="issue-sev sev-high"></div>
+      <div class="issue-symptom">Data Integration ERP connection fails — HTTP 401 or HTTP 403 error.</div>
+      <div class="issue-tags"><span class="tag tag-data">Data</span><span class="issue-chev">▼</span></div>
+    </div>
+    <div class="issue-body">
+      <div class="rf-row">
+        <div class="root-box"><div class="box-lbl root-lbl">401 vs 403 — Different Problems</div><div class="box-content"><strong>401:</strong> Authentication failure — wrong password, SSO/federated account (must use non-SSO service account), or expired credentials. <strong>403:</strong> IP firewall blocking EPM Cloud IPs — credentials are valid but ERP denies the connection from EPM's IP range.</div></div>
+        <div class="fix-box"><div class="box-lbl fix-lbl">Fix</div><div class="box-content"><strong>401:</strong> Verify account is non-SSO (test login directly via ERP REST API with Postman). Re-enter credentials in DI Connection. Confirm GL job role assigned. <strong>403:</strong> Contact ERP admin to add EPM Cloud IP ranges to ERP Network Access allowlist. Check Oracle's published EPM Cloud IP ranges for your data centre.</div></div>
+      </div>
+      <div class="ts-code"><button class="copy-btn" onclick="cp(this)">Copy</button><span style="color:#6a737d">// Postman diagnostic — POST to ERP REST</span>
+URL: https://&lt;erp-pod&gt;/fscmRestApi/resources/latest/erpintegrations
+<span style="color:#6a737d">// Body:</span>
+{ "OperationName": "submitESSJobRequest",
+  "JobPackageName": "oracle/apps/ess/financials/generalLedger/ledgers/ledgerDefinitions",
+  "JobDefName": "ExtractCubeInformation",
+  "ESSParameters": "null" }
+<span style="color:#6a737d">// HTTP 201 → credentials + roles OK</span>
+<span style="color:#6a737d">// HTTP 401 → wrong password or SSO account</span>
+<span style="color:#6a737d">// HTTP 403 → IP Firewall blocking EPM IPs</span></div>
+    </div>
+  </div>
+
+  <div class="issue" data-cat="data" data-keywords="records not loading unmapped DI zero data after load member mapping">
+    <div class="issue-hdr" onclick="toggle(this)">
+      <div class="issue-sev sev-high"></div>
+      <div class="issue-symptom">DI load reports success but specific accounts show zero / are missing in EPBCS.</div>
+      <div class="issue-tags"><span class="tag tag-data">Data</span><span class="issue-chev">▼</span></div>
+    </div>
+    <div class="issue-body">
+      <div class="rf-row">
+        <div class="root-box"><div class="box-lbl root-lbl">Root Cause</div><div class="box-content">New GL account codes added to SAP/ERP mid-year with no corresponding member mapping rule in Data Integration. Unmapped records are either rejected or land in the <code>Unclassified_Actuals</code> catch-all account (if one exists). Without a catch-all, records are silently dropped at Validate step.</div></div>
+        <div class="fix-box"><div class="box-lbl fix-lbl">Fix</div><div class="box-content">1. Check DI Workbench for unmapped records — filter by "Unmapped" status. 2. Add the missing account mappings in the dimension map. 3. If using an <code>Unclassified_Actuals</code> account: check its balance. 4. Re-run with REPLACE mode to reload the period correctly. For prevention: add a catch-all Like rule as the last mapping rule so no record is ever silently dropped.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="issue" data-cat="data" data-keywords="BIP report timeout data integration ESS job extract large">
+    <div class="issue-hdr" onclick="toggle(this)">
+      <div class="issue-sev sev-high"></div>
+      <div class="issue-symptom">Custom BIP extract in Data Integration times out — only partial data loads (typically first 20%).</div>
+      <div class="issue-tags"><span class="tag tag-data">Data</span><span class="issue-chev">▼</span></div>
+    </div>
+    <div class="issue-body">
+      <div class="rf-row">
+        <div class="root-box"><div class="box-lbl root-lbl">Root Cause</div><div class="box-content">Direct BIP Report execution mode has a 5-minute synchronous timeout. Large ERP extracts that take 8–12 minutes partially load before the timeout aborts the remaining data. The first batches write to Essbase; the rest are dropped.</div></div>
+        <div class="fix-box"><div class="box-lbl fix-lbl">Fix</div><div class="box-content">Switch Execution Method from <code>BIP Report</code> to <code>ESS Job</code> in DI Application Options. Create an Oracle Enterprise Scheduler Job in Fusion wrapping the same BIP report. ESS runs asynchronously — DI polls for up to 6.5 minutes. For extracts exceeding even that: partition by ledger or period range into multiple integrations.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="issue" data-cat="data" data-keywords="data integration period mapping wrong month quarterly adjustment overlapping">
+    <div class="issue-hdr" onclick="toggle(this)">
+      <div class="issue-sev sev-high"></div>
+      <div class="issue-symptom">Data loads to the wrong period — March data appears in April, or values are doubled for certain months.</div>
+      <div class="issue-tags"><span class="tag tag-data">Data</span><span class="issue-chev">▼</span></div>
+    </div>
+    <div class="issue-body">
+      <div class="rf-row">
+        <div class="root-box"><div class="box-lbl root-lbl">Root Cause</div><div class="box-content">Overlapping period keys in the Source Period Mapping — adjustment periods (e.g. Period 13) included in the regular period mapping, causing both the regular and adjustment period to match the same source key. Or: integration uses Explicit period type but some months are still mapped as Default.</div></div>
+        <div class="fix-box"><div class="box-lbl fix-lbl">Fix</div><div class="box-content">Go to DI → Actions → Period Mapping. Verify no duplicate Source Period keys — every source period label must map to exactly one EPM period. Remove adjustment periods from the regular mapping (they need their own dedicated integration). After fixing mappings, run Application Update to refresh the period cache.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="issue" data-cat="data" data-keywords="EPM automate runDataRule does not work quick mode direct load">
+    <div class="issue-hdr" onclick="toggle(this)">
+      <div class="issue-sev sev-medium"></div>
+      <div class="issue-symptom">EPM Automate <code>runDataRule</code> command works but Quick Mode (Direct Load) is not being used — load is slow.</div>
+      <div class="issue-tags"><span class="tag tag-data">Data</span><span class="issue-chev">▼</span></div>
+    </div>
+    <div class="issue-body">
+      <div class="rf-row">
+        <div class="root-box"><div class="box-lbl root-lbl">Root Cause</div><div class="box-content"><code>runDataRule</code> does NOT support Quick Mode. Quick Mode requires the EPM REST API's <code>runIntegration</code> endpoint with <code>importMode: "DIRECT"</code>. Calling <code>runDataRule</code> always uses the full workflow regardless of what's configured in the UI.</div></div>
+        <div class="fix-box"><div class="box-lbl fix-lbl">Fix</div><div class="box-content">Switch to the REST API for Quick Mode loads: <code>POST /rest/v3/applications/{app}/jobs</code> with <code>jobType: "IMPORT_DATA"</code> and <code>importMode: "DIRECT"</code>. Note: Quick Mode disables Workbench audit data and drill-through. Only use for high-volume loads where audit is not required.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="issue" data-cat="data" data-keywords="writeback ERP budget failed pre-validation rejected currency">
+    <div class="issue-hdr" onclick="toggle(this)">
+      <div class="issue-sev sev-high"></div>
+      <div class="issue-symptom">EPBCS budget writeback to ERP fails — "Error in Validating the Budget Load" or rows rejected.</div>
+      <div class="issue-tags"><span class="tag tag-data">Data</span><span class="issue-chev">▼</span></div>
+    </div>
+    <div class="issue-body">
+      <div class="rf-row">
+        <div class="root-box"><div class="box-lbl root-lbl">Root Cause</div><div class="box-content">ERP pre-validation rejected rows before they reached the GL. Common causes: invalid currency code, budget name doesn't match exactly what's configured in ERP (case-sensitive), or the ERP Essbase budget cube doesn't have the target scenario configured.</div></div>
+        <div class="fix-box"><div class="box-lbl fix-lbl">Fix</div><div class="box-content">Go to ERP → General Accounting Dashboard → Correct Budget Import Errors. This shows row-level rejection reasons. The fix must happen in ERP dimension configuration or the EPBCS-to-ERP mapping, not in EPM logs. Budget name must match ERP configuration exactly — case-sensitive.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="issue" data-cat="data" data-keywords="epmautomate Java 17 upgrade error Linux Unix Mac">
+    <div class="issue-hdr" onclick="toggle(this)">
+      <div class="issue-sev sev-medium"></div>
+      <div class="issue-symptom">EPM Automate fails on Linux/Mac automation server after EPM upgrade — Java-related error in startup.</div>
+      <div class="issue-tags"><span class="tag tag-data">Data</span><span class="issue-chev">▼</span></div>
+    </div>
+    <div class="issue-body">
+      <div class="rf-row">
+        <div class="root-box"><div class="box-lbl root-lbl">Root Cause</div><div class="box-content">EPM Automate on Linux/Unix/macOS requires Java 17 from EPM 25.06. Java 8 is discontinued. The server was running Java 8. Windows users are unaffected — EPM Automate Windows ships its own bundled JRE.</div></div>
+        <div class="fix-box"><div class="box-lbl fix-lbl">Fix</div><div class="box-content">Install Java 17 on the automation server. Set <code>JAVA_HOME</code> to the Java 17 installation. Test <code>epmautomate login</code> in a non-production environment first. Verify no other applications on the server require Java 8 specifically before upgrading.</div></div>
+      </div>
+    </div>
+  </div>
+
+  </div><!-- end data -->
+
+  <!-- ═══════════════════════ GROOVY ══════════════════════ -->
+  <div class="cat-section" id="cat-groovy">
+  <div class="cat-hdr">
+    <span class="cat-icon">⚡</span>
+    <span class="cat-title">Groovy Rules</span>
+    <span class="cat-count">9 issues</span>
+  </div>
+
+  <div class="issue" data-cat="groovy" data-keywords="groovy rule runs but nothing changes no data written silent fail">
+    <div class="issue-hdr" onclick="toggle(this)">
+      <div class="issue-sev sev-critical"></div>
+      <div class="issue-symptom">Groovy rule runs successfully (green in Job Console) but no data is written — cells are still empty or unchanged.</div>
+      <div class="issue-tags"><span class="tag tag-groovy">Groovy</span><span class="tag tag-calc">Blocks</span><span class="issue-chev">▼</span></div>
+    </div>
+    <div class="issue-body">
+      <div class="rf-row">
+        <div class="root-box"><div class="box-lbl root-lbl">Root Cause (Top 2)</div><div class="box-content">1. Target Essbase blocks don't exist — <code>setDataCellValues()</code> silently fails on non-existent blocks. No exception thrown. 2. <code>getCell()</code> returned null (block missing or #MISSING) and null propagated into the write list — null values written are treated as no-ops.</div></div>
+        <div class="fix-box"><div class="box-lbl fix-lbl">Fix</div><div class="box-content">1. Run a block creation step first: <code>DATACOPY</code> or <code>@CREATEBLOCK</code> calc script before the Groovy rule. 2. Add null-guards: <code>def val = getCell(...) ?: 0</code> to every <code>getCell()</code> call. 3. Add <code>println("Writing ${writes.size()} cells")</code> before the write call — if it logs 0, the loop built an empty list.</div></div>
+      </div>
+      <div class="ts-code"><button class="copy-btn" onclick="cp(this)">Copy</button><span style="color:#6a737d">// Diagnostic: add logging before write</span>
+<span style="color:#ff7b72">def</span> writes = []
+entities.each { e ->
+  <span style="color:#ff7b72">def</span> val = getCell(e.getName(), <span style="color:#a5d6ff">"Revenue"</span>, ...) ?: 0
+  writes << [e.getName(), <span style="color:#a5d6ff">"Revenue_Target"</span>, ..., val * 1.05]
+}
+<span style="color:#d2a8ff">println</span>(<span style="color:#a5d6ff">"Staging ${writes.size()} writes — if 0, check block existence"</span>)
+<span style="color:#ff7b72">if</span> (writes) operation.grid.setDataCellValues(writes)</div>
+    </div>
+  </div>
+
+  <div class="issue" data-cat="groovy" data-keywords="groovy NullPointerException NPE null runtime error allocation">
+    <div class="issue-hdr" onclick="toggle(this)">
+      <div class="issue-sev sev-high"></div>
+      <div class="issue-symptom">Groovy rule throws <code>NullPointerException</code> at runtime — rule aborts, nothing is calculated.</div>
+      <div class="issue-tags"><span class="tag tag-groovy">Groovy</span><span class="issue-chev">▼</span></div>
+    </div>
+    <div class="issue-body">
+      <div class="rf-row">
+        <div class="root-box"><div class="box-lbl root-lbl">Root Cause</div><div class="box-content"><code>getCell()</code> returns <code>null</code> when the intersection is <code>#MISSING</code> or when the block doesn't exist. If the result is used directly in arithmetic without a null-guard, Java/Groovy throws NPE when unboxing null to a primitive.</div></div>
+        <div class="fix-box"><div class="box-lbl fix-lbl">Fix</div><div class="box-content">Add Elvis operator to every <code>getCell()</code> call: <code>def val = getCell(...) ?: 0</code>. For allocation denominators: guard against zero division separately — <code>if (totalRev == 0) { println("No revenue"); return }</code>.</div></div>
+      </div>
+      <div class="ts-code"><button class="copy-btn" onclick="cp(this)">Copy</button><span style="color:#6a737d">// Safe pattern — always use ?: 0</span>
+<span style="color:#ff7b72">def</span> rev    = getCell(entity, <span style="color:#a5d6ff">"Revenue"</span>, ...) ?: 0
+<span style="color:#ff7b72">def</span> total  = getCell(<span style="color:#a5d6ff">"Total"</span>, <span style="color:#a5d6ff">"Revenue"</span>, ...) ?: 0
+<span style="color:#ff7b72">if</span> (total == 0) { <span style="color:#d2a8ff">println</span>(<span style="color:#a5d6ff">"Guard: zero denominator — abort"</span>); <span style="color:#ff7b72">return</span> }
+<span style="color:#ff7b72">def</span> share = rev / total  <span style="color:#6a737d">// safe — total ≠ 0</span></div>
+    </div>
+  </div>
+
+  <div class="issue" data-cat="groovy" data-keywords="groovy rule slow timeout performance loop getCell setCell many calls">
+    <div class="issue-hdr" onclick="toggle(this)">
+      <div class="issue-sev sev-high"></div>
+      <div class="issue-symptom">Groovy allocation or calculation rule runs correctly but takes 30+ minutes at scale.</div>
+      <div class="issue-tags"><span class="tag tag-groovy">Groovy</span><span class="tag tag-perf">Performance</span><span class="issue-chev">▼</span></div>
+    </div>
+    <div class="issue-body">
+      <div class="rf-row">
+        <div class="root-box"><div class="box-lbl root-lbl">Root Cause</div><div class="box-content">Rule uses individual <code>getCell()</code> / <code>setCell()</code> calls inside a loop — each is a network round-trip to Essbase. 200 cost centres × 2 calls = 400 round-trips. At 150ms each = 60 seconds minimum, plus overhead.</div></div>
+        <div class="fix-box"><div class="box-lbl fix-lbl">Fix</div><div class="box-content">Replace loop with: 1 <code>DataGridBuilder</code> batch read → stage all writes in a list → 1 <code>setDataCellValues()</code> call. Total: 2 round-trips regardless of entity count. See Groovy Chapter II — Performance Levers.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="issue" data-cat="groovy" data-keywords="groovy throwVetoException RuleStoppedException error user form validation">
+    <div class="issue-hdr" onclick="toggle(this)">
+      <div class="issue-sev sev-medium"></div>
+      <div class="issue-symptom">Groovy validation rule should stop a save with a message, but no message appears — or the rule throws an unhandled exception.</div>
+      <div class="issue-tags"><span class="tag tag-groovy">Groovy</span><span class="issue-chev">▼</span></div>
+    </div>
+    <div class="issue-body">
+      <div class="rf-row">
+        <div class="root-box"><div class="box-lbl root-lbl">Root Cause</div><div class="box-content">Rule uses <code>throw new RuleStoppedException("msg")</code> — this class does not exist in the EPM Groovy API. It throws a <code>MissingClassException</code>, which surfaces as an internal error rather than a user-visible message.</div></div>
+        <div class="fix-box"><div class="box-lbl fix-lbl">Fix</div><div class="box-content">Replace with <code>throwVetoException("Your message")</code> — no import, no <code>new</code>, just the helper method. This is the only supported mechanism for user-visible form validation messages in EPM Groovy.</div></div>
+      </div>
+      <div class="ts-code"><button class="copy-btn" onclick="cp(this)">Copy</button><span style="color:#6a737d">// ❌ Wrong — class doesn't exist</span>
+<span style="color:#ff7b72">throw new</span> RuleStoppedException(<span style="color:#a5d6ff">"Invalid entry"</span>)
+
+<span style="color:#6a737d">// ✓ Correct — helper method, no import needed</span>
+<span style="color:#d2a8ff">throwVetoException</span>(<span style="color:#a5d6ff">"Revenue cannot exceed $5B — contact Finance Admin"</span>)</div>
+    </div>
+  </div>
+
+  <div class="issue" data-cat="groovy" data-keywords="groovy getEssbaseCube getCube null application error method missing">
+    <div class="issue-hdr" onclick="toggle(this)">
+      <div class="issue-sev sev-high"></div>
+      <div class="issue-symptom">Groovy rule throws <code>MissingMethodException</code> on the first cube or dimension access call.</div>
+      <div class="issue-tags"><span class="tag tag-groovy">Groovy</span><span class="issue-chev">▼</span></div>
+    </div>
+    <div class="issue-body">
+      <div class="rf-row">
+        <div class="root-box"><div class="box-lbl root-lbl">Root Cause</div><div class="box-content">Calling <code>application.getEssbaseCube("Plan1")</code> — this method doesn't exist. Or calling <code>cube.getDimension("Account")</code> — the Cube object doesn't expose dimensions directly. These are the #1 and #2 Groovy API mistakes.</div></div>
+        <div class="fix-box"><div class="box-lbl fix-lbl">Fix</div><div class="box-content">Use: <code>operation.application.getCube("Plan1")</code> for the cube. Use: <code>cube.getOutline().getDimension("Account")</code> for dimensions. Use: <code>dim.findMember("Total_Revenue")</code> for members (not <code>getMember()</code>).</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="issue" data-cat="groovy" data-keywords="groovy println output where log job console debug">
+    <div class="issue-hdr" onclick="toggle(this)">
+      <div class="issue-sev sev-medium"></div>
+      <div class="issue-symptom">Groovy rule has <code>println()</code> debug statements but the output can't be found.</div>
+      <div class="issue-tags"><span class="tag tag-groovy">Groovy</span><span class="issue-chev">▼</span></div>
+    </div>
+    <div class="issue-body">
+      <div class="rf-row">
+        <div class="root-box"><div class="box-lbl root-lbl">Root Cause</div><div class="box-content">println() in EPM Groovy routes to the EPM Job Console log — not the browser console, not a log file on disk, not visible on the form to the user. If the developer is looking anywhere other than Jobs → Job Details, they won't find it.</div></div>
+        <div class="fix-box"><div class="box-lbl fix-lbl">Fix</div><div class="box-content">Navigate to Application → Jobs → (find your rule execution) → Job Details. The full println() output is there. Filter by job name and time. For form rules (beforeSave/afterSave), the job appears under "Business Rule" in the Jobs list immediately after the save event.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="issue" data-cat="groovy" data-keywords="groovy getRestApiClient scope form rule business rule REST API">
+    <div class="issue-hdr" onclick="toggle(this)">
+      <div class="issue-sev sev-medium"></div>
+      <div class="issue-symptom">Groovy rule using <code>getRestApiClient()</code> works in a form rule but fails in a standalone business rule.</div>
+      <div class="issue-tags"><span class="tag tag-groovy">Groovy</span><span class="issue-chev">▼</span></div>
+    </div>
+    <div class="issue-body">
+      <div class="rf-row">
+        <div class="root-box"><div class="box-lbl root-lbl">Root Cause</div><div class="box-content"><code>getRestApiClient()</code> is only available in form rules (<code>beforeSave</code>, <code>afterSave</code>, <code>onLoad</code>) — it is scoped to the form context and uses the current user's session. It does not exist in standalone business rules (EPM 25.11 limitation).</div></div>
+        <div class="fix-box"><div class="box-lbl fix-lbl">Fix</div><div class="box-content">For standalone business rules that need REST calls: use <code>HttpURLConnection</code> with a service account credential. Create a Named Connection in EPM Workspace pointing to your EPM URL and use it in the rule for authentication. This is the documented pattern for business rule REST calls.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="issue" data-cat="groovy" data-keywords="groovy substitution variable getSubstitutionVariable null wrong method">
+    <div class="issue-hdr" onclick="toggle(this)">
+      <div class="issue-sev sev-medium"></div>
+      <div class="issue-symptom">Groovy rule calling <code>getSubstitutionVariable("CurPeriod")</code> returns null or throws MethodMissingException.</div>
+      <div class="issue-tags"><span class="tag tag-groovy">Groovy</span><span class="issue-chev">▼</span></div>
+    </div>
+    <div class="issue-body">
+      <div class="rf-row">
+        <div class="root-box"><div class="box-lbl root-lbl">Root Cause</div><div class="box-content">Wrong method name. The correct method is <code>getSubstitutionVariableValue()</code> with the full <code>Value</code> suffix. The short form <code>getSubstitutionVariable()</code> doesn't exist — returns null silently or throws MissingMethod depending on context.</div></div>
+        <div class="fix-box"><div class="box-lbl fix-lbl">Fix</div><div class="box-content">Use full method name: <code>application.getSubstitutionVariableValue("CurPeriod")</code> or <code>cube.getSubstitutionVariableValue("CurPeriod")</code>. To set: <code>application.setSubstitutionVariableValue("CurPeriod", "Apr")</code>. Note: <code>getSubstitutionVariables()</code> (plural, no "Value") returns a collection of all variables — separate method.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="issue" data-cat="groovy" data-keywords="groovy excel workbook create send inbox outbox 25.07">
+    <div class="issue-hdr" onclick="toggle(this)">
+      <div class="issue-sev sev-medium"></div>
+      <div class="issue-symptom">Groovy rule to generate and distribute an Excel report isn't working — file not appearing in Inbox/Outbox.</div>
+      <div class="issue-tags"><span class="tag tag-groovy">Groovy</span><span class="issue-chev">▼</span></div>
+    </div>
+    <div class="issue-body">
+      <div class="rf-row">
+        <div class="root-box"><div class="box-lbl root-lbl">Root Cause</div><div class="box-content">Excel workbook creation via Groovy was introduced in EPM 25.07. If the environment is pre-25.07, the API is unavailable. Also: file upload to Inbox/Outbox uses the REST Jobs API (<code>UPLOAD_FILE</code> jobType) — there is no direct <code>uploadFileToServer()</code> method on the connection object.</div></div>
+        <div class="fix-box"><div class="box-lbl fix-lbl">Fix</div><div class="box-content">Verify EPM release is 25.07+. For file upload: use the REST API's UPLOAD_FILE job type via a Named Connection, not a direct method call. Check the EPM 25.07 What's New for the exact Groovy Excel API syntax — it changed from the originally documented beta API.</div></div>
+      </div>
+    </div>
+  </div>
+
+  </div><!-- end groovy -->
+
+  <!-- ═══════════════════════ CALCULATIONS ════════════════ -->
+  <div class="cat-section" id="cat-calc">
+  <div class="cat-hdr">
+    <span class="cat-icon">🧮</span>
+    <span class="cat-title">Calculations & Essbase</span>
+    <span class="cat-count">6 issues</span>
+  </div>
+
+  <div class="issue" data-cat="calc" data-keywords="calc all slow timeout 45 minutes long running calculation FIX scope">
+    <div class="issue-hdr" onclick="toggle(this)">
+      <div class="issue-sev sev-high"></div>
+      <div class="issue-symptom">Calculation rule runs in 45+ minutes — it used to run in 5 minutes.</div>
+      <div class="issue-tags"><span class="tag tag-calc">Calc</span><span class="tag tag-perf">Performance</span><span class="issue-chev">▼</span></div>
+    </div>
+    <div class="issue-body">
+      <div class="rf-row">
+        <div class="root-box"><div class="box-lbl root-lbl">Root Cause (Top 3)</div><div class="box-content">1. Block count has exploded — a prior rule with loose <code>SET CREATENONMISSINGBLK ON</code> created millions of empty blocks. 2. FIX statement is missing the Year dimension — calculates across all years instead of one. 3. Dynamic Calc account referenced inside a FIX — re-evaluated per block instead of on-demand.</div></div>
+        <div class="fix-box"><div class="box-lbl fix-lbl">Fix</div><div class="box-content">1. Check block count in Statistics. If exploded: find and fix the <code>SET CREATENONMISSINGBLK</code> rule, then clear and reload data. 2. Add Year to every FIX statement. 3. Materialize the Dynamic Calc account if it's referenced frequently in stored calcs.</div></div>
+      </div>
+      <div class="diag-flow">
+        <div class="diag-step"><div class="diag-num">1</div><div class="diag-content"><strong>Check Application Statistics</strong> — normal Vision Corp block count ~240,000. If you see 2M+, block explosion has occurred.</div></div>
+        <div class="diag-step"><div class="diag-num">2</div><div class="diag-content"><strong>Review all FIX statements</strong> — every FIX must include Scenario, Version, Year, and Entity scope. A FIX with only Scenario = calculates all years × all entities.</div></div>
+        <div class="diag-step"><div class="diag-num">3</div><div class="diag-content"><strong>Check for <code>SET CREATENONMISSINGBLK ON</code></strong> — search all rule scripts. Every occurrence must be paired with <code>SET CREATENONMISSINGBLK OFF</code> immediately after the ENDFIX.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="issue" data-cat="calc" data-keywords="dynamic calc wrong incorrect value formula member incorrect parent">
+    <div class="issue-hdr" onclick="toggle(this)">
+      <div class="issue-sev sev-high"></div>
+      <div class="issue-symptom">A member formula returns the wrong value for some entities but correct for others.</div>
+      <div class="issue-tags"><span class="tag tag-calc">Calc</span><span class="issue-chev">▼</span></div>
+    </div>
+    <div class="issue-body">
+      <div class="rf-row">
+        <div class="root-box"><div class="box-lbl root-lbl">Root Cause</div><div class="box-content">Member formula references a cross-dimensional expression without proper scoping. For entities where the referenced member doesn't exist (or is #MISSING), the formula silently returns #MISSING or 0 depending on the formula logic. Also common: formula uses a hard-coded parent member that not all entities are children of.</div></div>
+        <div class="fix-box"><div class="box-lbl fix-lbl">Fix</div><div class="box-content">Add @ISMBR checks in the formula for edge cases. Use @RELATIVE scoping to ensure the formula targets the correct level-0 members for all entities. Test the formula in an ad hoc grid against the failing entity specifically.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="issue" data-cat="calc" data-keywords="DATACOPY not working new year empty target year seeding blocks">
+    <div class="issue-hdr" onclick="toggle(this)">
+      <div class="issue-sev sev-critical"></div>
+      <div class="issue-symptom">DATACOPY calc script runs successfully but the target year remains empty.</div>
+      <div class="issue-tags"><span class="tag tag-calc">Calc</span><span class="issue-chev">▼</span></div>
+    </div>
+    <div class="issue-body">
+      <div class="rf-row">
+        <div class="root-box"><div class="box-lbl root-lbl">Root Cause</div><div class="box-content">Source year has zero blocks — nothing to copy. This happens when DATACOPY is attempted before any actuals or budget data has been loaded for the source year, or when the source scenario/version combination is different from what you think.</div></div>
+        <div class="fix-box"><div class="box-lbl fix-lbl">Fix</div><div class="box-content">Check source block count in Statistics before running DATACOPY. Verify the exact source Scenario, Version, Year in the script matches where data actually lives. If source is empty: load seed data first, or use <code>@CREATEBLOCK</code> approach instead of DATACOPY for zero-based seeding.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="issue" data-cat="calc" data-keywords="block explosion block count millions SET CREATENONMISSINGBLK phantom blocks">
+    <div class="issue-hdr" onclick="toggle(this)">
+      <div class="issue-sev sev-critical"></div>
+      <div class="issue-symptom">Application Statistics shows millions of blocks — significantly more than expected. Everything is slow.</div>
+      <div class="issue-tags"><span class="tag tag-calc">Calc</span><span class="tag tag-perf">Performance</span><span class="issue-chev">▼</span></div>
+    </div>
+    <div class="issue-body">
+      <div class="rf-row">
+        <div class="root-box"><div class="box-lbl root-lbl">Root Cause</div><div class="box-content">Block explosion — a calc script or Groovy rule used <code>SET CREATENONMISSINGBLK ON</code> without a tight FIX scope, creating blocks at every sparse intersection regardless of whether data exists. Or: a poorly scoped <code>@CREATEBLOCK</code> ran across all years × all scenarios.</div></div>
+        <div class="fix-box"><div class="box-lbl fix-lbl">Fix</div><div class="box-content">1. Identify the offending rule (check recent job history). 2. Fix it: add tight FIX scope, add <code>SET CREATENONMISSINGBLK OFF</code> after ENDFIX. 3. Clear all data and reload from backup — the only way to remove phantom blocks is to clear the data. 4. Verify normal block count after reload matches pre-explosion baseline.</div></div>
+      </div>
+      <div class="warn-box"><div class="warn-lbl">⚠ Vision Corp Impact</div>A loose <code>SET CREATENONMISSINGBLK</code> on a 5-dimension FIX grew Vision Corp's cube from 48,000 to 1.2M blocks overnight. The application became unresponsive. Recovery required a full data reload from the previous night's backup — 4-hour outage.</div>
+    </div>
+  </div>
+
+  <div class="issue" data-cat="calc" data-keywords="YTD wrong year to date calculation period accumulation incorrect">
+    <div class="issue-hdr" onclick="toggle(this)">
+      <div class="issue-sev sev-medium"></div>
+      <div class="issue-symptom">YTD values are wrong — not accumulating correctly from January or showing the same value as the monthly figure.</div>
+      <div class="issue-tags"><span class="tag tag-calc">Calc</span><span class="issue-chev">▼</span></div>
+    </div>
+    <div class="issue-body">
+      <div class="rf-row">
+        <div class="root-box"><div class="box-lbl root-lbl">Root Cause (Top 2)</div><div class="box-content">1. Period dimension hierarchy not structured for YTD rollup — YTD parent member with "+" consolidation isn't in the right position. 2. The <code>&CurPeriod</code> substitution variable is set to a future month, so YTD accumulates beyond the current period.</div></div>
+        <div class="fix-box"><div class="box-lbl fix-lbl">Fix</div><div class="box-content">1. Review Period dimension: confirm Jan → Dec members under a YTD parent with "+" consolidation. Check if H1/H2 parents are interfering. 2. Verify &CurPeriod value: Application → Substitution Variables. For current-month YTD, it should be the current closed month, not a future one.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="issue" data-cat="calc" data-keywords="calculation wrong scenario version data contamination Budget Actual mixed">
+    <div class="issue-hdr" onclick="toggle(this)">
+      <div class="issue-sev sev-high"></div>
+      <div class="issue-symptom">Budget data is showing Actual values — or calc rule appears to have written to the wrong Scenario.</div>
+      <div class="issue-tags"><span class="tag tag-calc">Calc</span><span class="issue-chev">▼</span></div>
+    </div>
+    <div class="issue-body">
+      <div class="rf-row">
+        <div class="root-box"><div class="box-lbl root-lbl">Root Cause</div><div class="box-content">FIX statement is missing Scenario or Version dimension scope. Without an explicit FIX on Scenario, a rule calculates all scenarios — meaning a Budget calculation also writes to Actual. This is rare in Calculation Manager rules but can happen in Groovy rules that hardcode member names incorrectly.</div></div>
+        <div class="fix-box"><div class="box-lbl fix-lbl">Fix</div><div class="box-content">1. Review FIX statement: always include explicit Scenario and Version. 2. Check Valid Intersections to add a guardrail preventing writes to Actual via planning rules. 3. Restore Actual data from last backup snapshot (EPM Automate <code>importData</code> from the pre-calc snapshot).</div></div>
+      </div>
+    </div>
+  </div>
+
+  </div><!-- end calc -->
+
+  <!-- ═══════════════════════ APPROVALS ════════════════════ -->
+  <div class="cat-section" id="cat-approval">
+  <div class="cat-hdr">
+    <span class="cat-icon">✅</span>
+    <span class="cat-title">Approval Workflow</span>
+    <span class="cat-count">4 issues</span>
+  </div>
+
+  <div class="issue" data-cat="approval" data-keywords="approval stuck under review reviewer not available leave locked budget cycle">
+    <div class="issue-hdr" onclick="toggle(this)">
+      <div class="issue-sev sev-high"></div>
+      <div class="issue-symptom">Planning unit stuck "Under Review" — reviewer is on leave and budget cycle closes in 48 hours.</div>
+      <div class="issue-tags"><span class="tag tag-approval">Approval</span><span class="issue-chev">▼</span></div>
+    </div>
+    <div class="issue-body">
+      <div class="rf-row">
+        <div class="root-box"><div class="box-lbl root-lbl">Root Cause</div><div class="box-content">Assigned reviewer is unavailable and no backup reviewer was configured in the Planning Unit Hierarchy. The unit cannot auto-advance.</div></div>
+        <div class="fix-box"><div class="box-lbl fix-lbl">Fix</div><div class="box-content">Application → Manage Approvals → find the stuck unit → admin can: (1) Change the assigned reviewer to a backup, or (2) Force-advance the status to Approved as an admin action. Both actions are logged in the audit trail with admin username and timestamp — the approval history is not lost.</div></div>
+      </div>
+      <div class="warn-box"><div class="warn-lbl">⚠ Prevention</div>Always configure at least one backup reviewer in the Planning Unit Hierarchy for each approval level before the budget cycle opens. Test the backup path during UAT — not during a live budget close.</div>
+    </div>
+  </div>
+
+  <div class="issue" data-cat="approval" data-keywords="approved locked cannot edit data after approval planning unit">
+    <div class="issue-hdr" onclick="toggle(this)">
+      <div class="issue-sev sev-medium"></div>
+      <div class="issue-symptom">Planner (or admin) cannot edit a cell that was previously writable — data entry is blocked without explanation.</div>
+      <div class="issue-tags"><span class="tag tag-approval">Approval</span><span class="issue-chev">▼</span></div>
+    </div>
+    <div class="issue-body">
+      <div class="rf-row">
+        <div class="root-box"><div class="box-lbl root-lbl">Root Cause</div><div class="box-content">The Planning Unit for this Entity/Scenario/Version/Year is in Approved or Locked status. Approved blocks planner edits. Locked blocks even administrator edits (must explicitly unlock).</div></div>
+        <div class="fix-box"><div class="box-lbl fix-lbl">Fix</div><div class="box-content">Check Application → Manage Approvals for the planning unit status. To reopen: admin pushes it back to the previous state (Approved → Under Review → First Pass). Document the reason in the approval comments — this creates an audit trail for SOX compliance purposes.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="issue" data-cat="approval" data-keywords="approval state not advancing promote submit first pass workflow">
+    <div class="issue-hdr" onclick="toggle(this)">
+      <div class="issue-sev sev-medium"></div>
+      <div class="issue-symptom">Planner clicks "Promote" but planning unit status doesn't change from First Pass.</div>
+      <div class="issue-tags"><span class="tag tag-approval">Approval</span><span class="issue-chev">▼</span></div>
+    </div>
+    <div class="issue-body">
+      <div class="rf-row">
+        <div class="root-box"><div class="box-lbl root-lbl">Root Cause</div><div class="box-content">The planner doesn't have the Entity dimension security access required to promote (needs Write access to the entity, not just Read). Or: the Planning Unit Hierarchy has a reviewer assigned at a higher level who hasn't acknowledged the promotion — state appears stuck from the planner's view.</div></div>
+        <div class="fix-box"><div class="box-lbl fix-lbl">Fix</div><div class="box-content">1. Check dimension security: planner must have Write access to the entity they're promoting. 2. Check Manage Approvals — is the unit waiting for a reviewer action at a higher level? Admin view shows the full approval chain status. 3. Verify the Planning Unit Hierarchy is configured correctly — the review levels must match the approval policy.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="issue" data-cat="approval" data-keywords="data changed after approval board pack different CFO signed off SOX">
+    <div class="issue-hdr" onclick="toggle(this)">
+      <div class="issue-sev sev-critical"></div>
+      <div class="issue-symptom">CFO approved the budget last week but EPBCS now shows different numbers than the Board Pack PDF.</div>
+      <div class="issue-tags"><span class="tag tag-approval">Approval</span><span class="tag tag-security">SOX</span><span class="issue-chev">▼</span></div>
+    </div>
+    <div class="issue-body">
+      <div class="rf-row">
+        <div class="root-box"><div class="box-lbl root-lbl">Causes to Investigate</div><div class="box-content">1. Board Pack used Working version; EPBCS report now shows Approved version (or vice versa). 2. CALC ALL ran after the PDF was generated — derived accounts updated. 3. An admin unlocked and edited an Approved planning unit post-sign-off (SOX finding). 4. Data was loaded to the wrong Scenario/Version after the PDF was created.</div></div>
+        <div class="fix-box"><div class="box-lbl fix-lbl">Fix</div><div class="box-content">1. Compare exact POV of the PDF and the current report. 2. Check Application Audit Log for any data changes after the PDF generation timestamp. 3. Check Manage Approvals for any unlock events post-approval. 4. Going forward: use Narrative Reporting with live data references — the "stale PDF" problem disappears permanently.</div></div>
+      </div>
+      <div class="warn-box"><div class="warn-lbl">⚠ SOX Note</div>Any data change to an Approved planning unit without documented sign-off is a SOX audit finding. If the audit trail shows an admin unlock + edit after CFO approval, this must be escalated to Finance Controllership immediately.</div>
+    </div>
+  </div>
+
+  </div><!-- end approval -->
+
+  <!-- ═══════════════════════ SECURITY ════════════════════ -->
+  <div class="cat-section" id="cat-security">
+  <div class="cat-hdr">
+    <span class="cat-icon">🔒</span>
+    <span class="cat-title">Security & Access</span>
+    <span class="cat-count">3 issues</span>
+  </div>
+
+  <div class="issue" data-cat="security" data-keywords="planner sees wrong entity data other entity dimension security access">
+    <div class="issue-hdr" onclick="toggle(this)">
+      <div class="issue-sev sev-critical"></div>
+      <div class="issue-symptom">A planner can see or edit data for entities they shouldn't have access to.</div>
+      <div class="issue-tags"><span class="tag tag-security">Security</span><span class="issue-chev">▼</span></div>
+    </div>
+    <div class="issue-body">
+      <div class="rf-row">
+        <div class="root-box"><div class="box-lbl root-lbl">Root Cause</div><div class="box-content">Entity dimension security not configured for this user's group. Or: the user is in a group that has parent-level Entity access (e.g. Total_Operating) — which grants access to all descendants by default. Or: a newly added Entity member hasn't been added to the group's security profile.</div></div>
+        <div class="fix-box"><div class="box-lbl fix-lbl">Fix</div><div class="box-content">Access Control → Dimension Security → Entity dimension → review the group's member access list. Remove parent member access if only leaf-level access is required. When adding new Entity members to the outline, immediately update all affected security groups. Test by logging in as a test user in the affected group.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="issue" data-cat="security" data-keywords="user cannot login provisioning IDCS role SSO federated">
+    <div class="issue-hdr" onclick="toggle(this)">
+      <div class="issue-sev sev-high"></div>
+      <div class="issue-symptom">New user cannot log into EPBCS — authentication error or "you don't have access to this application."</div>
+      <div class="issue-tags"><span class="tag tag-security">Security</span><span class="issue-chev">▼</span></div>
+    </div>
+    <div class="issue-body">
+      <div class="rf-row">
+        <div class="root-box"><div class="box-lbl root-lbl">Root Cause</div><div class="box-content">User was provisioned in IDCS but not assigned an Application Role in EPBCS (Planner, Power User, Viewer). Or: the user's email domain federation is not configured in IDCS. Or: user was added to the wrong IDCS group (group exists but doesn't have EPBCS access).</div></div>
+        <div class="fix-box"><div class="box-lbl fix-lbl">Fix</div><div class="box-content">1. In EPBCS: Application → Access Control → Users → verify the user appears and has an Application Role assigned. 2. In IDCS: verify user is in the correct group mapped to the EPBCS application. 3. If automating via EPM Automate: use <code>assignRole</code> command after <code>addUser</code>. Role assignment is a separate step from user creation.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="issue" data-cat="security" data-keywords="valid intersections blocking load data integration DI records rejected VI">
+    <div class="issue-hdr" onclick="toggle(this)">
+      <div class="issue-sev sev-high"></div>
+      <div class="issue-symptom">Data Integration load succeeds but specific data doesn't appear — rows are silently rejected.</div>
+      <div class="issue-tags"><span class="tag tag-security">Security</span><span class="tag tag-data">Data</span><span class="issue-chev">▼</span></div>
+    </div>
+    <div class="issue-body">
+      <div class="rf-row">
+        <div class="root-box"><div class="box-lbl root-lbl">Root Cause</div><div class="box-content">Valid Intersections rules are rejecting records during the DI Export step. This is not a security permission issue — it's a VI rule blocking the specific Entity + Scenario + Account combination the DI rule is trying to write to. Common: a VI rule blocks Actual scenario writes for all entities, but an override for certain entities isn't configured.</div></div>
+        <div class="fix-box"><div class="box-lbl fix-lbl">Fix</div><div class="box-content">Check DI Process Details — rejected rows appear in the Export step with a VI violation message. Review the VI rule set for the failing Entity/Scenario combination. Either update the VI rule to allow the specific intersection, or ensure the DI target matches the VI-allowed scope.</div></div>
+      </div>
+    </div>
+  </div>
+
+  </div><!-- end security -->
+
+  <!-- ═══════════════════════ CURRENCY ════════════════════ -->
+  <div class="cat-section" id="cat-currency">
+  <div class="cat-hdr">
+    <span class="cat-icon">💱</span>
+    <span class="cat-title">Currency Translation</span>
+    <span class="cat-count">2 issues</span>
+  </div>
+
+  <div class="issue" data-cat="currency" data-keywords="currency translation wrong rate FX exchange HSP_Rates incorrect translated">
+    <div class="issue-hdr" onclick="toggle(this)">
+      <div class="issue-sev sev-high"></div>
+      <div class="issue-symptom">Translated (reporting currency) values are wrong — appear to use the wrong exchange rate or no translation at all.</div>
+      <div class="issue-tags"><span class="tag tag-currency">Currency</span><span class="issue-chev">▼</span></div>
+    </div>
+    <div class="issue-body">
+      <div class="rf-row">
+        <div class="root-box"><div class="box-lbl root-lbl">Root Cause (Top 3)</div><div class="box-content">1. Exchange rates not loaded into the HSP_Rates cube for the specific period. 2. Wrong exchange rate type (Average vs Ending vs Historical) mapped to the account type — Income Statement accounts should use Average, Balance Sheet should use Ending. 3. Currency translation hasn't been run after loading new FX rates.</div></div>
+        <div class="fix-box"><div class="box-lbl fix-lbl">Fix</div><div class="box-content">1. Check HSP_Rates cube: open an ad-hoc grid on the Exchange Rate plan type and verify rates are populated for the period. 2. Check Account dimension properties — currency translation type is configured per account. 3. Run currency translation: Rules → Translate (or CALC ALL includes translation). 4. For systematic issues: trace one cell — open it in ad hoc, check Local value, apply rate manually, compare to translated value.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="issue" data-cat="currency" data-keywords="FX variance rate volume currency translation report wrong movement">
+    <div class="issue-hdr" onclick="toggle(this)">
+      <div class="issue-sev sev-medium"></div>
+      <div class="issue-symptom">FX variance in the reporting currency P&L is unexpectedly large — management wants a rate vs volume analysis.</div>
+      <div class="issue-tags"><span class="tag tag-currency">Currency</span><span class="issue-chev">▼</span></div>
+    </div>
+    <div class="issue-body">
+      <div class="rf-row">
+        <div class="root-box"><div class="box-lbl root-lbl">Root Cause</div><div class="box-content">FX rate changed significantly between periods and there's no rate vs volume analysis configured in EPBCS. The full P&L movement is visible but the split between "we sold more" (volume) vs "the rate moved" (FX) is not automated — Finance is calculating this manually in Excel.</div></div>
+        <div class="fix-box"><div class="box-lbl fix-lbl">Fix / Build</div><div class="box-content">Build FX variance members in the Account dimension: <code>FX_Rate_Var = (CurrPeriodRate - PriorRate) × LocalVolume</code>; <code>FX_Volume_Var = (CurrVolume - PriorVolume) × PriorRate</code>. Store prior period rates in a separate Version or use @PRIOR in a member formula. This eliminates the manual Excel FX bridge that every global Finance team currently runs every month.</div></div>
+      </div>
+    </div>
+  </div>
+
+  </div><!-- end currency -->
+
+  <!-- Performance section -->
+  <div class="cat-section" id="cat-perf">
+  <div class="cat-hdr">
+    <span class="cat-icon">⚡</span>
+    <span class="cat-title">Performance</span>
+    <span class="cat-count">5 issues</span>
+  </div>
+
+  <div class="issue" data-cat="perf" data-keywords="application slow every user morning cache cold start global performance">
+    <div class="issue-hdr" onclick="toggle(this)">
+      <div class="issue-sev sev-medium"></div>
+      <div class="issue-symptom">EPBCS is slow for all users every morning, then speeds up after the first few people use it.</div>
+      <div class="issue-tags"><span class="tag tag-perf">Performance</span><span class="issue-chev">▼</span></div>
+    </div>
+    <div class="issue-body">
+      <div class="rf-row">
+        <div class="root-box"><div class="box-lbl root-lbl">Root Cause</div><div class="box-content">Essbase block cache is cold after the nightly maintenance window. The first queries of the day must load blocks from disk into memory — subsequent queries hit the warm cache. This is normal behaviour but can be mitigated.</div></div>
+        <div class="fix-box"><div class="box-lbl fix-lbl">Fix</div><div class="box-content">Add a "cache warm-up" step to the nightly EPM Automate script: run a background data export or CALC ALL covering the most-accessed intersection immediately after maintenance completes. This pre-populates the block cache before Finance arrives. Alternatively, increase the EPM data cache size in Application Settings if the environment licence allows it.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="issue" data-cat="perf" data-keywords="report slow 45 seconds ASO BSO aggregation total entity reporting cube">
+    <div class="issue-hdr" onclick="toggle(this)">
+      <div class="issue-sev sev-high"></div>
+      <div class="issue-symptom">CFO consolidated P&L report (all entities) takes 45+ seconds to load in BSO.</div>
+      <div class="issue-tags"><span class="tag tag-perf">Performance</span><span class="tag tag-calc">Calc</span><span class="issue-chev">▼</span></div>
+    </div>
+    <div class="issue-body">
+      <div class="rf-row">
+        <div class="root-box"><div class="box-lbl root-lbl">Root Cause</div><div class="box-content">BSO is optimised for write-back and calculation, not for large read-only aggregation queries across all entities. Querying Total Entity in BSO triggers aggregation of 600 accounts × 12 entity blocks in real-time.</div></div>
+        <div class="fix-box"><div class="box-lbl fix-lbl">Fix</div><div class="box-content">Implement an ASO reporting cube. Configure Smart Push to push BSO data to ASO after each CALC ALL. CFO report queries ASO — aggregation is pre-computed, query returns in &lt;2 seconds. Vision Corp saw 45 seconds → 8 seconds (BSO with database suppression) → 2 seconds (ASO).</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="issue" data-cat="perf" data-keywords="groovy slow DataGridBuilder batch write performance optimization round trips">
+    <div class="issue-hdr" onclick="toggle(this)">
+      <div class="issue-sev sev-high"></div>
+      <div class="issue-symptom">Groovy allocation rule runs in 45 minutes for 200 cost centres. Needs to run in under 5 minutes.</div>
+      <div class="issue-tags"><span class="tag tag-perf">Performance</span><span class="tag tag-groovy">Groovy</span><span class="issue-chev">▼</span></div>
+    </div>
+    <div class="issue-body">
+      <div class="rf-row">
+        <div class="root-box"><div class="box-lbl root-lbl">Root Cause</div><div class="box-content">Rule uses individual <code>getCell()</code> / <code>setCell()</code> per cost centre in a loop. 200 entities × 2 calls = 400 network round-trips. At ~150ms each = 60 seconds minimum, plus overhead from EPM job orchestration per call.</div></div>
+        <div class="fix-box"><div class="box-lbl fix-lbl">Fix — Apply 9 Hourglass Levers in Order</div><div class="box-content">1. Replace loop reads with one <code>DataGridBuilder</code> call. 2. Stage all writes in a list, commit with one <code>setDataCellValues()</code>. 3. Verify FIX scope on upstream calc scripts — are they touching all years? 4. Check if the allocation basis account is Dynamic Calc (re-evaluated every getCell). 5. Check block count — has a prior run created phantom blocks?</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="issue" data-cat="perf" data-keywords="parallel processing DI load time multiple files entities slow sequential">
+    <div class="issue-hdr" onclick="toggle(this)">
+      <div class="issue-sev sev-medium"></div>
+      <div class="issue-symptom">Data Integration loads for multiple entity files take too long — running sequentially takes 32 minutes for 4 entities.</div>
+      <div class="issue-tags"><span class="tag tag-perf">Performance</span><span class="tag tag-data">Data</span><span class="issue-chev">▼</span></div>
+    </div>
+    <div class="issue-body">
+      <div class="rf-row">
+        <div class="root-box"><div class="box-lbl root-lbl">Root Cause</div><div class="box-content">Multi-file DI imports are running sequentially — 4 files × 8 minutes = 32 minutes. Parallel processing is available from EPM 25.08 but not enabled.</div></div>
+        <div class="fix-box"><div class="box-lbl fix-lbl">Fix</div><div class="box-content">Enable parallel processing: DI → Application Settings → Parallel Processing = On. All 4 entity files now load simultaneously — total time drops to ~10 minutes. Alternatively, use a Pipeline to orchestrate multiple integrations in the same Stage (Stage jobs run in parallel by design).</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="issue" data-cat="perf" data-keywords="consolidation slow FCCS close EPBCS aggregation CALC ALL timing">
+    <div class="issue-hdr" onclick="toggle(this)">
+      <div class="issue-sev sev-medium"></div>
+      <div class="issue-symptom">CALC ALL takes much longer this month than it did last month — no changes were made to rules.</div>
+      <div class="issue-tags"><span class="tag tag-perf">Performance</span><span class="tag tag-calc">Calc</span><span class="issue-chev">▼</span></div>
+    </div>
+    <div class="issue-body">
+      <div class="rf-row">
+        <div class="root-box"><div class="box-lbl root-lbl">Root Cause</div><div class="box-content">Block count increased since last month — either due to new entities, new scenarios being loaded, or a block creation rule that created more blocks than expected. More blocks = more work for CALC ALL even if the rules are unchanged.</div></div>
+        <div class="fix-box"><div class="box-lbl fix-lbl">Fix</div><div class="box-content">Compare Application Statistics block counts month-over-month. If block count grew significantly without a planned dimensional expansion: investigate recent calc scripts and data loads for unintended block creation. For expected growth: consider whether a Custom CALC (scoped FIX) can replace CALC ALL for the specific accounts that changed.</div></div>
+      </div>
+    </div>
+  </div>
+
+  </div><!-- end perf -->
+
+  <div style="margin-top:40px;padding:20px 24px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r)">
+    <p style="font-family:'Cinzel',serif;font-size:12px;font-weight:700;color:var(--goldLt);margin-bottom:6px;letter-spacing:.04em">ABOUT THIS GUIDE</p>
+    <p style="font-size:13px;color:var(--dim);line-height:1.7;margin:0">All issues verified against Oracle EPM Cloud EPM 25.11. Block storage behaviour, API method names, and release-specific features are cross-referenced against Oracle's official Groovy Scripting Reference and EPM Cloud What's New documentation. When in doubt: check the Job Console first, Application Statistics second, Oracle Support third.</p>
+  </div>
+
+</div></div>
+</div>
+
+<script>
+(function(){var s=document.getElementById('stars');for(var i=0;i<80;i++){var d=document.createElement('div');d.className='star';var sz=Math.random()*2+0.4;d.style.cssText='width:'+sz+'px;height:'+sz+'px;top:'+Math.random()*100+'%;left:'+Math.random()*100+'%;--d:'+(2+Math.random()*4)+'s;--delay:'+Math.random()*5+'s;--op:'+(0.1+Math.random()*0.35);s.appendChild(d);}})();
+
+function toggle(hdr){
+  var issue = hdr.closest('.issue');
+  issue.classList.toggle('open');
+}
+
+function cp(btn){
+  var code = btn.closest('.ts-code');
+  var text = code.innerText.replace('Copy\n','').replace('Copied!\n','');
+  navigator.clipboard.writeText(text).then(function(){
+    btn.textContent='Copied!';btn.classList.add('copied');
+    setTimeout(function(){btn.textContent='Copy';btn.classList.remove('copied');},1800);
+  });
+}
+
+function filterCat(cat, linkEl){
+  document.querySelectorAll('.sb-link').forEach(function(l){l.classList.remove('active')});
+  if(linkEl) linkEl.classList.add('active');
+  document.querySelectorAll('.issue').forEach(function(i){
+    i.dataset.hidden = (cat !== 'all' && i.dataset.cat !== cat) ? 'true' : 'false';
+  });
+  document.querySelectorAll('.cat-section').forEach(function(s){
+    var id = s.id.replace('cat-','');
+    if(cat === 'all' || cat === id){s.style.display='block';}else{s.style.display='none';}
+  });
+}
+
+function searchIssues(q){
+  q = q.toLowerCase().trim();
+  document.querySelectorAll('.issue').forEach(function(issue){
+    var text = (issue.dataset.keywords||'') + ' ' + issue.querySelector('.issue-symptom').textContent;
+    issue.dataset.hidden = (q && text.toLowerCase().indexOf(q) === -1) ? 'true' : 'false';
+  });
+  document.querySelectorAll('.cat-section').forEach(function(s){
+    var visible = s.querySelectorAll('.issue:not([data-hidden="true"])').length;
+    s.style.display = visible > 0 ? 'block' : 'none';
+  });
+}
+</script>
+<script src="branding.js"></script>
+</body>
+</html>
