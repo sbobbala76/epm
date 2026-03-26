@@ -2574,7 +2574,7 @@ batchWriteCells(writes)   <span class="cmt">// 2 round-trips total, not N×2</sp
     code:`<span class="kw">def</span> <span class="fn-c">validateRTP</span>(String rtpName, List allowedValues = [], String label = <span class="kw">null</span>) {
   <span class="kw">def</span> displayName = label ?: rtpName
   <span class="kw">def</span> rtpMap      = operation.grid?.getRTPS()
-  <span class="kw">def</span> val         = rtpMap ? rtpMap.getAt(rtpName) : rtps?."${rtpName}"
+  <span class="kw">def</span> val         = rtpMap ? rtpMap.getAt(rtpName) : rtps?."\${rtpName}"
   <span class="kw">if</span> (!val || val.toString().trim().isEmpty())
     <span class="fn-c">throwVetoException</span>(<span class="str">"\${displayName} is required. Please make a selection before saving."</span>)
   <span class="kw">if</span> (allowedValues && !(val.toString() <span class="kw">in</span> allowedValues))
