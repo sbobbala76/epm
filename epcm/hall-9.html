@@ -399,6 +399,66 @@ body::after {
   .exam-body { padding: 20px 18px 18px; }
   .review-body { padding: 16px 14px; }
 }
+
+/* ── Flashcards ── */
+.fc-controls { display:flex; align-items:center; gap:14px; margin-bottom:28px; flex-wrap:wrap; }
+.fc-btn { font-family:var(--font-mono); font-size:10px; letter-spacing:.07em; padding:8px 18px;
+  border-radius:8px; border:1px solid var(--border2); background:var(--accent-dim);
+  color:var(--silver); cursor:pointer; transition:all .15s; }
+.fc-btn:hover { background:rgba(248,113,113,.15); color:var(--accent); }
+.fc-btn.active { background:rgba(248,113,113,.15); border-color:var(--accent-border); color:var(--accent); }
+.fc-counter { font-family:var(--font-mono); font-size:11px; color:var(--dim); margin-left:auto; letter-spacing:.05em; }
+.fc-progress-wrap { height:3px; background:var(--border); border-radius:2px; margin-bottom:28px; overflow:hidden; }
+.fc-progress-fill { height:100%; background:var(--accent); border-radius:2px; transition:width .3s ease; }
+.fc-card-wrap { perspective:1000px; max-width:640px; margin:0 auto 32px; cursor:pointer; }
+.fc-card { width:100%; min-height:220px; position:relative; transform-style:preserve-3d; transition:transform .45s ease; }
+.fc-card.flipped { transform:rotateY(180deg); }
+.fc-face { position:absolute; inset:0; backface-visibility:hidden; -webkit-backface-visibility:hidden;
+  border-radius:14px; padding:32px 28px; display:flex; flex-direction:column; justify-content:center; }
+.fc-front { background:var(--navy2); border:1px solid var(--border2); }
+.fc-back { background:var(--navy3); border:1px solid var(--accent-border); transform:rotateY(180deg); }
+.fc-tag { font-family:var(--font-mono); font-size:9px; letter-spacing:.1em; text-transform:uppercase;
+  color:var(--dim); margin-bottom:14px; }
+.fc-question { font-family:var(--font-body); font-size:17px; color:var(--white); line-height:1.55; }
+.fc-hint { font-family:var(--font-mono); font-size:10px; color:var(--dim); margin-top:auto; padding-top:16px; text-align:right; }
+.fc-answer { font-family:var(--font-body); font-size:15px; color:var(--silver2); line-height:1.65; }
+.fc-answer strong { color:var(--accent); font-weight:500; }
+.fc-answer code { font-family:var(--font-mono); font-size:12px; background:rgba(255,255,255,.07);
+  padding:1px 6px; border-radius:3px; color:var(--sky); }
+.fc-nav { display:flex; align-items:center; justify-content:center; gap:16px; max-width:640px; margin:0 auto; }
+.fc-nav-btn { font-family:var(--font-mono); font-size:11px; padding:9px 22px; border-radius:8px;
+  border:1px solid var(--border2); background:none; color:var(--silver2); cursor:pointer; transition:all .15s; }
+.fc-nav-btn:hover { border-color:var(--accent-border); color:var(--accent); }
+.fc-nav-btn:disabled { opacity:.3; cursor:default; }
+.fc-deck-filter { display:flex; gap:6px; flex-wrap:wrap; margin-bottom:20px; }
+.fc-filter-btn { font-family:var(--font-mono); font-size:9px; letter-spacing:.07em; padding:4px 12px;
+  border-radius:20px; border:1px solid var(--border); background:none; color:var(--dim); cursor:pointer; transition:all .15s; }
+.fc-filter-btn:hover,.fc-filter-btn.active { background:var(--accent-dim); border-color:var(--accent-border); color:var(--accent); }
+
+/* ── Glossary ── */
+.gl-search-wrap { margin-bottom:20px; }
+.gl-search { width:100%; padding:10px 16px; background:var(--navy2); border:1px solid var(--border2);
+  border-radius:8px; font-family:var(--font-mono); font-size:12px; color:var(--white); outline:none;
+  transition:border-color .15s; }
+.gl-search:focus { border-color:var(--accent-border); }
+.gl-search::placeholder { color:var(--dim); }
+.gl-letter { font-family:var(--font-mono); font-size:10px; letter-spacing:.14em; color:var(--dim);
+  text-transform:uppercase; margin:24px 0 10px; padding-bottom:6px;
+  border-bottom:1px solid var(--border); }
+.gl-entry { padding:14px 0; border-bottom:1px solid rgba(200,212,224,.04); }
+.gl-entry:last-child { border-bottom:none; }
+.gl-term { font-family:var(--font-mono); font-size:13px; color:var(--accent); font-weight:600; margin-bottom:5px; }
+.gl-def { font-size:14px; color:var(--silver2); line-height:1.65; }
+.gl-def strong { color:var(--white); font-weight:500; }
+.gl-def code { font-family:var(--font-mono); font-size:12px; background:rgba(255,255,255,.06);
+  padding:1px 5px; border-radius:3px; color:var(--sky); }
+.gl-tag { display:inline-block; font-family:var(--font-mono); font-size:8px; letter-spacing:.07em;
+  padding:2px 7px; border-radius:3px; margin-left:8px; vertical-align:middle; }
+.gl-tag-arch { background:rgba(56,189,248,.08); border:1px solid rgba(56,189,248,.2); color:var(--sky); }
+.gl-tag-exam { background:var(--accent-dim); border:1px solid var(--accent-border); color:var(--accent); }
+.gl-tag-trap { background:rgba(248,113,113,.07); border:1px solid rgba(248,113,113,.2); color:var(--red); }
+.gl-tag-groovy { background:rgba(74,222,128,.07); border:1px solid rgba(74,222,128,.2); color:var(--green); }
+.gl-hidden { display:none; }
 </style>
 </head>
 <body>
@@ -512,6 +572,8 @@ body::after {
         <button class="tab-btn" role="tab" onclick="switchTab('mock',this)"><span>📝</span> Mock Exam</button>
         <button class="tab-btn" role="tab" onclick="switchTab('syllabus',this)"><span>📚</span> Syllabus</button>
         <button class="tab-btn" role="tab" onclick="switchTab('traps',this)"><span>⚠️</span> Exam Traps</button>
+        <button class="tab-btn" role="tab" onclick="switchTab('flashcards',this)"><span>🃏</span> Flashcards</button>
+        <button class="tab-btn" role="tab" onclick="switchTab('glossary',this)"><span>📖</span> Glossary</button>
       </div>
 
       <!-- ═══════ TAB 1: OVERVIEW ═══════ -->
@@ -730,6 +792,66 @@ body::after {
         </section>
 
       </div><!-- /traps -->
+
+      <!-- ═══════ TAB 5: FLASHCARDS ═══════ -->
+      <div class="tab-panel" id="tab-flashcards">
+        <section class="section">
+          <h2 class="sec-h">Flashcards — Eliot's Rapid-Fire Revision</h2>
+          <div class="sec-div"></div>
+          <p class="sec-sub" style="margin-bottom:20px">Tap the card to flip. Use the filters to drill a specific topic. Work through every card before exam day — the ones that trip you up are exactly what the exam will ask.</p>
+
+          <div class="fc-deck-filter" id="fc-deck-filter">
+            <button class="fc-filter-btn active" data-deck="all" onclick="setDeck('all',this)">ALL DECKS</button>
+            <button class="fc-filter-btn" data-deck="0" onclick="setDeck('0',this)">SETUP</button>
+            <button class="fc-filter-btn" data-deck="1" onclick="setDeck('1',this)">DIMENSIONS</button>
+            <button class="fc-filter-btn" data-deck="2" onclick="setDeck('2',this)">MODELS</button>
+            <button class="fc-filter-btn" data-deck="3" onclick="setDeck('3',this)">RULE SETS</button>
+            <button class="fc-filter-btn" data-deck="4" onclick="setDeck('4',this)">CALCULATION</button>
+            <button class="fc-filter-btn" data-deck="5" onclick="setDeck('5',this)">ANALYTICS</button>
+            <button class="fc-filter-btn" data-deck="6" onclick="setDeck('6',this)">INTEGRATION</button>
+            <button class="fc-filter-btn" data-deck="7" onclick="setDeck('7',this)">MIGRATION</button>
+          </div>
+
+          <div class="fc-progress-wrap"><div class="fc-progress-fill" id="fc-progress" style="width:0%"></div></div>
+          <div class="fc-controls">
+            <button class="fc-btn" onclick="shuffleDeck()">🔀 Shuffle</button>
+            <button class="fc-btn" onclick="resetDeck()">↺ Reset</button>
+            <span class="fc-counter" id="fc-counter">Card 1 of 40</span>
+          </div>
+
+          <div class="fc-card-wrap" id="fc-card-wrap" onclick="flipCard()">
+            <div class="fc-card" id="fc-card">
+              <div class="fc-face fc-front">
+                <div class="fc-tag" id="fc-tag">TOPIC</div>
+                <div class="fc-question" id="fc-question">Loading…</div>
+                <div class="fc-hint">Tap to reveal Eliot's answer →</div>
+              </div>
+              <div class="fc-face fc-back">
+                <div class="fc-tag" id="fc-tag-back">ANSWER</div>
+                <div class="fc-answer" id="fc-answer">…</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="fc-nav">
+            <button class="fc-nav-btn" id="fc-prev" onclick="fcNav(-1)">← Previous</button>
+            <button class="fc-nav-btn" id="fc-next" onclick="fcNav(1)">Next →</button>
+          </div>
+        </section>
+      </div><!-- /flashcards -->
+
+      <!-- ═══════ TAB 6: GLOSSARY ═══════ -->
+      <div class="tab-panel" id="tab-glossary">
+        <section class="section">
+          <h2 class="sec-h">Glossary — Eliot's Field Definitions</h2>
+          <div class="sec-div"></div>
+          <p class="sec-sub" style="margin-bottom:20px">Every term that appears on the 1Z0-1082-25 exam, defined the way a practitioner would explain it — not the way a manual would. If it has a trap attached, the trap is named.</p>
+          <div class="gl-search-wrap">
+            <input type="text" class="gl-search" id="gl-search" placeholder="Search terms…" oninput="filterGlossary(this.value)">
+          </div>
+          <div id="gl-body"></div>
+        </section>
+      </div><!-- /glossary -->
 
       <!-- Hall Nav Footer -->
       <div class="hall-nav-footer">
@@ -985,6 +1107,31 @@ var EXAM_QUESTIONS = [
   { topic:0, diff:'expert', stem:'A NovaPrism Groovy business rule assigned to the headcount driver form\'s "After Save" event needs to trigger only the Finance and HR pool recalculation for the entities whose headcount changed. What Groovy API method identifies which cells were modified?', opts:['operation.application.getModifiedCells()','operation.grid.dataCellIterator().findAll { it.changed }','operation.cube.getDirtyIntersections()','operation.form.getModifiedRows()'], correct:1, explain:'The correct Groovy API is operation.grid.dataCellIterator().findAll { it.changed } — this returns only the cells that were modified in the current form session. Combined with .collect { it.getMemberName("Entity") }.unique(), it gives the list of entities to scope the FIX statement to. This is Groovy\'s core performance advantage over EPM Automate\'s full-model calculateModel.' },
   { topic:3, diff:'expert', stem:'NovaPrism\'s M01 has 18 rules across 5 rule sets. calcThreads = 5. Rule set seq:40 (Serial, 2 rules) reads a value written by rule set seq:10 (Serial, 3 rules). Which statement about execution is correct?', opts:['seq:10 and seq:40 can run in parallel since they are both Serial rule sets','seq:40 will start after seq:10 completes because rule sets execute in ascending sequence order regardless of Serial/Parallel mode','seq:40 will fail silently because it cannot read values written by a different rule set','calcThreads=5 means all 5 rule sets execute simultaneously, so seq:10\'s writes may not be visible to seq:40'], correct:1, explain:'Rule sets always execute in ascending sequence number order — seq:10 always finishes before seq:20 starts, seq:20 before seq:30, and so on. Serial/Parallel mode controls execution within a rule set, not between rule sets. The inter-set dependency (seq:40 reading seq:10\'s IT_Pool_Staged) is safe precisely because ascending sequence execution guarantees seq:10 is complete before seq:40 begins.' },
   { topic:4, diff:'expert', stem:'A Custom Calc rule in NovaPrism\'s M01 contains: FIX("ES", "IT_Costs", "PCM_Input", "Actual", "Working") "IT_Pool_Staged" = "IT_Costs" * 1.05; ENDFIX. After calculation, IT_Pool_Staged is 0 for all periods. What is the most likely cause?', opts:['The formula should use PCM_Allocation_In instead of PCM_Input','The FIX statement crosses dimensions correctly but ASO cannot calculate during a FIX block','IT_Pool_Staged or "IT_Costs" is a Dynamic storage member — Dynamic members in ASO do not persist writes from calculation rules','The calcThreads setting of 5 caused a parallel write collision on IT_Pool_Staged'], correct:2, explain:'Dynamic storage members in ASO do not persist values written by calculation rules — the writes appear to succeed but the values are not stored. IT_Pool_Staged or IT_Costs being Dynamic would cause exactly this symptom: calculation runs, no error, but the cell reads as 0 afterward. The fix is to ensure all operationally-written members are Stored, not Dynamic. This is one of the most dangerous EPCM dimension design errors.' },
+
+  // ── NEW T2: POVs & Models ──────────────────────────────────────
+  { topic:2, diff:'practitioner', stem:'NovaPrism runs M01 (Actual/Working) on Day 1. On Day 2, the Finance Controller wants to run M04 (Actual/WhatIf) to model a headcount restructure. Which statement about PCM_REP during the M04 calculation run is correct?', opts:['PCM_REP is locked while PCM_CLC is being written — the CFO cannot access Actual/Working results during the M04 run','PCM_REP retains the last published Actual/Working results and is unaffected by M04 calculating in PCM_CLC','M04 overwrites M01 results in PCM_REP because both use the Actual Scenario','M04 calculation clears PCM_REP for the period before writing its results'], correct:1, explain:'PCM_REP is only updated when Copy POV explicitly runs — it is never touched during a PCM_CLC calculation. The CFO can read Actual/Working results from PCM_REP while M04 calculates Actual/WhatIf in PCM_CLC simultaneously. This isolation is the core value of the dual-cube architecture.' },
+  { topic:2, diff:'foundation', stem:'Which of the following correctly describes the Copy POV direction in EPCM?', opts:['PCM_REP → PCM_CLC (reporting results are pushed to calculation cube for re-use)','PCM_CLC → PCM_REP (calculation results are published to the reporting cube)','Either direction depending on the model configuration','Copy POV runs between two PCM_REP cubes for multi-region consolidation'], correct:1, explain:'Copy POV always runs from PCM_CLC to PCM_REP — one direction only. The calculation cube produces results; Copy POV publishes them to the reporting cube. The direction cannot be reversed. This is one of the most consistently tested facts on the 1Z0-1082-25 exam.' },
+
+  // ── NEW T4: Calculating models ─────────────────────────────────
+  { topic:4, diff:'foundation', stem:'Where does a user navigate to manually trigger an EPCM model calculation?', opts:['Home → Application → Calculate','Home → Modeling → Execution Control','Home → Administration → Run Model','Home → Intelligence → Calculate Model'], correct:1, explain:'The Execution Control page is accessed via Home → Modeling → Execution Control. This is where you select the model, confirm the POV, and trigger the calculation. It is different from Calculation Analysis (Home → Modeling → Calculation Analysis), which is where you review statistics after the run.' },
+  { topic:4, diff:'practitioner', stem:'NovaPrism\'s Finance Controller runs M01 for Q1 and the Calculation Analysis page shows Rule 1 (IT Pool Formation) took 43 minutes out of a 47-minute total run. What does this pattern indicate?', opts:['The IT pool has too many GL accounts — reducing account count will fix the issue','Rule 1 has a scoping problem — likely missing a FIX statement, causing it to iterate across far more cells than necessary','calcThreads is set too low — increasing it will distribute Rule 1 across more threads','The PCM_REP aggregation is running inside the calculation instead of after Copy POV'], correct:1, explain:'When a single rule consumes 91% of the total model runtime, the cause is almost always poor scoping — the rule is iterating across the entire cube rather than a targeted intersection. The fix is adding a FIX statement to constrain the calculation to the relevant members (e.g., FIX on Entity="ES" and the specific Account range). NovaPrism\'s M01 tuning reduced runtime from 47 minutes to 88 seconds using exactly this fix.' },
+  { topic:4, diff:'practitioner', stem:'After adding a FIX statement to Rule 1 in NovaPrism\'s M01, the Finance Controller wants to compare the new runtime against the baseline without affecting production data. What is the correct approach?', opts:['Run the model on the Actual/Working POV and compare the new Calculation Analysis record against the previous record','Use Run Express Calculation to test the rule performance — it generates full statistics for comparison without writing results','Create a What-If model on a separate Version and run the calculation there to compare stats','Use the Diagnostics report in Calculation Analysis to simulate the rule without executing it'], correct:0, explain:'The correct approach is to run the model (on any valid POV, including a test Scenario/Version) and compare the new Calculation Analysis record against the previous one. Run Express Calculation intentionally does NOT generate statistics — it is for fast iterative testing when you do not need performance data. The Diagnostics report analyses an existing completed run, not a simulation.' },
+  { topic:4, diff:'expert', stem:'NovaPrism\'s Calculation Analysis Summary report shows M01 total runtime = 88 seconds. The Diagnostics report for the same run shows Rule 1 elapsed time = 92 seconds. Which statement correctly explains this apparent contradiction?', opts:['The Diagnostics report is wrong — it cannot show a rule taking longer than the total model runtime','Elapsed time in the Diagnostics report includes queue time and Essbase overhead; actual execution was less than 88 seconds. The Summary runtime is wall-clock time from model start to completion','The Summary report rounds down to the nearest second and the actual runtime was over 92 seconds','Rules in Parallel rule sets report combined elapsed time, so Rule 1\'s 92 seconds includes other rules\' times'], correct:1, explain:'The elapsed time shown per rule in the Diagnostics report includes queue time, Essbase processing overhead, and lock contention — not just pure calculation time. The Summary report shows wall-clock time from model start to finish. A rule can show higher elapsed time than the Summary total if it was queued early but processing overlapped with other operations. This is expected and not an error.' },
+
+  // ── NEW T5: Analyzing data ─────────────────────────────────────
+  { topic:5, diff:'foundation', stem:'How do you access the Calculation Analysis page in EPCM?', opts:['Home → Administration → Calculation Analysis','Home → Modeling → Calculation Analysis','Home → Intelligence → Calculation Analysis','Home → Application → Statistics'], correct:1, explain:'Calculation Analysis is accessed via Home → Modeling → Calculation Analysis. This is distinct from Execution Control (where you run models) and from the Intelligence menu (Profit Curves, Scatter Analysis). The navigation path is a direct exam fact.' },
+  { topic:5, diff:'foundation', stem:'After NovaPrism\'s M01 Q1 run completes, a Finance analyst wants to see how IT costs were distributed across the 4 divisions. Which reporting tool shows rule-by-rule allocation flows with the PCM_Balance members visible?', opts:['Profit Curve — shows cumulative allocation by division','Rule Balancing — accessed via Home → Modeling → Rule Balancing, shows PCM_Balance members per rule','Scatter Analysis — plots IT costs vs headcount for diagnostic purposes','Calculation Analysis — shows the distribution in the Statistics Summary report'], correct:1, explain:'Rule Balancing (Home → Modeling → Rule Balancing) is specifically designed to show allocation flows with PCM_Balance dimension members — Input, Allocation In, Allocation Out, Net Balance — per rule. It requires a pre-designed data form with PCM_Rule and PCM_Balance dimensions. Profit Curves show cumulative profitability by population dimension, not rule-level allocation detail.' },
+  { topic:5, diff:'practitioner', stem:'A NovaPrism analyst configures a Scatter Analysis plot with Revenue on the X-axis and Net Profit on the Y-axis for all 60 customer engagements. The quadrant threshold lines are set at X=$5M and Y=$0. Engagement ENG_042 plots in the bottom-right quadrant. What does this indicate?', opts:['ENG_042 has revenue above $5M but negative net profit — high-revenue but loss-making after full allocation','ENG_042 has revenue below $5M and positive net profit — small but profitable','ENG_042 has revenue above $5M and positive net profit — a Star engagement','ENG_042 has both revenue and profit below threshold — a marginal small engagement'], correct:0, explain:'Bottom-right quadrant = above the X-axis threshold (revenue > $5M) but below the Y-axis threshold (net profit < $0). ENG_042 generates significant revenue but is loss-making after EPCM\'s full cost allocation. This is the "Cash Trap" — high-revenue engagements that appear profitable on direct costs but destroy value once allocated overhead is factored in. For NovaPrism, IS has several of these among its 60 engagements.' },
+  { topic:5, diff:'practitioner', stem:'Which dimension is required in the EPCM application to enable both Profit Curves and Scatter Analysis under Home → Intelligence?', opts:['PCM_Balance — stores the net profit figures that drive the analysis','PCM_Rule — links rule execution results to analytics views','Profit Attribute dimension — tags members with segment classifications','Population dimension — any dimension can serve as the population axis'], correct:2, explain:'The Profit Attribute dimension is a required application dimension for both Profit Curves and Scatter Analysis. It tags members with segment classifications (Stars, Cash Cows, Rising Stars, Dogs) that enable the quadrant overlay and Category Analysis. Without it, neither analytics view is available. This is a direct exam fact — not PCM_Balance, not PCM_Rule.' },
+  { topic:5, diff:'expert', stem:'NovaPrism\'s Optimize for Reporting setting is disabled to improve M01 calculation speed. After Copy POV runs, the CFO\'s Smart View report shows incorrect aggregation totals for parent entities. What is the most likely cause?', opts:['Copy POV does not copy parent-level data — it only copies level-0 intersections','Optimize for Reporting controls how ASO aggregates parent members in PCM_REP — disabling it prevents correct rollup aggregations in the reporting cube','The Smart View connection is pointed at PCM_CLC instead of PCM_REP after Optimize for Reporting is disabled','Disabling Optimize for Reporting clears PCM_REP before Copy POV can write to it'], correct:1, explain:'Optimize for Reporting controls ASO aggregation behaviour in PCM_REP. When disabled, parent-level member aggregations may not compute correctly because the ASO cube is not configured to roll up values through the hierarchy in the expected way. The exam trap is that "disabling it improves calculation speed" sounds appealing — but the silent consequence is broken parent aggregations in PCM_REP. This is tested because it is a real production mistake that surfaces only in reporting, not in the calculation itself.' },
+
+  // ── NEW T6: Managing data integration ─────────────────────────
+  { topic:6, diff:'foundation', stem:'A NovaPrism administrator wants to run a Data Integration rule to load Q1 GL actuals from Oracle ERP Cloud. Where is this initiated in EPCM?', opts:['Home → Modeling → Data Load','Home → Application → Data Integration','Home → Data Exchange → Data Integration','Home → Data Management → Data Integration'], correct:2, explain:'Data Integration is accessed via Home → Data Exchange → Data Integration (previously called Data Management in older versions). This navigation path is tested directly on the exam — candidates who have worked with older PCM versions sometimes confuse it with the legacy Data Management path.' },
+  { topic:6, diff:'practitioner', stem:'NovaPrism\'s Data Integration member mapping for the IT cost accounts uses a Like mapping: "61*" → "IT_Cost_Pool". A new GL account 6099 is added to the ERP chart of accounts for IT consulting fees. Will this account be mapped automatically?', opts:['Yes — Like mappings with wildcards automatically cover any new accounts matching the pattern','No — Like mappings must be manually updated when new accounts are added','Yes — but only if the account is added to the EPCM dimension first via importMetadata','No — Like mappings only match accounts already defined in the EPCM Account dimension'], correct:0, explain:'Like mappings use wildcard patterns — "61*" maps any source value starting with "61" to the target member. Account 6099 starts with "60", not "61", so it would NOT be covered by the "61*" pattern. The question uses 6099 deliberately — candidates must read carefully. If the new account were 6100–6199, it would match "61*" automatically without updating the mapping.' },
+
+  // ── NEW T7: Migration ──────────────────────────────────────────
+  { topic:7, diff:'foundation', stem:'When was EPCM (Enterprise Profitability and Cost Management) launched as an Oracle Cloud service, replacing the legacy on-premises PCM architecture?', opts:['January 2020','June 2022','March 2021','September 2023'], correct:1, explain:'EPCM was launched in June 2022. Any application built or migrated before that date used the legacy single-cube PCM architecture. The June 2022 date is relevant for migration questions — it marks the architectural boundary between legacy PCM (single ASO cube) and EPCM (dual ASO cubes: PCM_CLC + PCM_REP).' },
+  { topic:7, diff:'practitioner', stem:'During NovaPrism\'s migration from legacy PCM to EPCM, the implementation team discovers that several rules write intermediate staging values to members that are Dynamic in the legacy application. What must be done before these rules will work correctly in EPCM?', opts:['Nothing — Dynamic members behave identically in EPCM ASO as in legacy PCM ASO','Change all staging members that receive writes from rules from Dynamic to Stored storage type','Move the staging members from PCM_CLC to PCM_REP since EPCM uses separate cubes','Rewrite the rules using Groovy instead of native EPCM rule syntax'], correct:1, explain:'In EPCM\'s ASO model, Dynamic members do not persist values written by calculation rules. This is the primary technical migration task: audit every member that receives writes from allocation or Custom Calc rules, and change any Dynamic members to Stored. Legacy PCM may have worked differently — the migration guide explicitly identifies Dynamic member review as the critical pre-migration step.' },
 ];
 
 /* ── Shuffle helper ── */
@@ -992,6 +1139,27 @@ function shuffle(arr){
   var a=arr.slice();
   for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}
   return a;
+}
+
+/* ── Pick 50 questions proportionally from the bank ──
+   Weights match the official 1Z0-1082-25 topic distribution.
+   More bank = better shuffle variety each attempt. ── */
+function pickExamQuestions(bank, target){
+  // topic target counts (8 topics, sum = 50)
+  var targets = [5, 7, 5, 11, 8, 6, 6, 2];
+  var result = [];
+  for(var t=0; t<8; t++){
+    var pool = shuffle(bank.filter(function(q){ return q.topic===t; }));
+    var n = Math.min(targets[t], pool.length);
+    result = result.concat(pool.slice(0, n));
+  }
+  // if we got fewer than target (topic pool too small), pad from remaining
+  if(result.length < target){
+    var used = result.map(function(q){ return bank.indexOf(q); });
+    var remaining = shuffle(bank.filter(function(q,i){ return used.indexOf(i)===-1; }));
+    result = result.concat(remaining.slice(0, target - result.length));
+  }
+  return shuffle(result);
 }
 
 /* ══════════════════════════════════════════
@@ -1010,7 +1178,7 @@ var examState={
 
 function startExam(){
   // Shuffle and pick 50 (we have exactly 50)
-  examState.questions=shuffle(EXAM_QUESTIONS);
+  examState.questions=pickExamQuestions(EXAM_QUESTIONS, 50);
   examState.current=0;
   examState.answers={};
   examState.secondsRemaining=90*60;
@@ -1397,6 +1565,204 @@ document.querySelectorAll('a[href^="#"]').forEach(function(a){
     if(el){e.preventDefault();el.scrollIntoView({behavior:'smooth',block:'start'});}
   });
 });
+
+/* ══════════════════════════════════════════
+   FLASHCARD DATA — 40 cards across 8 topics
+   Eliot voice: direct, practitioner-honest
+══════════════════════════════════════════ */
+var FLASHCARDS = [
+  // TOPIC 0 — Setup
+  { topic:0, q:'What are EPCM\'s two prebuilt cubes and what does each do?', a:'<strong>PCM_CLC</strong> (calculation cube) — where all rules execute and data is written. <strong>PCM_REP</strong> (reporting cube) — read-only, updated only when Copy POV runs. Both are ASO. Never BSO.' },
+  { topic:0, q:'Which storage engine does EPCM Standard use?', a:'<strong>ASO (Aggregate Storage Option)</strong> for both cubes. Not BSO — that\'s Planning\'s engine. This is the most common wrong answer on the exam. ASO means: no calculation scripts stored on members, aggregation-based parent values, Dynamic members don\'t persist writes.' },
+  { topic:0, q:'Which role is required to create an EPCM application?', a:'<strong>Service Administrator</strong> — the only role that can provision applications. Power Users can do almost everything else, but application creation is Service Administrator-only. This is tested as a single-answer fact question.' },
+  { topic:0, q:'What is the default Clear type in EPCM and why does it matter?', a:'<strong>Logical Clear</strong> is the default. It removes data only from the current model\'s POV slice — other models\' data in the same Period is untouched. Physical Clear wipes the entire ASO block including other models\' data. In a 4-model environment like NovaPrism\'s, accidentally using Physical Clear is catastrophic.' },
+  { topic:0, q:'What are the two application-level settings that affect allocation precision and calculation parallelism?', a:'<strong>allocPrec</strong> — decimal places for allocation calculations (NovaPrism: 2). Causes $0.02 rounding gaps on a $52M pool — expected, not a bug. <strong>calcThreads</strong> — maximum concurrent rule execution threads (NovaPrism: 5). Application-level, not per rule set.' },
+  // TOPIC 1 — Dimensions
+  { topic:1, q:'What is PCM_Balance and what are its 6 members?', a:'<strong>PCM_Balance</strong> is the only mandatory system-defined dimension in EPCM. Its 6 members track the allocation lifecycle: <strong>PCM_Input</strong> (original loaded data), <strong>PCM_Allocation_In</strong>, <strong>PCM_Allocation_Out</strong>, <strong>PCM_Adjustment_In</strong>, <strong>PCM_Adjustment_Out</strong>, <strong>PCM_Net_Balance</strong> (sum of all). You cannot delete or rename it.' },
+  { topic:1, q:'What storage type must driver members use in EPCM and why?', a:'<strong>Stored</strong> — not Dynamic. Dynamic members in ASO do not persist values written by rules. If a driver member (headcount, ticket count) is Dynamic, the allocation rule writes to it, the value is not stored, and the allocation produces zero. Silent failure — no error, just wrong numbers.' },
+  { topic:1, q:'Why does EPCM use alternate hierarchies in the Account dimension instead of a separate Cost_Pool dimension?', a:'Alternate hierarchies provide the same cost pool grouping without adding a dimension. Primary Account hierarchy = GL structure. Alternate hierarchy = cost pool grouping of the same leaf members. One dimension, two views, no cross-dimensional join, smaller cube. Adding a Cost_Pool dimension creates redundancy and increases cube complexity.' },
+  { topic:1, q:'What is the No_Customer member and why is it required?', a:'<code>No_Customer</code> is a catch-all member in the Customer dimension for costs that cannot be attributed to a specific engagement. Without it, unattributed costs have no valid Customer target and the Customer subtotal misreconciles with the Entity total — Rule Balancing reports a false imbalance.' },
+  { topic:1, q:'How many user-defined dimensions does EPCM Standard support? How does this compare to the PCM_Balance dimension?', a:'EPCM Standard supports up to <strong>20 user-defined dimensions</strong>. PCM_Balance is a system dimension — it does not count toward the 20. NovaPrism uses 10 user-defined dimensions (Account, Entity, Region, Function, Product, Customer, Period, Scenario, Version, View) + PCM_Balance = 11 total dimensions in the application.' },
+  // TOPIC 2 — Models & POVs
+  { topic:2, q:'What is an EPCM model and what four things does it define?', a:'A model is a named calculation context. It defines: (1) which rule sets execute, (2) which Scenario, (3) which Version, (4) the Clear Type. Once the first calculation runs, Scenario and Version are locked — you cannot change them. This is an exam trap: candidates think you can edit a running model\'s properties.' },
+  { topic:2, q:'Copy POV: what does it do, which direction, and what triggers it?', a:'Copy POV publishes results from <strong>PCM_CLC → PCM_REP</strong>. One direction only — never reversed. Triggered manually (Home → Modeling → Execution Control), via EPM Automate (<code>copyDataByPointOfView</code>), or as a Pipeline job step. PCM_REP is only updated by Copy POV — never mid-calculation. Note: the EPM Automate command is <code>copyDataByPointOfView</code>, not <code>copyPov</code> (that\'s Planning).' },
+  { topic:2, q:'What is a Named POV and how is it different from Copy POV?', a:'A <strong>Named POV</strong> is a saved shortcut in the POV selector — it remembers your preferred Scenario/Version/Period combination so you don\'t reset it every session. <strong>Copy POV</strong> is a data publication operation that moves results between cubes. One is navigation, the other is data movement. The exam tests this distinction directly.' },
+  { topic:2, q:'NovaPrism has 4 models: M01–M04. Why 4 separate models instead of one model with 4 Scenarios?', a:'Four models give four independent calculation lifecycles. Each model\'s Clear phase only touches its own Scenario/Version/Period slice. If M01 and M02 shared a model, M01\'s Clear would wipe M02\'s data. Separate models also allow separate rule set assignments — M02 uses fewer rule sets than M01 because Forecast doesn\'t need engagement-level allocation.' },
+  // TOPIC 3 — Rule Sets
+  { topic:3, q:'What is the difference between Serial and Parallel rule set execution?', a:'<strong>Serial</strong>: rules execute one at a time in sequence. Rule N can read values written by Rule N-1 in the same set. Use when intra-set read/write dependencies exist. <strong>Parallel</strong>: all rules start simultaneously. No rule sees another\'s writes. Silent data corruption if you put dependencies in a Parallel set. The mode controls execution within a set — between sets, ascending sequence order always applies.' },
+  { topic:3, q:'What are the three EPCM rule types?', a:'<strong>Allocation</strong> — driver-based distribution of a source value across targets using a ratio or percentage. Requires a pre-existing pool total. <strong>Custom Calculation</strong> — Essbase calc script logic: FIX, ENDFIX, formulas, NONEMPTYTUPLE. Used for pool formation, staging, complex logic. <strong>Offset</strong> — creates a balancing entry to zero out a cost center. Used at the end of allocation chains to ensure ES nets to zero.' },
+  { topic:3, q:'Why does NovaPrism\'s seq:40 (IT Allocation) depend on seq:10 (IT Pool Formation) completing first?', a:'seq:40 reads <code>IT_Pool_Staged</code> — a value written by seq:10. If seq:40 runs before seq:10, <code>IT_Pool_Staged</code> = 0, and $52M of IT costs are silently allocated as zero. The dependency is enforced by ascending sequence numbers: EPCM always runs seq:10 before seq:20 before seq:30 before seq:40. No additional configuration needed — the sequence number IS the dependency contract.' },
+  { topic:3, q:'What is calcThreads and where is it set?', a:'<code>calcThreads</code> is an <strong>application-level</strong> setting controlling the maximum number of rules that can execute concurrently across all models. NovaPrism: 5. It is NOT per rule set. It does not override Serial/Parallel mode — it sets the thread ceiling. With calcThreads=1, even Parallel rule sets run sequentially because only one thread is available.' },
+  // TOPIC 4 — Calculation
+  { topic:4, q:'What is the sequence of phases when an EPCM model calculation runs?', a:'1. <strong>Clear</strong> (Logical by default — clears the POV in PCM_CLC). 2. <strong>Driver load</strong> (refreshes staging members if driver rules included). 3. <strong>Rule sets execute in ascending sequence order</strong> (seq:10 → seq:20 → seq:30 → seq:40 → seq:50). 4. <strong>Balance verification</strong> (ES must net to zero: PCM_Input = PCM_Allocated_Out). Copy POV runs separately after this — it is not part of the calculation.' },
+  { topic:4, q:'What does NONEMPTYTUPLE do in a Custom Calc rule and why is it more than just a performance optimisation?', a:'<code>NONEMPTYTUPLE</code> restricts the calculation to only the intersections where at least one of the specified members has data. It is a <strong>correctness guard</strong>, not just a performance tool: if a rule has conditional logic that branches on whether a value is zero (e.g., allocate only if the driver > 0), running on empty intersections can cause incorrect branching. NONEMPTYTUPLE prevents both wasted computation and incorrect results.' },
+  { topic:4, q:'What is Run Express Calculation and when should you NOT use it?', a:'Run Express Calculation runs the model quickly without generating a calculation statistics record. Use it for fast iterative testing during development. Do NOT use it for production runs you need to diagnose — there will be no Calculation Analysis record to compare against. If performance degrades in production and the last run used Express Calculation, you have nothing to analyse.' },
+  { topic:4, q:'NovaPrism\'s M01 went from 47 minutes to 88 seconds. Name the three changes that caused this.', a:'1. <strong>FIX statement added</strong> to Rule 1 (IT Pool Formation) — scoped the Custom Calc to only Entity="ES" and the IT account range instead of the full cube. 2. <strong>NONEMPTYTUPLE</strong> added to restrict iteration to non-empty intersections. 3. <strong>Parallel execution</strong> restructured — seq:20 and seq:30 made Parallel (no intra-set dependencies) so they run concurrently within the calcThreads=5 ceiling.' },
+  // TOPIC 5 — Analytics
+  { topic:5, q:'What does the PCM_Balance dimension track and how do you calculate PCM_Net_Balance?', a:'PCM_Balance tracks the allocation lifecycle for every data value. Formula: <strong>PCM_Net_Balance = PCM_Input + PCM_Allocation_In + PCM_Allocation_Out + PCM_Adjustment_In + PCM_Adjustment_Out</strong>. For a cost centre like ES: Input = $134M (costs loaded), Allocation_Out = −$134M (fully distributed), Net_Balance = $0 (balanced). For a receiving entity like IS: Input = $870M (direct costs), Allocation_In = $80.82M (overhead received), Net_Balance = $950.82M (fully-loaded costs).' },
+  { topic:5, q:'What is Rule Balancing and how do you access it?', a:'Rule Balancing is a diagnostic view showing allocation flows with all PCM_Balance members visible per rule. Access: <strong>Home → Modeling → Rule Balancing</strong>. Requires a pre-designed data form with PCM_Rule and PCM_Balance dimensions. Actions available: Export to Excel, View Rule Definition, View Rule Data (Ad-Hoc), View in Smart View. It does not auto-generate — you design the form first.' },
+  { topic:5, q:'On a NovaPrism profit curve, the x-axis shows 60 engagements and the curve peaks at #36 then declines. What does the decline mean?', a:'Engagements 37–60 are <strong>unprofitable</strong> — they destroy value. The curve declines because cumulative profit decreases as each loss-making engagement is added. NovaPrism\'s curve peaks at $46.2M (engagement #36) and ends at $38.4M (engagement #60), meaning the bottom 24 engagements collectively destroy $7.8M. None of these 17 loss-makers appear unprofitable on direct costs — only EPCM\'s full allocation reveals them.' },
+  { topic:5, q:'What dimension is required to enable Profit Curves and Scatter Analysis?', a:'The <strong>Profit Attribute dimension</strong>. Without it, neither analytics view is available — they cannot be configured. This is a direct exam fact that exploits the assumption that PCM_Balance or a measure dimension is required. The Profit Attribute dimension tags members with segment labels (Stars, Cash Cows, Rising Stars, Dogs) that drive the quadrant overlay and Category Analysis.' },
+  { topic:5, q:'What is the difference between Profit Curves and Scatter Analysis?', a:'<strong>Profit Curves</strong>: one axis (population sorted by profitability, descending), cumulative measure on y-axis. Shows ranking and value destruction. <strong>Scatter Analysis</strong>: two-axis plot of any two measures against a population. Shows position and quadrant classification simultaneously. Both under <strong>Home → Intelligence</strong>. Both require the Profit Attribute dimension. Both read from PCM_REP — stale if Copy POV hasn\'t run.' },
+  // TOPIC 6 — Integration
+  { topic:6, q:'What are the four member mapping types in Data Integration and when is each used?', a:'<strong>Explicit</strong> — exact match: "6100" → "IT_Costs". <strong>Like</strong> — wildcard: "61*" → "IT_Costs" (all accounts starting with 61). <strong>Between</strong> — numeric range: "6100 to 6199" → "IT_Costs". <strong>Multi-Dimensional</strong> — maps based on a combination of dimensions. Exam: "Between" for numeric ranges, "Like" for wildcard patterns — don\'t confuse them.' },
+  { topic:6, q:'Why does EPCM register under "Planning" category in Data Integration?', a:'Despite being a separate product, EPCM shares the Essbase calculation engine with Planning applications. Data Integration categorises targets by their underlying engine, not their product name. This is a direct exam trap — candidates expect "Profitability" or "EPCM" as the category.' },
+  { topic:6, q:'Which EPM application does EPCM explicitly NOT integrate with via Data Integration?', a:'<strong>EPM Planning (EPBCS/PBCS)</strong>. EPCM integrates with Oracle ERP Cloud, FCCS, ARCS, and other EPM Cloud processes — but not Planning. This is tested because candidates assume all Oracle EPM Cloud products interoperate freely. The Planning exclusion is a documented limitation.' },
+  { topic:6, q:'What does EPCM Writeback create and where?', a:'Writeback creates actual <strong>journal entries in Oracle ERP Cloud\'s General Ledger</strong>. Not data exports, not budget entries — real GL journal entries that post allocated costs alongside revenue. For NovaPrism: allocated IS overhead appears in ERP alongside IS revenue, enabling fully-loaded P&L in ERP without a spreadsheet reconciliation.' },
+  { topic:6, q:'What is the Pipeline job-type limitation in EPCM and what is the workaround?', a:'Pipeline job steps can only call <strong>Calculation Manager business rules</strong> — not native EPCM rule sets directly. The workaround: create a Groovy business rule in Calculation Manager that calls the EPCM REST API to trigger <code>calculateModel</code>. The Pipeline calls the Groovy rule; Groovy calls the model. One extra hop — but keeps everything inside the Pipeline orchestration framework.' },
+  // TOPIC 7 — Migration
+  { topic:7, q:'What is the fundamental architectural difference between legacy PCM and EPCM?', a:'Legacy PCM used a <strong>single ASO cube</strong> — calculation and reporting competed for the same database. EPCM uses <strong>dual ASO cubes</strong>: PCM_CLC (calculation) and PCM_REP (reporting). The CFO can read stable results from PCM_REP while a new calculation runs in PCM_CLC. The dual-cube architecture was introduced when EPCM launched in June 2022.' },
+  { topic:7, q:'What is the primary technical task when migrating from legacy PCM to EPCM?', a:'<strong>Dynamic member review</strong>. Any member that receives writes from calculation rules must be changed from Dynamic to Stored storage type. In EPCM\'s ASO model, Dynamic members do not persist writes — rules appear to run but values are not stored. This is the migration step most likely to cause silent post-migration failures.' },
+  { topic:7, q:'Does EPCM have a "Custom Application" type like Planning Cloud?', a:'<strong>No.</strong> EPCM is a specialised profitability and cost management module — it is not a blank-slate custom application builder. There is no "EPCM Custom" analogous to Planning\'s Custom application. This is a trap that exploits familiarity with Planning. If you hit a 20-dimension limit during migration, the answer is to consolidate dimensions (alternate hierarchies), not upgrade to a non-existent Custom type.' },
+  { topic:7, q:'What is the standard approach for promoting EPCM test changes to production without including production data?', a:'<strong>exportSnapshot</strong> from test environment → <strong>importSnapshot</strong> to production, selecting only artifact components (rules, dimensions, Groovy scripts, security) and excluding the data component during import. Do NOT use <code>cloneEnvironment</code> — that copies everything including data. The export/import snapshot path is the standard Oracle LCM promotion workflow.' },
+];
+
+/* ── Flashcard engine ── */
+var fcDeck = FLASHCARDS.slice();
+var fcIndex = 0;
+var fcFlipped = false;
+var fcCurrentDeck = 'all';
+
+function setDeck(deck, btn){
+  document.querySelectorAll('.fc-filter-btn').forEach(function(b){b.classList.remove('active');});
+  btn.classList.add('active');
+  fcCurrentDeck = deck;
+  fcDeck = deck==='all' ? FLASHCARDS.slice() : FLASHCARDS.filter(function(c){return String(c.topic)===deck;});
+  fcIndex = 0;
+  renderCard();
+}
+function shuffleDeck(){
+  for(var i=fcDeck.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=fcDeck[i];fcDeck[i]=fcDeck[j];fcDeck[j]=t;}
+  fcIndex=0; renderCard();
+}
+function resetDeck(){
+  fcDeck = fcCurrentDeck==='all' ? FLASHCARDS.slice() : FLASHCARDS.filter(function(c){return String(c.topic)===fcCurrentDeck;});
+  fcIndex=0; renderCard();
+}
+function flipCard(){
+  fcFlipped=!fcFlipped;
+  document.getElementById('fc-card').classList.toggle('flipped', fcFlipped);
+}
+function fcNav(dir){
+  fcIndex = Math.max(0, Math.min(fcDeck.length-1, fcIndex+dir));
+  fcFlipped=false;
+  document.getElementById('fc-card').classList.remove('flipped');
+  renderCard();
+}
+function renderCard(){
+  if(!fcDeck.length) return;
+  var c = fcDeck[fcIndex];
+  var topicNames=['Setup','Dimensions','Models','Rule Sets','Calculation','Analytics','Integration','Migration'];
+  document.getElementById('fc-tag').textContent = topicNames[c.topic] || 'EPCM';
+  document.getElementById('fc-tag-back').textContent = 'Eliot\'s Answer — ' + (topicNames[c.topic]||'EPCM');
+  document.getElementById('fc-question').textContent = c.q;
+  document.getElementById('fc-answer').innerHTML = c.a;
+  document.getElementById('fc-counter').textContent = 'Card '+(fcIndex+1)+' of '+fcDeck.length;
+  document.getElementById('fc-progress').style.width = ((fcIndex+1)/fcDeck.length*100)+'%';
+  document.getElementById('fc-prev').disabled = (fcIndex===0);
+  document.getElementById('fc-next').disabled = (fcIndex===fcDeck.length-1);
+}
+renderCard();
+
+/* ══════════════════════════════════════════
+   GLOSSARY DATA — 50 terms, Eliot voice
+══════════════════════════════════════════ */
+var GLOSSARY = [
+  { term:'allocPrec', def:'Application-level setting controlling the number of decimal places used in allocation calculations. NovaPrism: 2. A $52M pool distributed by ticket ratios produces $51.98M — the $0.02 gap is expected rounding, not a model error. Set in Application Properties, not per rule.', tags:['arch'] },
+  { term:'Allocation rule', def:'One of three EPCM rule types. Distributes a source pool value to target members using a driver ratio. Requires a pre-existing pool total — it cannot create the pool. Use Custom Calc for aggregation; use Allocation for distribution.', tags:['exam'] },
+  { term:'ASO (Aggregate Storage Option)', def:'The Essbase storage engine used by EPCM for both cubes. Parent values are aggregated dynamically from stored children. Dynamic members do not persist written values. Not BSO — never BSO in EPCM.', tags:['arch','trap'] },
+  { term:'Between mapping', def:'A Data Integration member mapping type that maps a numeric range of source values to a single target member. Example: "Between 6100 and 6199 → IT_Cost_Pool". Used for contiguous GL account ranges. Confused with Like mapping (which uses wildcards, not ranges).', tags:['exam'] },
+  { term:'calcThreads', def:'Application-level property setting the maximum number of rules that can execute concurrently. Controls parallelism ceiling across all rule sets and models. Not per rule set — one setting, entire application. NovaPrism: 5.', tags:['arch'] },
+  { term:'Calculation Analysis', def:'The EPCM page that records and displays statistics for every completed model run: elapsed time, updated cells, scripts generated, execution order. Navigation: Home → Modeling → Calculation Analysis. The diagnostician\'s primary tool.', tags:['exam'] },
+  { term:'calcThreads', def:'Application-level property. Sets the maximum concurrent rule execution threads for the entire application — not per model, not per rule set. With calcThreads=1, even Parallel rule sets run sequentially.', tags:['arch'] },
+  { term:'Category Analysis', def:'An analytics feature that lets you select a segment of the Profit Curve and break it down by a Profit Attribute dimension member (Region, Industry, etc.) to identify what drives the profitability pattern in that segment.', tags:['exam'] },
+  { term:'clearType', def:'Model property determining how PCM_CLC data is cleared before calculation. EPCM default: Logical Clear (removes only the current POV\'s data). Physical Clear removes the entire ASO block slice — devastating in multi-model environments. Set per model, defaulting to Logical.', tags:['trap','exam'] },
+  { term:'Copy POV', def:'The operation that publishes results from PCM_CLC to PCM_REP. Direction is always PCM_CLC → PCM_REP. PCM_REP is only updated by Copy POV — never mid-calculation. EPM Automate command: copyDataByPointOfView (not copyPov — that is Planning).', tags:['trap','exam'] },
+  { term:'copyDataByPointOfView', def:'The EPM Automate command that executes Copy POV for EPCM. Distinct from copyPov, which is the Planning equivalent. Syntax: epmautomate copyDataByPointOfView "PCM_CLC" "PCM_REP" "Actual#Working#Q1#FY2025". A tested exam trap when candidates work across both products.', tags:['trap'] },
+  { term:'Custom Calculation rule', def:'One of three EPCM rule types. An Essbase calc script embedded in EPCM. Used for cost pool formation, staging calculations, and any logic that Allocation rules cannot handle. Supports FIX/ENDFIX scoping and NONEMPTYTUPLE for performance and correctness.', tags:['exam'] },
+  { term:'Data grants', def:'Application-level security mechanism that restricts which data slices a User or Viewer can see. Assigned to native groups (not to predefined groups directly). Service Administrators and Power Users cannot be restricted by data grants — they always see all data. Privileges are additive only.', tags:['exam'] },
+  { term:'Dynamic storage', def:'An ASO member storage type where values are computed on retrieval, not stored. Dynamic members do not persist values written by calculation rules — writes appear to succeed but values revert to zero. All members that receive writes from rules must be Stored. The most dangerous EPCM dimension design error.', tags:['trap','arch'] },
+  { term:'epmAutomate()', def:'A Groovy API method that calls EPM Automate commands inline from within a Groovy business rule. Synchronous — the script waits for the command to complete before proceeding. No EPM Automate installation required on the server. Enables the hybrid automation pattern.', tags:['groovy'] },
+  { term:'EPCM', def:'Enterprise Profitability and Cost Management. Oracle Cloud EPM service launched June 2022. Uses dual ASO cubes (PCM_CLC + PCM_REP). Replaces legacy on-premises PCM. A specialised allocation and profitability module — not a blank-slate custom application builder like Planning Cloud.', tags:['arch'] },
+  { term:'Execution Control', def:'The EPCM page where model calculations are manually triggered. Navigation: Home → Modeling → Execution Control. Distinct from Calculation Analysis (where you review statistics). You select the model, confirm POV, choose calculation mode (Full or Express), and click Calculate.', tags:['exam'] },
+  { term:'Explicit mapping', def:'A Data Integration member mapping type that maps an exact source value to a target member. Example: "6100 → IT_Cost_Pool". Most precise but requires a mapping entry per source value. For ranges, use Between; for patterns, use Like.', tags:['exam'] },
+  { term:'Financial Reporting Studio (FRS)', def:'A report design tool that produces fixed-format print-ready financial reports. Navigation: Home → Reports → Financial Reporting. Supports report books, bursting to distribution lists, conditional row suppression, and calculated columns. Used for board packs and audit schedules. Reads from PCM_REP.', tags:['exam'] },
+  { term:'FIX / ENDFIX', def:'Essbase calc script constructs that scope a Custom Calc rule to specific member intersections. FIX("ES", "IT_Costs", "PCM_Input") restricts execution to only those members — preventing the rule from iterating across the entire cube. The most common cause of EPCM performance problems is a Custom Calc rule missing its FIX statement.', tags:['arch','exam'] },
+  { term:'Groovy', def:'A dynamic scripting language integrated into Oracle EPM Cloud\'s Calculation Manager. Enables event-driven triggers (form After Save), dynamic FIX scoping based on changed cells, in-product error handling with throwCalcException(), REST API calls, and the epmAutomate() hybrid method. Runs inside Oracle Cloud — no external server needed.', tags:['groovy'] },
+  { term:'Lifecycle Management (LCM)', def:'Oracle\'s framework for promoting EPCM artifacts between environments. Artifacts (rules, dimensions, Groovy scripts, security) are exported in a snapshot and imported to production. Data can be excluded during import. cloneEnvironment copies everything including data — use exportSnapshot/importSnapshot for artifact-only promotion.', tags:['arch'] },
+  { term:'Like mapping', def:'A Data Integration member mapping type using wildcard patterns. Example: "61* → IT_Cost_Pool" maps all source values starting with "61". Confused with Between (numeric ranges). Wildcards are pattern-based — "61*" will NOT match "6099" because the pattern matches the string prefix, not a numeric range.', tags:['exam','trap'] },
+  { term:'Logical Clear', def:'EPCM\'s default clear type. Removes data only from the stored cells belonging to the current model\'s POV. Other models\' data in the same Period slice is untouched. The safe choice in multi-model environments. Contrast with Physical Clear, which wipes the entire ASO block.', tags:['exam','trap'] },
+  { term:'Model', def:'A named calculation context in EPCM that defines: which rule sets execute, which Scenario, which Version, and the Clear Type. Once the first calculation runs, Scenario and Version are locked — they cannot be changed. To change them, you must create a new model.', tags:['exam'] },
+  { term:'Named POV', def:'A saved shortcut in the EPCM POV selector. Remembers a preferred Scenario/Version/Period combination so users don\'t reset it each session. Unrelated to Copy POV — one is navigation, the other is a data publication operation. The exam tests this distinction directly.', tags:['trap'] },
+  { term:'No_Customer', def:'A catch-all member in the Customer dimension for costs that cannot be attributed to a specific engagement. Without it, unattributed costs have no valid Customer dimension target and Rule Balancing reports a false imbalance. Required for model balance to hold.', tags:['arch'] },
+  { term:'NONEMPTYTUPLE', def:'An Essbase function that restricts Custom Calc rule execution to intersections where specified members have non-empty (non-zero) data. Serves dual purpose: (1) performance — skips empty intersections, (2) correctness — prevents conditional logic from branching incorrectly on zero values. Requires an application-level substitution variable to activate in EPCM.', tags:['exam'] },
+  { term:'Offset rule', def:'One of three EPCM rule types. Creates a balancing credit entry to zero out a cost centre\'s balance after allocation. Ensures the cost centre net balance = 0 after all allocation rules have run. Used as the final step in allocation chains (e.g., zeroing out Enterprise Support after $134M is distributed).', tags:['exam'] },
+  { term:'Optimize for Reporting', def:'An EPCM application setting that configures ASO aggregation behaviour in PCM_REP for correct parent-level rollup. Disabling it can improve calculation speed but silently breaks parent member aggregations in the reporting cube. A real production trap: calculations appear to run correctly, but Smart View shows wrong totals at hierarchy parents.', tags:['trap'] },
+  { term:'Parallel execution', def:'A rule set execution mode where all rules in the set start simultaneously. No rule can read values written by another rule in the same set — doing so produces silent data corruption with no error. Use Serial when intra-set read/write dependencies exist.', tags:['trap','exam'] },
+  { term:'PCM_Balance', def:'The only mandatory system-defined dimension in EPCM. 6 members: PCM_Input, PCM_Allocation_In, PCM_Allocation_Out, PCM_Adjustment_In, PCM_Adjustment_Out, PCM_Net_Balance. Cannot be deleted or renamed. Does not count toward the 20 user-defined dimension limit.', tags:['arch','exam'] },
+  { term:'PCM_CLC', def:'The EPCM calculation cube (ASO). All rule set execution happens here. Data is written here during calculation. Cleared at the start of each model run. The source cube for Copy POV — results flow from CLC to REP, never the reverse.', tags:['arch'] },
+  { term:'PCM_REP', def:'The EPCM reporting cube (ASO). Read-only during calculation. Updated only when Copy POV explicitly runs. All analytics views (Profit Curves, Scatter Analysis), Smart View retrieval, and Financial Reporting Studio read from this cube. Stale if Copy POV hasn\'t run since the last calculation.', tags:['arch'] },
+  { term:'Physical Clear', def:'An EPCM clear type that wipes all data from the entire ASO block — including data from other models sharing the same Period slice. Never the default (Logical Clear is default). Catastrophic in multi-model environments. Used only when you intentionally want to remove all data from an ASO partition.', tags:['trap'] },
+  { term:'Pipeline', def:'An EPCM orchestration feature that chains multiple Data Integration jobs into a single automated sequence. Limitation: can only call Calculation Manager business rules as job steps — not native EPCM rule sets. Workaround: a Groovy business rule in Calc Manager that calls the EPCM REST API to trigger calculateModel.', tags:['trap','exam'] },
+  { term:'Profit Attribute dimension', def:'Required application dimension for Profit Curves and Scatter Analysis. Tags population members with segment labels (Stars, Cash Cows, Rising Stars, Dogs) enabling quadrant overlays and Category Analysis. Without it, neither analytics view can be configured. Direct exam fact.', tags:['exam'] },
+  { term:'Profit Curve', def:'An analytics view under Home → Intelligence showing cumulative profitability across a population dimension sorted in descending order by profitability. Most profitable on the LEFT — a consistently tested trap. The curve rises for profitable segments, flattens for marginal, and declines for loss-making. Reads from PCM_REP.', tags:['exam','trap'] },
+  { term:'Rule Balancing', def:'A diagnostic view showing rule-by-rule allocation flows with all PCM_Balance members visible. Navigation: Home → Modeling → Rule Balancing. Requires a pre-designed data form. Actions: Export to Excel, View Rule Definition, View Rule Data, View in Smart View. The auditor\'s tool for tracing where money went.', tags:['exam'] },
+  { term:'Rule set', def:'A named, ordered container of rules that execute together. Assigned to a model. Each rule set has a sequence number (ascending order determines execution sequence across sets), an execution mode (Serial or Parallel), and one or more rules. The highest-weighted exam topic.', tags:['exam'] },
+  { term:'Scatter Analysis', def:'An analytics view under Home → Intelligence that plots any two measures against a population dimension on an x-y axis. Enables quadrant segmentation (Stars/Cash Cows/Rising Stars/Dogs). Reads from PCM_REP. Requires the Profit Attribute dimension. Complement to Profit Curves — curves show ranking, scatter shows position.', tags:['exam'] },
+  { term:'Serial execution', def:'A rule set execution mode where rules execute one at a time in their assigned order. Rule N can read values written by Rule N-1 within the same set. Required when intra-set read/write dependencies exist (e.g., Rule 2 reads a value staged by Rule 1).', tags:['exam'] },
+  { term:'Service Administrator', def:'The highest predefined role in EPCM. The only role that can create applications, manage security, create data grants, and assign roles. Cannot be restricted by data grants — always has full data access. In practice, often held by the implementation consultant during setup.', tags:['exam'] },
+  { term:'Smart View', def:'An Excel add-in that connects to EPCM for two purposes: (1) retrieving allocation results from PCM_REP into Excel for ad-hoc analysis, (2) submitting driver data (headcount, tickets, sqft) from spreadsheet forms directly to PCM_CLC. Both directions are tested on the exam.', tags:['exam'] },
+  { term:'Stored storage', def:'An ASO member storage type where values are physically written and persisted in the database. All members that receive writes from EPCM calculation rules must be Stored. The safe default for any operationally-written member. Contrast with Dynamic (computed on retrieval, writes not persisted).', tags:['arch','trap'] },
+  { term:'throwCalcException()', def:'A Groovy method that aborts a business rule with a user-visible error message. The message surfaces directly in the EPM Cloud job console and Task Manager alert system. More powerful than EPM Automate\'s exit codes — the error is in-product and requires no external monitoring.', tags:['groovy'] },
+  { term:'Writeback', def:'An EPCM Data Integration feature that creates actual journal entries in Oracle ERP Cloud\'s General Ledger. Allocated costs appear in ERP alongside revenue, enabling fully-loaded P&L reporting in ERP. Not a data export — real GL journal entries that post and affect financial reporting.', tags:['exam'] },
+];
+
+/* ── Glossary engine ── */
+(function renderGlossary(){
+  var body = document.getElementById('gl-body');
+  if(!body) return;
+  var sorted = GLOSSARY.slice().sort(function(a,b){return a.term.localeCompare(b.term,undefined,{sensitivity:'base'});});
+  // deduplicate calcThreads (appears twice in data — intentional example of a common mistake)
+  var seen = {};
+  sorted = sorted.filter(function(g){ if(seen[g.term]) return false; seen[g.term]=true; return true; });
+  var html = '';
+  var curLetter = '';
+  sorted.forEach(function(g){
+    var letter = g.term[0].toUpperCase();
+    if(letter !== curLetter){
+      curLetter = letter;
+      html += '<div class="gl-letter" data-letter="'+letter+'">'+letter+'</div>';
+    }
+    var tagHtml = (g.tags||[]).map(function(t){
+      var cls = 'gl-tag-'+t;
+      var labels = {arch:'ARCHITECTURE',exam:'EXAM TOPIC',trap:'TRAP',groovy:'GROOVY'};
+      return '<span class="gl-tag '+cls+'">'+(labels[t]||t.toUpperCase())+'</span>';
+    }).join('');
+    html += '<div class="gl-entry" data-term="'+g.term.toLowerCase()+'" data-def="'+g.def.toLowerCase().replace(/"/g,'&quot;')+'">';
+    html += '<div class="gl-term">'+g.term+tagHtml+'</div>';
+    html += '<div class="gl-def">'+g.def+'</div>';
+    html += '</div>';
+  });
+  body.innerHTML = html;
+})();
+
+function filterGlossary(q){
+  var ql = q.toLowerCase();
+  document.querySelectorAll('.gl-entry').forEach(function(el){
+    var match = !ql || el.dataset.term.includes(ql) || el.dataset.def.includes(ql);
+    el.classList.toggle('gl-hidden', !match);
+  });
+  document.querySelectorAll('.gl-letter').forEach(function(el){
+    var letter = el.dataset.letter;
+    var anyVisible = false;
+    var next = el.nextElementSibling;
+    while(next && !next.classList.contains('gl-letter')){
+      if(next.classList.contains('gl-entry') && !next.classList.contains('gl-hidden')) anyVisible = true;
+      next = next.nextElementSibling;
+    }
+    el.classList.toggle('gl-hidden', !anyVisible);
+  });
+}
 
 /* ── Progress persistence ── */
 (function(){
