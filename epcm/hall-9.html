@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Examination Hall — Academy of Profit Center · EPCM Study Tour · BrainSpring</title>
-<meta name="description" content="50-question timed mock exam for 1Z0-1082-25. Hall 9 of the EPCM Study Tour — graduation from the Academy of Profit Center.">
+<title>Oracle EPCM Hall 9: 50-Question Mock Exam — 1Z0-1082-25 | BrainSpring</title>
+<meta name="description" content="Full 50-question timed mock exam for Oracle 1Z0-1082-25 (EPCM 2025 Implementation Professional). All 8 topic areas, practitioner-level difficulty, explanations after every answer. Free — no registration required.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Pro:ital,wght@0,300;0,400;0,500;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 
@@ -718,7 +718,7 @@ body::after {
           <span style="font-size:14px">←</span>
           <div><div class="hnf-dir">Previous Hall</div><div class="hnf-name">Pipeline Lab</div></div>
         </a>
-        <a href="index.html" class="hnf-next">
+        <a href="../index.html" class="hnf-next">
           <div><div class="hnf-dir">Back to</div><div class="hnf-name">Academy Home</div></div>
           <span style="font-size:14px">→</span>
         </a>
@@ -844,7 +844,7 @@ var SYLLABUS_DETAIL = [
 var ALL_TRAPS = [
   { hall:'H1', trap:'EPCM is just PCM renamed', truth:'FALSE — EPCM added dual-cube ASO architecture + EPM Platform integration, released June 2022. Legacy PCM was single-cube on-premise.' },
   { hall:'H1', trap:'EPCM Standard uses BSO for calculation', truth:'FALSE — Both PCM_CLC and PCM_REP are ASO. Planning uses BSO. Do not confuse the two products.' },
-  { hall:'H1', trap:'Physical Clear is the EPCM default', truth:'FALSE — Logical Clear is the default. Physical Clear wipes the entire ASO block including other models' data.' },
+  { hall:'H1', trap:'Physical Clear is the EPCM default', truth:'FALSE — Logical Clear is the default. Physical Clear wipes the entire ASO block including other models\' data.' },
   { hall:'H2', trap:'Dynamic members are fine for rule targets', truth:'FALSE — Dynamic members in ASO do not persist values written by rules. Any rule targeting a Dynamic member fails silently.' },
   { hall:'H2', trap:'PCM_Balance can be renamed', truth:'FALSE — PCM_Balance is a System dimension. Its 6 member names and structure are fixed and cannot be modified.' },
   { hall:'H2', trap:'YTD needs a separate View dimension with Dynamic members', truth:'FALSE — Use alternate hierarchies in the Period dimension (Stored members). Dynamic YTD formula members cannot be rule write targets.' },
@@ -1323,6 +1323,28 @@ document.querySelectorAll('a[href^="#"]').forEach(function(a){
     if(el){e.preventDefault();el.scrollIntoView({behavior:'smooth',block:'start'});}
   });
 });
+
+/* ── Progress persistence ── */
+(function(){
+  var HALL = 9;
+  try { localStorage.setItem('epcm_h'+HALL,'1'); } catch(e){}
+  // patch campus map after it renders
+  setTimeout(function(){
+    document.querySelectorAll('.campus-building.locked').forEach(function(el){
+      var n = parseInt(el.textContent,10);
+      if(!n) return;
+      try {
+        if(localStorage.getItem('epcm_h'+n)==='1'){
+          el.classList.remove('locked');
+          el.classList.add('done');
+          var stop=el.closest('.campus-stop');
+          if(stop){ stop.classList.remove('campus-stop'); stop.classList.add('campus-stop','done-stop'); }
+        }
+      } catch(e){}
+    });
+  }, 150);
+})();
+
 </script>
 </body>
 </html>

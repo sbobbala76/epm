@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Changelog — Oracle EPCM Study Tour | BrainSpring</title>
+<meta name="description" content="Content update log for the BrainSpring Oracle EPCM Study Tour. All corrections and additions cross-validated against Oracle documentation.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&family=Crimson+Pro:ital,wght@0,400;0,500;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#0d1b2e;--navy2:#112240;--navy3:#16304f;
+  --coral:#fb923c;--coral2:#ea6a0a;
+  --green:#4ade80;--amber:#fbbf24;--red:#f87171;--sky:#38bdf8;--purple:#a855f7;
+  --white:#e8f0f8;--silver:#c8d4e0;--silver2:#8fa3b8;--dim:#4a6080;
+  --border:rgba(200,212,224,.1);--border2:rgba(251,146,60,.18);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Crimson Pro',serif;background:var(--navy);color:var(--white);min-height:100vh;overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;background-image:linear-gradient(rgba(251,146,60,.012) 1px,transparent 1px),linear-gradient(90deg,rgba(251,146,60,.012) 1px,transparent 1px);background-size:56px 56px}
+
+/* ── topbar ── */
+#topbar{position:sticky;top:0;z-index:100;background:rgba(13,27,46,.96);backdrop-filter:blur(16px);border-bottom:1px solid var(--border2);padding:0 24px;height:52px;display:flex;align-items:center;gap:14px}
+.tb-brand{font-family:'Rajdhani',sans-serif;font-size:15px;font-weight:700;text-decoration:none;color:var(--white)}
+.tb-brand span{color:var(--coral)}
+.tb-sep{color:var(--dim);font-size:12px}
+.tb-title{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--silver2);letter-spacing:.06em}
+.tb-back{margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--dim);text-decoration:none;letter-spacing:.06em;transition:color .15s}
+.tb-back:hover{color:var(--coral)}
+
+.wrap{max-width:860px;margin:0 auto;padding:0 24px;position:relative;z-index:1}
+h1{font-family:'Rajdhani',sans-serif;font-size:36px;font-weight:700;color:var(--white);margin:40px 0 8px}
+.subtitle{font-size:16px;color:var(--silver2);margin-bottom:8px;line-height:1.6}
+.intro-note{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--dim);letter-spacing:.04em;margin-bottom:40px;padding:12px 16px;background:rgba(251,146,60,.06);border:1px solid var(--border2);border-radius:8px}
+
+/* ── entry ── */
+.entry{margin-bottom:36px;padding-bottom:36px;border-bottom:1px solid var(--border)}
+.entry:last-child{border-bottom:none}
+.entry-header{display:flex;align-items:baseline;gap:14px;margin-bottom:14px;flex-wrap:wrap}
+.entry-date{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--coral);letter-spacing:.08em}
+.entry-halls{display:flex;gap:6px;flex-wrap:wrap}
+.hall-tag{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.06em;padding:2px 8px;border-radius:4px;background:rgba(251,146,60,.1);border:1px solid rgba(251,146,60,.2);color:var(--coral)}
+.hall-tag.accuracy{background:rgba(248,113,113,.08);border-color:rgba(248,113,113,.2);color:var(--red)}
+.hall-tag.content{background:rgba(74,222,128,.07);border-color:rgba(74,222,128,.15);color:var(--green)}
+.hall-tag.ux{background:rgba(56,189,248,.07);border-color:rgba(56,189,248,.15);color:var(--sky)}
+.hall-tag.bugfix{background:rgba(168,85,247,.07);border-color:rgba(168,85,247,.2);color:var(--purple)}
+
+.change-list{list-style:none;padding:0}
+.change-list li{padding:8px 0 8px 20px;position:relative;font-size:14.5px;color:var(--silver2);line-height:1.65;border-bottom:1px solid rgba(200,212,224,.04)}
+.change-list li:last-child{border-bottom:none}
+.change-list li::before{content:'→';position:absolute;left:0;color:var(--dim);font-family:'JetBrains Mono',monospace;font-size:11px;top:10px}
+.change-list li strong{color:var(--white);font-weight:500}
+.change-list li code{font-family:'JetBrains Mono',monospace;font-size:12px;background:rgba(255,255,255,.05);padding:1px 5px;border-radius:3px;color:var(--sky)}
+
+.divider{height:1px;background:linear-gradient(90deg,transparent,rgba(251,146,60,.15),transparent);margin:40px 0}
+
+/* footer */
+footer{text-align:center;padding:32px 0 40px;color:var(--dim);font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.1em;position:relative;z-index:1}
+footer a{color:rgba(251,146,60,.4);text-decoration:none}
+</style>
+</head>
+<body>
+
+<div id="topbar">
+  <a href="/epcm/" class="tb-brand"><span>Brain</span>Spring</a>
+  <span class="tb-sep">›</span>
+  <span class="tb-title">EPCM Study Tour</span>
+  <a href="/epcm/" class="tb-back">← Back to Tour</a>
+</div>
+
+<div class="wrap">
+  <h1>Changelog</h1>
+  <p class="subtitle">Content updates, corrections, and additions — cross-validated against Oracle documentation.</p>
+  <div class="intro-note">All accuracy corrections are traced to specific Oracle documentation sources. Hall content is updated whenever the 1Z0-1082-25 syllabus changes or Oracle documentation reveals a discrepancy.</div>
+
+  <!-- ─── MARCH 2026 ─── -->
+  <div class="entry">
+    <div class="entry-header">
+      <span class="entry-date">MARCH 2026</span>
+      <div class="entry-halls">
+        <span class="hall-tag content">Hall 7 — New Tab</span>
+        <span class="hall-tag content">Halls 1–5</span>
+        <span class="hall-tag accuracy">FCCS Hall 6</span>
+        <span class="hall-tag ux">All Halls</span>
+        <span class="hall-tag bugfix">Bug Fixes</span>
+      </div>
+    </div>
+    <ul class="change-list">
+      <li><strong>Hall 7 — New Reporting tab added.</strong> Covers Scatter Analysis (Profit Attribute dimension requirement, quadrant configuration), Financial Reporting Studio (report books, bursting, conditional suppression), Smart View output direction (retrieve vs submit), and four ASO extraction anomalies with MDX examples: parent ≠ sum of children, #MISSING diagnosis, <code>Members</code> vs <code>Descendants(...,LEAVES)</code> filter, FRS row suppression. Three new quiz questions added (Q6–Q8). Score counter updated to 0/8.</li>
+      <li><strong>Hall 6 EPCM — 6 improvements.</strong> Auto-purge caveat ("no fixed retention period — not 30, not 90 days"); Optimize for Reporting exam trap added ("disabling it breaks PCM_REP aggregations silently"); Diagnostics report format caveat; Exam answer vs implementation reality comparison table (9 rows); Q6 Run Express Calculation trap question added; 31× corrected to 32× (47:12 ÷ 1:28 = 2,832s ÷ 88s = 32.2×) with arithmetic shown and 750× bottleneck context note.</li>
+      <li><strong>Hall 9 — Difficulty calibration.</strong> Three-tier results messaging: under 68% = review halls; 68–81% = borderline, real exam has no foundation questions; 82%+ = ready to book. Difficulty warning added to Overview tab and mock exam start screen.</li>
+      <li><strong>Hall 5 — NONEMPTYTUPLE correctness caveat.</strong> Clarified that NONEMPTYTUPLE is a correctness guard (not just performance) in rules with conditional logic that branches on zero. Added to exam syllabus box and comparison table row.</li>
+      <li><strong>Hall 3 — Copy POV automation.</strong> Added <code>epmautomate copyPov</code> infobox and updated comparison table row: "In production, triggered via EPM Automate as part of the automated close pipeline — not always a manual UI step."</li>
+      <li><strong>Hall 1 — allocPrec added.</strong> Application setting <code>allocPrec: 2</code> now covered in syllabus sub-bullet 2 and comparison table. NovaPrism rounding hook: $52M × ticket ratios = $51.98M, $0.02 gap expected, Rule Balancing tolerance covers it.</li>
+      <li><strong>Hall 2 — System vs user-defined dimension boundary.</strong> New comparison table row: PCM_Balance = only mandatory system dimension; all others (Account, Entity, Period, Scenario, Version, View, custom) = user-defined. NovaPrism count shown: 1 system + 10 user-defined = 11 total.</li>
+      <li><strong>All halls — Bug fix: <code>event.target</code> TypeError.</strong> Hall 6 EPCM <code>showScenario()</code> was using implicit global <code>event.target</code> to activate the selected button. Called at page load with no event in scope → crash. Fixed with a static ID map <code>{untuned:'btn-v1', ...}</code>.</li>
+      <li><strong>Hall 9 — Bug fix: unescaped apostrophe.</strong> <code>models' data</code> in ALL_TRAPS array broke JS string literal. Fixed to <code>models\' data</code>. Validator script <code>validate_js.py</code> added to catch future instances.</li>
+      <li><strong>FCCS Hall 6 — Full Oracle cross-check.</strong> 23 corrections applied including: Consolidation Journal vs Enterprise Journal architecture; status names (OK not Consolidated, numeric codes removed); EJ three posting methods (direct connector, APIs, EPM Automate); DeutschWerk PCON=100% — 100% flows to parent, not 80%; locked period navigation corrected to Home → Approvals → Change Status; re-lock requires OK status; rejection → Working status (not Validated); unbalanced journals supported when feature enabled; MDX filter returns Working not Validated on rejection.</li>
+    </ul>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ─── HOW TO REPORT ─── -->
+  <div style="background:rgba(56,189,248,.05);border:1px solid rgba(56,189,248,.12);border-radius:10px;padding:20px 22px;margin-bottom:40px">
+    <div style="font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;color:var(--sky);letter-spacing:.06em;margin-bottom:8px">FOUND AN INACCURACY?</div>
+    <p style="font-size:14px;color:var(--silver2);line-height:1.65">If you spot a discrepancy between tour content and Oracle documentation, or a question where the explanation doesn't match real EPCM behaviour, the best reference is <a href="https://docs.oracle.com/en/cloud/saas/enterprise-profitability-cost-management-cloud/pcmpl/" target="_blank" style="color:var(--sky)">docs.oracle.com/epcm</a>. Content corrections are reviewed and applied on a rolling basis.</p>
+  </div>
+
+</div>
+
+<footer>
+  BRAINSPRING · ORACLE EPM CLOUD LEARNING HUB · epm.brainspring.ai<br>
+  Oracle, EPCM, and related names are trademarks of Oracle Corporation. BrainSpring is independent and not affiliated with Oracle.
+</footer>
+
+</body>
+</html>

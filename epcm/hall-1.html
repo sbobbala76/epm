@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Foundations Hall — Academy of Profit Center · EPCM Study Tour · BrainSpring</title>
-<meta name="description" content="The $134M blind spot. NovaPrism Group's CFO cannot tell the board which divisions make money. This is where you learn why — and how EPCM fixes it.">
+<title>Oracle EPCM Hall 1: Application Setup & Architecture | 1Z0-1082-25 Exam Prep | BrainSpring</title>
+<meta name="description" content="Learn Oracle EPCM architecture: dual-cube ASO design (PCM_CLC + PCM_REP), application setup, calcThreads, allocPrec, and the NovaPrism $134M cost allocation blind spot. Free exam prep for 1Z0-1082-25.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Pro:ital,wght@0,300;0,400;0,500;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 
@@ -747,12 +747,8 @@ body::after {
     <nav class="tb-nav-right">
       <a href="hall-1.html" class="tb-link current">Foundations</a>
       <a href="hall-2.html" class="tb-link">Dimensions</a>
-      <a href="hall-3.html" class="tb-link">Models</a>
-      <a href="hall-4.html" class="tb-link">Logic</a>
-      <a href="hall-5.html" class="tb-link">Workshop</a>
-      <a href="hall-6.html" class="tb-link">Control</a>
+      <a href="hall-4.html" class="tb-link">Hall of Logic</a>
       <a href="hall-7.html" class="tb-link">Observatory</a>
-      <a href="hall-8.html" class="tb-link">Pipeline</a>
       <a href="hall-9.html" class="tb-link">Exam Hall</a>
     </nav>
     <span class="tb-hall-badge">Hall 1 of 9 · Foundations Hall</span>
@@ -1253,7 +1249,7 @@ body::after {
 
       <!-- Hall Nav Footer -->
       <div class="hall-nav-footer">
-        <a href="index.html" class="hnf-prev">
+        <a href="../index.html" class="hnf-prev">
           <span style="font-size:14px">←</span>
           <div>
             <div class="hnf-dir">Back to</div>
@@ -1648,6 +1644,28 @@ document.querySelectorAll('a[href^="#"]').forEach(function(a){
     if(el){e.preventDefault();el.scrollIntoView({behavior:'smooth',block:'start'});}
   });
 });
+
+/* ── Progress persistence ── */
+(function(){
+  var HALL = 1;
+  try { localStorage.setItem('epcm_h'+HALL,'1'); } catch(e){}
+  // patch campus map after it renders
+  setTimeout(function(){
+    document.querySelectorAll('.campus-building.locked').forEach(function(el){
+      var n = parseInt(el.textContent,10);
+      if(!n) return;
+      try {
+        if(localStorage.getItem('epcm_h'+n)==='1'){
+          el.classList.remove('locked');
+          el.classList.add('done');
+          var stop=el.closest('.campus-stop');
+          if(stop){ stop.classList.remove('campus-stop'); stop.classList.add('campus-stop','done-stop'); }
+        }
+      } catch(e){}
+    });
+  }, 150);
+})();
+
 </script>
 </body>
 </html>
