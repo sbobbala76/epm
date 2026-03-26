@@ -1173,6 +1173,17 @@ body::after {
               </tbody>
             </table>
           </div>
+
+          <div class="exam-box" style="margin-top:20px">
+            <div class="exam-box-header">⚙️ From rule sets to production pipeline — the automation question</div>
+            <div class="exam-box-body">
+              Hall 4 covers <em>what</em> runs (rule sets, rule types, sequence order). The next question every practitioner asks is <em>how do I trigger this reliably at 2am on Day 1 of close?</em><br><br>
+              <strong>EPM Automate:</strong> <code>epmautomate calculateModel "NovaPrism_EPCM_PROD" "M01"</code> — runs all 5 rule sets in ascending sequence order from a scheduled shell script. Git-managed, DevOps-friendly, no browser required.<br><br>
+              <strong>Groovy:</strong> A Calculation Manager business rule calls the EPCM REST API to trigger <code>calculateModel</code> — the only way to include the model calculation inside a Pipeline job step (Pipeline cannot call native rule sets directly).<br><br>
+              <strong>Hybrid:</strong> Groovy validates pool totals before the run, calls <code>epmAutomate("calculateModel",...)</code> inline, then writes a completion status flag back to the cube for Rule Balancing visibility.<br><br>
+              For the full debate — 8 rounds, side-by-side pipelines, and a 14-scenario decision matrix — see the <a href="epmautomate.html" style="color:var(--amber)">EPM Automate vs Groovy reference page</a>.
+            </div>
+          </div>
         </section>
 
       </div><!-- /exam -->

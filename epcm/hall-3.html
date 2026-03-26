@@ -812,6 +812,10 @@ body::after {
             <div class="infobox-icon">📋</div>
             <div class="infobox-body"><strong>Named POVs vs Copy POV:</strong> These are two completely different concepts with confusingly similar names. A <em>Named POV</em> is a saved shortcut in the POV selector — it remembers your preferred Scenario/Version/Period combination so you do not have to reset it every session. <em>Copy POV</em> is an administrative operation that transfers data between cubes. One is a navigation shortcut. The other is a data publication workflow. The exam tests that you know the difference.</div>
           </div>
+          <div class="infobox tip">
+            <div class="infobox-icon">⚙️</div>
+            <div class="infobox-body"><strong>Copy POV in production — it's rarely a manual UI step.</strong> In NovaPrism's automated monthly close, Copy POV is triggered via <code style="font-family:var(--font-mono);font-size:12px;background:rgba(255,255,255,.06);padding:1px 5px;border-radius:3px">epmautomate copyDataByPointOfView "PCM_CLC" "PCM_REP" "Actual#Working#Q1#FY2025"</code> as step 6 of the nightly pipeline — no human clicks required. Note the EPM Automate command is <strong>copyDataByPointOfView</strong> (EPCM), not <em>copyPov</em> (which is the Planning command). A common exam trap when candidates switch between products. For the full EPM Automate vs Groovy automation debate, see the <a href="epmautomate.html" style="color:var(--sky)">EPM Automate reference page</a>.</div>
+          </div>
         </section>
 
         <section class="section" id="model-calculation">

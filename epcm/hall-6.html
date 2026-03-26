@@ -726,6 +726,10 @@ body::after {
 
           <p class="prose">After you calculate a model using Calculation Control, EPM Automate, or the REST API, EPCM records detailed statistics about every rule that ran: <strong>elapsed time</strong>, <strong>updated cells</strong>, <strong>scripts generated</strong>, and the <strong>execution order</strong>. The Calculation Analysis page — accessed via <code>Home → Modeling → Calculation Analysis</code> — displays these records and lets you generate diagnostic reports.</p>
           <p class="prose">For NovaPrism's M01 (Actuals Allocation Process), a typical monthly close run touches all 5 rule sets, 18 rules, and writes to roughly <strong>4,200 cell intersections</strong>. When the model runs in 90 seconds, Finance closes the books on time. When it takes 47 minutes, the CFO starts asking questions. The difference is almost always visible in the statistics.</p>
+          <div class="infobox note">
+            <div class="infobox-icon">⚙️</div>
+            <div class="infobox-body"><strong>Automating the close pipeline.</strong> In production, NovaPrism triggers <code>calculateModel</code> via EPM Automate in a nightly scheduled script — not via the Calculation Control UI. After the run, <code>exportData</code> archives the statistics before auto-purge removes them. Groovy adds in-product validation before the run and writes a completion status flag to the cube after. For the full automation architecture — EPM Automate vs Groovy, the hybrid pipeline, and all EPCM-relevant commands — see the <a href="epmautomate.html" style="color:var(--sky)">EPM Automate vs Groovy reference</a>.</div>
+          </div>
 
           <div class="stat-grid">
             <div class="stat-card good">

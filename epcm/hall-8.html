@@ -1233,15 +1233,19 @@ ES,SqFt,2100</pre>
 
         <section class="section" id="exam-quiz">
           <div class="sec-type-bar"><div class="sec-type-icon exam">📝</div><span class="sec-type-label exam">Exam Preparation</span></div>
-          <h2 class="sec-h">Data Integration Quiz - 5 Questions</h2>
+          <h2 class="sec-h">Data Integration Quiz — 8 Questions</h2>
           <div class="sec-div"></div>
           <p class="sec-sub">Test your understanding of EPCM Data Integration concepts. These questions reflect topics covered in the 1Z0-1082-25 exam.</p>
+          <div class="infobox note" style="margin-bottom:18px">
+            <div class="infobox-icon">🔗</div>
+            <div class="infobox-body"><strong>Automation deep dive available.</strong> This hall covers Data Integration at exam level. For the full EPM Automate vs Groovy technical debate — side-by-side pipelines, decision matrix, and all EPCM commands — see the <a href="epmautomate.html" style="color:var(--sky)">EPM Automate vs Groovy reference page</a>.</div>
+          </div>
 
           <div id="quiz-container">
             <!-- Quiz questions inserted by JS -->
           </div>
           <div class="quiz-score-box" id="quiz-score" style="display:none;">
-            <div class="quiz-score-val" id="quiz-score-val">0/5</div>
+            <div class="quiz-score-val" id="quiz-score-val">0/8</div>
             <div class="quiz-score-label">Quiz Score</div>
             <div class="quiz-score-msg" id="quiz-score-msg"></div>
           </div>
@@ -1260,7 +1264,10 @@ ES,SqFt,2100</pre>
                 <tr><td><strong>Integration Limitations</strong></td><td>EPCM does not integrate with EPM Planning or Projects</td><td>This is a common trap question. EPCM integrates with ERP Cloud and other EPM processes except Planning.</td></tr>
                 <tr><td><strong>Pipeline EPCM Rules</strong></td><td>Native EPCM rules cannot be called directly from Pipeline</td><td>Only Calculation Manager rules work in Pipeline. Use Groovy to call EPCM REST APIs as workaround.</td></tr>
                 <tr><td><strong>Writeback</strong></td><td>Creates GL journal entries</td><td>Understand that writeback creates actual journal entries, not just data exports.</td></tr>
-                <tr><td><strong>Mapping Types</strong></td><td>Explicit, Like, Between, Multi-Dimensional</td><td>Know when to use each mapping type. "Like" uses wildcards, "Between" uses numeric ranges.</td></tr>
+                <tr><td><strong>Mapping Types</strong></td><td>Explicit, Like, Between, Multi-Dimensional</td><td>Know when to use each: Like = wildcards (*), Between = numeric ranges, Explicit = exact match.</td></tr>
+                <tr><td><strong>copyDataByPointOfView</strong></td><td>EPCM command — not copyPov</td><td>copyPov is Planning. EPCM uses copyDataByPointOfView. Tested when candidates work across both products.</td></tr>
+                <tr><td><strong>refreshCube</strong></td><td>After metadata import only — not after data loads</td><td>Common exam trap. Running refreshCube after every data load wastes time — only metadata changes require it.</td></tr>
+                <tr><td><strong>Smart View submission</strong></td><td>Business users submit driver data from Excel</td><td>Self-service path for Finance Controllers and analysts — no Service Administrator involvement needed.</td></tr>
               </tbody>
             </table>
           </div>
@@ -1354,43 +1361,106 @@ function closeSidebar(){
   document.getElementById('overlay').classList.remove('open');
 }
 
-// ── DEAN ELIOT CHAT ──
-function chipAsk(el){ sbAsk(el.textContent); }
+/* ── Dean Eliot ── */
+var HALL_SYSTEM_EXTENSION=[
+  'CURRENT HALL: Hall 8 — Pipeline Lab (Academy of Profit Center)',
+  'HALL SCOPE: Data Integration, Pipelines, ERP actuals load, driver data submission, ERP writeback, EPM Automate automation, and Groovy scripting for EPCM.',
+  '',
+  'KEY CONCEPTS IN THIS HALL:',
+  '- Data Integration (formerly Data Management): connects EPCM to ERP Cloud, files, and other EPM processes.',
+  '- EPCM can be BOTH source (writeback to GL) and target (actuals load from GL).',
+  '- EPCM registers under "Planning" category in Data Integration — tested exam fact.',
+  '- EPCM does NOT integrate with EPM Planning (EPBCS). This is a common exam trap.',
+  '- Integration types: Direct (Oracle ERP Cloud connector) vs File-based (CSV/flat file via inbox).',
+  '- Member mapping types: Explicit (exact match), Like (wildcard *), Between (numeric range), Multi-Dimensional.',
+  '- Pipeline: orchestrates multiple Data Integration jobs as a single automated sequence.',
+  '- Pipeline job types: Data Load, Export Data, Clear Data, Business Rule (Calculation Manager only), Run Integration.',
+  '- CRITICAL: Native EPCM rule sets CANNOT be called from a Pipeline. Only Calculation Manager business rules work.',
+  '- Groovy workaround: create a Groovy business rule in Calc Manager that calls EPCM REST API to run calculateModel.',
+  '- ERP Writeback: creates actual GL journal entries in Oracle ERP Cloud. Not just a data export — real journal entries.',
+  '- Smart View submission: analysts submit driver data (headcount, tickets, sqft) directly from Excel forms.',
+  '- EPM Automate: CLI tool for automating close pipeline. calculateModel, copyDataByPointOfView, exportSnapshot.',
+  '- copyDataByPointOfView (EPCM) vs copyPov (Planning) — different commands, common exam confusion.',
+  '- refreshCube: needed after metadata import only, NOT after data loads.',
+  '',
+  'NOVAPRISM IN THIS HALL:',
+  'NovaPrism loads $134M indirect costs monthly from Oracle ERP Cloud via Data Integration.',
+  'Four driver datasets submitted via Smart View: IT tickets (4,540 total), sqft (154,000 total), headcount (4,540 total).',
+  'DS: 2,800 tickets / 42,000 sqft / 1,240 HC. IS: 4,200 tickets / 98,000 sqft / 2,890 HC.',
+  'CL: 840 tickets / 14,000 sqft / 410 HC.',
+  'Monthly close pipeline: EPM Automate → upload → runDataRule → calculateModel → copyDataByPointOfView → aggregate.',
+  'Pipeline trap: NovaPrism uses a Groovy Calc Manager rule as the pipeline step for calculateModel (REST API workaround).',
+  '',
+  'AUTOMATION DEBATE (link to epmautomate.html for full content):',
+  '- EPM Automate wins: scheduled jobs, bulk admin, Git-native CI/CD, cloneEnvironment, calculateModel is native.',
+  '- Groovy wins: event-driven (form After Save), dynamic targeting (changed cells only), Pipeline compatibility, error write-back.',
+  '- Hybrid: Groovy validates + calls epmAutomate() inline for calculateModel and snapshot. Best of both.',
+  '',
+  'EXAM TOPICS: Managing data integration, Pipeline job types, member mapping types, writeback, EPM Automate commands.',
+  '',
+  'OUT OF SCOPE: Calculation tuning → Hall 6. Rule Balancing → Hall 7. Exam mock → Hall 9.'
+].join('\n');
+
+function buildSystemPrompt(){
+  var pa=(typeof NP!=='undefined')?NP.postAllocation:null;
+  return [
+    'You are Dean Eliot, the AI practitioner-guide for the BrainSpring EPCM Study Tour — Academy of Profit Center.',
+    'You are a senior Oracle EPM practitioner who has implemented EPCM at 40+ enterprises.',
+    'Voice: direct (no hedging), practitioner-honest, concise (3–5 sentences target), never sycophantic.',
+    '',
+    'CASE COMPANY: NovaPrism Group — $2.1B professional services conglomerate. 8,400 employees. 4 divisions.',
+    pa?('IS: $'+pa.IS.revenue+'M revenue | '+pa.IS.directPct+'% direct → '+pa.IS.marginPct+'% fully-loaded | $'+pa.IS.allocatedIn+'M allocated in.'):'',
+    'Enterprise Support: $134M costs across IT $52M (tickets), Facilities $38M (sqft), Finance $28M (headcount), HR $16M (headcount).',
+    '',
+    'RULES: Connect every answer to NovaPrism. Name exam answer AND implementation reality when they differ.',
+    'Never invent product behaviour. For out-of-scope topics, name the hall that covers them.',
+    '',
+    HALL_SYSTEM_EXTENSION
+  ].filter(Boolean).join('\n');
+}
+
+function chipAsk(el){ document.getElementById('sb-input').value=el.textContent; sbSend(); }
+var sbHistory=[];
 function sbSend(){
-  const input = document.getElementById('sb-input');
-  const q = input.value.trim();
-  if(!q) return;
-  input.value = '';
-  sbAsk(q);
+  var inp=document.getElementById('sb-input');
+  var txt=inp.value.trim(); if(!txt) return;
+  inp.value='';
+  sbAddMsg('user',txt);
+  sbHistory.push({role:'user',content:txt});
+  var typing=sbAddMsg('guide','...');
+  typing.classList.add('typing');
+  sbCall(typing);
 }
-function sbAsk(q){
-  const msgs = document.getElementById('sb-msgs');
-  const uMsg = document.createElement('div');
-  uMsg.className = 'sb-msg user';
-  uMsg.textContent = q;
-  msgs.appendChild(uMsg);
-  const typing = document.createElement('div');
-  typing.className = 'sb-msg guide typing';
-  typing.textContent = 'Dean Eliot is thinking...';
-  msgs.appendChild(typing);
-  msgs.scrollTop = msgs.scrollHeight;
-  setTimeout(() => {
-    typing.remove();
-    const gMsg = document.createElement('div');
-    gMsg.className = 'sb-msg guide';
-    gMsg.innerHTML = getDeanResponse(q);
-    msgs.appendChild(gMsg);
-    msgs.scrollTop = msgs.scrollHeight;
-  }, 800 + Math.random()*600);
+function sbAddMsg(role,text){
+  var msgs=document.getElementById('sb-msgs');
+  var div=document.createElement('div');
+  div.className='sb-msg '+role;
+  div.textContent=text;
+  msgs.appendChild(div);
+  msgs.scrollTop=msgs.scrollHeight;
+  return div;
 }
-function getDeanResponse(q){
-  const ql = q.toLowerCase();
-  if(ql.includes('data integration') || ql.includes('what is')) return "Data Integration connects your source systems to EPCM. You can pull GL actuals from Oracle ERP Cloud, load driver data from files, and write allocated costs back to the General Ledger. It's how your profitability model stays current with real data.";
-  if(ql.includes('actuals') || ql.includes('erp') || ql.includes('load')) return "To load actuals from Oracle ERP Cloud: register your EPCM app in Data Integration, configure a source connection to ERP, create member mappings from GL accounts to EPCM members, and run the integration. NovaPrism pulls $134M of indirect costs this way monthly.";
-  if(ql.includes('pipeline')) return "A Pipeline orchestrates multiple integration jobs as a single automated process. For EPCM, you'd chain: Clear Cube > Load Actuals > Run Allocations > Validate > Writeback. The catch: native EPCM rules can't be called directly - use Groovy to call EPCM REST APIs instead.";
-  if(ql.includes('write') || ql.includes('journal') || ql.includes('gl')) return "Yes, EPCM can write allocated costs back to Oracle ERP Cloud's General Ledger. Writeback creates actual journal entries that post to your financial accounts. This closes the loop - actuals in, allocations run, results visible in ERP for executive reporting.";
-  if(ql.includes('smart view')) return "Smart View connects to EPCM via the EPM Cloud URL. Users can retrieve allocation results into Excel, submit driver data from spreadsheets, and refresh forms. It's faster than web forms for bulk data entry like NovaPrism's 60-engagement driver updates.";
-  return "Good question about Data Integration! The key points: EPCM can be both source and target, it integrates with ERP Cloud but not EPM Planning, and Pipeline jobs can't call native EPCM rules directly. What specific aspect would you like me to explain further?";
+async function sbCall(typingEl){
+  try{
+    var resp=await fetch('https://epbcs-tutor.fancy-brook-fc0d.workers.dev',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        model:'claude-sonnet-4-20250514',
+        max_tokens:500,
+        system:buildSystemPrompt(),
+        messages:sbHistory.slice(-8)
+      })
+    });
+    var data=await resp.json();
+    var reply=(data.content&&data.content[0]&&data.content[0].text)||'Try rephrasing — I had trouble with that one.';
+    typingEl.textContent=reply;
+    typingEl.classList.remove('typing');
+    sbHistory.push({role:'assistant',content:reply});
+  }catch(e){
+    typingEl.textContent='Connection issue — please try again.';
+    typingEl.classList.remove('typing');
+  }
 }
 
 // ── QUIZ ──
@@ -1424,6 +1494,39 @@ const quizData = [
     opts: ["Explicit mapping", "Like mapping", "Between mapping", "Multi-dimensional mapping"],
     correct: 2,
     explain: "Between mapping is used for numeric ranges. 'Between 6100 and 6199' would map all accounts in that range to a single target member. Like mapping uses wildcards (*), not numeric ranges."
+  },
+  {
+    q: "NovaPrism's Finance Controller wants to submit updated Q1 headcount figures for all 60 engagements without logging into the EPCM web interface. What is the correct approach?",
+    opts: [
+      "Use EPM Automate importData command with a CSV file",
+      "Submit driver data via Smart View directly from Excel using the EPM Cloud connection",
+      "Email the figures to the Service Administrator who manually updates the cube",
+      "Use the EPCM REST API to POST headcount values for each engagement"
+    ],
+    correct: 1,
+    explain: "Smart View connects directly to EPCM from Excel. The Finance Controller submits driver data (headcount, tickets, sqft) from a spreadsheet form without leaving Excel. EPM Automate importData works but requires a Service Administrator — Smart View is the self-service path for business users like the Finance Controller."
+  },
+  {
+    q: "After NovaPrism's quarterly dimension refresh adds 5 new Customer members, what is the correct sequence before running the next M01 calculation?",
+    opts: [
+      "importMetadata → calculateModel (refreshCube not needed for data loads)",
+      "importMetadata → refreshCube → calculateModel",
+      "refreshCube → importMetadata → calculateModel",
+      "calculateModel → importMetadata → refreshCube (order does not matter)"
+    ],
+    correct: 1,
+    explain: "The correct sequence is: importMetadata (loads new members into the application) → refreshCube (rebuilds the ASO cube structure to include new members — required after metadata changes, NOT needed after data loads) → calculateModel (now runs with the new Customer dimension members available). Running calculateModel before refreshCube would fail or produce incorrect results for the new members."
+  },
+  {
+    q: "A NovaPrism Pipeline job is designed to: (1) clear the cube, (2) load actuals, (3) run M01 allocation, (4) copy to PCM_REP. Step 3 fails silently — the Pipeline completes with no error. What is the most likely cause?",
+    opts: [
+      "Step 3 used calculateModel EPM Automate command which is not supported in Pipelines",
+      "Step 3 used a native EPCM rule set as the job step — Pipeline only supports Calculation Manager business rules",
+      "The Pipeline clearCube step removed the PCM_CLC data before allocation could run",
+      "copyDataByPointOfView in Step 4 requires a separate login session"
+    ],
+    correct: 1,
+    explain: "Pipeline job steps can only call Calculation Manager business rules — not native EPCM rule sets. If Step 3 was configured with a native rule set, the Pipeline silently skips it or completes without executing the calculation. The fix: create a Groovy business rule in Calculation Manager that calls the EPCM REST API to trigger calculateModel, then use that Groovy rule as the Pipeline job step."
   }
 ];
 
