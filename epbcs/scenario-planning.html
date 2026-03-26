@@ -242,17 +242,17 @@ body{font-family:'Crimson Pro',serif;background:var(--bg);color:var(--white);min
 <!-- Sidebar -->
 <div id="sb">
   <div class="sb-hdr">Scenario Planning</div>
-  <a href="javascript:void(0)" class="sb-link" onclick="scrollTo('foundation')">🧱 Foundation — The Two Dimensions</a>
-  <a href="javascript:void(0)" class="sb-link" onclick="scrollTo('tools')">🔧 The Four What-If Tools</a>
-  <a href="javascript:void(0)" class="sb-link" onclick="scrollTo('sandbox')">🏖 Sandbox Deep-Dive</a>
-  <a href="javascript:void(0)" class="sb-link" onclick="scrollTo('vision-matrix')">📊 Vision Corp Matrix</a>
-  <a href="javascript:void(0)" class="sb-link" onclick="scrollTo('strategic-modeling')">🔮 Strategic Modeling Module</a>
-  <a href="javascript:void(0)" class="sb-link" onclick="scrollTo('goal-seek')">🎯 Goal Seek</a>
-  <a href="javascript:void(0)" class="sb-link" onclick="scrollTo('monte-carlo')">🎲 Monte Carlo Simulation</a>
-  <a href="javascript:void(0)" class="sb-link" onclick="scrollTo('integration')">🔗 Integration with Financials</a>
-  <a href="javascript:void(0)" class="sb-link" onclick="scrollTo('groovy')">⚡ Groovy Patterns</a>
-  <a href="javascript:void(0)" class="sb-link" onclick="scrollTo('build')">⚒ Build Checklist</a>
-  <a href="javascript:void(0)" class="sb-link" onclick="scrollTo('fpa')">💼 FP&A Context</a>
+  <a href="javascript:void(0)" class="sb-link" onclick="goToSection('foundation')">🧱 Foundation — The Two Dimensions</a>
+  <a href="javascript:void(0)" class="sb-link" onclick="goToSection('tools')">🔧 The Four What-If Tools</a>
+  <a href="javascript:void(0)" class="sb-link" onclick="goToSection('sandbox')">🏖 Sandbox Deep-Dive</a>
+  <a href="javascript:void(0)" class="sb-link" onclick="goToSection('vision-matrix')">📊 Vision Corp Matrix</a>
+  <a href="javascript:void(0)" class="sb-link" onclick="goToSection('strategic-modeling')">🔮 Strategic Modeling Module</a>
+  <a href="javascript:void(0)" class="sb-link" onclick="goToSection('goal-seek')">🎯 Goal Seek</a>
+  <a href="javascript:void(0)" class="sb-link" onclick="goToSection('monte-carlo')">🎲 Monte Carlo Simulation</a>
+  <a href="javascript:void(0)" class="sb-link" onclick="goToSection('integration')">🔗 Integration with Financials</a>
+  <a href="javascript:void(0)" class="sb-link" onclick="goToSection('groovy')">⚡ Groovy Patterns</a>
+  <a href="javascript:void(0)" class="sb-link" onclick="goToSection('build')">⚒ Build Checklist</a>
+  <a href="javascript:void(0)" class="sb-link" onclick="goToSection('fpa')">💼 FP&A Context</a>
   <div class="sb-hdr" style="margin-top:8px">Quest</div>
   <a class="sb-tool-link" href="index.html">🏠 Quest Map</a>
   <a class="sb-tool-link" href="parts-4-5.html">⚔ Parts IV–V</a>
@@ -902,7 +902,7 @@ operation.grid.setDataCellValues(writes)   <span style="color:#6a737d">// 1 netw
 EPM="/opt/Oracle/EPMAutomate/bin/epmautomate"
 LOG="/var/log/epm/scenario_refresh_$(date +%Y%m%d).log"
 
-$EPM login finance-admin@vision.com $PASSWORD $ENV_URL >> $LOG 2>&1
+$EPM login <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="76101f18171815135b17121b1f1836001f051f19185815191b">[email&#160;protected]</a> $PASSWORD $ENV_URL >> $LOG 2>&1
 
 <span style="color:#6a737d"># 1. Advance the rolling forecast period</span>
 $EPM setSubstitutionVariable OEP_FS CurPeriod <span style="color:#a5d6ff">$(date +%b)</span>   >> $LOG
@@ -1039,12 +1039,12 @@ echo "Scenario refresh complete: $(date)" >> $LOG</div>
 </div></div>
 </div>
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 // Stars
 (function(){var s=document.getElementById('stars');for(var i=0;i<100;i++){var d=document.createElement('div');d.className='star';var sz=Math.random()*2+0.4;d.style.cssText='width:'+sz+'px;height:'+sz+'px;top:'+Math.random()*100+'%;left:'+Math.random()*100+'%;--d:'+(2+Math.random()*4)+'s;--delay:'+Math.random()*5+'s;--op:'+(0.12+Math.random()*0.35);s.appendChild(d);}})();
 
 // Scroll to section
-function scrollTo(id){
+function goToSection(id){
   var el=document.getElementById(id);
   if(el){el.scrollIntoView({behavior:'smooth',block:'start'});}
 }

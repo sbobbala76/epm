@@ -144,11 +144,11 @@ h2{font-family:'Cinzel',serif;font-size:16px;font-weight:600;color:var(--goldLt)
 <div id="fa-shell">
 <div id="fa-sb">
   <div class="sb-hdr">Failing Answers</div>
-  <a href="javascript:void(0)" class="sb-link" onclick="scrollTo('terminology')">📛 Terminology (8)</a>
-  <a href="javascript:void(0)" class="sb-link" onclick="scrollTo('depth')">🕳 Depth Signals (7)</a>
-  <a href="javascript:void(0)" class="sb-link" onclick="scrollTo('groovy')">⚡ Groovy Fails (8)</a>
-  <a href="javascript:void(0)" class="sb-link" onclick="scrollTo('production')">🔥 Prod Blindspots (6)</a>
-  <a href="javascript:void(0)" class="sb-link" onclick="scrollTo('quickref')">📋 Quick Reference</a>
+  <a href="javascript:void(0)" class="sb-link" onclick="goToSection('terminology')">📛 Terminology (8)</a>
+  <a href="javascript:void(0)" class="sb-link" onclick="goToSection('depth')">🕳 Depth Signals (7)</a>
+  <a href="javascript:void(0)" class="sb-link" onclick="goToSection('groovy')">⚡ Groovy Fails (8)</a>
+  <a href="javascript:void(0)" class="sb-link" onclick="goToSection('production')">🔥 Prod Blindspots (6)</a>
+  <a href="javascript:void(0)" class="sb-link" onclick="goToSection('quickref')">📋 Quick Reference</a>
   <div class="sb-hdr" style="margin-top:8px">Related</div>
   <a class="sb-tool-link" href="interview-prep.html">🎯 Interview Prep (59 Qs)</a>
   <a class="sb-tool-link" href="troubleshoot.html">🔧 Troubleshooting Guide</a>
@@ -717,7 +717,7 @@ function toggle(hdr) {
   card.classList.toggle('open');
 }
 
-function scrollTo(id) {
+function goToSection(id) {
   var el = document.getElementById(id);
   if (el) el.scrollIntoView({behavior:'smooth', block:'start'});
 }
