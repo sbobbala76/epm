@@ -2263,7 +2263,7 @@ async function sbCall(typingEl){
         model:'claude-sonnet-4-20250514',
         max_tokens:500,
         system:buildSystemPrompt(),
-        messages:sbHistory
+        messages:sbHistory.slice(-8)
       })
     });
     var data=await resp.json();
@@ -2287,6 +2287,27 @@ document.querySelectorAll('a[href^="#"]').forEach(function(a){
 
 // Initialize engagement simulator
 calculateEngagement();
+
+/* ── Progress persistence ── */
+(function(){
+  var HALL = 7;
+  try { localStorage.setItem('epcm_h'+HALL,'1'); } catch(e){}
+  setTimeout(function(){
+    document.querySelectorAll('.campus-building.locked').forEach(function(el){
+      var n = parseInt(el.textContent,10);
+      if(!n) return;
+      try {
+        if(localStorage.getItem('epcm_h'+n)==='1'){
+          el.classList.remove('locked');
+          el.classList.add('done');
+          var stop=el.closest('.campus-stop');
+          if(stop){ stop.classList.remove('campus-stop'); stop.classList.add('campus-stop','done-stop'); }
+        }
+      } catch(e){}
+    });
+  }, 150);
+})();
+
 </script>
 </body>
 </html>
