@@ -1,0 +1,1136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<base href="/epbcs/">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Scenario Planning & Strategic Modeling — Oracle EPM · The Planning Quest</title>
+<meta name="description" content="The complete practitioner guide to scenario planning in Oracle EPM Cloud. Scenario vs Version architecture, Sandbox, Strategic Modeling, Monte Carlo simulation, Goal Seek, what-if patterns, and the Vision Corp implementation blueprint.">
+<meta name="keywords" content="Oracle EPM scenario planning, EPBCS Strategic Modeling, EPM what-if analysis, sandbox planning, Monte Carlo EPM, goal seek EPM cloud, scenario dimension version dimension EPBCS">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Crimson+Pro:ital,wght@0,400;0,500;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#07090e;--bg2:#0c0f18;--bg3:#111520;--bg4:#161c2a;
+  --gold:#d4a017;--goldLt:#f0c040;--goldDim:#5c4108;
+  --teal:#1fb8a8;--tealLt:#4dd9c8;
+  --purple:#7c3aed;--purpleLt:#a855f7;
+  --emerald:#059669;--emeraldLt:#10b981;
+  --sky:#0ea5e9;--skyLt:#38bdf8;
+  --red:#c0392b;--redLt:#e74c3c;
+  --amber:#d97706;--amberLt:#fbbf24;
+  --rose:#be185d;--roseLt:#f472b6;
+  --indigo:#4338ca;--indigoLt:#818cf8;
+  --border:rgba(212,160,23,.15);--white:#f0ead6;--dim:#5a6478;--r:10px;
+  --sidebar:268px;--topbar:54px
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Crimson Pro',serif;background:var(--bg);color:var(--white);min-height:100vh;overflow-x:hidden}
+#stars{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+.star{position:absolute;border-radius:50%;background:white;animation:twinkle var(--d,3s) infinite var(--delay,0s)}
+@keyframes twinkle{0%,100%{opacity:.05}50%{opacity:var(--op,.6)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(212,160,23,.3)}50%{box-shadow:0 0 0 8px rgba(212,160,23,0)}}
+@keyframes glow{0%,100%{text-shadow:0 0 20px rgba(124,58,237,.3)}50%{text-shadow:0 0 50px rgba(124,58,237,.5)}}
+
+/* Topbar */
+#topbar{position:fixed;top:0;left:0;right:0;height:var(--topbar);background:rgba(7,9,14,.97);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 20px;gap:14px;z-index:200}
+.tb-dot{width:8px;height:8px;border-radius:50%;background:var(--tealLt);animation:pulse 2s infinite;flex-shrink:0}
+.tb-tools{display:flex;gap:3px;margin-left:6px;overflow-x:auto;flex-shrink:0}
+.tb-tools::-webkit-scrollbar{display:none}
+.tb-tool{padding:4px 8px;border-radius:6px;border:1px solid var(--border);background:transparent;color:var(--dim);font-family:'Cinzel',serif;font-size:8.5px;font-weight:700;letter-spacing:.05em;cursor:pointer;transition:all .15s;text-transform:uppercase;text-decoration:none;display:inline-flex;align-items:center;white-space:nowrap}
+.tb-tool:hover,.tb-tool.active{border-color:var(--purpleLt);color:var(--purpleLt);background:rgba(124,58,237,.06)}
+
+/* Shell */
+#shell{display:flex;padding-top:var(--topbar);min-height:100vh}
+#sb{width:var(--sidebar);background:var(--bg2);border-right:1px solid var(--border);position:fixed;top:var(--topbar);bottom:0;overflow-y:auto;z-index:100}
+#sb::-webkit-scrollbar{width:3px}
+#sb::-webkit-scrollbar-thumb{background:var(--goldDim);border-radius:2px}
+.sb-hdr{padding:10px 16px 6px;font-family:'Cinzel',serif;font-size:9px;font-weight:700;color:var(--goldDim);letter-spacing:.1em;text-transform:uppercase;border-bottom:1px solid rgba(255,255,255,.04)}
+.sb-link{display:flex;align-items:center;gap:8px;padding:8px 16px;font-size:11.5px;color:rgba(240,234,214,.4);text-decoration:none;transition:all .12s;border-left:2px solid transparent;cursor:pointer;line-height:1.35}
+.sb-link:hover,.sb-link.active{color:var(--purpleLt);background:rgba(124,58,237,.05);border-left-color:var(--purpleLt)}
+.sb-tool-link{padding:8px 14px;display:flex;align-items:center;gap:9px;font-size:11.5px;color:var(--dim);text-decoration:none;transition:all .12s;border-left:2px solid transparent}
+.sb-tool-link:hover{color:var(--tealLt);background:rgba(31,184,168,.04);border-left-color:var(--tealLt)}
+
+/* Main */
+#main{margin-left:var(--sidebar);flex:1;min-width:0;position:relative;z-index:1}
+.sp-wrap{max-width:860px;padding:36px 48px 120px;margin:0 auto;animation:fadeUp .35s ease}
+
+/* Hero */
+.sp-hero{margin-bottom:44px;padding-bottom:28px;border-bottom:1px solid var(--border);position:relative}
+.sp-badge{font-family:'Cinzel',serif;font-size:9.5px;font-weight:700;letter-spacing:.14em;color:var(--purpleLt);padding:4px 16px;border:1px solid rgba(124,58,237,.3);border-radius:20px;display:inline-block;margin-bottom:16px}
+.sp-title{font-family:'Cinzel',serif;font-size:34px;font-weight:900;line-height:1.1;margin-bottom:10px;background:linear-gradient(135deg,var(--purpleLt),var(--goldLt),var(--tealLt));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:glow 4s infinite}
+.sp-sub{font-size:15px;color:rgba(240,234,214,.55);line-height:1.75;max-width:700px;font-style:italic}
+.sp-meta{display:flex;gap:20px;flex-wrap:wrap;margin-top:20px}
+.sp-meta-item{display:flex;align-items:center;gap:7px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--dim)}
+.sp-meta-dot{width:6px;height:6px;border-radius:50%;background:var(--purpleLt)}
+
+/* Section headers */
+.sec-hdr{font-family:'Cinzel',serif;font-size:20px;font-weight:700;color:var(--goldLt);margin:52px 0 20px;padding-top:8px;letter-spacing:.03em;border-top:2px solid rgba(212,160,23,.12);padding-top:20px}
+.sec-hdr-purple{color:var(--purpleLt);border-top-color:rgba(124,58,237,.2)}
+.sec-hdr-teal{color:var(--tealLt);border-top-color:rgba(31,184,168,.2)}
+.sec-hdr-amber{color:var(--amberLt);border-top-color:rgba(217,119,6,.2)}
+.sec-intro{font-size:15px;color:rgba(240,234,214,.65);line-height:1.82;margin-bottom:24px}
+
+/* Two-column tool grid */
+.tool-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:24px 0}
+@media(max-width:640px){.tool-grid{grid-template-columns:1fr}}
+.tool-card{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:20px 22px;transition:border-color .15s}
+.tool-card:hover{border-color:rgba(124,58,237,.25)}
+.tc-icon{font-size:24px;margin-bottom:10px}
+.tc-name{font-family:'Cinzel',serif;font-size:12.5px;font-weight:700;color:var(--purpleLt);margin-bottom:5px;letter-spacing:.03em}
+.tc-desc{font-size:13.5px;color:rgba(240,234,214,.6);line-height:1.72}
+.tc-when{font-size:12px;color:var(--dim);margin-top:8px;font-style:italic}
+
+/* Architecture diagram */
+.arch-diagram{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:28px;margin:24px 0}
+.arch-row{display:flex;align-items:center;gap:0;margin-bottom:8px}
+.arch-box{padding:10px 16px;border-radius:8px;font-family:'Cinzel',serif;font-size:11px;font-weight:700;letter-spacing:.04em;text-align:center;flex:1}
+.arch-arrow{color:var(--dim);font-size:18px;padding:0 8px;flex-shrink:0}
+.box-actual{background:rgba(5,150,105,.1);border:1px solid rgba(5,150,105,.3);color:var(--emeraldLt)}
+.box-budget{background:rgba(14,165,233,.1);border:1px solid rgba(14,165,233,.3);color:var(--skyLt)}
+.box-forecast{background:rgba(217,119,6,.1);border:1px solid rgba(217,119,6,.3);color:var(--amberLt)}
+.box-scenario{background:rgba(124,58,237,.1);border:1px solid rgba(124,58,237,.3);color:var(--purpleLt)}
+.box-sandbox{background:rgba(212,160,23,.1);border:1px solid rgba(212,160,23,.3);color:var(--goldLt)}
+.arch-label{font-family:'Cinzel',serif;font-size:8.5px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--dim);margin-bottom:10px}
+
+/* Decision table */
+.dtbl-wrap{overflow-x:auto;margin:16px 0;border-radius:var(--r);border:1px solid var(--border)}
+.dtbl{width:100%;border-collapse:collapse;font-size:13.5px}
+.dtbl th{background:rgba(124,58,237,.06);color:var(--purpleLt);padding:10px 14px;text-align:left;font-family:'Cinzel',serif;font-size:10px;letter-spacing:.04em;border-bottom:1px solid var(--border)}
+.dtbl td{padding:10px 14px;border-bottom:1px solid rgba(255,255,255,.04);color:rgba(240,234,214,.68);vertical-align:top;line-height:1.6}
+.dtbl tr:last-child td{border-bottom:none}
+.dtbl tr:hover td{background:rgba(255,255,255,.012)}
+.tag-sm{font-family:'JetBrains Mono',monospace;font-size:10.5px;padding:2px 7px;border-radius:5px;display:inline-block}
+
+/* Callouts */
+.callout{border-radius:var(--r);padding:15px 20px;margin:18px 0;font-size:14px;line-height:1.78}
+.callout strong{color:var(--white)}
+.tip{background:rgba(5,150,105,.06);border:1px solid rgba(5,150,105,.2)}
+.warn{background:rgba(217,119,6,.06);border:1px solid rgba(217,119,6,.22)}
+.insight{background:rgba(124,58,237,.06);border:1px solid rgba(124,58,237,.2)}
+.fpa{background:rgba(14,165,233,.05);border:1px solid rgba(14,165,233,.18)}
+.ci{font-size:15px;margin-right:8px}
+
+/* Code blocks */
+.code-wrap{margin:16px 0}
+.code-lbl{font-family:'Cinzel',serif;font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);margin-bottom:6px}
+.code-block{background:#090d14;border:1px solid rgba(255,255,255,.07);border-radius:8px;padding:16px 20px;font-family:'JetBrains Mono',monospace;font-size:11.5px;line-height:1.75;color:#a8d8ea;overflow-x:auto;white-space:pre;position:relative}
+.copy-btn{position:absolute;top:9px;right:9px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:6px;padding:3px 10px;font-family:'Cinzel',serif;font-size:8px;color:var(--dim);cursor:pointer;transition:all .15s}
+.copy-btn:hover{background:rgba(31,184,168,.1);border-color:var(--teal);color:var(--tealLt)}
+.copy-btn.copied{color:var(--emeraldLt)}
+
+/* Scenario tier cards */
+.tier-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin:24px 0}
+@media(max-width:700px){.tier-grid{grid-template-columns:1fr}}
+.tier-card{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:18px;position:relative;overflow:hidden}
+.tier-accent{position:absolute;top:0;left:0;right:0;height:3px}
+.tier-label{font-family:'Cinzel',serif;font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px}
+.tier-name{font-family:'Cinzel',serif;font-size:14px;font-weight:700;margin-bottom:8px}
+.tier-desc{font-size:13px;color:rgba(240,234,214,.58);line-height:1.7}
+.tier-examples{margin-top:10px;padding-top:10px;border-top:1px solid rgba(255,255,255,.05)}
+.tier-ex-lbl{font-family:'JetBrains Mono',monospace;font-size:9.5px;color:var(--dim);margin-bottom:5px}
+.tier-ex{font-size:12.5px;color:rgba(240,234,214,.5);line-height:1.6}
+
+/* Step-by-step */
+.steps{margin:20px 0}
+.step{display:flex;gap:16px;margin-bottom:18px;align-items:flex-start}
+.step-num{width:28px;height:28px;border-radius:50%;background:rgba(124,58,237,.12);border:1px solid rgba(124,58,237,.3);color:var(--purpleLt);font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px}
+.step-content{flex:1}
+.step-title{font-family:'Cinzel',serif;font-size:13px;font-weight:700;color:var(--white);margin-bottom:4px}
+.step-desc{font-size:14px;color:rgba(240,234,214,.65);line-height:1.75}
+
+/* Feature deep-dive */
+.feature-block{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);margin-bottom:16px;overflow:hidden}
+.fb-hdr{display:flex;align-items:center;gap:12px;padding:16px 20px;cursor:pointer;user-select:none}
+.fb-icon{font-size:18px;flex-shrink:0}
+.fb-title{font-family:'Cinzel',serif;font-size:13.5px;font-weight:700;color:var(--goldLt);flex:1}
+.fb-tags{display:flex;gap:5px;flex-shrink:0}
+.fb-tag{font-family:'Cinzel',serif;font-size:7.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:2px 7px;border-radius:6px}
+.tag-enterprise{background:rgba(124,58,237,.1);border:1px solid rgba(124,58,237,.25);color:var(--purpleLt)}
+.tag-standard{background:rgba(14,165,233,.1);border:1px solid rgba(14,165,233,.25);color:var(--skyLt)}
+.tag-sm{background:rgba(212,160,23,.1);border:1px solid rgba(212,160,23,.25);color:var(--goldLt)}
+.fb-chev{color:var(--dim);font-size:10px;transition:transform .2s}
+.feature-block.open .fb-chev{transform:rotate(180deg)}
+.fb-body{display:none;padding:0 20px 20px}
+.feature-block.open .fb-body{display:block}
+
+/* Vision Corp scenario matrix */
+.matrix{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:24px;margin:24px 0}
+.matrix-title{font-family:'Cinzel',serif;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--tealLt);margin-bottom:16px}
+.matrix-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+@media(max-width:640px){.matrix-grid{grid-template-columns:1fr 1fr}}
+.matrix-cell{background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.06);border-radius:8px;padding:12px}
+.mc-scenario{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--purpleLt);margin-bottom:4px}
+.mc-version{font-family:'Cinzel',serif;font-size:11px;font-weight:700;color:var(--white);margin-bottom:4px}
+.mc-desc{font-size:11.5px;color:rgba(240,234,214,.45);line-height:1.5}
+.mc-highlight{border-color:rgba(124,58,237,.3);background:rgba(124,58,237,.06)}
+
+/* SM module callout */
+.sm-banner{background:linear-gradient(135deg,rgba(124,58,237,.08),rgba(212,160,23,.05));border:1px solid rgba(124,58,237,.2);border-radius:var(--r);padding:22px 26px;margin:24px 0;position:relative;overflow:hidden}
+.sm-banner::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--purple),var(--goldLt),var(--teal))}
+.sm-banner-title{font-family:'Cinzel',serif;font-size:16px;font-weight:700;color:var(--purpleLt);margin-bottom:8px}
+.sm-banner-sub{font-size:14px;color:rgba(240,234,214,.6);line-height:1.75}
+.sm-banner-note{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--amber);margin-top:10px;padding:8px 12px;background:rgba(217,119,6,.07);border-radius:6px;border-left:2px solid var(--amber)}
+
+/* Monte Carlo viz */
+.mc-viz{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:24px;margin:20px 0}
+.mc-viz-title{font-family:'Cinzel',serif;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--goldLt);margin-bottom:16px}
+.percentile-bar{margin-bottom:10px}
+.pb-label{display:flex;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-size:10.5px;margin-bottom:4px}
+.pb-track{height:10px;background:rgba(255,255,255,.05);border-radius:5px;overflow:hidden;position:relative}
+.pb-fill{height:100%;border-radius:5px;transition:width .8s ease}
+
+/* Checklist */
+.cl-block{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:20px 24px;margin:20px 0}
+.cl-title{font-family:'Cinzel',serif;font-size:10px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--tealLt);margin-bottom:14px}
+.cl-item{display:flex;align-items:flex-start;gap:12px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.04);cursor:pointer;user-select:none}
+.cl-item:last-child{border-bottom:none}
+.cl-box{width:18px;height:18px;border-radius:4px;border:1.5px solid rgba(124,58,237,.3);flex-shrink:0;margin-top:2px;display:flex;align-items:center;justify-content:center;font-size:11px;transition:all .15s}
+.cl-box.on{background:var(--emerald);border-color:var(--emerald);color:white}
+.cl-text{font-size:13.5px;color:rgba(240,234,214,.62);line-height:1.6}
+.cl-text.done{text-decoration:line-through;opacity:.35}
+
+/* AI Tutor */
+.tutor-box{background:linear-gradient(135deg,rgba(124,58,237,.05),rgba(7,9,14,.98));border:1px solid rgba(124,58,237,.2);border-radius:var(--r);padding:20px 24px;margin:32px 0}
+.tutor-hdr{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.tutor-av{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--purple),var(--gold));display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.tutor-nm{font-family:'Cinzel',serif;font-size:12px;font-weight:700;color:var(--purpleLt)}
+.tutor-rl{font-size:11px;color:var(--dim)}
+.tutor-desc{font-size:13.5px;color:rgba(240,234,214,.5);margin-bottom:12px;font-style:italic}
+.chips{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:12px}
+.chip{padding:5px 12px;background:rgba(124,58,237,.07);border:1px solid rgba(124,58,237,.2);border-radius:20px;font-size:12px;color:rgba(240,234,214,.6);cursor:pointer;transition:all .12s}
+.chip:hover{background:rgba(124,58,237,.14);color:var(--purpleLt);border-color:rgba(124,58,237,.4)}
+.tutor-row{display:flex;gap:10px}
+.tutor-input{flex:1;padding:10px 14px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:8px;color:var(--white);font-family:'Crimson Pro',serif;font-size:14px;outline:none;transition:border-color .15s}
+.tutor-input:focus{border-color:var(--purpleLt)}
+.tutor-input::placeholder{color:rgba(255,255,255,.18)}
+.tutor-send{padding:10px 18px;background:linear-gradient(135deg,var(--purple),var(--indigo));color:white;border:none;border-radius:8px;font-family:'Cinzel',serif;font-size:10px;font-weight:700;letter-spacing:.05em;cursor:pointer;white-space:nowrap;transition:opacity .15s}
+.tutor-send:hover{opacity:.85}
+.tutor-out{margin-top:14px;background:rgba(0,0,0,.3);border:1px solid rgba(124,58,237,.15);border-radius:8px;padding:14px 18px;font-size:14px;color:rgba(240,234,214,.75);line-height:1.82;display:none}
+.tutor-out.show{display:block}
+.tutor-msg-lbl{font-family:'Cinzel',serif;font-size:8.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--purpleLt);margin-bottom:6px}
+
+/* Responsive */
+@media(max-width:860px){#sb{display:none}#main{margin-left:0}.sp-wrap{padding:24px 18px 80px}.sp-title{font-size:24px}.tier-grid{grid-template-columns:1fr}.matrix-grid{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+<div id="stars"></div>
+
+<!-- Topbar -->
+<div id="topbar">
+  <a href="index.html" style="font-family:'Cinzel',serif;font-size:13px;font-weight:700;color:var(--goldLt);text-decoration:none;display:flex;align-items:center;gap:9px;flex-shrink:0"><span class="tb-dot"></span>The Planning Quest</a>
+  <span style="color:var(--goldDim)">›</span>
+  <span style="font-family:'Cinzel',serif;font-size:11px;color:var(--purpleLt);flex-shrink:0">Scenario Planning</span>
+  <div class="tb-tools">
+    <a href="parts-1-3.html" class="tb-tool">📖 I–III</a>
+    <a href="parts-4-5.html" class="tb-tool">⚔ IV–V</a>
+    <a href="parts-6-9.html" class="tb-tool">👑 VI–IX</a>
+    <a href="groovy-ch1.html" class="tb-tool">📘 Gr.I</a>
+    <a href="groovy-ch2.html" class="tb-tool">⚡ Gr.II</a>
+    <a href="essbase-kernel.html" class="tb-tool">⚙ Kernel</a>
+    <a href="engagement.html" class="tb-tool">🏆 Engage</a>
+    <a href="quiz.html" class="tb-tool">📝 Quiz</a>
+    <a href="interview-prep.html" class="tb-tool">🎯 Prep</a>
+    <a href="troubleshoot.html" class="tb-tool">🔧 Fix</a>
+    <a href="search.html" class="tb-tool">🔍</a>
+  </div>
+</div>
+
+<div id="shell">
+
+<!-- Sidebar -->
+<div id="sb">
+  <div class="sb-hdr">Scenario Planning</div>
+  <a href="javascript:void(0)" class="sb-link" onclick="scrollTo('foundation')">🧱 Foundation — The Two Dimensions</a>
+  <a href="javascript:void(0)" class="sb-link" onclick="scrollTo('tools')">🔧 The Four What-If Tools</a>
+  <a href="javascript:void(0)" class="sb-link" onclick="scrollTo('sandbox')">🏖 Sandbox Deep-Dive</a>
+  <a href="javascript:void(0)" class="sb-link" onclick="scrollTo('vision-matrix')">📊 Vision Corp Matrix</a>
+  <a href="javascript:void(0)" class="sb-link" onclick="scrollTo('strategic-modeling')">🔮 Strategic Modeling Module</a>
+  <a href="javascript:void(0)" class="sb-link" onclick="scrollTo('goal-seek')">🎯 Goal Seek</a>
+  <a href="javascript:void(0)" class="sb-link" onclick="scrollTo('monte-carlo')">🎲 Monte Carlo Simulation</a>
+  <a href="javascript:void(0)" class="sb-link" onclick="scrollTo('integration')">🔗 Integration with Financials</a>
+  <a href="javascript:void(0)" class="sb-link" onclick="scrollTo('groovy')">⚡ Groovy Patterns</a>
+  <a href="javascript:void(0)" class="sb-link" onclick="scrollTo('build')">⚒ Build Checklist</a>
+  <a href="javascript:void(0)" class="sb-link" onclick="scrollTo('fpa')">💼 FP&A Context</a>
+  <div class="sb-hdr" style="margin-top:8px">Quest</div>
+  <a class="sb-tool-link" href="index.html">🏠 Quest Map</a>
+  <a class="sb-tool-link" href="parts-4-5.html">⚔ Parts IV–V</a>
+  <a class="sb-tool-link" href="essbase-kernel.html">⚙ Essbase Kernel</a>
+  <a class="sb-tool-link" href="troubleshoot.html">🔧 Troubleshooting</a>
+  <a class="sb-tool-link" href="interview-prep.html">🎯 Interview Prep</a>
+  <a class="sb-tool-link" href="whats-new.html">🆕 What's New</a>
+</div>
+
+<div id="main">
+<div class="sp-wrap">
+
+<!-- Hero -->
+<div class="sp-hero">
+  <div class="sp-badge">🔮 Practitioner Hub · EPM Enterprise Cloud · EPM 25.11+</div>
+  <h1 class="sp-title">Scenario Planning &<br>Strategic Modeling</h1>
+  <p class="sp-sub">The complete Oracle EPM practitioner guide — from Scenario vs Version architecture, Sandbox, and what-if patterns, to the Strategic Modeling module, Goal Seek, and Monte Carlo simulation. Everything you need to build, configured correctly.</p>
+  <div class="sp-meta">
+    <div class="sp-meta-item"><span class="sp-meta-dot"></span>4 what-if tools covered</div>
+    <div class="sp-meta-item"><span class="sp-meta-dot"></span>Strategic Modeling module</div>
+    <div class="sp-meta-item"><span class="sp-meta-dot"></span>Monte Carlo simulation</div>
+    <div class="sp-meta-item"><span class="sp-meta-dot"></span>Vision Corp blueprint</div>
+    <div class="sp-meta-item"><span class="sp-meta-dot"></span>Groovy automation patterns</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- SECTION 1: FOUNDATION                                  -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div id="foundation">
+<h2 class="sec-hdr">The Foundation — Scenario vs Version</h2>
+<p class="sec-intro">Before building any what-if capability, you need to understand the two dimensions that make it possible. Most EPM practitioners know that Scenario and Version exist. Very few understand why they exist as two separate dimensions, and what each one is actually for. Getting this wrong at design time means rebuilding your entire planning structure.</p>
+
+<div class="callout insight"><span class="ci">🔮</span><strong>The Core Distinction:</strong> <strong>Scenario</strong> = what type of data is this? (Budget, Actual, Forecast). <strong>Version</strong> = which iteration or perspective of that type? (Working, Final, Approved, Upside, Downside). A single Scenario can have multiple Versions. You never create multiple Scenarios to represent the same data type at different stages — that's what Versions are for.</div>
+
+<div class="dtbl-wrap"><table class="dtbl">
+  <thead><tr><th>Dimension</th><th>What It Represents</th><th>Examples</th><th>Who Configures It</th></tr></thead>
+  <tbody>
+    <tr>
+      <td><strong style="color:var(--purpleLt)">Scenario</strong></td>
+      <td>The <em>type</em> of plan — the fundamental nature of the data. Scenarios don't inherit from each other. Each is completely independent.</td>
+      <td>Budget, Actual, Forecast, Long_Range_Plan, Acquisition_Model</td>
+      <td>Admin — at application creation. Adding Scenarios mid-cycle requires database refresh.</td>
+    </tr>
+    <tr>
+      <td><strong style="color:var(--goldLt)">Version</strong></td>
+      <td>The <em>stage or perspective</em> of a Scenario. Versions can be shared across Scenarios or Scenario-specific. Supports the approval workflow lifecycle.</td>
+      <td>Working, Draft, Final, Approved, Upside, Downside, Base, Mgmt_Adj</td>
+      <td>Admin — at application creation or via outline. Adding Versions is lower-risk than adding Scenarios.</td>
+    </tr>
+  </tbody>
+</table></div>
+
+<h3 style="font-family:'Cinzel',serif;font-size:14px;color:var(--tealLt);margin:24px 0 12px">Why Both Are Sparse — And Why It Matters</h3>
+<p style="font-size:14px;color:rgba(240,234,214,.68);line-height:1.82;margin-bottom:16px">Both Scenario and Version are <strong>sparse dimensions</strong>. Essbase only allocates blocks at Scenario × Version combinations where data actually exists. This is the key architectural fact: adding 3 new Scenario members and 5 new Version members to your outline doesn't balloon your database by 15× — it only increases storage when data is actually written at those intersections. This is why what-if analysis in EPBCS can be fast even with many scenarios: you only pay storage cost for the combinations that matter.</p>
+
+<div class="callout warn"><span class="ci">⚠</span><strong>The Design Trap:</strong> Teams new to EPBCS often create a new Scenario for every planning iteration — "Budget_v1", "Budget_v2_CFO", "Budget_FINAL". This is wrong. Scenarios are types; Versions are iterations. The correct structure: one Budget Scenario with Working, CFO_Review, and Final Versions. The budget cycle progression lives in Version, not Scenario. Violating this rule creates a cube that grows uncontrollably and makes reporting across versions impossible.</div>
+
+<div class="arch-diagram">
+  <div class="arch-label">Vision Corp — Correct Scenario × Version Architecture</div>
+  <div style="display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:start">
+    <div style="padding-top:4px">
+      <div style="font-family:'Cinzel',serif;font-size:9px;color:var(--dim);letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px">Scenarios →</div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--dim);line-height:2.2">Actual<br>Budget<br>Forecast<br>Long_Range<br>Acquisition</div>
+    </div>
+    <div>
+      <div style="font-family:'Cinzel',serif;font-size:9px;color:var(--dim);letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px">Versions (per scenario where active) ↓</div>
+      <div style="overflow-x:auto">
+      <table style="font-family:'JetBrains Mono',monospace;font-size:10px;border-collapse:collapse;min-width:500px">
+        <thead><tr>
+          <th style="padding:6px 10px;background:rgba(255,255,255,.04);color:var(--dim);text-align:left;border:1px solid rgba(255,255,255,.06)">Version</th>
+          <th style="padding:6px 10px;background:rgba(255,255,255,.04);color:var(--emeraldLt);text-align:center;border:1px solid rgba(255,255,255,.06)">Actual</th>
+          <th style="padding:6px 10px;background:rgba(255,255,255,.04);color:var(--skyLt);text-align:center;border:1px solid rgba(255,255,255,.06)">Budget</th>
+          <th style="padding:6px 10px;background:rgba(255,255,255,.04);color:var(--amberLt);text-align:center;border:1px solid rgba(255,255,255,.06)">Forecast</th>
+          <th style="padding:6px 10px;background:rgba(255,255,255,.04);color:var(--purpleLt);text-align:center;border:1px solid rgba(255,255,255,.06)">Long_Range</th>
+          <th style="padding:6px 10px;background:rgba(255,255,255,.04);color:var(--goldLt);text-align:center;border:1px solid rgba(255,255,255,.06)">Acquisition</th>
+        </tr></thead>
+        <tbody>
+          <tr><td style="padding:5px 10px;border:1px solid rgba(255,255,255,.04);color:rgba(240,234,214,.6)">Working</td><td style="border:1px solid rgba(255,255,255,.04);text-align:center;color:var(--emeraldLt)">✓</td><td style="border:1px solid rgba(255,255,255,.04);text-align:center;color:var(--skyLt)">✓</td><td style="border:1px solid rgba(255,255,255,.04);text-align:center;color:var(--amberLt)">✓</td><td style="border:1px solid rgba(255,255,255,.04);text-align:center;color:var(--purpleLt)">✓</td><td style="border:1px solid rgba(255,255,255,.04);text-align:center;color:var(--goldLt)">✓</td></tr>
+          <tr><td style="padding:5px 10px;border:1px solid rgba(255,255,255,.04);color:rgba(240,234,214,.6)">Final</td><td style="border:1px solid rgba(255,255,255,.04);text-align:center;color:rgba(255,255,255,.15)">—</td><td style="border:1px solid rgba(255,255,255,.04);text-align:center;color:var(--skyLt)">✓</td><td style="border:1px solid rgba(255,255,255,.04);text-align:center;color:var(--amberLt)">✓</td><td style="border:1px solid rgba(255,255,255,.04);text-align:center;color:var(--purpleLt)">✓</td><td style="border:1px solid rgba(255,255,255,.04);text-align:center;color:rgba(255,255,255,.15)">—</td></tr>
+          <tr><td style="padding:5px 10px;border:1px solid rgba(255,255,255,.04);color:rgba(240,234,214,.6)">Upside</td><td style="border:1px solid rgba(255,255,255,.04);text-align:center;color:rgba(255,255,255,.15)">—</td><td style="border:1px solid rgba(255,255,255,.04);text-align:center;color:rgba(255,255,255,.15)">—</td><td style="border:1px solid rgba(255,255,255,.04);text-align:center;color:var(--amberLt)">✓</td><td style="border:1px solid rgba(255,255,255,.04);text-align:center;color:var(--purpleLt)">✓</td><td style="border:1px solid rgba(255,255,255,.04);text-align:center;color:rgba(255,255,255,.15)">—</td></tr>
+          <tr><td style="padding:5px 10px;border:1px solid rgba(255,255,255,.04);color:rgba(240,234,214,.6)">Downside</td><td style="border:1px solid rgba(255,255,255,.04);text-align:center;color:rgba(255,255,255,.15)">—</td><td style="border:1px solid rgba(255,255,255,.04);text-align:center;color:rgba(255,255,255,.15)">—</td><td style="border:1px solid rgba(255,255,255,.04);text-align:center;color:var(--amberLt)">✓</td><td style="border:1px solid rgba(255,255,255,.04);text-align:center;color:var(--purpleLt)">✓</td><td style="border:1px solid rgba(255,255,255,.04);text-align:center;color:rgba(255,255,255,.15)">—</td></tr>
+          <tr><td style="padding:5px 10px;border:1px solid rgba(255,255,255,.04);color:rgba(240,234,214,.6)">Management_Adj</td><td style="border:1px solid rgba(255,255,255,.04);text-align:center;color:rgba(255,255,255,.15)">—</td><td style="border:1px solid rgba(255,255,255,.04);text-align:center;color:var(--skyLt)">✓</td><td style="border:1px solid rgba(255,255,255,.04);text-align:center;color:rgba(255,255,255,.15)">—</td><td style="border:1px solid rgba(255,255,255,.04);text-align:center;color:rgba(255,255,255,.15)">—</td><td style="border:1px solid rgba(255,255,255,.04);text-align:center;color:rgba(255,255,255,.15)">—</td></tr>
+          <tr><td style="padding:5px 10px;border:1px solid rgba(255,255,255,.04);color:rgba(240,234,214,.6)">Sandbox</td><td style="border:1px solid rgba(255,255,255,.04);text-align:center;color:rgba(255,255,255,.15)">—</td><td style="border:1px solid rgba(255,255,255,.04);text-align:center;color:var(--skyLt)">✓</td><td style="border:1px solid rgba(255,255,255,.04);text-align:center;color:var(--amberLt)">✓</td><td style="border:1px solid rgba(255,255,255,.04);text-align:center;color:rgba(255,255,255,.15)">—</td><td style="border:1px solid rgba(255,255,255,.04);text-align:center;color:rgba(255,255,255,.15)">—</td></tr>
+        </tbody>
+      </table>
+      </div>
+    </div>
+  </div>
+  <p style="font-size:11.5px;color:var(--dim);margin-top:12px;font-style:italic">✓ = active combination. — = blocks not created, no storage cost. Actual/Final rarely exists — actuals are loaded as-is from ERP, no approval cycle needed.</p>
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- SECTION 2: THE FOUR TOOLS                              -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div id="tools">
+<h2 class="sec-hdr sec-hdr-purple">The Four What-If Tools</h2>
+<p class="sec-intro">Oracle EPM Cloud provides four distinct mechanisms for scenario modeling, each solving a different planning problem. Understanding when to use which tool is the difference between an elegant implementation and a messy one.</p>
+
+<div class="tool-grid">
+  <div class="tool-card">
+    <div class="tc-icon">🗂️</div>
+    <div class="tc-name">Scenario + Version Dimension</div>
+    <div class="tc-desc">The foundational EPBCS mechanism. Create Base, Upside, Downside as Versions under Forecast Scenario. Planners work in Working; Finance promotes to Final. Full approval workflow, security, and audit trail. Lives in BSO cube alongside all operational data.</div>
+    <div class="tc-when">Best for: Budget iterations, Forecast cycles, Base/Upside/Downside that need approval workflow and long-term storage.</div>
+  </div>
+  <div class="tool-card">
+    <div class="tc-icon">🏖️</div>
+    <div class="tc-name">Sandbox</div>
+    <div class="tc-desc">Personal what-if scratchpad. Each user gets their own isolated Sandbox copy of a plan — changes are visible only to them until explicitly promoted. No approval workflow. Automatically available when enabled at application creation. Separate from the main Version hierarchy.</div>
+    <div class="tc-when">Best for: Individual analyst exploration, "what if we hired 20 more people" quick-play before any team discussion.</div>
+  </div>
+  <div class="tool-card">
+    <div class="tc-icon">🔮</div>
+    <div class="tc-name">Strategic Modeling Module</div>
+    <div class="tc-desc">A dedicated long-range planning module separate from the standard Planning dimensions. Has its own chart of accounts, scenario engine (Base + inheriting scenarios), Goal Seek, and Monte Carlo simulation. Built for 3–10 year integrated P&L / BS / Cash Flow models, M&A analysis, and debt/capital structure modeling.</div>
+    <div class="tc-when">Best for: 3–10 year strategic plans, M&A modeling, capital structure what-ifs, sensitivity analysis with probability distributions.</div>
+  </div>
+  <div class="tool-card">
+    <div class="tc-icon">🆓</div>
+    <div class="tc-name">Freeform (EPM Enterprise)</div>
+    <div class="tc-desc">No required dimension constraints. Build any cube structure you need — custom dimensions, custom relationships. The most flexible option, used for highly custom analytical models or legacy Essbase application migrations to cloud. No Predictive Planning features (requires standard Scenario/Version/Period dimensions).</div>
+    <div class="tc-when">Best for: Highly custom operational models, Essbase-to-cloud migrations, non-standard planning processes that don't fit module templates.</div>
+  </div>
+</div>
+
+<div class="dtbl-wrap"><table class="dtbl">
+  <thead><tr><th>Decision</th><th>Recommended Tool</th><th>Why</th></tr></thead>
+  <tbody>
+    <tr><td>3 forecast scenarios (Base/Up/Down) for quarterly Board</td><td><span class="tag-sm" style="background:rgba(217,119,6,.1);border:1px solid rgba(217,119,6,.25);color:var(--amberLt)">Versions under Forecast</span></td><td>Same Scenario, different Versions. Comparison reports work natively. Approval workflow controls who can edit which version.</td></tr>
+    <tr><td>Annual Budget with Management Adjustments on top</td><td><span class="tag-sm" style="background:rgba(14,165,233,.1);border:1px solid rgba(14,165,233,.25);color:var(--skyLt)">Budget/Working + Budget/Mgmt_Adj Version</span></td><td>Management overlays live in a separate Version. Comparison = Working vs Mgmt_Adj. Planners can't see or edit Mgmt_Adj.</td></tr>
+    <tr><td>Analyst wants to test "what if headcount grows 15%"</td><td><span class="tag-sm" style="background:rgba(212,160,23,.1);border:1px solid rgba(212,160,23,.25);color:var(--goldLt)">Sandbox</span></td><td>Personal, isolated, instant. No impact on working data. No approval needed. Promote to Working if the analysis is worth sharing.</td></tr>
+    <tr><td>CFO wants 5-year integrated P&L model for acquisition target</td><td><span class="tag-sm" style="background:rgba(124,58,237,.1);border:1px solid rgba(124,58,237,.25);color:var(--purpleLt)">Strategic Modeling</span></td><td>Integrated three-statement model with built-in financial logic. Cross-scenario consolidation. M&A deal period feature. Monte Carlo for probability ranges.</td></tr>
+    <tr><td>Quantify probability of hitting revenue guidance</td><td><span class="tag-sm" style="background:rgba(124,58,237,.1);border:1px solid rgba(124,58,237,.25);color:var(--purpleLt)">Monte Carlo in Strategic Modeling</span></td><td>Run 1,000+ simulations across uncertain assumptions. Output: probability distribution, percentile confidence intervals, target achievement probability.</td></tr>
+    <tr><td>"What revenue growth rate do we need to hit $300M EBITDA?"</td><td><span class="tag-sm" style="background:rgba(5,150,105,.1);border:1px solid rgba(5,150,105,.25);color:var(--emeraldLt)">Goal Seek in Strategic Modeling</span></td><td>Reverse-engineer: specify a target output, let Goal Seek solve for the required input driver value. Instant iteration.</td></tr>
+  </tbody>
+</table></div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- SECTION 3: SANDBOX DEEP DIVE                           -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div id="sandbox">
+<h2 class="sec-hdr sec-hdr-teal">Sandbox — Personal What-If Scratchpad</h2>
+<p class="sec-intro">Sandbox is the most underused feature in EPBCS. It gives every analyst their own personal copy of a form's data to experiment with — completely isolated from the working budget — without needing admin rights, Groovy scripts, or a new Version member.</p>
+
+<div class="sm-banner">
+  <div class="sm-banner-title">How Sandbox Works</div>
+  <div class="sm-banner-sub">When a planner opens a Sandbox-enabled form, EPBCS creates a personal copy of the current data at that intersection. The planner can change drivers, adjust assumptions, and immediately see cascading impacts on calculated accounts — all in isolation. Other planners see nothing. The Working version is untouched. The planner can: <strong>Promote</strong> (push changes to Working), <strong>Discard</strong> (reset to Working values), or <strong>keep exploring</strong>.</div>
+  <div class="sm-banner-note">⚠ Sandbox must be enabled at application creation time — it cannot be enabled retrospectively on an existing application without recreating it. Confirm this requirement with your client before the build decision is made.</div>
+</div>
+
+<div class="steps">
+  <div class="step">
+    <div class="step-num">1</div>
+    <div class="step-content">
+      <div class="step-title">Enable at Application Creation</div>
+      <div class="step-desc">During the Planning application creation wizard: Details page → <strong>Enable Sandboxes = Yes</strong>. This cannot be changed after the application is created. It adds a Sandbox dimension to the cube. Once enabled, all standard forms automatically have Sandbox capability.</div>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-num">2</div>
+    <div class="step-content">
+      <div class="step-title">Enable Sandbox on Specific Forms</div>
+      <div class="step-desc">In Form Designer → Properties → enable "Allow Sandbox". Not all forms need Sandbox — enable it selectively on high-value what-if forms (revenue planning, headcount, driver adjustment forms) to avoid unnecessary complexity.</div>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-num">3</div>
+    <div class="step-content">
+      <div class="step-title">Planner Opens Sandbox Mode</div>
+      <div class="step-desc">On a Sandbox-enabled form, the planner sees a Sandbox toolbar. Click <strong>Create Sandbox</strong> or select an existing personal Sandbox. The form header indicates which Sandbox is active. Data from Working is copied into the personal Sandbox on first open.</div>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-num">4</div>
+    <div class="step-content">
+      <div class="step-title">Experiment Freely</div>
+      <div class="step-desc">Change any driver — headcount, price, volume, growth rate. Calculated accounts update instantly (Dynamic Calc members) or on Save (stored members). Compare Sandbox vs Working in a split view. The planner owns this space completely.</div>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-num">5</div>
+    <div class="step-content">
+      <div class="step-title">Promote or Discard</div>
+      <div class="step-desc"><strong>Promote:</strong> pushes Sandbox changes to Working version — triggers normal save/validation/Groovy rules. <strong>Discard:</strong> resets Sandbox to current Working values. Multiple Sandboxes per user are possible — create "Scenario A" and "Scenario B" Sandboxes to compare two approaches side-by-side.</div>
+    </div>
+  </div>
+</div>
+
+<div class="callout tip"><span class="ci">💡</span><strong>Production Pattern — Multi-Sandbox Comparison:</strong> Give analysts two Sandbox slots per form: "Conservative_Assumptions" and "Aggressive_Assumptions". Both display in a comparison dashboard alongside the Working version. The CFO sees all three views simultaneously and makes the call on which assumptions to promote. This eliminates the "email me your scenario spreadsheet" workflow permanently.</div>
+
+<div class="callout warn"><span class="ci">⚠</span><strong>Sandbox + Groovy Rules:</strong> When a planner Promotes a Sandbox, it triggers the form's <code>beforeSave</code> and <code>afterSave</code> Groovy rules exactly as a normal save would. If you have validation guards in those rules (e.g. checking approval status or valid intersections), test that they work correctly with Sandbox promotions. A rule that blocks all saves with a hard-coded "wrong Version" check will also block Sandbox promotions.</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- SECTION 4: VISION CORP MATRIX                          -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div id="vision-matrix">
+<h2 class="sec-hdr">Vision Corp — The Complete Scenario Matrix</h2>
+<p class="sec-intro">How Vision Corporation ($2.8B, 12 entities, 6 currencies) structures its scenario and version dimensions across the full planning landscape. This is the reference architecture for a mid-to-large enterprise EPBCS implementation.</p>
+
+<div class="matrix">
+  <div class="matrix-title">Active Scenario × Version Combinations — Vision Corp OEP_FS Cube</div>
+  <div class="matrix-grid">
+    <div class="matrix-cell">
+      <div class="mc-scenario">Actual</div>
+      <div class="mc-version">Working</div>
+      <div class="mc-desc">GL actuals loaded nightly from SAP via DI. No planner write access. Read-only for all reports.</div>
+    </div>
+    <div class="matrix-cell mc-highlight">
+      <div class="mc-scenario">Budget</div>
+      <div class="mc-version">Working</div>
+      <div class="mc-desc">Live budget input. Planners write here. Approval workflow: First Pass → Under Review → Approved → Locked.</div>
+    </div>
+    <div class="matrix-cell">
+      <div class="mc-scenario">Budget</div>
+      <div class="mc-version">Mgmt_Adj</div>
+      <div class="mc-desc">Finance overlay on top of planner Working. CFO adjustments. Planners cannot see this version.</div>
+    </div>
+    <div class="matrix-cell">
+      <div class="mc-scenario">Budget</div>
+      <div class="mc-version">Final</div>
+      <div class="mc-desc">Board-approved budget. Locked after CFO sign-off. Source for variance reporting vs Actual.</div>
+    </div>
+    <div class="matrix-cell mc-highlight">
+      <div class="mc-scenario">Forecast</div>
+      <div class="mc-version">Working</div>
+      <div class="mc-desc">Rolling 12-month forecast. Advances monthly via SubVar. Planners update monthly assumptions.</div>
+    </div>
+    <div class="matrix-cell">
+      <div class="mc-scenario">Forecast</div>
+      <div class="mc-version">Upside</div>
+      <div class="mc-desc">+10% revenue assumption across all entities. Seeded from Working via DATACOPY, then adjusted. Owned by CFO office.</div>
+    </div>
+    <div class="matrix-cell">
+      <div class="mc-scenario">Forecast</div>
+      <div class="mc-version">Downside</div>
+      <div class="mc-desc">-15% revenue scenario. Supply chain disruption model. Used for covenant testing and cash stress testing.</div>
+    </div>
+    <div class="matrix-cell">
+      <div class="mc-scenario">Forecast</div>
+      <div class="mc-version">Final</div>
+      <div class="mc-desc">Board submission version. Promoted from Working by Finance at quarter-end. Basis for external guidance.</div>
+    </div>
+    <div class="matrix-cell">
+      <div class="mc-scenario">Long_Range</div>
+      <div class="mc-version">Working</div>
+      <div class="mc-desc">3-year strategic plan. Annual update cycle. Drives target-setting for next year's Budget.</div>
+    </div>
+    <div class="matrix-cell">
+      <div class="mc-scenario">Long_Range</div>
+      <div class="mc-version">Upside</div>
+      <div class="mc-desc">Strategic acceleration scenario. New market entry, M&A. Reviewed by Board annually.</div>
+    </div>
+    <div class="matrix-cell mc-highlight">
+      <div class="mc-scenario">Acquisition</div>
+      <div class="mc-version">Working</div>
+      <div class="mc-desc">M&A target model. Temporary Scenario created during deal analysis. Feeds into Strategic Modeling consolidation.</div>
+    </div>
+    <div class="matrix-cell">
+      <div class="mc-scenario">Budget / Forecast</div>
+      <div class="mc-version">Sandbox</div>
+      <div class="mc-desc">Per-analyst personal what-if. 2 Sandbox slots per planner. Promote to Working on approval.</div>
+    </div>
+  </div>
+</div>
+
+<div class="callout fpa"><span class="ci">📊</span><strong>FP&A Reality — Why Three Forecast Versions Matter:</strong> During a Board Prep cycle, Vision's CFO needs to present three views simultaneously: the Working (current planner estimate), the Upside (management's stretch case), and the Downside (stress scenario for covenant testing with the CFO's lender). Without Upside and Downside Versions properly structured in EPBCS, Finance is maintaining parallel Excel models — creating exactly the reconciliation chaos EPBCS was deployed to eliminate.</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- SECTION 5: STRATEGIC MODELING MODULE                   -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div id="strategic-modeling">
+<h2 class="sec-hdr sec-hdr-purple">Strategic Modeling Module</h2>
+
+<div class="sm-banner">
+  <div class="sm-banner-title">🔮 What Is Strategic Modeling?</div>
+  <div class="sm-banner-sub">Strategic Modeling is a <strong>separate module</strong> within EPM Enterprise Cloud that provides long-range financial modeling with built-in scenario analysis. It is not the same as the Scenario/Version dimensions in the Planning cube — it's a distinct application with its own chart of accounts, its own scenario engine, its own calculation approach, and its own UI (both web and Smart View). It integrates with Financials, Capital, Projects, and Workforce but operates independently.</div>
+  <div class="sm-banner-note">📋 Licensing: Strategic Modeling requires EPM Enterprise Cloud Service (EPBCS). It is not available in EPM Standard (PBCS). Verify your subscription includes Enterprise before planning a Strategic Modeling implementation.</div>
+</div>
+
+<h3 style="font-family:'Cinzel',serif;font-size:14px;color:var(--tealLt);margin:24px 0 12px">What Makes It Different from Standard Planning Scenarios</h3>
+
+<div class="tool-grid">
+  <div class="tool-card">
+    <div class="tc-icon">📋</div>
+    <div class="tc-name">Built-in Chart of Accounts</div>
+    <div class="tc-desc">Strategic Modeling ships with a hierarchical chart of accounts for a complete three-statement model: Income Statement, Balance Sheet, Cash Flow (direct and indirect), and Treasury accounts. No dimension design required — use the templates and customize from there. Account codes follow the v-series convention (v0300 = Unit Volume, v0305 = Product Price, etc.).</div>
+  </div>
+  <div class="tool-card">
+    <div class="tc-icon">🔗</div>
+    <div class="tc-name">Inheriting Scenarios</div>
+    <div class="tc-desc">Strategic Modeling's scenario engine is different from Versions. A scenario can be <strong>Standalone</strong> (fully independent set of assumptions) or <strong>Inheriting</strong> (inherits values from a parent scenario except for explicitly overridden accounts). The Upside scenario inherits Base's COGS assumptions but overrides Revenue drivers — only 2 account changes needed to model the full P&L impact.</div>
+  </div>
+  <div class="tool-card">
+    <div class="tc-icon">⏱️</div>
+    <div class="tc-name">Flexible Time Structure</div>
+    <div class="tc-desc">Models can span any time horizon — annual, quarterly, or mixed frequency. A common pattern: annual data for Years 1–5, quarterly for Year 1 (matching the operating forecast). Strategic Modeling handles both in the same model, with rollup from quarterly to annual automatic.</div>
+  </div>
+  <div class="tool-card">
+    <div class="tc-icon">🏢</div>
+    <div class="tc-name">Multi-Model Consolidation</div>
+    <div class="tc-desc">Each business unit has its own Strategic Modeling model. A parent consolidation structure blends scenarios across models — Vision US in its "Expansion" scenario, Vision EU in its "Conservative" scenario, combining to produce a consolidated enterprise view. Business unit models don't require matching structures.</div>
+  </div>
+  <div class="tool-card">
+    <div class="tc-icon">💰</div>
+    <div class="tc-name">Treasury & Debt Modeling</div>
+    <div class="tc-desc">Built-in debt modeling: term loans, revolving credit, bonds, equity. Automatically calculates interest expense, principal payments, amortization of issuance costs. Model credit rating impact of leverage scenarios. Covenant testing (Debt/EBITDA, Interest Coverage) with breach alerts. No Groovy scripting required — all out-of-box.</div>
+  </div>
+  <div class="tool-card">
+    <div class="tc-icon">🔄</div>
+    <div class="tc-name">Forecast Methods</div>
+    <div class="tc-desc">Each account in a Strategic Modeling model has an assigned <strong>forecast method</strong> that determines how future periods are calculated: % of Revenue, % growth over prior year, absolute value, % of a driver account. Change the forecast method for an account and all future periods recalculate instantly. Supports rapid re-modelling of structural assumptions.</div>
+  </div>
+</div>
+
+<h3 style="font-family:'Cinzel',serif;font-size:14px;color:var(--tealLt);margin:28px 0 12px">Setting Up Your First Strategic Model — Step by Step</h3>
+
+<div class="steps">
+  <div class="step">
+    <div class="step-num">1</div>
+    <div class="step-content">
+      <div class="step-title">Enable Strategic Modeling on the Application</div>
+      <div class="step-desc">Home → Application → Configure → Strategic Modeling → Enable. Select your industry template (Generic, Retail, Banking, Insurance, etc.). The template pre-loads the chart of accounts relevant to your industry. You can add/remove accounts after setup.</div>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-num">2</div>
+    <div class="step-content">
+      <div class="step-title">Create a Model</div>
+      <div class="step-desc">Home → Strategic Modeling → Models → New Model. Name it (e.g., "Vision_Corp_LRP"), set the time structure (start year, end year, frequency), select the base currency, and enable multicurrency if required. The model is created with the template chart of accounts populated.</div>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-num">3</div>
+    <div class="step-content">
+      <div class="step-title">Populate the Base Scenario</div>
+      <div class="step-desc">Open the model → Account View → POV: Scenario = Base, Dataview = Standard. Enter historical actuals for context years (last 2–3 years). Enter the Base forecast assumptions for projected years. Set forecast methods per account group: Revenue accounts = % growth, COGS = % of Revenue, Operating expenses = mixed.</div>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-num">4</div>
+    <div class="step-content">
+      <div class="step-title">Create What-If Scenarios</div>
+      <div class="step-desc">Scenario Manager → New Scenario. Type = Standalone (independent) or Inherits (from Base or another scenario). For Inheriting scenarios: specify which accounts differ from the parent. Example: Upside Case inherits all Base accounts except v0300 (Unit Volume) and v0305 (Product Price) — override just those two drivers to see full P&L impact instantly.</div>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-num">5</div>
+    <div class="step-content">
+      <div class="step-title">Run Calculate and Compare</div>
+      <div class="step-desc">Calculate → Current Scenario (or All Scenarios). View side-by-side scenario comparisons via Account View with the Scenario POV dropdown, or via Strategic Modeling's built-in reports (Income Statement, Balance Sheet, Cash Flow, KPI dashboards). Export to Smart View for offline analysis.</div>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-num">6</div>
+    <div class="step-content">
+      <div class="step-title">Integrate with Operational Plan</div>
+      <div class="step-desc">Actions → Push to Financials: maps Strategic Modeling targets (strategic revenue, EBITDA targets) to the Financials module as top-down targets that planners see when building the bottom-up operational budget. Creates the strategy-to-execution alignment loop that prevents "the budget doesn't match the LRP" conversations.</div>
+    </div>
+  </div>
+</div>
+
+<div class="callout insight"><span class="ci">🔮</span><strong>The M&A Use Case:</strong> Strategic Modeling's deal period feature is purpose-built for acquisition analysis. Define the acquisition closing date, model the combined entity financials including synergies, purchase accounting adjustments, and acquisition financing. Run multiple deal structures (all-cash vs. debt-financed vs. equity) as separate scenarios and compare EPS accretion/dilution, pro forma leverage ratios, and combined cash flow. This replaces the CFO's Excel merger model entirely — with a live, auditable, multi-scenario tool.</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- SECTION 6: GOAL SEEK                                   -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div id="goal-seek">
+<h2 class="sec-hdr sec-hdr-teal">Goal Seek — Working Backwards</h2>
+<p class="sec-intro">Goal Seek answers the question Finance always asks but Excel can barely handle: "We need $300M EBITDA — what does that require from our revenue growth rate?" Rather than iterating assumptions manually until the output hits the target, Goal Seek reverse-engineers the required driver value automatically.</p>
+
+<div class="tool-grid">
+  <div class="tool-card" style="border-color:rgba(31,184,168,.2)">
+    <div class="tc-icon">🎯</div>
+    <div class="tc-name">How Goal Seek Works</div>
+    <div class="tc-desc">You specify: (1) a <strong>target output account</strong> and a <strong>target value</strong> (e.g. EBITDA = $300M), (2) the <strong>driver account</strong> Goal Seek should adjust (e.g. Unit Volume), (3) the <strong>time range</strong> and <strong>adjustment method</strong> (same amount across all periods, same percentage, or front-loaded). Goal Seek uses iterative calculation to find the driver value that produces the target output. Impacted cells turn yellow — review before accepting.</div>
+  </div>
+  <div class="tool-card" style="border-color:rgba(31,184,168,.2)">
+    <div class="tc-icon">💡</div>
+    <div class="tc-name">Adjustment Methods</div>
+    <div class="tc-desc"><strong>Same Amount:</strong> adds the same absolute value to each period (e.g. +$50K revenue per month). <strong>Same Percentage:</strong> grows each period by the same % (compound growth). <strong>Front-Loaded:</strong> adjusts earlier periods more heavily. Each method answers a different question — "how many units per month?" vs "what CAGR?" vs "where do we need to accelerate early?"</div>
+  </div>
+</div>
+
+<div class="code-wrap">
+  <div class="code-lbl">Goal Seek — Vision Corp Example Sequence</div>
+  <div class="code-block"><button class="copy-btn" onclick="cp(this)">Copy</button><span style="color:#6a737d">// Scenario: CFO wants to test if a $300M EBITDA target is achievable</span>
+<span style="color:#6a737d">// Current Base EBITDA forecast: $241M</span>
+<span style="color:#6a737d">// Question: What Unit Volume growth rate closes the $59M gap?</span>
+
+<span style="color:#6a737d">// Step 1: Open Strategic Model → Account View → Income Statement tab</span>
+<span style="color:#6a737d">// Step 2: Right-click EBITDA cell for Year 3 ($241.58M)</span>
+<span style="color:#6a737d">// Step 3: Select Goal Seek</span>
+
+Goal:      EBITDA = <span style="color:#a5d6ff">300,000</span>   <span style="color:#6a737d">// $300M target</span>
+Adjust By: v0300 (Unit Volume)        <span style="color:#6a737d">// the driver to change</span>
+Start:     FY2024
+End:       FY2026
+Method:    Same Percentage            <span style="color:#6a737d">// compound growth rate</span>
+
+<span style="color:#6a737d">// Result: Unit Volume must grow by 17.26% annually to hit $300M EBITDA</span>
+<span style="color:#6a737d">// Impacted cells turn yellow — includes COGS, Operating Expenses (via % of Revenue formulas)</span>
+<span style="color:#6a737d">// CFO can see: is 17.26% CAGR achievable? What does it imply for market share?</span>
+<span style="color:#6a737d">// Click Accept to update the scenario, or Close to discard</span></div>
+</div>
+
+<div class="callout fpa"><span class="ci">💡</span><strong>FP&A Board Prep Pattern:</strong> Vision's CFO uses Goal Seek in the week before every Board meeting to answer exactly one question: "What operating leverage assumptions are embedded in our guidance?" Run Goal Seek with Revenue Growth as the driver against EPS as the target. The answer — the breakeven revenue growth rate for EPS guidance — becomes the key slide in the Board deck. Previously this took two days in Excel; in Strategic Modeling it takes 4 minutes.</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- SECTION 7: MONTE CARLO                                 -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div id="monte-carlo">
+<h2 class="sec-hdr sec-hdr-amber">Monte Carlo Simulation</h2>
+<p class="sec-intro">Monte Carlo simulation in Strategic Modeling quantifies risk by running thousands of scenario iterations automatically. Instead of three point estimates (Base/Up/Down), you get a full probability distribution — "there is a 73% chance of achieving $250M EBITDA or higher." This is the most rigorous scenario planning tool in the EPM suite.</p>
+
+<div class="callout insight"><span class="ci">🎲</span><strong>How Oracle's Monte Carlo Works:</strong> You define uncertain inputs as <strong>Assumptions</strong> with a probability distribution (Normal, Uniform, Triangular, Log-Normal) and a range. You define target outputs as <strong>Forecasts</strong>. Strategic Modeling runs 500–1,000 trials (each trial samples each assumption randomly from its distribution, recalculates the full model, records the output). The result: a histogram of all possible outcomes with percentile confidence intervals.</div>
+
+<div class="mc-viz">
+  <div class="mc-viz-title">Monte Carlo Output — Vision Corp FY2026 Net Income ($M)</div>
+  <div class="percentile-bar">
+    <div class="pb-label"><span style="color:var(--redLt)">5th percentile (worst case)</span><span style="color:var(--redLt)">$183M</span></div>
+    <div class="pb-track"><div class="pb-fill" style="width:25%;background:linear-gradient(90deg,var(--red),var(--amber))"></div></div>
+  </div>
+  <div class="percentile-bar">
+    <div class="pb-label"><span style="color:var(--amberLt)">25th percentile</span><span style="color:var(--amberLt)">$204M</span></div>
+    <div class="pb-track"><div class="pb-fill" style="width:45%;background:linear-gradient(90deg,var(--amber),var(--gold))"></div></div>
+  </div>
+  <div class="percentile-bar">
+    <div class="pb-label"><span style="color:var(--goldLt)">50th percentile (median)</span><span style="color:var(--goldLt)">$224M</span></div>
+    <div class="pb-track"><div class="pb-fill" style="width:62%;background:linear-gradient(90deg,var(--gold),var(--teal))"></div></div>
+  </div>
+  <div class="percentile-bar">
+    <div class="pb-label"><span style="color:var(--tealLt)">75th percentile</span><span style="color:var(--tealLt)">$248M</span></div>
+    <div class="pb-track"><div class="pb-fill" style="width:78%;background:linear-gradient(90deg,var(--teal),var(--emeraldLt))"></div></div>
+  </div>
+  <div class="percentile-bar">
+    <div class="pb-label"><span style="color:var(--emeraldLt)">95th percentile (best case)</span><span style="color:var(--emeraldLt)">$267M</span></div>
+    <div class="pb-track"><div class="pb-fill" style="width:95%;background:linear-gradient(90deg,var(--emerald),var(--emeraldLt))"></div></div>
+  </div>
+  <div style="margin-top:14px;font-family:'JetBrains Mono',monospace;font-size:10.5px;color:var(--dim)">
+    Target: $250M net income guidance → <span style="color:var(--goldLt)">72% probability of achieving or exceeding</span> · 1,000 trials · Assumptions: FX rate (Normal ±10%), Unit Volume (Triangular ±15%), Commodity costs (Log-Normal +5%/–8%)
+  </div>
+</div>
+
+<h3 style="font-family:'Cinzel',serif;font-size:14px;color:var(--amberLt);margin:24px 0 12px">Sampling Methods — Monte Carlo vs Latin Hypercube</h3>
+<div class="dtbl-wrap"><table class="dtbl">
+  <thead><tr><th>Method</th><th>How It Works</th><th>Best For</th><th>Trial Count</th></tr></thead>
+  <tbody>
+    <tr>
+      <td><strong style="color:var(--goldLt)">Monte Carlo</strong></td>
+      <td>Pure random sampling — each trial draws independently from each assumption's distribution. Natural, random-feel outputs.</td>
+      <td>General scenario analysis. When you want "what does this distribution actually look like?"</td>
+      <td>500–1,000+ for stable results</td>
+    </tr>
+    <tr>
+      <td><strong style="color:var(--purpleLt)">Latin Hypercube</strong></td>
+      <td>Stratified sampling — divides each distribution into equal-probability bands and samples once per band. More even coverage of the distribution space.</td>
+      <td>Accurate percentile statistics. When you need 95th/5th percentile confidence with fewer trials.</td>
+      <td>200–500 sufficient for stable percentiles</td>
+    </tr>
+  </tbody>
+</table></div>
+
+<div class="code-wrap">
+  <div class="code-lbl">Monte Carlo Setup — Vision Corp FX Risk Model</div>
+  <div class="code-block"><button class="copy-btn" onclick="cp(this)">Copy</button><span style="color:#6a737d">// Define Assumptions (uncertain inputs)</span>
+<span style="color:#6a737d">// Right-click each driver account → Define as Assumption</span>
+
+Assumption 1: EUR/USD exchange rate
+  Distribution: Normal
+  Mean: 1.08 (current forecast rate)
+  Std Dev: 0.08 (±10% range at 1σ)
+
+Assumption 2: Unit Volume growth rate
+  Distribution: Triangular
+  Minimum: -5%  (worst case: market softness)
+  Most Likely: +8% (base forecast)
+  Maximum: +20% (bull case: market share gain)
+
+Assumption 3: Commodity cost inflation
+  Distribution: Log-Normal (skewed right — costs rarely fall but can spike)
+  Mean: +4%
+  Std Dev: 6%
+
+<span style="color:#6a737d">// Define Forecasts (outputs to track)</span>
+<span style="color:#6a737d">// Right-click each output account → Define as Forecast</span>
+
+Forecast 1: Net Income (v2050)
+Forecast 2: EBITDA Margin % (v2040 / v1010)
+Forecast 3: Free Cash Flow (v3200)
+
+<span style="color:#6a737d">// Run: Strategic Modeling → Simulation → Run</span>
+<span style="color:#6a737d">// Trials: 1,000 · Method: Latin Hypercube</span>
+<span style="color:#6a737d">// Review: histogram + percentile table per Forecast account</span></div>
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- SECTION 8: INTEGRATION WITH FINANCIALS                 -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div id="integration">
+<h2 class="sec-hdr sec-hdr-teal">Integration with Financials & Operational Plan</h2>
+<p class="sec-intro">Strategic Modeling is most powerful when connected to the operational plan in the Financials module. The integration creates a two-directional alignment: strategic targets flow down to operational planners as constraints; operational actuals and forecasts flow up to refresh the strategic model.</p>
+
+<div class="steps">
+  <div class="step">
+    <div class="step-num">→</div>
+    <div class="step-content">
+      <div class="step-title">Strategic Targets → Operational Budget (Top-Down)</div>
+      <div class="step-desc">Strategic Modeling → Actions → Push to Financials. Maps Strategic Modeling scenario values (Revenue target, EBITDA target) to the Financials module. Planners see their budget targets in context of the strategic plan — "your revenue target is $284M, which achieves the LRP goal." Eliminates the disconnect between "what Finance agreed in the LRP" and "what planners were told to budget."</div>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-num">→</div>
+    <div class="step-content">
+      <div class="step-title">Operational Actuals → Strategic Model (Bottom-Up Refresh)</div>
+      <div class="step-desc">Data Integration pipeline or manual refresh: push current-year actuals from OEP_FS cube to the Strategic Modeling historical input accounts. The strategic model's context years update automatically. Goal Seek and Monte Carlo results always reflect actual performance, not stale point-in-time assumptions.</div>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-num">→</div>
+    <div class="step-content">
+      <div class="step-title">Job Console Monitoring</div>
+      <div class="step-desc">Strategic Modeling integration jobs (Push to Financials, Consolidation rollups) appear in Application → Jobs → Job Console with full run status and error details. This is how you monitor scheduled Strategic Modeling jobs in production — same Job Console as all other EPM operations.</div>
+    </div>
+  </div>
+</div>
+
+<div class="callout tip"><span class="ci">💡</span><strong>Smart View Integration:</strong> Strategic Modeling has a dedicated Smart View extension (download from EPM Cloud → Smart View → Strategic Modeling extension). Finance can work directly in Excel with live Strategic Modeling data — building Board presentations where numbers auto-refresh, running Goal Seek from Excel, and building custom scenario comparison reports. The extension supports both account view grids and report views.</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- SECTION 9: GROOVY PATTERNS                             -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div id="groovy">
+<h2 class="sec-hdr sec-hdr-purple">Groovy Patterns for Scenario Automation</h2>
+<p class="sec-intro">Most scenario automation tasks in EPBCS — seeding new versions, running what-if rule chains, detecting scenario state — are done via Groovy rules or EPM Automate scripts. These are the production patterns Vision Corp uses.</p>
+
+<div class="feature-block" id="fb1">
+  <div class="fb-hdr" onclick="toggleFb('fb1')">
+    <span class="fb-icon">⚡</span>
+    <span class="fb-title">Seed Upside/Downside Versions from Working via Groovy</span>
+    <div class="fb-tags"><span class="fb-tag tag-enterprise">Enterprise</span></div>
+    <span class="fb-chev">▼</span>
+  </div>
+  <div class="fb-body">
+    <p style="font-size:13.5px;color:rgba(240,234,214,.65);margin-bottom:12px;line-height:1.75">Vision Corp runs this pattern at the start of each quarterly forecast cycle. Working is seeded from the prior quarter's Forecast/Final. Upside and Downside are then seeded from Working and adjusted by a global assumption set. The entire operation is triggered from an Action Menu button on the Forecast form.</p>
+    <div class="code-block"><button class="copy-btn" onclick="cp(this)">Copy</button><span style="color:#6a737d">/* Vision Corp — Quarterly Scenario Seeding
+   Triggered from Action Menu on Forecast input form
+   Step 1: This Groovy rule validates state and triggers the calc chain
+   Step 2: A calc script runs DATACOPY for each scenario (see below)
+   Step 3: A second Groovy rule applies the scenario adjustments */</span>
+
+<span style="color:#6a737d">// Read current period from SubVar</span>
+<span style="color:#ff7b72">def</span> curPeriod = operation.application.getSubstitutionVariableValue(<span style="color:#a5d6ff">"CurPeriod"</span>)
+<span style="color:#ff7b72">def</span> curYear   = operation.application.getSubstitutionVariableValue(<span style="color:#a5d6ff">"CurYear"</span>)
+<span style="color:#d2a8ff">println</span>(<span style="color:#a5d6ff">"Seeding Upside/Downside for ${curPeriod} / ${curYear}"</span>)
+
+<span style="color:#6a737d">// Guard: don't seed if Forecast/Final is locked</span>
+<span style="color:#ff7b72">def</span> cube = operation.application.getCube(<span style="color:#a5d6ff">"OEP_FS"</span>)
+<span style="color:#ff7b72">def</span> entities = cube.getOutline().getDimension(<span style="color:#a5d6ff">"Entity"</span>)
+    .findMember(<span style="color:#a5d6ff">"Total_Entity"</span>).getLevelZeroMembers()
+
+entities.each { e ->
+  <span style="color:#ff7b72">def</span> status = cube.getPlanningContext()
+      .getPlanningUnitStatus(e.getName(), <span style="color:#a5d6ff">"Forecast"</span>, curYear)
+  <span style="color:#ff7b72">if</span> (status == <span style="color:#a5d6ff">"LOCKED"</span>) {
+    <span style="color:#d2a8ff">throwVetoException</span>(<span style="color:#a5d6ff">"${e.getName()} Forecast is Locked — cannot seed scenarios. Contact Finance Admin."</span>)
+  }
+}
+
+<span style="color:#6a737d">// Trigger the DATACOPY calc script via job factory</span>
+<span style="color:#ff7b72">def</span> jobDef = operation.application.getJobFactory()
+    .createRuleJobDefinition(<span style="color:#a5d6ff">"Seed_Scenario_Versions"</span>, [:])
+<span style="color:#ff7b72">def</span> result = operation.application.executeJob(jobDef)
+<span style="color:#ff7b72">if</span> (!result.isSuccessful()) {
+  <span style="color:#d2a8ff">throwVetoException</span>(<span style="color:#a5d6ff">"Scenario seeding failed. Check Job Console."</span>)
+}
+<span style="color:#d2a8ff">println</span>(<span style="color:#a5d6ff">"Seeding complete. Upside and Downside ready for adjustment."</span>)</div>
+    <div class="callout warn" style="margin-top:12px"><span class="ci">⚠</span><strong>Calc Script Required for DATACOPY:</strong> The actual block creation (DATACOPY from Forecast/Working → Forecast/Upside, Forecast/Downside) must happen in a native calc script — Groovy cannot create blocks. The Groovy rule above triggers the calc script via <code>createRuleJobDefinition</code>. Never try to do DATACOPY in Groovy itself.</div>
+  </div>
+</div>
+
+<div class="feature-block" id="fb2">
+  <div class="fb-hdr" onclick="toggleFb('fb2')">
+    <span class="fb-icon">⚡</span>
+    <span class="fb-title">Apply Global Scenario Adjustments (Upside +10%, Downside -15%)</span>
+    <div class="fb-tags"><span class="fb-tag tag-enterprise">Enterprise</span></div>
+    <span class="fb-chev">▼</span>
+  </div>
+  <div class="fb-body">
+    <p style="font-size:13.5px;color:rgba(240,234,214,.65);margin-bottom:12px;line-height:1.75">After seeding, apply global multipliers to revenue driver accounts. Upside = Working × 1.10, Downside = Working × 0.85. Batch read all entities at once, compute adjustments, write in one call.</p>
+    <div class="code-block"><button class="copy-btn" onclick="cp(this)">Copy</button><span style="color:#6a737d">/* Apply Scenario Multipliers — runs after DATACOPY seeding complete */</span>
+
+<span style="color:#ff7b72">def</span> cube = operation.application.getCube(<span style="color:#a5d6ff">"OEP_FS"</span>)
+<span style="color:#ff7b72">def</span> entities = cube.getOutline().getDimension(<span style="color:#a5d6ff">"Entity"</span>)
+    .findMember(<span style="color:#a5d6ff">"Total_Entity"</span>).getLevelZeroMembers()
+<span style="color:#ff7b72">def</span> curYear = operation.application.getSubstitutionVariableValue(<span style="color:#a5d6ff">"CurYear"</span>)
+
+<span style="color:#ff7b72">def</span> UPSIDE_MULT   = 1.10  <span style="color:#6a737d">// +10% revenue drivers for Upside scenario</span>
+<span style="color:#ff7b72">def</span> DOWNSIDE_MULT = 0.85  <span style="color:#6a737d">// -15% revenue drivers for Downside scenario</span>
+<span style="color:#ff7b72">def</span> REVENUE_ACCTS = [<span style="color:#a5d6ff">"Product_Revenue"</span>, <span style="color:#a5d6ff">"Service_Revenue"</span>, <span style="color:#a5d6ff">"License_Revenue"</span>]
+<span style="color:#ff7b72">def</span> PERIODS = [<span style="color:#a5d6ff">"Jan"</span>,<span style="color:#a5d6ff">"Feb"</span>,<span style="color:#a5d6ff">"Mar"</span>,<span style="color:#a5d6ff">"Apr"</span>,<span style="color:#a5d6ff">"May"</span>,<span style="color:#a5d6ff">"Jun"</span>,<span style="color:#a5d6ff">"Jul"</span>,<span style="color:#a5d6ff">"Aug"</span>,<span style="color:#a5d6ff">"Sep"</span>,<span style="color:#a5d6ff">"Oct"</span>,<span style="color:#a5d6ff">"Nov"</span>,<span style="color:#a5d6ff">"Dec"</span>]
+<span style="color:#ff7b72">def</span> VERSIONS = [<span style="color:#a5d6ff">"Upside"</span>: UPSIDE_MULT, <span style="color:#a5d6ff">"Downside"</span>: DOWNSIDE_MULT]
+
+<span style="color:#ff7b72">def</span> writes = []
+<span style="color:#ff7b72">def</span> writeCount = 0
+
+VERSIONS.each { version, mult ->
+  entities.each { e ->
+    REVENUE_ACCTS.each { acct ->
+      PERIODS.each { period ->
+        <span style="color:#6a737d">// Read from Working (source), write to this Version</span>
+        <span style="color:#ff7b72">def</span> baseVal = getCell(e.getName(), acct, period, curYear, <span style="color:#a5d6ff">"Forecast"</span>, <span style="color:#a5d6ff">"Working"</span>) ?: 0
+        writes << [e.getName(), acct, period, curYear, <span style="color:#a5d6ff">"Forecast"</span>, version, baseVal * mult]
+        writeCount++
+      }
+    }
+  }
+}
+
+<span style="color:#d2a8ff">println</span>(<span style="color:#a5d6ff">"Staging ${writeCount} scenario adjustment writes"</span>)
+operation.grid.setDataCellValues(writes)   <span style="color:#6a737d">// 1 network call for all writes</span>
+<span style="color:#d2a8ff">println</span>(<span style="color:#a5d6ff">"Upside (+10%) and Downside (-15%) applied. Run CALC ALL to aggregate."</span>)</div>
+  </div>
+</div>
+
+<div class="feature-block" id="fb3">
+  <div class="fb-hdr" onclick="toggleFb('fb3')">
+    <span class="fb-icon">⚙</span>
+    <span class="fb-title">EPM Automate — Schedule Quarterly Scenario Refresh</span>
+    <div class="fb-tags"><span class="fb-tag tag-standard">EPM Automate</span></div>
+    <span class="fb-chev">▼</span>
+  </div>
+  <div class="fb-body">
+    <div class="code-block"><button class="copy-btn" onclick="cp(this)">Copy</button><span style="color:#6a737d">#!/bin/bash
+# Vision Corp — Quarterly Scenario Refresh Script
+# Runs on first day of new forecast quarter (scheduled via cron)
+# Prerequisites: Working version is closed, Final version locked</span>
+
+EPM="/opt/Oracle/EPMAutomate/bin/epmautomate"
+LOG="/var/log/epm/scenario_refresh_$(date +%Y%m%d).log"
+
+$EPM login finance-admin@vision.com $PASSWORD $ENV_URL >> $LOG 2>&1
+
+<span style="color:#6a737d"># 1. Advance the rolling forecast period</span>
+$EPM setSubstitutionVariable OEP_FS CurPeriod <span style="color:#a5d6ff">$(date +%b)</span>   >> $LOG
+$EPM setSubstitutionVariable OEP_FS CurYear FY<span style="color:#a5d6ff">$(date +%Y)</span>    >> $LOG
+
+<span style="color:#6a737d"># 2. Seed Working from prior quarter Final</span>
+$EPM runBusinessRule "Seed_Working_From_Final" >> $LOG 2>&1
+<span style="color:#ff7b72">if</span> [ $? -ne 0 ]; then
+  echo "ERROR: Working seed failed" >> $LOG
+  exit 1
+<span style="color:#ff7b72">fi</span>
+
+<span style="color:#6a737d"># 3. DATACOPY Working → Upside and Downside (via calc script Business Rule)</span>
+$EPM runBusinessRule "Seed_Scenario_Versions" >> $LOG 2>&1
+
+<span style="color:#6a737d"># 4. Apply scenario multipliers (the Groovy rule above)</span>
+$EPM runBusinessRule "Apply_Scenario_Multipliers" >> $LOG 2>&1
+
+<span style="color:#6a737d"># 5. Run CALC ALL to aggregate all three versions</span>
+$EPM runBusinessRule "CALC_ALL_FORECAST" >> $LOG 2>&1
+
+<span style="color:#6a737d"># 6. Run scenario comparison report package for CFO</span>
+$EPM runReportingObjectJobset "CFO_Scenario_Pack" >> $LOG 2>&1
+
+$EPM logout >> $LOG 2>&1
+echo "Scenario refresh complete: $(date)" >> $LOG</div>
+  </div>
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- SECTION 10: BUILD CHECKLIST                            -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div id="build">
+<h2 class="sec-hdr">Build Checklist — Scenario Architecture</h2>
+
+<div class="cl-block">
+  <div class="cl-title">📋 Design Phase — Before You Build</div>
+  <div class="cl-item" onclick="tick(this)"><div class="cl-box"></div><div class="cl-text">Document all required Scenarios (types of plans) and Versions (iterations within each type) — get CFO sign-off before building</div></div>
+  <div class="cl-item" onclick="tick(this)"><div class="cl-box"></div><div class="cl-text">Confirm: does this application need Sandbox? Decide at creation time — it cannot be enabled retroactively</div></div>
+  <div class="cl-item" onclick="tick(this)"><div class="cl-box"></div><div class="cl-text">Confirm: does this use case require Strategic Modeling (long-range, M&A, Monte Carlo)? Verify EPM Enterprise license</div></div>
+  <div class="cl-item" onclick="tick(this)"><div class="cl-box"></div><div class="cl-text">Design Scenario × Version matrix (like Vision Corp's above) — document which combinations are active vs not</div></div>
+  <div class="cl-item" onclick="tick(this)"><div class="cl-box"></div><div class="cl-text">Map Versions to approval workflow: which Versions need Planning Unit Hierarchy? (Working does; Sandbox does not)</div></div>
+  <div class="cl-item" onclick="tick(this)"><div class="cl-box"></div><div class="cl-text">Design Valid Intersections to block planner write access to Final, Approved, Actual scenarios</div></div>
+</div>
+
+<div class="cl-block">
+  <div class="cl-title">🔨 Build Phase</div>
+  <div class="cl-item" onclick="tick(this)"><div class="cl-box"></div><div class="cl-text">Add Scenario and Version members to outline with correct properties (Start, End year, current period, security)</div></div>
+  <div class="cl-item" onclick="tick(this)"><div class="cl-box"></div><div class="cl-text">Configure dimension security: planners read-only on Actual, no access to Mgmt_Adj, write access to Working only</div></div>
+  <div class="cl-item" onclick="tick(this)"><div class="cl-box"></div><div class="cl-text">Build DATACOPY calc script for seeding Working → Upside/Downside/scenario copies</div></div>
+  <div class="cl-item" onclick="tick(this)"><div class="cl-box"></div><div class="cl-text">Build Groovy rule for applying scenario multipliers (batch reads, staged writes, zero-division guard)</div></div>
+  <div class="cl-item" onclick="tick(this)"><div class="cl-box"></div><div class="cl-text">Test Sandbox: enable on target forms, verify isolation from Working, test Promote and Discard flows</div></div>
+  <div class="cl-item" onclick="tick(this)"><div class="cl-box"></div><div class="cl-text">Build scenario comparison report (Forecast/Working vs Forecast/Upside vs Forecast/Downside in one FRS report)</div></div>
+  <div class="cl-item" onclick="tick(this)"><div class="cl-box"></div><div class="cl-text">If Strategic Modeling: enable module, select industry template, configure model structure, verify integration with Financials</div></div>
+  <div class="cl-item" onclick="tick(this)"><div class="cl-box"></div><div class="cl-text">Build EPM Automate script for quarterly scenario refresh — test in non-prod before scheduling in prod</div></div>
+</div>
+
+<div class="cl-block">
+  <div class="cl-title">✅ UAT / Production Readiness</div>
+  <div class="cl-item" onclick="tick(this)"><div class="cl-box"></div><div class="cl-text">Test seeding with empty data (new year, no blocks) — verify DATACOPY runs before Groovy adjustments</div></div>
+  <div class="cl-item" onclick="tick(this)"><div class="cl-box"></div><div class="cl-text">Test Sandbox Promote with beforeSave Groovy rules — confirm validation guards fire correctly on promotion</div></div>
+  <div class="cl-item" onclick="tick(this)"><div class="cl-box"></div><div class="cl-text">Verify security: log in as a Planner role user and confirm they cannot see or edit Actual/Final/Mgmt_Adj</div></div>
+  <div class="cl-item" onclick="tick(this)"><div class="cl-box"></div><div class="cl-text">Performance test: run CALC ALL across all three scenario versions, verify it completes within acceptable time</div></div>
+  <div class="cl-item" onclick="tick(this)"><div class="cl-box"></div><div class="cl-text">Document the scenario naming convention and Version purpose in the Finance team runbook</div></div>
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- SECTION 11: FP&A CONTEXT                               -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div id="fpa">
+<h2 class="sec-hdr sec-hdr-teal">FP&A Context — Why This Changes the CFO Conversation</h2>
+
+<div class="callout fpa"><span class="ci">📊</span><strong>The Before State at Every Client:</strong> Without proper scenario architecture in EPBCS, Vision Corp's FP&A team maintains three separate Excel workbooks: "Q3_Forecast_BASE.xlsx", "Q3_Forecast_UPSIDE_CFO_v3_FINAL.xlsx", and "Q3_Forecast_DOWNSIDE_STRESS.xlsx". Each takes 2 days to update when assumptions change. The three workbooks disagree by month 3 because someone forgot to propagate a formula change. The CFO presentation takes a separate Excel consolidation model to produce the three-scenario comparison table.</div>
+
+<div class="tier-grid">
+  <div class="tier-card">
+    <div class="tier-accent" style="background:var(--tealLt)"></div>
+    <div class="tier-label" style="color:var(--tealLt)">Standard Implementation</div>
+    <div class="tier-name" style="color:var(--tealLt)">Scenario Versions in Planning</div>
+    <div class="tier-desc">Base/Upside/Downside as Versions under Forecast Scenario. Seeded from Working via DATACOPY. Scenario comparison report built natively. Update time: 2 hours → 15 minutes when assumptions change.</div>
+    <div class="tier-examples">
+      <div class="tier-ex-lbl">CFO gets:</div>
+      <div class="tier-ex">Live three-way scenario comparison · Audit trail per version · Approval workflow preserved · No Excel reconciliation</div>
+    </div>
+  </div>
+  <div class="tier-card">
+    <div class="tier-accent" style="background:var(--goldLt)"></div>
+    <div class="tier-label" style="color:var(--goldLt)">Advanced Implementation</div>
+    <div class="tier-name" style="color:var(--goldLt)">Sandbox + Version Architecture</div>
+    <div class="tier-desc">Planners explore individually in Sandbox, propose changes for review, promote approved changes to Working. Finance runs scenario comparison across Working + promoted Sandbox analyses. Multiple analysts can run parallel what-ifs without touching the locked forecast.</div>
+    <div class="tier-examples">
+      <div class="tier-ex-lbl">CFO gets:</div>
+      <div class="tier-ex">Bottom-up scenario contributions · Planner ownership · Working data integrity maintained · Rapid iteration cycle</div>
+    </div>
+  </div>
+  <div class="tier-card">
+    <div class="tier-accent" style="background:var(--purpleLt)"></div>
+    <div class="tier-label" style="color:var(--purpleLt)">Full Strategic Implementation</div>
+    <div class="tier-name" style="color:var(--purpleLt)">Strategic Modeling + Monte Carlo</div>
+    <div class="tier-desc">3-5 year integrated P&L/BS/CF model with Base + Upside + Downside scenarios. Monte Carlo quantifies guidance risk — board presentation includes a probability distribution, not three point estimates. Goal Seek answers "what growth rate closes the gap to guidance?"</div>
+    <div class="tier-examples">
+      <div class="tier-ex-lbl">CFO gets:</div>
+      <div class="tier-ex">Guidance with confidence interval · Probability of miss quantified · Integrated three-statement LRP · M&A scenario modeling</div>
+    </div>
+  </div>
+</div>
+
+<div class="callout insight"><span class="ci">🔮</span><strong>The CFO Conversation That Changes:</strong> Before EPBCS scenario architecture, the CFO presentation is: "Here are three Excel files. The numbers may not tie exactly." After: "Here are your Base, Upside, and Downside scenarios. There is a 73% probability of meeting guidance. The scenario that closes the gap requires 17% unit volume growth. Shall I run Goal Seek on a 14% assumption to test the downside?"</div>
+</div>
+
+<!-- AI Tutor -->
+<div class="tutor-box">
+  <div class="tutor-hdr">
+    <div class="tutor-av">🔮</div>
+    <div>
+      <div class="tutor-nm">The Oracle — Scenario Planning Expert</div>
+      <div class="tutor-rl">Strategic Modeling · What-If Architecture · Monte Carlo · Sandbox</div>
+    </div>
+  </div>
+  <p class="tutor-desc">Ask anything about scenario planning, Strategic Modeling, Monte Carlo simulation, Sandbox architecture, or Version design in Oracle EPM Cloud.</p>
+  <div class="chips" id="chips-sp"></div>
+  <div class="tutor-row">
+    <input class="tutor-input" id="q-sp" placeholder="Ask about scenario planning, Strategic Modeling, or what-if architecture..." onkeydown="if(event.key==='Enter')ask()">
+    <button class="tutor-send" onclick="ask()">Consult Oracle 🔮</button>
+  </div>
+  <div class="tutor-out" id="out-sp">
+    <div class="tutor-msg-lbl">Oracle</div>
+    <div id="out-sp-text"></div>
+  </div>
+</div>
+
+</div></div>
+</div>
+
+<script>
+// Stars
+(function(){var s=document.getElementById('stars');for(var i=0;i<100;i++){var d=document.createElement('div');d.className='star';var sz=Math.random()*2+0.4;d.style.cssText='width:'+sz+'px;height:'+sz+'px;top:'+Math.random()*100+'%;left:'+Math.random()*100+'%;--d:'+(2+Math.random()*4)+'s;--delay:'+Math.random()*5+'s;--op:'+(0.12+Math.random()*0.35);s.appendChild(d);}})();
+
+// Scroll to section
+function scrollTo(id){
+  var el=document.getElementById(id);
+  if(el){el.scrollIntoView({behavior:'smooth',block:'start'});}
+}
+
+// Feature block toggle
+function toggleFb(id){
+  var fb=document.getElementById(id);
+  fb.classList.toggle('open');
+}
+
+// Checklist tick
+function tick(el){
+  var b=el.querySelector('.cl-box'),t=el.querySelector('.cl-text');
+  b.classList.toggle('on');b.textContent=b.classList.contains('on')?'✓':'';
+  t.classList.toggle('done');
+}
+
+// Copy code
+function cp(btn){
+  var block=btn.closest('.code-block');
+  var text=block.innerText.replace(/^Copy\n/,'').replace(/^Copied!\n/,'');
+  navigator.clipboard.writeText(text).then(function(){
+    btn.textContent='Copied!';btn.classList.add('copied');
+    setTimeout(function(){btn.textContent='Copy';btn.classList.remove('copied');},1800);
+  });
+}
+
+// Sidebar scroll spy
+window.addEventListener('scroll',function(){
+  var sections=['foundation','tools','sandbox','vision-matrix','strategic-modeling','goal-seek','monte-carlo','integration','groovy','build','fpa'];
+  var scrollY=window.scrollY+80;var current='';
+  sections.forEach(function(id){var el=document.getElementById(id);if(el&&el.offsetTop<=scrollY)current=id;});
+  document.querySelectorAll('.sb-link').forEach(function(l){
+    var onclick=l.getAttribute('onclick')||'';
+    l.classList.toggle('active',onclick.indexOf("'"+current+"'")>=0);
+  });
+},{passive:true});
+
+// Chips
+var CHIPS=[
+  'Scenario vs Version — what\'s the real difference?',
+  'When should I use Sandbox vs a Version?',
+  'How does Strategic Modeling differ from Planning scenarios?',
+  'How do I set up Monte Carlo simulation?',
+  'Goal Seek — how do I reverse-engineer a revenue target?',
+  'How many Scenarios is too many?',
+  'How do I seed Upside/Downside from Working?',
+  'Can Groovy create Essbase blocks for a new scenario?'
+];
+var chipsEl=document.getElementById('chips-sp');
+CHIPS.forEach(function(text){
+  var btn=document.createElement('button');btn.className='chip';btn.textContent=text;
+  btn.onclick=function(){document.getElementById('q-sp').value=text;ask();};
+  chipsEl.appendChild(btn);
+});
+
+// AI Tutor
+async function ask(){
+  var inp=document.getElementById('q-sp'),out=document.getElementById('out-sp'),outText=document.getElementById('out-sp-text');
+  var q=inp.value.trim();if(!q)return;inp.value='';
+  out.classList.add('show');
+  outText.innerHTML='<em style="opacity:.4">Consulting the ancient scrolls...</em>';
+  var ctx='You are The Oracle, expert in Oracle EPM Cloud scenario planning, Strategic Modeling, Sandbox, and what-if architecture. The user is an EPBCS practitioner building for Vision Corporation ($2.8B revenue, 12 entities, 6 currencies, SAP ERP). Answer with production-grade precision. Cover: Scenario vs Version architecture, Sandbox, Strategic Modeling module (Goal Seek, Monte Carlo, inheriting scenarios), Groovy patterns for scenario automation, and FP&A context. 200-280 words. Real examples from Vision Corp where relevant.\n\nQuestion: '+q;
+  try{
+    var r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:800,messages:[{role:'user',content:ctx}]})});
+    var j=await r.json();
+    var text=(j.content||[]).map(function(c){return c.text||''}).join('')||'The Oracle is silent.';
+    outText.innerHTML=text.replace(/\n\n/g,'</p><p style="margin-top:8px">').replace(/^/,'<p>').replace(/$/,'</p>').replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>');
+  }catch(e){outText.textContent='The Oracle is unreachable. Check your connection.';}
+}
+
+// Animate percentile bars on scroll
+var barsAnimated=false;
+function animateBars(){
+  if(barsAnimated)return;
+  var fills=document.querySelectorAll('.pb-fill');
+  var widths=['25%','45%','62%','78%','95%'];
+  fills.forEach(function(f,i){f.style.width='0';setTimeout(function(){f.style.width=widths[i];},i*120);});
+  barsAnimated=true;
+}
+var mcSection=document.getElementById('monte-carlo');
+if(mcSection){
+  var obs=new IntersectionObserver(function(entries){entries.forEach(function(e){if(e.isIntersecting)animateBars();});},{threshold:0.3});
+  obs.observe(mcSection);
+}
+</script>
+<script src="branding.js"></script>
+</body>
+</html>
