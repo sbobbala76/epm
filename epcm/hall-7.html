@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Oracle EPCM Hall 7: Rule Balancing, Profit Curves & Reporting | 1Z0-1082-25 | BrainSpring</title>
-<meta name="description" content="Learn EPCM Rule Balancing, PCM_Balance dimension, profit curve analysis, Scatter Analysis, Financial Reporting Studio, Smart View output, and ASO extraction anomalies. Free 1Z0-1082-25 study guide.">
+<title>Observatory — Academy of Profit Center · EPCM Study Tour · BrainSpring</title>
+<meta name="description" content="Rule Balancing and Profit Curves reveal where value flows and where it vanishes. Hall 7 covers the PCM_Balance dimension, Rule Balancing reports, profit curve analysis, and the decision framework for NovaPrism's 60 engagements.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Pro:ital,wght@0,300;0,400;0,500;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 
@@ -851,6 +851,7 @@ pre.code .dim { color: var(--accent); }
   <button class="tab-btn active" onclick="switchTab('conceptual',this)"><span class="tab-icon">📐</span> PCM_Balance</button>
   <button class="tab-btn" onclick="switchTab('technical',this)"><span class="tab-icon">📊</span> Rule Balancing</button>
   <button class="tab-btn" onclick="switchTab('curves',this)"><span class="tab-icon">📈</span> Profit Curves</button>
+  <button class="tab-btn" onclick="switchTab('reporting',this)"><span class="tab-icon">🖨️</span> Reporting</button>
   <button class="tab-btn" onclick="switchTab('lab',this)"><span class="tab-icon">🔬</span> Lab</button>
   <button class="tab-btn" onclick="switchTab('exam',this)"><span class="tab-icon">🎯</span> Exam Prep</button>
 </div>
@@ -1387,8 +1388,227 @@ pre.code .dim { color: var(--accent); }
 
 </div>
 
+
 <!-- ═══════════════════════════════════════════════════════════════════════
-     TAB 4: LAB
+     TAB 4: REPORTING
+═══════════════════════════════════════════════════════════════════════ -->
+<div id="tab-reporting" class="tab-panel">
+
+<!-- ── SECTION 1: THREE REPORTING TOOLS ── -->
+<section class="section" id="reporting-overview">
+  <div class="sec-type-bar">
+    <div class="sec-type-icon conceptual">🖨️</div>
+    <span class="sec-type-label conceptual">Conceptual</span>
+  </div>
+  <h2 class="sec-h">Three ways to report EPCM results</h2>
+  <div class="sec-div"></div>
+  <p class="sec-sub">Profit Curves show you <em>which</em> engagements to act on. These three tools show you <em>the numbers behind</em> those decisions — each serving a different consumer and a different purpose.</p>
+
+  <div class="tbl-wrap">
+    <table class="tbl">
+      <thead><tr><th>Tool</th><th>Navigation</th><th>Consumer</th><th>Output</th><th>NovaPrism use case</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><strong>Smart View</strong></td>
+          <td>Excel → EPM Cloud add-in → Connect</td>
+          <td>Finance analysts, FP&amp;A</td>
+          <td>Ad-hoc Excel grids; live refresh; Profit Curves in Excel; driver data submission</td>
+          <td>CFO's team pulls IS margin drill-down to engagement level in Excel; Finance team submits Q2 headcount drivers directly from spreadsheet</td>
+        </tr>
+        <tr>
+          <td><strong>Financial Reporting Studio (FRS)</strong></td>
+          <td>Home → Reports → Financial Reporting</td>
+          <td>Board, auditors, scheduled recipients</td>
+          <td>Formatted print-ready reports with headers, footers, page breaks; book bursting; PDF export</td>
+          <td>Monthly board pack: Division P&amp;L with fully-loaded margins formatted to CFO spec; scheduled to burst to each division head on close Day 5</td>
+        </tr>
+        <tr>
+          <td><strong>Scatter Analysis</strong></td>
+          <td>Home → Intelligence → Scatter Analysis</td>
+          <td>Finance Controllers, strategy team</td>
+          <td>Two-axis plot of any two measures across a population — Revenue vs Net Profit, Allocated Cost vs Margin%</td>
+          <td>Plot all 60 engagements on Revenue (x) vs Net Profit (y) — four quadrants immediately visible: Stars, Cash Cows, Rising Stars, Dogs</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ── SECTION 2: SCATTER ANALYSIS ── -->
+<section class="section" id="scatter-analysis">
+  <div class="sec-type-bar">
+    <div class="sec-type-icon interactive">⬡</div>
+    <span class="sec-type-label interactive">Analytics</span>
+  </div>
+  <h2 class="sec-h">Scatter Analysis — the quadrant view</h2>
+  <div class="sec-div"></div>
+  <p class="sec-sub">Profit Curves show cumulative rank. Scatter Analysis shows position — two measures simultaneously across the whole population, making quadrant segmentation immediate.</p>
+
+  <p class="prose">NovaPrism's profit curve tells you <em>that</em> client #42 is in the bottom 24. Scatter Analysis tells you <em>why</em> — high revenue but catastrophic allocated cost ratio, placing it firmly in the bottom-right quadrant. The two views are complementary. Profit Curves for ranking; Scatter for diagnosis.</p>
+
+  <div class="tbl-wrap">
+    <table class="tbl">
+      <thead><tr><th>Axis</th><th>Configured as</th><th>NovaPrism setting</th></tr></thead>
+      <tbody>
+        <tr><td>X-axis</td><td>Any numeric measure from the model (Revenue, Allocated Cost, Margin%)</td><td>Revenue ($M) — shows engagement scale</td></tr>
+        <tr><td>Y-axis</td><td>Any numeric measure from the model</td><td>Net Profit ($M) — shows fully-loaded result</td></tr>
+        <tr><td>Population</td><td>Any dimension (Customer, Entity, Product)</td><td>Customer — 60 engagement codes</td></tr>
+        <tr><td>Quadrant lines</td><td>Configurable thresholds (absolute or percentile)</td><td>X: $5M revenue. Y: $0 profit (break-even)</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="infobox accent">
+    <div class="infobox-icon">📌</div>
+    <div class="infobox-body"><strong>The Profit Attribute dimension is required.</strong> Scatter Analysis (and Profit Curves) need a <strong>Profit Attribute dimension</strong> in the application. This is the dimension that tags members with segment labels — enabling the quadrant overlay and Category Analysis. If a candidate is asked "what dimension is required for Profit Curve and Scatter Analysis?" the answer is Profit Attribute dimension — not PCM_Balance, not Customer. This is a tested exam fact.</div>
+  </div>
+
+  <div class="infobox trap">
+    <div class="infobox-icon">⚠️</div>
+    <div class="infobox-body"><strong>Scatter Analysis requires PCM_REP, not PCM_CLC.</strong> Like all analytics views under <code>Home → Intelligence</code>, Scatter Analysis reads from the published reporting cube. If Copy POV has not been run after the latest M01 calculation, the scatter plot reflects stale data. This is the same timing gap as Smart View reporting — both depend on Copy POV having run.</div>
+  </div>
+</section>
+
+<!-- ── SECTION 3: FINANCIAL REPORTING STUDIO ── -->
+<section class="section" id="financial-reporting-studio">
+  <div class="sec-type-bar">
+    <div class="sec-type-icon technical">📄</div>
+    <span class="sec-type-label technical">Technical</span>
+  </div>
+  <h2 class="sec-h">Financial Reporting Studio — formatted reports</h2>
+  <div class="sec-div"></div>
+  <p class="sec-sub">When ad-hoc grids and profit curves aren't enough — when the CFO needs a board-ready formatted P&amp;L — Financial Reporting Studio is the tool.</p>
+
+  <p class="prose">Financial Reporting Studio (FRS) is a report design tool available to EPCM. It produces formatted financial reports: fixed headers and footers, page breaks at hierarchy levels, conditional suppression of zero rows, calculated columns, and scheduled PDF bursting to a distribution list. The output looks like a printed financial statement, not a spreadsheet. It connects to PCM_REP for its data — again, Copy POV must have run.</p>
+
+  <div class="tbl-wrap">
+    <table class="tbl">
+      <thead><tr><th>Feature</th><th>What it does</th><th>When NovaPrism uses it</th></tr></thead>
+      <tbody>
+        <tr><td>Report books</td><td>Bundle multiple reports into a single book — one PDF per recipient per period</td><td>Monthly close pack: Division P&amp;L + Engagement Summary + Cost Pool Summary in one document</td></tr>
+        <tr><td>Bursting</td><td>Run one report template, distribute personalised slices to different recipients based on POV</td><td>Each division head receives their own P&amp;L with only their entities visible</td></tr>
+        <tr><td>Conditional suppression</td><td>Hide rows where all values are zero or below a threshold</td><td>Suppress zero-revenue rows in the engagement summary — only active engagements shown</td></tr>
+        <tr><td>Calculated columns</td><td>Add formulas (variance, %, prior period) that don't exist in the cube</td><td>Add "Direct vs Fully Loaded margin delta" column: IS shows −8.2pp, revealing the allocation impact</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="infobox note">
+    <div class="infobox-icon">📋</div>
+    <div class="infobox-body"><strong>FRS vs Smart View — when to use which.</strong> FRS is for <em>fixed-format</em> reports that must look the same every period — board packs, audit schedules, regulatory filings. Smart View is for <em>flexible analysis</em> — drill-down, pivoting, scenario comparison, ad-hoc investigation. In NovaPrism's close process, FRS produces the formal output; Smart View is the analyst's workbench. The exam tests that you know both exist and serve different purposes — not their detailed configuration.</div>
+  </div>
+</section>
+
+<!-- ── SECTION 4: SMART VIEW — THE OUTPUT ANGLE ── -->
+<section class="section" id="smart-view-output">
+  <div class="sec-type-bar">
+    <div class="sec-type-icon technical">📊</div>
+    <span class="sec-type-label technical">Technical</span>
+  </div>
+  <h2 class="sec-h">Smart View — retrieval, analysis, and the ASO extraction problem</h2>
+  <div class="sec-div"></div>
+  <p class="sec-sub">Hall 8 covers Smart View as a data submission tool. This section covers the other direction: retrieving allocation results from PCM_REP into Excel for analysis — and why ASO creates anomalies you have to know how to diagnose.</p>
+
+  <p class="prose">Smart View connects to EPCM via the EPM Cloud URL. Once connected, analysts can open ad-hoc grids against PCM_REP, retrieve any intersection of members, refresh to latest published data, and work in Excel with full pivot and formula capability. Profit Curves and Scatter Analysis can be displayed directly in Smart View. Driver data (headcount, ticket counts) can be <em>submitted</em> back — that flow is in Hall 8. This section is about reading <em>out</em>.</p>
+
+  <div class="tbl-wrap">
+    <table class="tbl">
+      <thead><tr><th>Smart View action</th><th>Direction</th><th>Source/Target</th><th>NovaPrism example</th></tr></thead>
+      <tbody>
+        <tr><td>Ad-hoc retrieval</td><td>PCM_REP → Excel</td><td>Read from PCM_REP</td><td>Pull IS fully-loaded margin by engagement code into Excel pivot</td></tr>
+        <tr><td>Profit Curve in Excel</td><td>PCM_REP → Excel</td><td>Read from PCM_REP</td><td>Embed NovaPrism profit curve directly in the CFO's deck</td></tr>
+        <tr><td>Driver submission</td><td>Excel → PCM_CLC</td><td>Write to PCM_CLC</td><td>Finance team updates Q2 headcount for 60 engagements from spreadsheet (Hall 8)</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ── SECTION 5: ASO EXTRACTION ANOMALIES ── -->
+<section class="section" id="aso-extraction">
+  <div class="sec-type-bar">
+    <div class="sec-type-icon technical">⚠️</div>
+    <span class="sec-type-label technical">Technical — Practitioner</span>
+  </div>
+  <h2 class="sec-h">ASO extraction anomalies — why your Smart View numbers don't match</h2>
+  <div class="sec-div"></div>
+  <p class="sec-sub">EPCM runs on ASO. ASO's aggregation behaviour is fundamentally different from BSO. When you retrieve data into Smart View or FRS, certain conditions produce numbers that look wrong — and diagnosing them requires understanding how ASO computes parent values.</p>
+
+  <p class="prose">In BSO, every cell value is either <em>stored</em> or <em>calculated on demand</em> from a formula you can inspect. In ASO, parent members are <em>aggregated</em> from their stored children using the consolidation operator. This is fast and elegant — until you try to retrieve data in a way that crosses hierarchy boundaries, asks for a member that aggregates differently than you expect, or retrieves a slice that doesn't correspond to a stored block. Four anomalies appear repeatedly in EPCM reporting.</p>
+
+  <div class="infobox trap">
+    <div class="infobox-icon">🔴</div>
+    <div class="infobox-body"><strong>Anomaly 1 — Parent total ≠ sum of children in Smart View.</strong><br>
+    <strong>Symptom:</strong> You retrieve <code>All_Customers</code> total = $38.4M net profit. You then retrieve each of the 60 engagement codes individually and sum them — you get a different number.<br>
+    <strong>Root cause:</strong> ASO aggregates parent values from stored children using consolidation operators. If any child has a <code>~</code> (ignore) operator, or if the hierarchy has shared members that aggregate differently, the parent is not a simple sum. The stored child values and the dynamic parent aggregation can diverge when the member selection in your Smart View grid doesn't match the aggregation path ASO uses internally.<br>
+    <strong>Diagnosis:</strong> Check consolidation operators on all children under <code>All_Customers</code>. Verify no shared members are double-counted. In Smart View: use <code>Member Selection</code> to explicitly retrieve <code>All_Customers.Children</code> rather than individual member names — this forces ASO to aggregate consistently with the hierarchy path.</div>
+  </div>
+
+  <div class="infobox trap">
+    <div class="infobox-icon">🔴</div>
+    <div class="infobox-body"><strong>Anomaly 2 — Asymmetric retrieval produces #MISSING where data exists.</strong><br>
+    <strong>Symptom:</strong> You retrieve IS × ENG_042 × Net_Profit — the cell shows #MISSING. You know ENG_042 is an IS engagement with costs allocated. The Profit Curve shows it as a loss-maker.<br>
+    <strong>Root cause:</strong> ASO only stores data at the intersections where rules actually wrote values. If your Smart View grid is retrieving at a member intersection that doesn't correspond to a stored block — for example, a combination of <code>PCM_Input</code> + a Customer code that only has data at the <code>PCM_Allocated_In</code> member — the cell is genuinely empty at that intersection.<br>
+    <strong>Diagnosis:</strong> Check which PCM_Balance members hold data for that engagement. Use an ad-hoc grid with all 6 PCM_Balance members on columns and the engagement on rows. Typically: <code>PCM_Input = 0</code> (no direct input), <code>PCM_Allocated_In &gt; 0</code> (received allocation), <code>PCM_Net_Balance &lt; 0</code> (loss-making). The number is not missing — you were looking at the wrong PCM_Balance slice.</div>
+  </div>
+
+  <div class="infobox trap">
+    <div class="infobox-icon">🔴</div>
+    <div class="infobox-body"><strong>Anomaly 3 — MDX filter returns unexpected members or wrong counts.</strong><br>
+    <strong>Symptom:</strong> You write an MDX expression to filter the 17 loss-making engagements: <code>FILTER([Customer].Members, [PCM_Net_Balance] &lt; 0)</code>. The result returns 23 members, not 17. Or it returns correct members but with #MISSING values when you try to retrieve associated measures.<br>
+    <strong>Root cause:</strong> MDX against ASO evaluates conditions against the <em>current aggregated context</em>. If the MDX is running against PCM_CLC instead of PCM_REP, or if the POV context is not set to the correct Scenario/Period, the filter evaluates against stale or wrong data. Additionally, ASO MDX <code>Members</code> returns all members in the hierarchy including parents — use <code>Leaves</code> or <code>Descendants(..., LEAVES)</code> to restrict to level-0 members only.<br>
+    <strong>Fix:</strong>
+    <pre style="background:var(--navy3);border:1px solid var(--border2);border-radius:8px;padding:14px;font-family:var(--font-mono);font-size:0.78rem;color:var(--silver2);margin-top:10px;overflow-x:auto;line-height:1.7"><span style="color:var(--accent)">/* Wrong — includes parent rollups in filter */</span>
+FILTER([Customer].Members, [Measures].[PCM_Net_Balance] &lt; 0)
+
+<span style="color:var(--accent)">/* Correct — level-0 engagements only */</span>
+FILTER(
+  Descendants([Customer].[All_Customers], [Customer].[ENG_001].Level, LEAVES),
+  ([Measures].[PCM_Net_Balance],
+   [Scenario].[Actual],
+   [Year].[FY2025],
+   [Period].[Q1]) &lt; 0
+)</pre>
+    </div>
+  </div>
+
+  <div class="infobox trap">
+    <div class="infobox-icon">🔴</div>
+    <div class="infobox-body"><strong>Anomaly 4 — Conditional suppression in FRS hides rows with non-zero data.</strong><br>
+    <strong>Symptom:</strong> You configure FRS to suppress rows where Net Profit = 0. Several engagement rows disappear that you know should have values. When you remove the suppression, they appear with correct non-zero values.<br>
+    <strong>Root cause:</strong> FRS suppression evaluates each cell in the row independently. In ASO, a row can have data in one column (e.g. <code>PCM_Allocated_In</code>) but return zero or #MISSING in another column (e.g. <code>PCM_Input</code>). If the suppression condition is evaluated against a column that happens to be zero at that intersection, the entire row is suppressed even though adjacent columns have meaningful data.<br>
+    <strong>Fix:</strong> Set the suppression condition explicitly to the measure you care about — <code>Suppress if PCM_Net_Balance = 0</code> — rather than using the default row suppression which evaluates the first column. In FRS: Row Properties → Suppress → <em>specify the exact member</em>, don't rely on the default.</div>
+  </div>
+</section>
+
+<!-- ── SECTION 6: EXAM TAKEAWAYS FOR THIS TAB ── -->
+<section class="section" id="reporting-exam">
+  <div class="sec-type-bar">
+    <div class="sec-type-icon exam">📝</div>
+    <span class="sec-type-label exam">Exam — Reporting</span>
+  </div>
+  <h2 class="sec-h">What the exam tests on reporting</h2>
+  <div class="sec-div"></div>
+
+  <div class="tbl-wrap">
+    <table class="tbl">
+      <thead><tr><th>Concept</th><th>Exam answer</th><th>Implementation reality</th></tr></thead>
+      <tbody>
+        <tr><td>Profit Attribute dimension</td><td>Required for Profit Curves and Scatter Analysis</td><td>Without it, neither analytics view is available — it's the prerequisite dimension the exam will test by asking what's required to create a profit curve</td></tr>
+        <tr><td>Scatter Analysis navigation</td><td>Home → Intelligence → Scatter Analysis</td><td>Same location as Profit Curves — both under Intelligence, not Modeling</td></tr>
+        <tr><td>FRS vs Smart View</td><td>FRS for fixed-format formatted reports; Smart View for ad-hoc analysis and driver submission</td><td>In production you use both: FRS for the monthly board pack, Smart View for everything else</td></tr>
+        <tr><td>Smart View — two directions</td><td>Retrieve allocation results from PCM_REP (output); Submit driver data to PCM_CLC (input)</td><td>Most candidates only know the submission side — the retrieval side is equally tested</td></tr>
+        <tr><td>ASO #MISSING in Smart View</td><td>May mean you are retrieving the wrong PCM_Balance member, not that the data is absent</td><td>Always pull all 6 PCM_Balance members when diagnosing a missing value — the data is likely in a different balance member than expected</td></tr>
+        <tr><td>MDX filter on ASO — Members vs Leaves</td><td>Use Descendants(..., LEAVES) to filter level-0 members only; .Members includes parent rollups</td><td>This is the most common MDX error in EPCM reporting — filter returns 23 instead of 17 because parent members match the condition too</td></tr>
+        <tr><td>All reporting views depend on Copy POV</td><td>Smart View, FRS, Scatter Analysis all read from PCM_REP — stale if Copy POV hasn't run</td><td>The timing gap is the same as any PCM_REP consumer: calculate → Copy POV → then report</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+</div><!-- /tab-reporting -->
+
+<!-- ═══════════════════════════════════════════════════════════════════════
+     TAB 5: LAB
 ═══════════════════════════════════════════════════════════════════════ -->
 <div id="tab-lab" class="tab-panel">
 
@@ -1594,12 +1814,12 @@ pre.code .dim { color: var(--accent); }
   </div>
   <h2 class="sec-h">Rule Balancing & Profit Curve Quiz</h2>
   <div class="sec-div"></div>
-  <p class="sec-sub">Test your knowledge on PCM_Balance, Rule Balancing reports, and profit curve analysis.</p>
+  <p class="sec-sub">Test your knowledge on PCM_Balance, Rule Balancing reports, profit curve analysis, and reporting tools.</p>
 
   <div class="quiz-container" id="quiz-container"></div>
 
   <div class="quiz-score" id="quiz-score">
-    <div class="quiz-score-num" id="quiz-score-num">0/5</div>
+    <div class="quiz-score-num" id="quiz-score-num">0/8</div>
     <div class="quiz-score-msg" id="quiz-score-msg">Loading...</div>
   </div>
 </section>
@@ -1695,6 +1915,11 @@ pre.code .dim { color: var(--accent); }
     {id:'profit-curve-concept',name:'Profit Curves'},
     {id:'profit-curve-anatomy',name:'Curve Anatomy'},
     {id:'decision-framework',name:'Decision Framework'},
+    {id:'reporting-overview',name:'Reporting Tools'},
+    {id:'scatter-analysis',name:'Scatter Analysis'},
+    {id:'financial-reporting-studio',name:'Financial Reporting Studio'},
+    {id:'smart-view-output',name:'Smart View — Output'},
+    {id:'aso-extraction',name:'ASO Extraction Anomalies'},
     {id:'lab-rule-balancing',name:'Lab: Rule Balancing'},
     {id:'lab-profit-curve',name:'Lab: Profit Curve'},
     {id:'exam-quiz',name:'Exam Practice'}
@@ -1855,6 +2080,42 @@ var quizData=[
     ],
     correct:1,
     explanation:'To see IT costs at the customer engagement level, the form needs <strong>Customer (Level 0) on rows</strong> and <strong>PCM_Balance on columns</strong>. This shows each engagement\'s Input, Allocation In, Allocation Out, and Net Balance. The form would also need POV selections for Account (IT Costs) and Entity (filtered to show only the receiving divisions). Rule Balancing always requires a pre-designed data form — it doesn\'t auto-generate.'
+  },
+  {
+    diff:'foundation',qnum:'Q6',
+    stem:'Which dimension is required in the EPCM application to enable Profit Curve and Scatter Analysis?',
+    options:[
+      'PCM_Balance — stores the net profit values that the curve plots',
+      'Profit Attribute dimension — tags members with segment labels for curve and quadrant analysis',
+      'Customer dimension — Profit Curves only work with the Customer population dimension',
+      'PCM_Rule — links rule execution results to the analytics views'
+    ],
+    correct:1,
+    explanation:'Both Profit Curves and Scatter Analysis require a <strong>Profit Attribute dimension</strong> in the application. This dimension tags members with segment labels that enable the quadrant overlay and Category Analysis. Without it, neither analytics view is available. This is a direct exam fact — not PCM_Balance, not Customer, not PCM_Rule.'
+  },
+  {
+    diff:'practitioner',qnum:'Q7',
+    stem:'A NovaPrism analyst retrieves all 60 engagement codes in Smart View against PCM_Net_Balance for Q1 Actual and sums them manually in Excel — getting $41.2M. The Profit Curve shows $38.4M total net profit for the same period. Which is the most likely explanation?',
+    options:[
+      'The Profit Curve is wrong — Smart View retrieves raw data more accurately',
+      'The manual sum includes parent rollup members in the retrieval, double-counting some engagements via shared hierarchy members',
+      'Smart View always adds 7.3% overhead to ASO retrievals as a system rounding buffer',
+      'The analyst is reading from PCM_CLC; the Profit Curve reads from PCM_REP — Copy POV has not been run'
+    ],
+    correct:1,
+    explanation:'This is the classic ASO parent aggregation anomaly. If the Smart View retrieval used <code>[Customer].Members</code> rather than explicitly selecting only the 60 level-0 engagement codes, it may have included intermediate parent nodes (e.g., a regional rollup) that aggregate some engagements with a non-ignore consolidation operator — effectively double-counting. The fix: use <code>Descendants([Customer].[All_Customers], LEAVES)</code> to retrieve level-0 members only. The Profit Curve reads from the correct aggregation path in PCM_REP and is the authoritative figure.'
+  },
+  {
+    diff:'expert',qnum:'Q8',
+    stem:'An MDX query against NovaPrism\'s EPCM application — FILTER([Customer].Members, [PCM_Net_Balance] < 0) — returns 23 members. The Profit Curve shows only 17 loss-making engagements. What is wrong?',
+    options:[
+      'The MDX syntax is incorrect — FILTER is not supported in ASO MDX',
+      '[Customer].Members includes parent rollup members; parent nodes aggregate to negative values even though their children may be individually profitable in some sub-groupings',
+      'The PCM_Net_Balance measure is not available in MDX context — use PCM_Output instead',
+      'The Profit Curve filters by revenue threshold; MDX has no equivalent and counts differently'
+    ],
+    correct:1,
+    explanation:'<code>[Customer].Members</code> returns ALL members in the Customer dimension — including parent/rollup nodes like <code>All_Customers</code> and any intermediate hierarchy parents. When parent nodes aggregate children that are mostly loss-making, the parent\'s PCM_Net_Balance can also be negative, satisfying the filter even though the parent is not an engagement. Fix: use <code>Descendants([Customer].[All_Customers], [Customer].[ENG_001].Level, LEAVES)</code> to restrict to level-0 engagement members only — matching the 17 that the Profit Curve identifies.'
   }
 ];
 
@@ -1905,7 +2166,7 @@ function showScore(){
 /* ── Dean Eliot ── */
 var HALL_SYSTEM_EXTENSION=[
   'CURRENT HALL: Hall 7 — Observatory (Academy of Profit Center)',
-  'HALL SCOPE: Rule Balancing, PCM_Balance dimension, Profit Curves, and engagement profitability analysis.',
+  'HALL SCOPE: Rule Balancing, PCM_Balance dimension, Profit Curves, Scatter Analysis, Financial Reporting Studio, Smart View output, and ASO extraction anomalies.',
   '',
   'KEY CONCEPTS IN THIS HALL:',
   '- PCM_Balance dimension: System-generated. Members: PCM_Input, PCM_Allocation In, PCM_Allocation Out, PCM_Adjustment In, PCM_Adjustment Out, PCM_Net Balance.',
@@ -1917,6 +2178,17 @@ var HALL_SYSTEM_EXTENSION=[
   '- Profit Curve Y-axis: Cumulative measure (usually Net Profit). Rises for profitable, flattens for marginal, declines for unprofitable.',
   '- Category Analysis: Select portion of curve, analyze by attribute (Region, Industry) to understand drivers.',
   '- Security: Only Service Administrators and Power Users can define profit curves. All users can view/generate.',
+  '- Profit Attribute dimension: REQUIRED for both Profit Curves and Scatter Analysis. Without it, neither view is available.',
+  '- Scatter Analysis: Home → Intelligence → Scatter Analysis. Two-axis plot (e.g. Revenue vs Net Profit) across a population. Quadrant view. Reads from PCM_REP.',
+  '- Financial Reporting Studio (FRS): Home → Reports → Financial Reporting. Fixed-format reports, book bursting, conditional suppression. For board packs and audit schedules.',
+  '- Smart View output: Retrieves allocation results from PCM_REP into Excel. Also displays Profit Curves in Excel. Separate from driver submission (Hall 8).',
+  '- All analytics/reporting views depend on Copy POV having run — they read from PCM_REP, not PCM_CLC.',
+  '',
+  'ASO EXTRACTION ANOMALIES (practitioner content):',
+  '- Parent ≠ sum of children: ASO aggregates via consolidation operators. [Customer].Members includes parent nodes. Use Descendants(...,LEAVES) for level-0 only.',
+  '- #MISSING in Smart View: May mean wrong PCM_Balance member, not absent data. Retrieve all 6 PCM_Balance members to diagnose.',
+  '- MDX filter returns wrong count: FILTER([Customer].Members, ...) includes parents. Use Descendants with LEAVES.',
+  '- FRS conditional suppression hides non-zero rows: Default suppression evaluates first column. Set suppression explicitly to the measure you care about (PCM_Net_Balance).',
   '',
   'NOVAPRISM IN THIS HALL:',
   '60 client engagements analyzed via profit curve.',
@@ -1924,7 +2196,9 @@ var HALL_SYSTEM_EXTENSION=[
   'Final net profit: $38.4M (after all 60 clients).',
   'Bottom 24 clients destroy $7.8M in value.',
   'Top 15 clients generate 78% of total profit.',
+  '17 loss-making engagements — none visible on direct costs alone.',
   'IT allocation: $52M flows from ES to 4 divisions via PCM_Balance.',
+  'IS: 11.2% direct margin → 3.0% fully loaded. The $80.82M allocation is the story.',
   '',
   'DECISION FRAMEWORK:',
   '- Stars: High profit, high revenue → Protect & Expand',
@@ -1932,9 +2206,9 @@ var HALL_SYSTEM_EXTENSION=[
   '- Rising Stars: High profit %, low revenue → Scale if Possible',
   '- Dogs: Negative profit → Reprice or Exit',
   '',
-  'EXAM TOPICS: Analytics features, profit curves, rule balancing, PCM_Balance dimension.',
+  'EXAM TOPICS: Analytics features, profit curves, rule balancing, PCM_Balance dimension, Scatter Analysis, FRS, Smart View output, Profit Attribute dimension requirement.',
   '',
-  'OUT OF SCOPE: Data Integration → Pipeline Lab (Hall 8). Calculation tuning → Control Tower (Hall 6).'
+  'OUT OF SCOPE: Data Integration and Smart View driver submission → Pipeline Lab (Hall 8). Calculation tuning → Control Tower (Hall 6).'
 ].join('\n');
 
 function buildSystemPrompt(){
@@ -1989,7 +2263,7 @@ async function sbCall(typingEl){
         model:'claude-sonnet-4-20250514',
         max_tokens:500,
         system:buildSystemPrompt(),
-        messages:sbHistory.slice(-8)
+        messages:sbHistory
       })
     });
     var data=await resp.json();
@@ -2013,28 +2287,6 @@ document.querySelectorAll('a[href^="#"]').forEach(function(a){
 
 // Initialize engagement simulator
 calculateEngagement();
-
-/* ── Progress persistence ── */
-(function(){
-  var HALL = 7;
-  try { localStorage.setItem('epcm_h'+HALL,'1'); } catch(e){}
-  // patch campus map after it renders
-  setTimeout(function(){
-    document.querySelectorAll('.campus-building.locked').forEach(function(el){
-      var n = parseInt(el.textContent,10);
-      if(!n) return;
-      try {
-        if(localStorage.getItem('epcm_h'+n)==='1'){
-          el.classList.remove('locked');
-          el.classList.add('done');
-          var stop=el.closest('.campus-stop');
-          if(stop){ stop.classList.remove('campus-stop'); stop.classList.add('campus-stop','done-stop'); }
-        }
-      } catch(e){}
-    });
-  }, 150);
-})();
-
 </script>
 </body>
 </html>
