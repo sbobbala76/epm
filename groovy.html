@@ -440,7 +440,7 @@ body.hacker-mode .snav-section{color:rgba(248,113,113,.3)!important}
   </button>
   <button class="snav-btn" onclick="showPanel('library',this)" id="snav-library">
     <span class="snav-icon">⚡</span>Library
-    <span class="snav-badge" id="snavBadge">31</span>
+    <span class="snav-badge" id="snavBadge">40</span>
   </button>
   <button class="snav-btn" onclick="showPanel('cheatsheet',this)" id="snav-cheatsheet">
     <span class="snav-icon">⊞</span>Cheat Sheet
@@ -577,7 +577,7 @@ body.hacker-mode .snav-section{color:rgba(248,113,113,.3)!important}
     <button class="fpill" data-cat="rest" onclick="setFilter('rest',this)">🌐 REST / External</button>
   </div>
   <div class="stats-bar">
-    <span class="stat"><strong id="visCount">31</strong> functions shown</span>
+    <span class="stat"><strong id="visCount">40</strong> functions shown</span>
     <span class="stat-sep">·</span>
     <span class="stat">Cloud EPM <strong>25.11</strong> compatible</span>
     <span class="stat-sep">·</span>
@@ -599,7 +599,7 @@ body.hacker-mode .snav-section{color:rgba(248,113,113,.3)!important}
   <div class="sec-lbl">Quick Reference</div>
   <h2 class="sec-h">Groovy Function Cheat Sheet <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:rgba(74,222,128,.5);font-weight:400;vertical-align:middle;margin-left:10px">✓ API Validated 25.11</span></h2>
   <div class="sec-div"></div>
-  <p class="sec-sub">All 31 functions at a glance — name, category, what it does, and when to use it.</p>
+  <p class="sec-sub">All 40 functions at a glance — name, category, what it does, and when to use it.</p>
   <p style="font-size:11px;color:rgba(232,240,248,.18);font-style:italic;font-family:'JetBrains Mono',monospace;margin:-8px 0 18px">// "If you know the system's inventory, you own it."</p>
   <div class="tbl-wrap">
     <table class="cheat-table" id="cheatTable"></table>
@@ -2274,6 +2274,439 @@ ENDFIX`,
       {code:"EMPTY_FIX",cause:"fixMembers map produced empty or null FIX clause",fix:"Validate that all sub variables and member names resolve before building"}
     ],
     release:"executeCalcScript() on Cube is the correct API for inline calc scripts since 20.06."
+  }
+
+  ,
+  {
+    id:"batchWriteCells",name:"batchWriteCells()",cat:"data",
+    desc:"Stages multiple cell writes and commits them in a single setDataCellValues() call. The mandatory pattern for any rule touching more than one cell — individual setCell() calls inside a loop are a performance anti-pattern that silently fails when blocks don't exist.",
+    since:"20.06",applies:["Planning","FCCS"],
+    params:[
+      {n:"writes",req:true,d:"List of Lists — each inner list is [dim1Member, dim2Member, ..., value]. Order must match the form's dimension order."},
+      {n:"validateBlocks",req:false,d:"Boolean — if true, logs a block-existence warning before writing (default: false)"}
+    ],
+    returns:"int — number of cells committed. Throws if the form grid context is missing.",
+    code:`<span class="kw">def</span> <span class="fn-c">batchWriteCells</span>(List writes, Boolean validateBlocks = <span class="kw">false</span>) {
+  <span class="kw">def</span> grid = operation.grid
+  <span class="kw">if</span> (!grid) <span class="kw">throw new</span> Exception(<span class="str">"batchWriteCells requires a Data Form rule context"</span>)
+  <span class="kw">if</span> (!writes) { println(<span class="str">"[WARN] batchWriteCells: empty write list"</span>); <span class="kw">return</span> <span class="num">0</span> }
+  <span class="kw">if</span> (validateBlocks) {
+    println(<span class="str">"[INFO] Block check: if cells stay empty after this write,"</span>)
+    println(<span class="str">"[INFO] blocks don't exist. Run DATACOPY or @CREATEBLOCK first."</span>)
+  }
+  grid.setDataCellValues(writes)
+  println(<span class="str">"[INFO] Committed \${writes.size()} cell writes in 1 round-trip"</span>)
+  <span class="kw">return</span> writes.size()
+}
+
+<span class="cmt">// Stage ALL writes, commit once — not N setCell() calls in a loop</span>
+<span class="kw">def</span> cube     = operation.application.getCube(<span class="str">"OEP_FS"</span>)
+<span class="kw">def</span> entities = cube.getOutline().getDimension(<span class="str">"Entity"</span>, cube)
+              .findMember(<span class="str">"Total_Entity"</span>).getLevelZeroMembers()
+<span class="kw">def</span> pool  = operation.application.getSubstitutionVariableValue(<span class="str">"IT_Pool"</span>)?.toBigDecimal() ?: <span class="num">0</span>
+<span class="kw">def</span> total = entities.collect { e ->
+  getCell(e.getName(), <span class="str">"Revenue"</span>, <span class="str">"Jan"</span>, <span class="str">"FY25"</span>, <span class="str">"Budget"</span>, <span class="str">"Working"</span>) ?: <span class="num">0</span>
+}.sum() ?: <span class="num">1</span>
+
+<span class="kw">def</span> writes = []
+entities.each { e ->
+  <span class="kw">def</span> rev   = getCell(e.getName(), <span class="str">"Revenue"</span>, <span class="str">"Jan"</span>, <span class="str">"FY25"</span>, <span class="str">"Budget"</span>, <span class="str">"Working"</span>) ?: <span class="num">0</span>
+  <span class="kw">def</span> alloc = pool * (rev / total)
+  writes << [e.getName(), <span class="str">"IT_Allocated"</span>, <span class="str">"Jan"</span>, <span class="str">"FY25"</span>, <span class="str">"Budget"</span>, <span class="str">"Working"</span>, alloc]
+}
+batchWriteCells(writes)`,
+    output:`[INFO] Committed 12 cell writes in 1 round-trip`,
+    errors:[
+      {code:"SILENT_EMPTY",cause:"Writes succeed but cells remain blank",fix:"Blocks don't exist at target intersections. Groovy cannot create blocks — run DATACOPY or @CREATEBLOCK BEFORE batchWriteCells."},
+      {code:"NULL_GRID",cause:"Rule is not a Data Form rule",fix:"batchWriteCells requires operation.grid. For standalone rules use buildCalcScript() instead."},
+      {code:"WRONG_DIM_ORDER",cause:"Members in wrong dimension sequence",fix:"Member order in each inner list must match your form's dimension POV order exactly."}
+    ],
+    release:"setDataCellValues() available since 20.06. CRITICAL: Groovy cannot create Essbase blocks. If target intersections are new (new year, new scenario), run a DATACOPY or @CREATEBLOCK calc script first or writes silently fail."
+  }
+  ,
+  {
+    id:"safeGetCell",name:"safeGetCell()",cat:"data",
+    desc:"Null-safe cell read returning 0.0 for #MISSING, null, or non-existent blocks. The Elvis operator pattern made reusable — every production allocation needs this on every getCell() call. Skipping it causes NullPointerException on arithmetic.",
+    since:"20.06",applies:["Planning","FCCS"],
+    params:[
+      {n:"defaultVal",req:false,d:"Double — return if cell is null or #MISSING (default: 0.0)"},
+      {n:"allowZero",req:false,d:"Boolean — if false, treats 0 as missing (default: true)"},
+      {n:"members",req:true,d:"Varargs — dimension members in POV order"}
+    ],
+    returns:"Double — cell value, or defaultVal if null/missing/non-existent.",
+    code:`<span class="kw">def</span> <span class="fn-c">safeGetCell</span>(Double defaultVal = <span class="num">0.0d</span>, Boolean allowZero = <span class="kw">true</span>, Object... members) {
+  <span class="kw">def</span> raw = getCell(*members)
+  <span class="kw">if</span> (raw == <span class="kw">null</span>)                   <span class="kw">return</span> defaultVal
+  <span class="kw">if</span> (raw.toString() == <span class="str">"#MISSING"</span>)  <span class="kw">return</span> defaultVal
+  <span class="kw">if</span> (raw.toString() == <span class="str">"NaN"</span>)       <span class="kw">return</span> defaultVal
+  <span class="kw">def</span> val = raw <span class="kw">as</span> Double
+  <span class="kw">if</span> (!allowZero && val == <span class="num">0.0d</span>)    <span class="kw">return</span> defaultVal
+  <span class="kw">return</span> val
+}
+
+<span class="cmt">// Standard allocation — all three null guards in one call</span>
+<span class="kw">def</span> rev   = <span class="fn-c">safeGetCell</span>(<span class="num">0.0d</span>, <span class="kw">true</span>,  entity, <span class="str">"Revenue"</span>, <span class="str">"Jan"</span>, <span class="str">"FY25"</span>, <span class="str">"Budget"</span>, <span class="str">"Working"</span>)
+<span class="kw">def</span> total = <span class="fn-c">safeGetCell</span>(<span class="num">1.0d</span>, <span class="kw">false</span>, <span class="str">"Total"</span>,  <span class="str">"Revenue"</span>, <span class="str">"Jan"</span>, <span class="str">"FY25"</span>, <span class="str">"Budget"</span>, <span class="str">"Working"</span>)
+<span class="cmt">// defaultVal=1.0 + allowZero=false: zero denominator becomes 1.0, no division-by-zero</span>
+
+<span class="cmt">// Why it matters — without safeGetCell this throws NPE when block is missing:</span>
+<span class="cmt">// def bad = getCell(entity, "Revenue", ...) * 1.05   // NPE</span>
+<span class="cmt">// def ok  = safeGetCell(0.0d, true, entity, "Revenue", ...) * 1.05   // safe</span>`,
+    output:`// Returns Double — no output. NPE eliminated at the source.`,
+    errors:[
+      {code:"NPE on result",cause:"Arithmetic on safeGetCell() result still fails",fix:"Ensure the result variable is typed: def rev = safeGetCell(...) as Double — explicit cast prevents Groovy unboxing edge cases."},
+      {code:"Division by zero",cause:"Denominator defaulted to 0 using safeGetCell(0.0d,...)",fix:"Always use safeGetCell(1.0d, false, ...) for denominators — allowZero=false prevents a valid zero from becoming a divisor."}
+    ],
+    release:"getCell() returns null since 20.06. The minimal Elvis pattern is ?: 0 — safeGetCell adds NaN, #MISSING string, and zero-denominator guards as a reusable function. EPM Groovy 3.x enforces stricter null handling — explicit typing required."
+  }
+  ,
+  {
+    id:"getRestApiClient",name:"getRestApiClient()",cat:"rest",
+    desc:"Returns an EPM REST client pre-authenticated with the current user's session — no named connection, no manual token. The correct way to make REST calls from form rules (beforeSave, afterSave, onLoad) from EPM 25.11+. NOT available in standalone business rules.",
+    since:"25.11",applies:["Planning","FCCS"],
+    params:[
+      {n:"(none)",req:false,d:"No parameters — client is scoped to the active user's session automatically"}
+    ],
+    returns:"HttpClient — authenticated EPM REST client. Throws if called outside a form rule context.",
+    code:`<span class="cmt">// FORM RULE ONLY — beforeSave / afterSave / onLoad</span>
+<span class="cmt">// EPM 25.11+. NOT available in standalone business rules.</span>
+
+<span class="kw">def</span> <span class="fn-c">callPlanningRestFromForm</span>(String path, Map payload = <span class="kw">null</span>) {
+  <span class="kw">def</span> client  = operation.getRestApiClient()   <span class="cmt">// session-scoped, user-authenticated</span>
+  <span class="kw">def</span> appName = operation.application.name
+  <span class="kw">def</span> url     = <span class="str">"/HyperionPlanning/rest/v3/applications/\${appName}\${path}"</span>
+  <span class="kw">def</span> resp    = payload ? client.post(url, payload) : client.get(url)
+  <span class="kw">if</span> (resp.status >= <span class="num">400</span>)
+    <span class="kw">throw new</span> Exception(<span class="str">"REST call failed: HTTP \${resp.status}"</span>)
+  <span class="kw">return</span> <span class="kw">new</span> groovy.json.JsonSlurper().parseText(resp.body)
+}
+
+<span class="cmt">// Example: lock a planning unit after the planner saves a Budget form (afterSave)</span>
+<span class="kw">def</span> pov    = operation.grid.pov
+<span class="kw">def</span> entity = pov.getMemberName(<span class="str">"Entity"</span>)
+<span class="kw">def</span> year   = pov.getMemberName(<span class="str">"Year"</span>)
+<span class="fn-c">callPlanningRestFromForm</span>(<span class="str">"/planningunits/lock"</span>, [
+  scenario: <span class="str">"Budget"</span>, version: <span class="str">"Working"</span>,
+  entity: entity, year: year
+])
+println(<span class="str">"[INFO] Locked \${entity}/Budget/Working/\${year}"</span>)
+
+<span class="cmt">// For standalone rules — use getConnection() instead:</span>
+<span class="cmt">// operation.application.getConnection("LocalConnection").post(url, payload)</span>`,
+    output:`[INFO] Locked E001/Budget/Working/FY25`,
+    errors:[
+      {code:"UnsupportedOperationException",cause:"Called from a standalone business rule",fix:"getRestApiClient() is form-rule-only. For standalone rules use operation.application.getConnection('LocalConnection')."},
+      {code:"Method not found on EPM < 25.11",cause:"Running on earlier release",fix:"getRestApiClient() was introduced in 25.11. Use getConnection() for pre-25.11 environments."},
+      {code:"Session expired mid-rule",cause:"Long-running form rule (>5 min) — session token expires",fix:"For rules longer than 5 minutes use getConnection() with a service account — session tokens can expire."}
+    ],
+    release:"Introduced EPM 25.11. Form-rule-only (beforeSave, afterSave, onLoad). Uses the active user's session — respects user-level data security. For standalone business rules, use operation.application.getConnection('LocalConnection')."
+  }
+  ,
+  {
+    id:"bulkSetSubVars",name:"bulkSetSubstitutionVariables()",cat:"variable",
+    desc:"Sets multiple substitution variables atomically. The correct close-cycle pattern for advancing CurPeriod, CurYear, and PriorPeriod together — avoids a mid-update window where some vars are advanced and others are not.",
+    since:"21.01",applies:["Planning","FCCS","TRCS"],
+    params:[
+      {n:"vars",req:true,d:"Map<String,String> — variable name to new value pairs"},
+      {n:"cubeName",req:false,d:"String — set at cube level if provided, application level if omitted"}
+    ],
+    returns:"void — throws if any variable name doesn't exist.",
+    code:`<span class="kw">def</span> <span class="fn-c">bulkSetSubstitutionVariables</span>(Map&lt;String,String&gt; vars, String cubeName = <span class="kw">null</span>) {
+  vars.each { String varName, String value ->
+    <span class="kw">if</span> (cubeName)
+      operation.application.getCube(cubeName).setSubstitutionVariableValue(varName, value)
+    <span class="kw">else</span>
+      operation.application.setSubstitutionVariableValue(varName, value)
+    println(<span class="str">"[INFO] '\${varName}' → '\${value}'"</span>)
+  }
+  println(<span class="str">"[INFO] \${vars.size()} substitution variables updated"</span>)
+}
+
+<span class="cmt">// Month-end period advance — all three vars set atomically</span>
+<span class="fn-c">bulkSetSubstitutionVariables</span>([
+  CurPeriod  : <span class="str">"Feb-25"</span>,
+  PriorPeriod: <span class="str">"Jan-25"</span>,
+  CurYear    : <span class="str">"FY25"</span>
+])
+<span class="cmt">// All forms showing &CurPeriod, &PriorPeriod, &CurYear update immediately.</span>
+<span class="cmt">// No window where CurPeriod=Feb but PriorPeriod still=Dec.</span>
+
+<span class="cmt">// Cube-level variant</span>
+<span class="fn-c">bulkSetSubstitutionVariables</span>([BudgetVersion: <span class="str">"Working"</span>], <span class="str">"OEP_FS"</span>)`,
+    output:`[INFO] 'CurPeriod' → 'Feb-25'
+[INFO] 'PriorPeriod' → 'Jan-25'
+[INFO] 'CurYear' → 'FY25'
+[INFO] 3 substitution variables updated`,
+    errors:[
+      {code:"VAR_NOT_FOUND",cause:"Variable doesn't exist in the application",fix:"Create via Application → Substitution Variables before setting from Groovy."},
+      {code:"PARTIAL_UPDATE",cause:"Error on var 3 after vars 1+2 already set",fix:"Verify all var names exist before calling — or wrap in try-catch with rollback logic."}
+    ],
+    release:"setSubstitutionVariableValue() (full name with 'Value' suffix — shorter form does not exist) available since 20.06. Bulk pattern stable from 21.01. EPM Automate equivalent: epmautomate setSubstitutionVariable."
+  }
+  ,
+  {
+    id:"createExcelWorkbook",name:"createExcelWorkbook()",cat:"utility",
+    desc:"Creates a formatted Excel workbook from Groovy data and writes it to the EPM Outbox. The 25.07 API — generates CFO morning packs, budget templates, or variance reports programmatically from a scheduled Groovy rule.",
+    since:"25.07",applies:["Planning","FCCS"],
+    params:[
+      {n:"fileName",req:true,d:"Destination filename including .xlsx extension"},
+      {n:"sheetName",req:true,d:"Name of the first worksheet tab"},
+      {n:"headers",req:true,d:"List<String> — column header labels"},
+      {n:"rows",req:true,d:"List<List> — each inner list is one data row"},
+      {n:"destination",req:false,d:"'inbox' or 'outbox' (default: 'outbox')"}
+    ],
+    returns:"String — file path in EPM Outbox. Throws on workbook or upload failure.",
+    code:`<span class="kw">def</span> <span class="fn-c">createExcelWorkbook</span>(String fileName, String sheetName, List headers, List rows, String dest = <span class="str">"outbox"</span>) {
+  <span class="cmt">// EPM 25.07+ native Groovy Excel API</span>
+  <span class="kw">def</span> wb = operation.application.createWorkbook()
+  <span class="kw">def</span> sh = wb.createSheet(sheetName)
+
+  <span class="cmt">// Header row</span>
+  <span class="kw">def</span> hrow = sh.createRow(<span class="num">0</span>)
+  headers.eachWithIndex { String h, Integer i ->
+    <span class="kw">def</span> cell = hrow.createCell(i)
+    cell.setCellValue(h)
+    cell.setCellStyle(wb.createHeaderStyle())
+  }
+
+  <span class="cmt">// Data rows</span>
+  rows.eachWithIndex { List rowData, Integer rowIdx ->
+    <span class="kw">def</span> row = sh.createRow(rowIdx + <span class="num">1</span>)
+    rowData.eachWithIndex { val, Integer colIdx ->
+      <span class="kw">def</span> cell = row.createCell(colIdx)
+      <span class="kw">if</span> (val instanceof Number) cell.setCellValue(val <span class="kw">as</span> Double)
+      <span class="kw">else</span> cell.setCellValue(val?.toString() ?: <span class="str">""</span>)
+    }
+  }
+  <span class="kw">def</span> path = <span class="str">"\${dest}/\${fileName}"</span>
+  wb.write(path)
+  println(<span class="str">"[INFO] '\${fileName}' → EPM \${dest} (\${rows.size()} rows)"</span>)
+  <span class="kw">return</span> path
+}
+
+<span class="cmt">// CFO Flash Report built from live Essbase data</span>
+<span class="kw">def</span> cube     = operation.application.getCube(<span class="str">"OEP_FS"</span>)
+<span class="kw">def</span> entities = cube.getOutline().getDimension(<span class="str">"Entity"</span>, cube)
+               .findMember(<span class="str">"Total_Entity"</span>).getLevelZeroMembers()
+<span class="kw">def</span> dataRows = entities.collect { e -> [
+  e.getName(),
+  getCell(e.getName(), <span class="str">"Revenue"</span>, <span class="str">"Jan"</span>, <span class="str">"FY25"</span>, <span class="str">"Actual"</span>,  <span class="str">"Working"</span>) ?: <span class="num">0</span>,
+  getCell(e.getName(), <span class="str">"Revenue"</span>, <span class="str">"Jan"</span>, <span class="str">"FY25"</span>, <span class="str">"Budget"</span>,  <span class="str">"Final"</span>)  ?: <span class="num">0</span>
+]}
+createExcelWorkbook(
+  <span class="str">"CFO_Flash_Jan25.xlsx"</span>, <span class="str">"Revenue vs Budget"</span>,
+  [<span class="str">"Entity"</span>, <span class="str">"Actual Rev"</span>, <span class="str">"Budget Rev"</span>], dataRows
+)`,
+    output:`[INFO] 'CFO_Flash_Jan25.xlsx' → EPM outbox (12 rows)`,
+    errors:[
+      {code:"ClassNotFoundException: createWorkbook",cause:"EPM release earlier than 25.07",fix:"Excel API introduced in 25.07. For earlier releases use exportDataToOutbox() and process downstream."},
+      {code:"QUOTA_EXCEEDED",cause:"EPM Outbox storage limit reached",fix:"Delete old files with deleteInboxFile() before creating new workbooks."},
+      {code:"INVALID_SHEET_NAME",cause:"Sheet name contains /, \\, ?, *, [, ]",fix:"Sanitize: sheetName.replaceAll('[/\\\\\\\\?*\\\\[\\\\]]', '_')"}
+    ],
+    release:"Excel workbook creation introduced EPM 25.07. Requires EPM Enterprise Cloud Service. Multiple sheets supported — call wb.createSheet() multiple times before wb.write()."
+  }
+  ,
+  {
+    id:"batchReadCells",name:"batchReadCells()",cat:"data",
+    desc:"Reads N cells across multiple dimension intersections in a SINGLE DataGridBuilder round-trip. The Hourglass Principle in code — replaces N getCell() calls in a loop with 1 grid read. For allocation rules: always batchReadCells() then batchWriteCells() — 2 round-trips total, never N×2.",
+    since:"20.06",applies:["Planning","FCCS"],
+    params:[
+      {n:"cubeName",req:true,d:"Essbase cube name"},
+      {n:"dimMembers",req:true,d:"Map<String,List<String>> — dimension to members to include in the grid"},
+      {n:"nullDefault",req:false,d:"Double — value for #MISSING cells (default: 0.0)"}
+    ],
+    returns:"List<Map> — each Map has 'value' (Double) plus one key per dimension with its member name.",
+    code:`<span class="kw">def</span> <span class="fn-c">batchReadCells</span>(String cubeName, Map&lt;String,List&gt; dimMembers, Double nullDefault = <span class="num">0.0d</span>) {
+  <span class="kw">def</span> cube    = operation.application.getCube(cubeName)
+  <span class="kw">def</span> builder = cube.dataGridDefinitionBuilder()
+  dimMembers.each { String dim, List members ->
+    members.each { String m -> builder.addPov(dim, m) }
+  }
+  <span class="kw">def</span> grid    = cube.loadGrid(builder.build(), <span class="kw">false</span>)
+  <span class="kw">def</span> results = []
+  grid?.dataCellIterator()?.each { cell ->
+    <span class="kw">def</span> val = (cell.data == <span class="kw">null</span> || cell.data.toString() == <span class="str">"#MISSING"</span>)
+              ? nullDefault : (cell.data <span class="kw">as</span> Double)
+    <span class="kw">def</span> row = [value: val]
+    dimMembers.keySet().each { String dim -> row[dim] = cell.getMemberName(dim) }
+    results << row
+  }
+  println(<span class="str">"[INFO] batchReadCells: \${results.size()} cells in 1 round-trip"</span>)
+  <span class="kw">return</span> results
+}
+
+<span class="cmt">// Revenue-proportional IT allocation — 2 total round-trips for N entities</span>
+<span class="kw">def</span> entities = operation.application.getCube(<span class="str">"OEP_FS"</span>)
+               .getOutline().getDimension(<span class="str">"Entity"</span>, operation.application.getCube(<span class="str">"OEP_FS"</span>))
+               .findMember(<span class="str">"Total_Entity"</span>).getLevelZeroMembers()
+               .collect { it.getName() }
+
+<span class="kw">def</span> cells  = <span class="fn-c">batchReadCells</span>(<span class="str">"OEP_FS"</span>, [
+  Entity: entities, Account:[<span class="str">"Revenue"</span>],
+  Period:[<span class="str">"Jan"</span>], Year:[<span class="str">"FY25"</span>], Scenario:[<span class="str">"Budget"</span>], Version:[<span class="str">"Working"</span>]
+])
+<span class="kw">def</span> total  = cells.collect { it.value }.sum() ?: <span class="num">1</span>
+<span class="kw">def</span> writes = cells.collect { Map c ->
+  [c.Entity, <span class="str">"IT_Allocated"</span>, <span class="str">"Jan"</span>, <span class="str">"FY25"</span>, <span class="str">"Budget"</span>, <span class="str">"Working"</span>,
+   <span class="num">500000</span> * (c.value / total)]
+}
+batchWriteCells(writes)   <span class="cmt">// 2 round-trips total, not N×2</span>`,
+    output:`[INFO] batchReadCells: 12 cells in 1 round-trip
+[INFO] Committed 12 cell writes in 1 round-trip`,
+    errors:[
+      {code:"EMPTY_RESULTS",cause:"No cells returned — members don't exist or blocks are missing",fix:"Validate member names before calling. Check block count in Application Statistics."},
+      {code:"GRID_TOO_LARGE",cause:"Too many members — grid exceeds EPM memory limit",fix:"Process in batches: split entity list into chunks of 50-100."},
+      {code:"getMemberName returns null",cause:"Requesting a dimension not included in dimMembers",fix:"Only dimensions in dimMembers are accessible on result cells."}
+    ],
+    release:"dataGridDefinitionBuilder() available since 20.06. This is the Hourglass Principle from the Essbase Kernel: 1 batch read + 1 batch write = 2 round-trips always, vs N×2 for loop-based getCell/setCell. A 200-entity rule drops from ~60s to <2s."
+  }
+  ,
+  {
+    id:"validateRTP",name:"validateRTP()",cat:"validation",
+    desc:"Reads a runtime prompt, validates it is present and optionally checks it against an allowed list, and throws throwVetoException with a user-readable message if invalid. The complete RTP guard pattern — place at the top of every form rule before any business logic.",
+    since:"20.06",applies:["Planning","FCCS"],
+    params:[
+      {n:"rtpName",req:true,d:"Runtime prompt name as defined in Calculation Manager"},
+      {n:"allowedValues",req:false,d:"List<String> — throws if value not in list"},
+      {n:"label",req:false,d:"String — human-readable name for the error message"}
+    ],
+    returns:"String — the validated RTP value. Throws throwVetoException if invalid — user sees the message on the form.",
+    code:`<span class="kw">def</span> <span class="fn-c">validateRTP</span>(String rtpName, List allowedValues = [], String label = <span class="kw">null</span>) {
+  <span class="kw">def</span> displayName = label ?: rtpName
+  <span class="kw">def</span> rtpMap      = operation.grid?.getRTPS()
+  <span class="kw">def</span> val         = rtpMap ? rtpMap.getAt(rtpName) : rtps?."${rtpName}"
+  <span class="kw">if</span> (!val || val.toString().trim().isEmpty())
+    <span class="fn-c">throwVetoException</span>(<span class="str">"\${displayName} is required. Please make a selection before saving."</span>)
+  <span class="kw">if</span> (allowedValues && !(val.toString() <span class="kw">in</span> allowedValues))
+    <span class="fn-c">throwVetoException</span>(<span class="str">"\${displayName} '\${val}' is not valid. Expected: \${allowedValues.join(', ')}"</span>)
+  <span class="kw">def</span> clean = val.toString().trim()
+  println(<span class="str">"[INFO] RTP '\${rtpName}' = '\${clean}'"</span>)
+  <span class="kw">return</span> clean
+}
+
+<span class="cmt">// Guard all RTPs at rule entry — before any business logic reaches them</span>
+<span class="kw">def</span> scenario = <span class="fn-c">validateRTP</span>(<span class="str">"ScenarioRTP"</span>, [<span class="str">"Budget"</span>, <span class="str">"Forecast"</span>], <span class="str">"Scenario"</span>)
+<span class="kw">def</span> year     = <span class="fn-c">validateRTP</span>(<span class="str">"YearRTP"</span>)
+<span class="kw">def</span> version  = <span class="fn-c">validateRTP</span>(<span class="str">"VersionRTP"</span>, [<span class="str">"Working"</span>, <span class="str">"Draft"</span>], <span class="str">"Version"</span>)
+
+<span class="cmt">// Only reaches here if all 3 RTPs are valid</span>
+println(<span class="str">"[INFO] Proceeding: \${scenario}/\${version}/\${year}"</span>)`,
+    output:`[INFO] RTP 'ScenarioRTP' = 'Budget'
+[INFO] RTP 'YearRTP' = 'FY25'
+[INFO] RTP 'VersionRTP' = 'Working'
+[INFO] Proceeding: Budget/Working/FY25`,
+    errors:[
+      {code:"throwVetoException fired — user sees message",cause:"Planner didn't set the RTP",fix:"Correct behaviour. The message includes allowed values. The planner fixes their selection."},
+      {code:"WRONG_CLASS",cause:"Old code using 'throw new RuleStoppedException()' or 'throw new EpmGroovyRtpException()'",fix:"Neither class exists in EPM Groovy. Use throwVetoException(message) — no 'new', no import required."},
+      {code:"null val outside form context",cause:"getRTPS() returns null in standalone rules",fix:"Function falls back to the rtps map for standalone rules. Ensure Calculation Manager exposes the prompt via the rtps object."}
+    ],
+    release:"throwVetoException() available since 20.06. getRTPS() since 20.06. Critical: throwVetoException() is a helper method, NOT a class. Never 'throw new RuleStoppedException()' or 'throw new EpmGroovyRtpException()' — neither class exists."
+  }
+  ,
+  {
+    id:"contextMatrix",name:"contextMatrix()",cat:"utility",
+    desc:"Detects and documents the active EPM Groovy execution context — form rule vs standalone business rule — and which APIs are available in each. The canonical reference for the question every EPM developer asks: 'Why does this work in one rule but not another?'",
+    since:"20.06",applies:["Planning","FCCS","TRCS","EPCM"],
+    params:[
+      {n:"required",req:false,d:"'form', 'rule', or 'any' — throws if context doesn't match (default: 'any')"}
+    ],
+    returns:"Map — {context, hasGrid, hasPOV, hasRTPS, appName}",
+    code:`<span class="cmt">/*
+ ╔══════════════════════════════════════════════════╗
+ ║  GROOVY API CONTEXT MATRIX — EPM 25.11          ║
+ ╠══════════════════╦══════════════╦════════════════╣
+ ║ API              ║  Form Rule   ║ Standalone Rule║
+ ╠══════════════════╬══════════════╬════════════════╣
+ ║ operation.grid   ║  ✓           ║  ✗ null        ║
+ ║ grid.pov         ║  ✓           ║  ✗ null        ║
+ ║ grid.getRTPS()   ║  ✓           ║  ✗ null        ║
+ ║ getRestApiClient ║  ✓ (25.11+)  ║  ✗ throws      ║
+ ║ setDataCellValues║  ✓           ║  ✗ (no grid)   ║
+ ║ operation.app    ║  ✓           ║  ✓             ║
+ ║ getCube(name)    ║  ✓           ║  ✓             ║
+ ║ executeCalcScript║  ✓           ║  ✓             ║
+ ║ getConnection()  ║  ✓           ║  ✓             ║
+ ║ throwVetoException║ ✓ user sees ║  ✓ aborts rule ║
+ ║ rtps.PromptName  ║  ✓ form RTP  ║  ✓ rule RTP    ║
+ ║ println()        ║  ✓ Job Console║ ✓ Job Console  ║
+ ╚══════════════════╩══════════════╩════════════════╝
+ NOTE: setDataCellValues requires operation.grid.
+       For standalone cell writes, use buildCalcScript().
+*/</span>
+<span class="kw">def</span> <span class="fn-c">contextMatrix</span>(String required = <span class="str">"any"</span>) {
+  <span class="kw">def</span> grid   = operation.grid
+  <span class="kw">def</span> ctx    = grid ? <span class="str">"form"</span> : <span class="str">"rule"</span>
+  <span class="kw">def</span> result = [
+    context : ctx,
+    hasGrid : grid != <span class="kw">null</span>,
+    hasPOV  : grid?.pov != <span class="kw">null</span>,
+    hasRTPS : grid?.getRTPS() != <span class="kw">null</span>,
+    appName : operation.application.name
+  ]
+  <span class="kw">if</span> (required != <span class="str">"any"</span> && ctx != required)
+    <span class="fn-c">throwVetoException</span>(<span class="str">"Rule requires '\${required}' context but ran from '\${ctx}'. Check Calculation Manager assignment."</span>)
+  println(<span class="str">"[INFO] ctx=\${ctx} | grid=\${result.hasGrid} | pov=\${result.hasPOV} | app=\${result.appName}"</span>)
+  <span class="kw">return</span> result
+}
+
+<span class="cmt">// Guard: throw if not a form rule</span>
+<span class="fn-c">contextMatrix</span>(<span class="str">"form"</span>)
+
+<span class="cmt">// Branch: handle both contexts in one rule</span>
+<span class="kw">def</span> ctx = <span class="fn-c">contextMatrix</span>()
+<span class="kw">if</span> (ctx.hasGrid) {
+  batchWriteCells(writes)                          <span class="cmt">// form context</span>
+} <span class="kw">else</span> {
+  buildCalcScript(<span class="str">"OEP_FS"</span>, [Scenario: <span class="str">"Budget"</span>], <span class="str">"CALC ALL;"</span>) <span class="cmt">// standalone fallback</span>
+}`,
+    output:`[INFO] ctx=form | grid=true | pov=true | app=VisionCorp`,
+    errors:[
+      {code:"throwVetoException on wrong context",cause:"Rule deployed as standalone but written for form context",fix:"Check rule assignment in Calculation Manager — form rules are attached to a form; standalone rules run from action menus or EPM Automate."},
+      {code:"Unexpected 'rule' context",cause:"Rule is running via EPM Automate batch, not from a form save",fix:"setDataCellValues requires form context. Wrap form-only logic in if(ctx.hasGrid) to gracefully degrade."}
+    ],
+    release:"Context detection via operation.grid null check available since 20.06. API availability matrix is accurate as of EPM 25.11. getRestApiClient() form-only restriction applies from 25.11."
+  }
+  ,
+  {
+    id:"structuredLog",name:"structuredLog()",cat:"utility",
+    desc:"Production-grade structured logger for EPM Groovy rules. Prefixes every Job Console line with timestamp and level. Splits messages exceeding the undocumented 200-char console limit. Replaces ad-hoc println() with auditable, grep-able output.",
+    since:"20.06",applies:["All EPM Cloud"],
+    params:[
+      {n:"level",req:true,d:"'INFO', 'WARN', 'ERROR', or 'DEBUG'"},
+      {n:"message",req:true,d:"Log message — auto-split if >180 chars"},
+      {n:"context",req:false,d:"Map — optional key=value pairs appended to the line"}
+    ],
+    returns:"void — outputs to EPM Job Console via println().",
+    code:`<span class="kw">def</span> <span class="fn-c">structuredLog</span>(String level, String message, Map context = [:]) {
+  <span class="kw">def</span> MAX   = <span class="num">180</span>   <span class="cmt">// Job Console limit ~200 chars</span>
+  <span class="kw">def</span> ts    = <span class="kw">new</span> java.text.SimpleDateFormat(<span class="str">"HH:mm:ss"</span>).format(<span class="kw">new</span> Date())
+  <span class="kw">def</span> ctx   = context ? <span class="str">" | "</span> + context.collect { k, v -> <span class="str">"\${k}=\${v}"</span> }.join(<span class="str">" "</span>) : <span class="str">""</span>
+  <span class="kw">def</span> line  = <span class="str">"[\${ts}][\${level.padRight(5)}] \${message}\${ctx}"</span>
+  <span class="kw">def</span> pfx   = <span class="str">"[\${ts}][\${level.padRight(5)}] "</span>
+  <span class="kw">if</span> (line.length() <= MAX) { println(line); <span class="kw">return</span> }
+  <span class="cmt">// Split at word boundary — avoid truncation mid-token</span>
+  <span class="kw">def</span> rest = message + ctx
+  <span class="kw">while</span> (rest.length() > <span class="num">0</span>) {
+    <span class="kw">def</span> chunk = rest.length() > (MAX - pfx.length())
+      ? rest[<span class="num">0</span>..(MAX - pfx.length() - <span class="num">1</span>)]
+      : rest
+    println(pfx + chunk)
+    rest = rest.length() > (MAX - pfx.length()) ? rest[(MAX - pfx.length())..-<span class="num">1</span>].trim() : <span class="str">""</span>
+  }
+}
+
+<span class="fn-c">structuredLog</span>(<span class="str">"INFO"</span>,  <span class="str">"Starting GL load"</span>, [period: <span class="str">"Jan-25"</span>, entity: <span class="str">"E001"</span>])
+<span class="fn-c">structuredLog</span>(<span class="str">"WARN"</span>,  <span class="str">"No actuals found — seeding from prior period"</span>)
+<span class="fn-c">structuredLog</span>(<span class="str">"ERROR"</span>, <span class="str">"DI job failed: \${e.message}"</span>, [jobId: jId, rule: <span class="str">"Load_GL_Actuals"</span>])`,
+    output:`[09:32:11][INFO ] Starting GL load | period=Jan-25 entity=E001
+[09:32:11][WARN ] No actuals found — seeding from prior period
+[09:32:12][ERROR] DI job failed: HTTP 503 | jobId=100245 rule=Load_GL_Actuals`,
+    errors:[
+      {code:"Date() flagged 26.01+",cause:"java.util.Date() deprecated in newer Groovy engine",fix:"Replace with: new java.text.SimpleDateFormat('HH:mm:ss').format(new Date()) stays valid in 25.11. For 26.x: use java.time.LocalTime.now().toString().substring(0,8)"},
+      {code:"Console flooding",cause:"High-frequency logging inside a 10k-iteration loop",fix:"Log only every Nth iteration. structuredLog is for rule lifecycle events — not per-cell events."},
+      {code:"OUTPUT_TRUNCATED",cause:"Single message still >180 chars after splitting",fix:"Keep message strings under 160 chars. Move context into the Map parameter — it's formatted compactly."}
+    ],
+    release:"println() routes to EPM Job Console since 20.06. The ~200-char truncation limit is UNDOCUMENTED by Oracle but consistently observed. SimpleDateFormat uses UTC timezone (Oracle Cloud pod timezone). The log pattern [LEVEL] enables Job Console filtering: search '[ERROR]' to surface failures across multi-step rule chains."
   }
 
 ];
