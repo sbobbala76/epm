@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Workshop of Precision — Academy of Profit Center · EPCM Study Tour · BrainSpring</title>
-<meta name="description" content="Custom Calculation rules are the precision instruments of EPCM. When Allocation rules can't do it, Custom Calc can. Hall 5 covers syntax, patterns, NonEmptyTuple performance, and every trap on the 1Z0-1082-25 exam.">
+<title>Oracle EPCM Hall 5: Custom Calculation Rules & NONEMPTYTUPLE | 1Z0-1082-25 | BrainSpring</title>
+<meta name="description" content="Learn EPCM Custom Calc syntax: FIX scoping, NONEMPTYTUPLE performance and correctness, PCM_Balance writes, cross-dimension references. Free study guide for Oracle 1Z0-1082-25 certification.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Pro:ital,wght@0,300;0,400;0,500;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 
@@ -1454,7 +1454,7 @@ async function sbCall(typingEl){
         model:'claude-sonnet-4-20250514',
         max_tokens:500,
         system:buildSystemPrompt(),
-        messages:sbHistory
+        messages:sbHistory.slice(-8)
       })
     });
     var data=await resp.json();
@@ -1475,6 +1475,28 @@ document.querySelectorAll('a[href^="#"]').forEach(function(a){
     if(el){e.preventDefault();el.scrollIntoView({behavior:'smooth',block:'start'});}
   });
 });
+
+/* ── Progress persistence ── */
+(function(){
+  var HALL = 5;
+  try { localStorage.setItem('epcm_h'+HALL,'1'); } catch(e){}
+  // patch campus map after it renders
+  setTimeout(function(){
+    document.querySelectorAll('.campus-building.locked').forEach(function(el){
+      var n = parseInt(el.textContent,10);
+      if(!n) return;
+      try {
+        if(localStorage.getItem('epcm_h'+n)==='1'){
+          el.classList.remove('locked');
+          el.classList.add('done');
+          var stop=el.closest('.campus-stop');
+          if(stop){ stop.classList.remove('campus-stop'); stop.classList.add('campus-stop','done-stop'); }
+        }
+      } catch(e){}
+    });
+  }, 150);
+})();
+
 </script>
 </body>
 </html>

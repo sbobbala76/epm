@@ -1,0 +1,945 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EPM Automate vs Groovy — The EPCM Automation Debate | BrainSpring</title>
+<meta name="description" content="EPM Automate CLI vs Groovy scripting for Oracle EPCM — real technical debate, side-by-side code, decision matrix, and the NovaPrism M01 close pipeline in both approaches.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;1,9..144,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0a0f1a;--ink2:#111827;--ink3:#1a2537;--ink4:#243347;
+  --paper:#f0f4f8;--paper2:#e2eaf2;
+  --lime:#b8ff57;--lime2:#94e030;--lime-dim:rgba(184,255,87,.1);--lime-border:rgba(184,255,87,.3);
+  --cyan:#00d4ff;--cyan-dim:rgba(0,212,255,.08);--cyan-border:rgba(0,212,255,.25);
+  --amber:#ffb830;--amber-dim:rgba(255,184,48,.1);--amber-border:rgba(255,184,48,.3);
+  --rose:#ff4f6e;--rose-dim:rgba(255,79,110,.08);--rose-border:rgba(255,79,110,.25);
+  --purple:#c084fc;--purple-dim:rgba(192,132,252,.08);
+  --silver:#8fa3b8;--dim:#3d5069;--border:rgba(255,255,255,.07);--border2:rgba(184,255,87,.2);
+  --mono:'IBM Plex Mono',monospace;
+  --sans:'Space Grotesk',sans-serif;
+  --serif:'Fraunces',serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;font-size:16px}
+body{font-family:var(--sans);background:var(--ink);color:var(--paper);min-height:100vh;overflow-x:hidden;line-height:1.6}
+body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:radial-gradient(ellipse 100% 60% at 20% -5%,rgba(184,255,87,.04) 0%,transparent 60%),
+             radial-gradient(ellipse 80% 50% at 80% 100%,rgba(0,212,255,.03) 0%,transparent 60%);
+}
+
+/* ── TOPBAR ── */
+#topbar{position:sticky;top:0;z-index:200;height:52px;display:flex;align-items:center;padding:0 28px;gap:16px;
+  background:rgba(10,15,26,.95);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+.tb-brand{font-family:var(--serif);font-size:17px;font-weight:700;color:var(--paper);text-decoration:none;letter-spacing:-.01em}
+.tb-brand em{color:var(--lime);font-style:normal}
+.tb-sep{color:var(--dim)}
+.tb-crumb{font-family:var(--mono);font-size:10px;color:var(--silver);letter-spacing:.06em}
+.tb-back{margin-left:auto;font-family:var(--mono);font-size:10px;color:var(--dim);text-decoration:none;
+  transition:color .15s;letter-spacing:.05em}
+.tb-back:hover{color:var(--lime)}
+
+/* ── HERO ── */
+.hero{padding:64px 0 48px;position:relative;z-index:1}
+.hero-eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--lime);margin-bottom:16px}
+.hero h1{font-family:var(--serif);font-size:clamp(2.2rem,5vw,3.6rem);font-weight:700;
+  line-height:1.08;color:var(--paper);margin-bottom:20px;letter-spacing:-.02em}
+.hero h1 em{font-style:italic;color:var(--lime)}
+.hero-lead{font-size:17px;color:var(--silver);max-width:640px;line-height:1.7;margin-bottom:32px}
+.verdict-row{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:8px}
+.verdict-pill{font-family:var(--mono);font-size:10px;letter-spacing:.07em;padding:5px 14px;border-radius:20px}
+.vp-cli{background:var(--amber-dim);border:1px solid var(--amber-border);color:var(--amber)}
+.vp-groovy{background:var(--lime-dim);border:1px solid var(--lime-border);color:var(--lime)}
+.vp-hybrid{background:var(--cyan-dim);border:1px solid var(--cyan-border);color:var(--cyan)}
+
+/* ── WRAP ── */
+.wrap{max-width:1080px;margin:0 auto;padding:0 28px;position:relative;z-index:1}
+
+/* ── TAB BAR ── */
+.tab-nav{display:flex;gap:2px;border-bottom:1px solid var(--border);margin-bottom:40px;position:sticky;top:52px;z-index:100;
+  background:var(--ink);padding-top:4px}
+.tab-nav-btn{font-family:var(--mono);font-size:11px;letter-spacing:.07em;padding:12px 20px;border:none;
+  background:none;color:var(--dim);cursor:pointer;border-bottom:2px solid transparent;
+  transition:all .15s;text-transform:uppercase}
+.tab-nav-btn:hover{color:var(--silver)}
+.tab-nav-btn.active{color:var(--lime);border-bottom-color:var(--lime)}
+.tab-panel{display:none}.tab-panel.active{display:block}
+
+/* ── DEBATE LAYOUT ── */
+.debate-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:36px}
+@media(max-width:720px){.debate-grid{grid-template-columns:1fr}}
+.debate-card{border-radius:12px;overflow:hidden;border:1px solid var(--border)}
+.debate-card.cli{border-color:rgba(255,184,48,.2)}
+.debate-card.groovy{border-color:rgba(184,255,87,.2)}
+.debate-header{padding:14px 18px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--border)}
+.debate-card.cli .debate-header{background:rgba(255,184,48,.06)}
+.debate-card.groovy .debate-header{background:rgba(184,255,87,.06)}
+.debate-badge{font-family:var(--mono);font-size:9px;letter-spacing:.1em;padding:3px 9px;border-radius:4px}
+.cli .debate-badge{background:var(--amber-dim);border:1px solid var(--amber-border);color:var(--amber)}
+.groovy .debate-badge{background:var(--lime-dim);border:1px solid var(--lime-border);color:var(--lime)}
+.debate-title{font-family:var(--sans);font-size:14px;font-weight:600;color:var(--paper)}
+.debate-body{padding:16px 18px}
+.debate-body p{font-size:13.5px;color:var(--silver);line-height:1.65;margin-bottom:10px}
+.debate-body p:last-child{margin-bottom:0}
+
+/* ── CODE BLOCKS ── */
+.code-wrap{margin:16px 0;border-radius:8px;overflow:hidden;border:1px solid var(--border)}
+.code-label{font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;
+  padding:7px 14px;background:rgba(255,255,255,.04);border-bottom:1px solid var(--border);color:var(--dim)}
+pre.code{padding:16px;font-family:var(--mono);font-size:12px;line-height:1.8;overflow-x:auto;
+  background:var(--ink2);color:#c9d5e4;margin:0;white-space:pre}
+.kw{color:var(--lime);font-weight:600}
+.fn{color:var(--cyan)}
+.str{color:var(--amber)}
+.cmt{color:var(--dim);font-style:italic}
+.num{color:var(--purple)}
+.err{color:var(--rose)}
+.op{color:var(--silver)}
+
+/* ── ROUND / VERDICT ── */
+.round{background:var(--ink2);border:1px solid var(--border);border-radius:12px;padding:20px 22px;margin-bottom:20px}
+.round-title{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);margin-bottom:12px}
+.round-header{font-family:var(--serif);font-size:18px;font-weight:700;color:var(--paper);margin-bottom:14px;letter-spacing:-.01em}
+.verdict{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:10px;letter-spacing:.07em;
+  padding:5px 12px;border-radius:6px;margin-top:10px}
+.verdict.win-cli{background:var(--amber-dim);border:1px solid var(--amber-border);color:var(--amber)}
+.verdict.win-groovy{background:var(--lime-dim);border:1px solid var(--lime-border);color:var(--lime)}
+.verdict.tie{background:var(--cyan-dim);border:1px solid var(--cyan-border);color:var(--cyan)}
+.round p{font-size:14px;color:var(--silver);line-height:1.7;margin-bottom:8px}
+.round p:last-of-type{margin-bottom:0}
+
+/* ── DECISION MATRIX ── */
+.matrix-table{width:100%;border-collapse:collapse;margin-bottom:32px}
+.matrix-table th{font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--dim);padding:10px 14px;text-align:left;border-bottom:1px solid var(--border)}
+.matrix-table td{padding:12px 14px;font-size:13.5px;color:var(--silver);border-bottom:1px solid rgba(255,255,255,.04);
+  vertical-align:top;line-height:1.55}
+.matrix-table td:first-child{color:var(--paper);font-weight:500}
+.matrix-table tr:last-child td{border-bottom:none}
+.tag{display:inline-block;font-family:var(--mono);font-size:9px;letter-spacing:.06em;padding:2px 8px;border-radius:4px;margin:1px}
+.tag-cli{background:var(--amber-dim);border:1px solid var(--amber-border);color:var(--amber)}
+.tag-groovy{background:var(--lime-dim);border:1px solid var(--lime-border);color:var(--lime)}
+.tag-both{background:var(--cyan-dim);border:1px solid var(--cyan-border);color:var(--cyan)}
+.tag-neither{background:rgba(255,255,255,.04);border:1px solid var(--border);color:var(--dim)}
+
+/* ── PIPELINE VIEW ── */
+.pipeline-toggle{display:flex;gap:0;border:1px solid var(--border);border-radius:8px;overflow:hidden;margin-bottom:20px;width:fit-content}
+.pt-btn{font-family:var(--mono);font-size:10px;letter-spacing:.07em;padding:8px 18px;border:none;
+  background:none;cursor:pointer;transition:all .15s;color:var(--dim)}
+.pt-btn.active.cli{background:rgba(255,184,48,.12);color:var(--amber)}
+.pt-btn.active.groovy{background:rgba(184,255,87,.12);color:var(--lime)}
+.pt-btn.active.hybrid{background:rgba(0,212,255,.12);color:var(--cyan)}
+.pipeline-view{display:none}.pipeline-view.active{display:block}
+
+/* ── REFERENCE GRID ── */
+.ref-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:12px;margin-bottom:40px}
+.ref-card{background:var(--ink2);border:1px solid var(--border);border-radius:10px;overflow:hidden}
+.ref-card:hover{border-color:rgba(184,255,87,.15)}
+.ref-card-head{padding:10px 14px;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--border)}
+.ref-cmd{font-family:var(--mono);font-size:12px;color:var(--lime);font-weight:600}
+.ref-type{font-family:var(--mono);font-size:8px;letter-spacing:.08em;padding:2px 7px;border-radius:3px}
+.ref-card-body{padding:10px 14px}
+.ref-card-body p{font-size:12.5px;color:var(--silver);line-height:1.55;margin-bottom:6px}
+.ref-card-body pre{font-family:var(--mono);font-size:10.5px;line-height:1.6;color:var(--cyan);
+  background:rgba(0,0,0,.3);border-radius:5px;padding:8px 10px;overflow-x:auto;margin-top:6px}
+.ref-search{width:100%;padding:10px 16px;background:var(--ink2);border:1px solid var(--border);
+  border-radius:8px;font-family:var(--mono);font-size:12px;color:var(--paper);outline:none;
+  margin-bottom:16px;transition:border-color .15s}
+.ref-search:focus{border-color:var(--lime-border)}
+.ref-search::placeholder{color:var(--dim)}
+.ref-filter{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:20px}
+.rf-btn{font-family:var(--mono);font-size:9px;letter-spacing:.08em;padding:5px 12px;border-radius:20px;
+  border:1px solid var(--border);background:none;color:var(--dim);cursor:pointer;transition:all .15s}
+.rf-btn:hover,.rf-btn.active{background:var(--lime-dim);border-color:var(--lime-border);color:var(--lime)}
+
+/* ── TRAPS ── */
+.trap-card{background:var(--rose-dim);border:1px solid var(--rose-border);border-radius:10px;
+  padding:16px 18px;margin-bottom:12px}
+.trap-title{font-family:var(--sans);font-size:13.5px;font-weight:600;color:var(--rose);margin-bottom:6px}
+.trap-body{font-size:13.5px;color:var(--silver);line-height:1.65}
+code{font-family:var(--mono);font-size:12px;background:rgba(255,255,255,.06);padding:1px 5px;border-radius:3px;color:var(--cyan)}
+
+/* ── SCORE CARD ── */
+.scorecard{display:grid;grid-template-columns:1fr auto 1fr;gap:0;background:var(--ink2);
+  border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:32px}
+.score-col{padding:20px 24px}
+.score-col.cli{border-right:1px solid var(--border)}
+.score-col.groovy{border-left:1px solid var(--border);text-align:right}
+.score-vs{display:flex;align-items:center;justify-content:center;padding:20px 12px;
+  font-family:var(--serif);font-size:28px;font-weight:700;color:var(--dim)}
+.score-name{font-family:var(--mono);font-size:9px;letter-spacing:.12em;text-transform:uppercase;margin-bottom:8px}
+.score-col.cli .score-name{color:var(--amber)}
+.score-col.groovy .score-name{color:var(--lime)}
+.score-num{font-family:var(--serif);font-size:48px;font-weight:700;line-height:1}
+.score-col.cli .score-num{color:var(--amber)}
+.score-col.groovy .score-num{color:var(--lime)}
+.score-label{font-family:var(--mono);font-size:10px;color:var(--dim);margin-top:4px;letter-spacing:.04em}
+.score-wins{font-size:13px;color:var(--silver);margin-top:8px;line-height:1.5}
+
+footer{text-align:center;padding:32px 0 40px;color:var(--dim);font-family:var(--mono);font-size:9px;
+  letter-spacing:.1em;position:relative;z-index:1;border-top:1px solid var(--border)}
+footer a{color:rgba(184,255,87,.35);text-decoration:none}
+</style>
+</head>
+<body>
+
+<div id="topbar">
+  <a href="/epcm/" class="tb-brand"><em>Brain</em>Spring</a>
+  <span class="tb-sep">›</span>
+  <span class="tb-crumb">EPCM · AUTOMATION</span>
+  <a href="/epcm/" class="tb-back">← Back to Tour</a>
+</div>
+
+<div class="wrap">
+  <div class="hero">
+    <div class="hero-eyebrow">Oracle EPCM · Automation Deep Dive</div>
+    <h1>EPM Automate <em>vs</em> Groovy<br>The Real Debate</h1>
+    <p class="hero-lead">Two legitimate automation paths. Different trade-offs. Most production EPCM implementations use both — knowing when to use which separates solid implementations from fragile ones.</p>
+    <div class="verdict-row">
+      <span class="verdict-pill vp-cli">EPM AUTOMATE — CLI, scheduled, DevOps-friendly</span>
+      <span class="verdict-pill vp-groovy">GROOVY — in-product, event-driven, API-native</span>
+      <span class="verdict-pill vp-hybrid">HYBRID — Groovy calling epmautomate() inline</span>
+    </div>
+  </div>
+
+  <!-- TAB NAV -->
+  <div class="tab-nav">
+    <button class="tab-nav-btn active" onclick="switchTab('debate',this)">THE DEBATE</button>
+    <button class="tab-nav-btn" onclick="switchTab('pipeline',this)">M01 PIPELINE</button>
+    <button class="tab-nav-btn" onclick="switchTab('matrix',this)">DECISION MATRIX</button>
+    <button class="tab-nav-btn" onclick="switchTab('reference',this)">REFERENCE</button>
+    <button class="tab-nav-btn" onclick="switchTab('traps',this)">EXAM TRAPS</button>
+  </div>
+
+  <!-- ══ TAB 1: DEBATE ══ -->
+  <div id="tab-debate" class="tab-panel active">
+
+    <!-- SCORECARD -->
+    <div class="scorecard">
+      <div class="score-col cli">
+        <div class="score-name">EPM Automate</div>
+        <div class="score-num" id="score-cli">4</div>
+        <div class="score-label">rounds won</div>
+        <div class="score-wins" id="wins-cli">Bulk ops · Scheduling · LCM · Env mgmt</div>
+      </div>
+      <div class="score-vs">VS</div>
+      <div class="score-col groovy">
+        <div class="score-name">Groovy</div>
+        <div class="score-num" id="score-groovy">5</div>
+        <div class="score-label">rounds won</div>
+        <div class="score-wins" id="wins-groovy" style="text-align:right">Dynamic calc · Error handling · REST · UI triggers · In-product logic</div>
+      </div>
+    </div>
+
+    <!-- ROUND 1 -->
+    <div class="round">
+      <div class="round-title">Round 1</div>
+      <div class="round-header">Getting started — what does each require?</div>
+      <div class="debate-grid">
+        <div class="debate-card cli">
+          <div class="debate-header"><span class="debate-badge">EPM AUTOMATE</span><span class="debate-title">Install → Authenticate → Script</span></div>
+          <div class="debate-body">
+            <p>EPM Automate is a CLI tool you install on a machine outside Oracle Cloud — Windows, Linux, or a CI/CD agent. Java 17 required. You script it in Bash (Linux) or PowerShell (Windows). Authentication is via plain-text credentials or an encrypted password file (<code>encrypt</code> command). Runs on a schedule via Task Scheduler, cron, OIC, or any external orchestrator.</p>
+            <p>The command <code>epmautomate login serviceAdmin password url</code> is the mandatory first step of every script. One session per machine. Scripts run synchronously by default.</p>
+            <div class="code-wrap">
+              <div class="code-label">bash — minimal EPCM close trigger</div>
+              <pre class="code"><span class="cmt"># runs on any Linux server or CI agent</span>
+epmautomate <span class="fn">login</span> <span class="str">$USER</span> <span class="str">$PWD_FILE</span> <span class="str">$EPM_URL</span>
+epmautomate <span class="fn">calculateModel</span> <span class="str">"NovaPrism_EPCM_PROD"</span> <span class="str">"M01"</span>
+epmautomate <span class="fn">copyDataByPointOfView</span> <span class="str">"PCM_CLC"</span> <span class="str">"PCM_REP"</span> \
+  <span class="str">"Actual#Working#Q1#FY2025"</span>
+epmautomate <span class="fn">logout</span></pre>
+            </div>
+          </div>
+        </div>
+        <div class="debate-card groovy">
+          <div class="debate-header"><span class="debate-badge">GROOVY</span><span class="debate-title">In-product · No install required</span></div>
+          <div class="debate-body">
+            <p>Groovy business rules live inside EPCM's Calculation Manager. No external tool, no server, no credentials file. You write the script in a browser, save it, and assign it to a menu item, a form action, or a Task Manager job. Runs as the authenticated user — no separate auth setup.</p>
+            <p>The Groovy EPM API gives you access to cube data, member hierarchies, forms, and REST connections through a Java-based object model. <code>operation.application</code> is your entry point to everything in the application.</p>
+            <div class="code-wrap">
+              <div class="code-label">groovy — trigger M01 calculation via REST API</div>
+              <pre class="code"><span class="cmt">/*RTPS: {Period} {Year}*/</span>
+<span class="kw">def</span> period = rtps.<span class="fn">Period</span>.value
+<span class="kw">def</span> year   = rtps.<span class="fn">Year</span>.value
+
+<span class="cmt">// Call EPCM REST API — no external tool needed</span>
+<span class="kw">def</span> conn = operation.application.<span class="fn">getConnection</span>(<span class="str">"Local"</span>)
+<span class="kw">def</span> body = <span class="fn">json</span>([
+  jobType: <span class="str">"CalculateModel"</span>,
+  jobName: <span class="str">"M01"</span>,
+  parameters: [Period: period, Year: year]
+])
+<span class="kw">def</span> resp = conn.<span class="fn">post</span>(
+  <span class="str">'/HyperionPlanning/rest/v3/applications/NovaPrism_EPCM_PROD/jobs'</span>
+).<span class="fn">header</span>(<span class="str">"Content-Type"</span>,<span class="str">"application/json"</span>).<span class="fn">body</span>(body).<span class="fn">asString</span>()
+
+<span class="kw">if</span> (resp.status != <span class="num">200</span>) <span class="fn">throwCalcException</span>(<span class="str">"M01 failed: "</span> + resp.body)
+</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="verdict tie">TIE — different deployment models, neither is simpler for all scenarios</div>
+    </div>
+
+    <!-- ROUND 2 -->
+    <div class="round">
+      <div class="round-title">Round 2</div>
+      <div class="round-header">Error handling — what happens when it breaks at 2am?</div>
+      <div class="debate-grid">
+        <div class="debate-card cli">
+          <div class="debate-header"><span class="debate-badge">EPM AUTOMATE</span><span class="debate-title">Exit codes + external monitoring</span></div>
+          <div class="debate-body">
+            <p>EPM Automate returns exit code 0 on success, non-zero on failure. You catch this in Bash/PowerShell with <code>$?</code> or <code>$LASTEXITCODE</code>. Error detail goes to the EPM Automate log file and the EPM Cloud job console. You handle retry logic, alerting, and escalation in your external script.</p>
+            <p>Problem: the error is outside Oracle Cloud. If your monitoring system is down, the failure is silent. Log parsing is required to distinguish "job submitted but failed" from "could not connect."</p>
+            <div class="code-wrap">
+              <div class="code-label">bash — error handling pattern</div>
+              <pre class="code">epmautomate <span class="fn">calculateModel</span> <span class="str">"NovaPrism_EPCM_PROD"</span> <span class="str">"M01"</span>
+<span class="kw">if</span> [ <span class="str">$?</span> -ne <span class="num">0</span> ]; <span class="kw">then</span>
+  <span class="fn">echo</span> <span class="str">"M01 FAILED — alerting Finance Controller"</span>
+  <span class="fn">mail</span> -s <span class="str">"EPCM Close FAILED"</span> fc@novaprism.com
+  epmautomate <span class="fn">logout</span>
+  <span class="fn">exit</span> <span class="num">1</span>
+<span class="kw">fi</span></pre>
+            </div>
+          </div>
+        </div>
+        <div class="debate-card groovy">
+          <div class="debate-header"><span class="debate-badge">GROOVY</span><span class="debate-title">try/catch + throwCalcException + in-product alerts</span></div>
+          <div class="debate-body">
+            <p>Groovy gives you full Java exception handling. Wrap any operation in try/catch, inspect the response body, throw a <code>CalcException</code> with a meaningful message that surfaces directly in the EPM Cloud job console and Task Manager alert system. No external monitoring required.</p>
+            <p>You can also write validation results back to a control member in the cube — Rule Balancing can then monitor that member and surface the error in the Finance Controller's dashboard before they even check email.</p>
+            <div class="code-wrap">
+              <div class="code-label">groovy — rich error handling with cube write-back</div>
+              <pre class="code"><span class="kw">try</span> {
+  <span class="kw">def</span> resp = conn.<span class="fn">post</span>(calcUrl).<span class="fn">body</span>(body).<span class="fn">asString</span>()
+  <span class="kw">def</span> job  = <span class="fn">parseJson</span>(resp.body)
+
+  <span class="cmt">// poll until complete</span>
+  <span class="kw">while</span> (job.status == <span class="str">"PROCESSING"</span>) {
+    <span class="fn">sleep</span>(<span class="num">5000</span>)
+    job = <span class="fn">parseJson</span>(conn.<span class="fn">get</span>(statusUrl + job.jobId).<span class="fn">asString</span>().body)
+  }
+
+  <span class="kw">if</span> (job.status != <span class="str">"SUCCESS"</span>) {
+    <span class="cmt">// write flag to cube for Rule Balancing visibility</span>
+    operation.grid.<span class="fn">dataCellIterator</span>(<span class="str">"CALC_STATUS_FLAG"</span>).each {
+      it.data = <span class="num">-1</span>  <span class="cmt">// non-zero = Rule Balancing will flag it</span>
+    }
+    <span class="fn">throwCalcException</span>(<span class="str">"M01 failed: "</span> + job.errorMessage)
+  }
+
+} <span class="kw">catch</span> (Exception e) {
+  <span class="fn">throwCalcException</span>(<span class="str">"Groovy error: "</span> + e.message)
+}</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="verdict win-groovy">GROOVY WINS — richer error handling, in-product visibility, no external monitoring dependency</div>
+    </div>
+
+    <!-- ROUND 3 -->
+    <div class="round">
+      <div class="round-title">Round 3</div>
+      <div class="round-header">Dynamic targeting — can it calculate only what changed?</div>
+      <div class="debate-grid">
+        <div class="debate-card cli">
+          <div class="debate-header"><span class="debate-badge">EPM AUTOMATE</span><span class="debate-title">All-or-nothing model execution</span></div>
+          <div class="debate-body">
+            <p><code>calculateModel</code> runs the entire model — all 5 rule sets, all 18 rules, against the full POV. You cannot scope it to "only the entities where data changed this period." Every EPM Automate run is a full model run. For NovaPrism's M01, that's fine — $134M needs to be fully reallocated anyway. But for intra-month corrections or what-if scenarios, running the full model for a 3-cell change is expensive.</p>
+          </div>
+        </div>
+        <div class="debate-card groovy">
+          <div class="debate-header"><span class="debate-badge">GROOVY</span><span class="debate-title">Form-aware, POV-aware, diff-aware</span></div>
+          <div class="debate-body">
+            <p>Groovy can read exactly which cells the user just modified in a form, dynamically generate a FIX statement scoped only to those entities and periods, and run a targeted Custom Calc against those intersections only. This is Groovy's original killer feature — and why Oracle built it.</p>
+            <p>For NovaPrism's M04 (Actual/WhatIf), a single headcount change in IS should trigger only the Finance and HR pool re-allocations, not IT (ticket-count driver is unchanged). Groovy can encode that logic. EPM Automate cannot.</p>
+            <div class="code-wrap">
+              <div class="code-label">groovy — targeted recalc from form changes</div>
+              <pre class="code"><span class="cmt">// read which entities were modified in the current form session</span>
+<span class="kw">def</span> changedEntities = operation.grid.<span class="fn">dataCellIterator</span>()
+  .<span class="fn">findAll</span> { it.changed }
+  .<span class="fn">collect</span> { it.<span class="fn">getMemberName</span>(<span class="str">"Entity"</span>) }
+  .<span class="fn">unique</span>()
+
+<span class="kw">if</span> (changedEntities.<span class="fn">isEmpty</span>()) <span class="kw">return</span>
+
+<span class="cmt">// generate targeted calc script — only affected entities</span>
+<span class="kw">def</span> fixClause = changedEntities.<span class="fn">collect</span> { <span class="str">"\"${it}\""</span> }.<span class="fn">join</span>(<span class="str">","</span>)
+<span class="kw">def</span> script = <span class="str">"""
+FIX(${fixClause}, "PCM_Input", "Actual", "Working", "Q1")
+  /* recalc Finance+HR pools only */
+  "Finance_Pool_Staged" = ...;
+  "HR_Pool_Staged" = ...;
+ENDFIX
+"""</span>
+operation.application.<span class="fn">getEssbaseServerConnection</span>().<span class="fn">calculate</span>(script)
+</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="verdict win-groovy">GROOVY WINS — dynamic targeting is architecturally impossible with EPM Automate</div>
+    </div>
+
+    <!-- ROUND 4 -->
+    <div class="round">
+      <div class="round-title">Round 4</div>
+      <div class="round-header">Bulk operations — metadata, users, snapshots</div>
+      <div class="debate-grid">
+        <div class="debate-card cli">
+          <div class="debate-header"><span class="debate-badge">EPM AUTOMATE</span><span class="debate-title">Built for bulk admin</span></div>
+          <div class="debate-body">
+            <p>EPM Automate has 40+ commands purpose-built for bulk operations: <code>addUsers</code>, <code>importMetadata</code>, <code>exportSnapshot</code>, <code>cloneEnvironment</code>, <code>assignRole</code>. These are administrative operations that live outside the calculation layer. Running them from Groovy is technically possible but pointless — you'd call <code>epmAutomate()</code> from inside Groovy just to replicate what the CLI does natively.</p>
+            <p>For NovaPrism's quarterly dimension refresh (adding 5 new engagement codes to the Customer dimension), EPM Automate is the right tool: upload CSV → <code>importMetadata</code> → <code>refreshCube</code>. No Groovy needed.</p>
+          </div>
+        </div>
+        <div class="debate-card groovy">
+          <div class="debate-header"><span class="debate-badge">GROOVY</span><span class="debate-title">Can call epmautomate() but shouldn't for this</span></div>
+          <div class="debate-body">
+            <p>Groovy's <code>epmAutomate()</code> method lets you call EPM Automate commands inline from a business rule. This is the hybrid approach — Groovy as the orchestrator, EPM Automate as the executor. It's useful for sequencing: Groovy validates data, then calls <code>epmAutomate("exportSnapshot", [name:"pre-close-backup"])</code> before kicking off the calculation. But for pure admin tasks, this adds Groovy complexity for no gain.</p>
+            <div class="code-wrap">
+              <div class="code-label">groovy — calling epmautomate() inline (hybrid)</div>
+              <pre class="code"><span class="cmt">// Groovy validates, then calls EPM Automate inline</span>
+<span class="kw">def</span> poolTotal = operation.grid.<span class="fn">getDataCell</span>(
+  <span class="str">"IT_Pool_Staged"</span>, <span class="str">"ES"</span>, <span class="str">"PCM_Input"</span>
+).data
+
+<span class="kw">if</span> (Math.<span class="fn">abs</span>(poolTotal - <span class="num">52.0</span>) > <span class="num">0.1</span>) {
+  <span class="fn">throwCalcException</span>(<span class="str">"IT pool validation failed: ${poolTotal}"</span>)
+}
+
+<span class="cmt">// snapshot before calculation — epmautomate called inline</span>
+<span class="fn">epmAutomate</span>(<span class="str">"exportSnapshot"</span>, [name: <span class="str">"pre-M01-Q1-FY25"</span>])
+
+<span class="cmt">// now trigger the model via REST</span>
+<span class="cmt">// ... (REST call as shown in Round 1)</span>
+</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="verdict win-cli">EPM AUTOMATE WINS — native, idiomatic, no Groovy overhead needed for bulk admin</div>
+    </div>
+
+    <!-- ROUND 5 -->
+    <div class="round">
+      <div class="round-title">Round 5</div>
+      <div class="round-header">EPCM's critical limitation — Pipeline job types</div>
+      <div class="debate-grid">
+        <div class="debate-card cli">
+          <div class="debate-header"><span class="debate-badge">EPM AUTOMATE</span><span class="debate-title">Runs outside Pipeline — no job-type restriction</span></div>
+          <div class="debate-body">
+            <p>EPM Automate runs completely outside the EPCM Pipeline framework. It doesn't need Pipeline job type support — it calls the environment directly. <code>calculateModel</code> works. Full stop. No workaround needed.</p>
+            <p>This is why most EPCM production close pipelines are EPM Automate shell scripts rather than native Pipeline jobs: the Pipeline framework cannot call <code>calculateModel</code> directly (it only supports Calculation Manager business rules), so EPM Automate is the practical choice for scheduled close automation.</p>
+          </div>
+        </div>
+        <div class="debate-card groovy">
+          <div class="debate-header"><span class="debate-badge">GROOVY</span><span class="debate-title">The workaround for Pipeline's native rule limitation</span></div>
+          <div class="debate-body">
+            <p>EPCM Pipelines can only call <strong>Calculation Manager business rules</strong> — not native EPCM rule sets directly. This is the documented limitation. The standard workaround: create a Groovy business rule in Calculation Manager that calls the EPCM REST API to trigger <code>calculateModel</code>. The Pipeline calls the Groovy rule; the Groovy rule calls the model. One extra hop, but it keeps everything inside the Pipeline orchestration framework.</p>
+            <p>When the Finance Controller wants a one-click Pipeline on the EPCM home page that runs load → calculate → copy → aggregate, the Groovy wrapper is the only way to include the calculation step natively.</p>
+            <div class="code-wrap">
+              <div class="code-label">groovy — Calculation Manager wrapper for Pipeline (the workaround)</div>
+              <pre class="code"><span class="cmt">/*RTPS: {ModelName} {Scenario} {Year} {Period}*/</span>
+<span class="cmt">// This rule is called by the Pipeline job step</span>
+<span class="cmt">// It in turn calls the EPCM REST API to run the model</span>
+<span class="kw">def</span> app  = <span class="str">"NovaPrism_EPCM_PROD"</span>
+<span class="kw">def</span> model = rtps.ModelName.value  <span class="cmt">// runtime prompt = "M01"</span>
+<span class="kw">def</span> conn  = operation.application.<span class="fn">getConnection</span>(<span class="str">"Local"</span>)
+<span class="kw">def</span> url   = <span class="str">"/HyperionPlanning/rest/v3/applications/${app}/jobs"</span>
+<span class="kw">def</span> resp  = conn.<span class="fn">post</span>(url)
+  .<span class="fn">header</span>(<span class="str">"Content-Type"</span>, <span class="str">"application/json"</span>)
+  .<span class="fn">body</span>(<span class="fn">json</span>([jobType:<span class="str">"CalculateModel"</span>, jobName:model,
+               parameters:[awaitCompletion:<span class="num">true</span>]]))
+  .<span class="fn">asString</span>()
+
+<span class="kw">if</span> (resp.status != <span class="num">200</span>) <span class="fn">throwCalcException</span>(resp.body)
+</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="verdict win-groovy">GROOVY WINS — the only way to trigger native EPCM model calculation inside a Pipeline</div>
+    </div>
+
+    <!-- ROUND 6 -->
+    <div class="round">
+      <div class="round-title">Round 6</div>
+      <div class="round-header">Version control, CI/CD, and DevOps integration</div>
+      <div class="debate-grid">
+        <div class="debate-card cli">
+          <div class="debate-header"><span class="debate-badge">EPM AUTOMATE</span><span class="debate-title">Native CI/CD citizen — plain text scripts</span></div>
+          <div class="debate-body">
+            <p>EPM Automate scripts are plain Bash or PowerShell files — they live in Git, they get code-reviewed, they run in GitHub Actions or Azure DevOps pipelines, they have change history. This is standard DevOps. For organisations with mature release management, EPM Automate scripts integrate with zero friction.</p>
+            <p><code>cloneEnvironment</code> and <code>importSnapshot</code> enable promote-from-test-to-prod workflows that are scriptable, repeatable, and auditable without touching a browser.</p>
+          </div>
+        </div>
+        <div class="debate-card groovy">
+          <div class="debate-header"><span class="debate-badge">GROOVY</span><span class="debate-title">In-product — export/import for version control</span></div>
+          <div class="debate-body">
+            <p>Groovy rules live inside the EPM application. They can be exported as part of a Migration snapshot and imported into test/prod. But there's no native Git integration — you'd export the Calculation Manager rule to a text file, commit that, and import on the target. More friction than committing a <code>.sh</code> file.</p>
+            <p>That said, Groovy rules are promoted through the same LCM migration path as all other EPCM artifacts — so for teams using EPM Automate's <code>importSnapshot</code> for their release process, Groovy rules come along automatically.</p>
+          </div>
+        </div>
+      </div>
+      <div class="verdict win-cli">EPM AUTOMATE WINS — native DevOps / Git citizen, zero-friction CI/CD</div>
+    </div>
+
+    <!-- ROUND 7 -->
+    <div class="round">
+      <div class="round-title">Round 7</div>
+      <div class="round-header">User-triggered vs scheduled — who controls the trigger?</div>
+      <div class="debate-grid">
+        <div class="debate-card cli">
+          <div class="debate-header"><span class="debate-badge">EPM AUTOMATE</span><span class="debate-title">Scheduled only — no UI event awareness</span></div>
+          <div class="debate-body">
+            <p>EPM Automate runs on a schedule or when manually invoked. It has no awareness of what users are doing in the EPCM UI. If NovaPrism's Finance Controller submits new headcount drivers in a Smart View form, EPM Automate cannot detect that event and trigger a recalculation. You schedule the calculation for midnight. The Controller's change sits unprocessed until then.</p>
+          </div>
+        </div>
+        <div class="debate-card groovy">
+          <div class="debate-header"><span class="debate-badge">GROOVY</span><span class="debate-title">Event-driven — responds to form saves, menus, data loads</span></div>
+          <div class="debate-body">
+            <p>A Groovy rule assigned to a form's "After Save" event fires the moment a user submits data. For NovaPrism, a Groovy rule on the headcount driver form can immediately validate the submission, update staging members, and trigger a targeted recalculation — all before the Finance Controller closes the tab. No schedule. No midnight batch window. No stale data.</p>
+            <p>This is the user-experience argument for Groovy: the model responds in seconds to data changes, rather than the user waiting until the next scheduled run.</p>
+          </div>
+        </div>
+      </div>
+      <div class="verdict win-groovy">GROOVY WINS — the only approach that can respond to in-application events in real time</div>
+    </div>
+
+    <!-- ROUND 8 — THE REAL ANSWER -->
+    <div class="round" style="border-color:var(--cyan-border);background:var(--cyan-dim)">
+      <div class="round-title" style="color:var(--cyan)">Round 8 — The Real Answer</div>
+      <div class="round-header">What every senior EPCM practitioner actually does</div>
+      <p>The debate is a false binary. Every serious EPCM implementation uses all three approaches, layered:</p>
+      <div class="code-wrap" style="margin-top:16px">
+        <div class="code-label">the production architecture — all three layers</div>
+        <pre class="code"><span class="cmt">LAYER 1 — EPM AUTOMATE (external scheduler, nightly/monthly close)</span>
+<span class="cmt">  → calculateModel, copyDataByPointOfView, exportSnapshot</span>
+<span class="cmt">  → Runs on schedule. DevOps-managed. Git-controlled. No browser needed.</span>
+
+<span class="cmt">LAYER 2 — GROOVY WRAPPERS (Pipeline-callable business rules)</span>
+<span class="cmt">  → Groovy rule in Calc Manager wraps REST API calls to calculateModel</span>
+<span class="cmt">  → Makes model calculation available as a Pipeline job step</span>
+<span class="cmt">  → Adds pre-calculation validation (pool total check, driver sanity)</span>
+
+<span class="cmt">LAYER 3 — GROOVY EVENT HANDLERS (user-driven, form-level)</span>
+<span class="cmt">  → After-save on driver forms: validate + targeted recalc</span>
+<span class="cmt">  → Dynamic FIX statements scoped to changed entities only</span>
+<span class="cmt">  → Write results back to control members for Rule Balancing visibility</span>
+
+<span class="cmt">NOVAPRISM PRODUCTION ARCHITECTURE:</span>
+<span class="fn">Night of Day 1</span>: EPM Automate → calculateModel M01 (full alloc)
+<span class="fn">Day 2-4</span>:        Groovy form handler → targeted recalc on driver updates
+<span class="fn">Day 4 CFO review</span>: Pipeline (Groovy wrapper) → recalc + copy + aggregate
+<span class="fn">Day 5 lock</span>:       EPM Automate → exportSnapshot (pre-lock backup)</pre>
+      </div>
+      <div class="verdict tie" style="margin-top:12px">CORRECT ANSWER — both, layered by use case. The exam tests that you know the limitation of each.</div>
+    </div>
+
+  </div><!-- /debate -->
+
+  <!-- ══ TAB 2: PIPELINE ══ -->
+  <div id="tab-pipeline" class="tab-panel">
+    <h2 style="font-family:var(--serif);font-size:24px;margin-bottom:8px;letter-spacing:-.01em">NovaPrism M01 Close Pipeline — Three Implementations</h2>
+    <p style="color:var(--silver);font-size:15px;margin-bottom:28px;line-height:1.7">The same 10-step close pipeline, written three ways. Each has different trade-offs for scheduling, error handling, and in-product integration.</p>
+
+    <div class="pipeline-toggle">
+      <button class="pt-btn active cli" id="pt-cli" onclick="switchPipeline('cli')">EPM AUTOMATE (CLI)</button>
+      <button class="pt-btn" id="pt-groovy" onclick="switchPipeline('groovy')">GROOVY (IN-PRODUCT)</button>
+      <button class="pt-btn" id="pt-hybrid" onclick="switchPipeline('hybrid')">HYBRID</button>
+    </div>
+
+    <div id="pv-cli" class="pipeline-view active">
+      <div class="code-wrap">
+        <div class="code-label">bash — NovaPrism M01 close · EPM Automate implementation</div>
+        <pre class="code"><span class="cmt">#!/bin/bash
+# NovaPrism M01 Monthly Close — EPM Automate
+# Runs nightly on Day 1 of close via cron / Azure DevOps</span>
+
+<span class="kw">set</span> -e  <span class="cmt"># exit on any error</span>
+PERIOD=<span class="str">"Q1"</span>; YEAR=<span class="str">"FY2025"</span>
+
+<span class="cmt"># 1. Authenticate</span>
+epmautomate <span class="fn">login</span> <span class="str">"$EPM_USER"</span> <span class="str">"$EPM_PWD_FILE"</span> <span class="str">"$EPM_URL"</span>
+
+<span class="cmt"># 2. Validate pool totals via export before calc</span>
+epmautomate <span class="fn">exportData</span> <span class="str">"PreCalc_Validation_Export"</span>
+epmautomate <span class="fn">downloadFile</span> <span class="str">"PreCalc_Validation_Export.zip"</span> <span class="str">"./validation/"</span>
+<span class="cmt"># ... external script validates CSV contents ...</span>
+
+<span class="cmt"># 3. Snapshot before calculation</span>
+epmautomate <span class="fn">exportSnapshot</span> <span class="str">"NovaPrism_PreClose_${PERIOD}_${YEAR}"</span>
+
+<span class="cmt"># 4. Calculate M01 — all 5 rule sets, 18 rules</span>
+epmautomate <span class="fn">calculateModel</span> <span class="str">"NovaPrism_EPCM_PROD"</span> <span class="str">"M01"</span>
+<span class="kw">if</span> [ <span class="str">$?</span> -ne <span class="num">0</span> ]; <span class="kw">then</span>
+  mail -s <span class="str">"EPCM M01 FAILED"</span> fc@novaprism.com; exit <span class="num">1</span>
+<span class="kw">fi</span>
+
+<span class="cmt"># 5. Copy PCM_CLC → PCM_REP (publish results)</span>
+epmautomate <span class="fn">copyDataByPointOfView</span> <span class="str">"PCM_CLC"</span> <span class="str">"PCM_REP"</span> \
+  <span class="str">"Actual#Working#${PERIOD}#${YEAR}"</span>
+
+<span class="cmt"># 6. Aggregate PCM_REP for Smart View query performance</span>
+epmautomate <span class="fn">executeAggregationProcess</span> <span class="str">"PCM_REP"</span>
+
+<span class="cmt"># 7. Export calc statistics before auto-purge</span>
+epmautomate <span class="fn">exportData</span> <span class="str">"CalcStats_${PERIOD}_${YEAR}"</span>
+epmautomate <span class="fn">downloadFile</span> <span class="str">"CalcStats_${PERIOD}_${YEAR}.zip"</span> <span class="str">"./archive/"</span>
+
+<span class="cmt"># 8. Verify pool balances (Rule Balancing export)</span>
+epmautomate <span class="fn">exportData</span> <span class="str">"RuleBalancing_Export_${PERIOD}"</span>
+
+<span class="cmt"># 9. Clean up inbox</span>
+epmautomate <span class="fn">deleteFile</span> <span class="str">"CalcStats_${PERIOD}_${YEAR}.zip"</span>
+
+<span class="cmt"># 10. Disconnect</span>
+epmautomate <span class="fn">logout</span>
+echo <span class="str">"M01 close complete — ${PERIOD} ${YEAR}"</span></pre>
+      </div>
+      <div style="background:var(--amber-dim);border:1px solid var(--amber-border);border-radius:8px;padding:14px 18px;margin-top:16px">
+        <div style="font-family:var(--mono);font-size:10px;color:var(--amber);letter-spacing:.08em;margin-bottom:6px">TRADE-OFFS — EPM AUTOMATE</div>
+        <p style="font-size:13.5px;color:var(--silver);line-height:1.65">✅ Git-versionable · ✅ DevOps-schedulable · ✅ Zero Oracle install footprint needed in pipeline · ✅ calculateModel works natively · ❌ No in-app visibility without monitoring · ❌ Validation is external · ❌ Cannot scope to changed cells only</p>
+      </div>
+    </div>
+
+    <div id="pv-groovy" class="pipeline-view">
+      <div class="code-wrap">
+        <div class="code-label">groovy — NovaPrism M01 close · in-product Calculation Manager rule</div>
+        <pre class="code"><span class="cmt">/*RTPS: {Period} {Year}*/</span>
+<span class="cmt">// NovaPrism M01 Monthly Close — Groovy implementation
+// Assigned to Task Manager job; callable from Pipeline via job step</span>
+
+<span class="kw">def</span> period = rtps.Period.value
+<span class="kw">def</span> year   = rtps.Year.value
+<span class="kw">def</span> app    = <span class="str">"NovaPrism_EPCM_PROD"</span>
+<span class="kw">def</span> conn   = operation.application.<span class="fn">getConnection</span>(<span class="str">"Local"</span>)
+<span class="kw">def</span> base   = <span class="str">"/HyperionPlanning/rest/v3/applications/${app}"</span>
+
+<span class="cmt">// STEP 1: Pre-calc validation — read pool total from cube</span>
+<span class="kw">def</span> itPool = operation.grid.<span class="fn">getDataCell</span>(
+  <span class="str">"IT_Pool_Staged"</span>,<span class="str">"ES"</span>,<span class="str">"PCM_Input"</span>,<span class="str">"Actual"</span>,year,period
+).data
+<span class="kw">if</span> (Math.<span class="fn">abs</span>(itPool - <span class="num">52.0</span>) > <span class="num">0.5</span>)
+  <span class="fn">throwCalcException</span>(<span class="str">"IT pool validation failed. Expected ~52M, got ${itPool}M"</span>)
+
+<span class="cmt">// STEP 2: Snapshot before calculation (calling EPM Automate inline)</span>
+<span class="fn">epmAutomate</span>(<span class="str">"exportSnapshot"</span>, [name: <span class="str">"NovaPrism_PreClose_${period}_${year}"</span>])
+
+<span class="cmt">// STEP 3: Run M01 via REST API — await completion</span>
+<span class="kw">def</span> jobResp = conn.<span class="fn">post</span>(<span class="str">"${base}/jobs"</span>)
+  .<span class="fn">header</span>(<span class="str">"Content-Type"</span>,<span class="str">"application/json"</span>)
+  .<span class="fn">body</span>(<span class="fn">json</span>([jobType:<span class="str">"CalculateModel"</span>,jobName:<span class="str">"M01"</span>,
+              parameters:[Period:period,Year:year,awaitCompletion:<span class="num">true</span>]]))
+  .<span class="fn">asString</span>()
+<span class="kw">def</span> job = <span class="fn">parseJson</span>(jobResp.body)
+<span class="kw">if</span> (job.status != <span class="str">"SUCCESS"</span>)
+  <span class="fn">throwCalcException</span>(<span class="str">"M01 failed: "</span> + job.errorMessage)
+
+<span class="cmt">// STEP 4: Copy PCM_CLC → PCM_REP via REST</span>
+<span class="kw">def</span> pov = <span class="str">"Actual#Working#${period}#${year}"</span>
+conn.<span class="fn">post</span>(<span class="str">"${base}/jobs"</span>)
+  .<span class="fn">body</span>(<span class="fn">json</span>([jobType:<span class="str">"CopyData"</span>,parameters:[
+    sourceCube:<span class="str">"PCM_CLC"</span>,targetCube:<span class="str">"PCM_REP"</span>,POV:pov,awaitCompletion:<span class="num">true</span>
+  ]])).<span class="fn">asString</span>()
+
+<span class="cmt">// STEP 5: Aggregation for query performance</span>
+conn.<span class="fn">post</span>(<span class="str">"${base}/jobs"</span>)
+  .<span class="fn">body</span>(<span class="fn">json</span>([jobType:<span class="str">"AggregateData"</span>,jobName:<span class="str">"PCM_REP"</span>,awaitCompletion:<span class="num">true</span>]))
+  .<span class="fn">asString</span>()
+
+<span class="cmt">// STEP 6: Write completion flag to cube for Rule Balancing visibility</span>
+operation.grid.<span class="fn">dataCellIterator</span>(<span class="str">"CLOSE_STATUS_FLAG"</span>).each { it.data = <span class="num">1</span> }
+
+println <span class="str">"M01 close complete — ${period} ${year}"</span></pre>
+      </div>
+      <div style="background:var(--lime-dim);border:1px solid var(--lime-border);border-radius:8px;padding:14px 18px;margin-top:16px">
+        <div style="font-family:var(--mono);font-size:10px;color:var(--lime);letter-spacing:.08em;margin-bottom:6px">TRADE-OFFS — GROOVY</div>
+        <p style="font-size:13.5px;color:var(--silver);line-height:1.65">✅ Pipeline-callable · ✅ In-product validation before calc · ✅ Cube write-back for status visibility · ✅ Runtime prompts for Period/Year · ❌ REST API polling adds complexity · ❌ No native Git (export/import via LCM) · ❌ Harder for non-Groovy team members to maintain</p>
+      </div>
+    </div>
+
+    <div id="pv-hybrid" class="pipeline-view">
+      <div class="code-wrap">
+        <div class="code-label">hybrid — NovaPrism M01 · Groovy orchestrates, EPM Automate executes bulk ops</div>
+        <pre class="code"><span class="cmt">/*RTPS: {Period} {Year}*/</span>
+<span class="cmt">// HYBRID ARCHITECTURE — best of both
+// Groovy: validation, dynamic logic, event handling, status write-back
+// EPM Automate (inline): bulk ops, snapshots, aggregation</span>
+
+<span class="kw">def</span> period = rtps.Period.value
+<span class="kw">def</span> year   = rtps.Year.value
+
+<span class="cmt">// ── GROOVY: Pre-calc validation ──────────────────────────────────</span>
+[<span class="str">"IT_Pool_Staged"</span>:<span class="num">52.0</span>, <span class="str">"Facilities_Pool_Staged"</span>:<span class="num">38.0</span>,
+ <span class="str">"Finance_Pool_Staged"</span>:<span class="num">28.0</span>,  <span class="str">"HR_Pool_Staged"</span>:<span class="num">16.0</span>].each { pool, expected ->
+  <span class="kw">def</span> actual = operation.grid.<span class="fn">getDataCell</span>(pool,<span class="str">"ES"</span>,<span class="str">"PCM_Input"</span>).data
+  <span class="kw">if</span> (Math.<span class="fn">abs</span>(actual - expected) > <span class="num">0.5</span>)
+    <span class="fn">throwCalcException</span>(<span class="str">"Pool validation failed: ${pool} = ${actual}, expected ${expected}"</span>)
+}
+
+<span class="cmt">// ── EPM AUTOMATE INLINE: snapshot before calc ─────────────────────</span>
+<span class="fn">epmAutomate</span>(<span class="str">"exportSnapshot"</span>, [name: <span class="str">"PreClose_${period}_${year}"</span>])
+
+<span class="cmt">// ── EPM AUTOMATE INLINE: run the model ───────────────────────────</span>
+<span class="cmt">// calculateModel is idiomatic here — no REST API needed</span>
+<span class="fn">epmAutomate</span>(<span class="str">"calculateModel"</span>, [appName: <span class="str">"NovaPrism_EPCM_PROD"</span>, modelName: <span class="str">"M01"</span>])
+
+<span class="cmt">// ── EPM AUTOMATE INLINE: publish + aggregate ──────────────────────</span>
+<span class="fn">epmAutomate</span>(<span class="str">"copyDataByPointOfView"</span>, [
+  sourceCube: <span class="str">"PCM_CLC"</span>, targetCube: <span class="str">"PCM_REP"</span>,
+  POV: <span class="str">"Actual#Working#${period}#${year}"</span>
+])
+<span class="fn">epmAutomate</span>(<span class="str">"executeAggregationProcess"</span>, [cubeName: <span class="str">"PCM_REP"</span>])
+
+<span class="cmt">// ── GROOVY: Write completion status to cube ───────────────────────</span>
+operation.grid.<span class="fn">dataCellIterator</span>(<span class="str">"CLOSE_STATUS_FLAG"</span>).each { it.data = <span class="num">1</span> }
+operation.grid.<span class="fn">dataCellIterator</span>(<span class="str">"CLOSE_TIMESTAMP"</span>).each {
+  it.data = System.<span class="fn">currentTimeMillis</span>() / <span class="num">1000L</span>
+}
+println <span class="str">"Hybrid close complete — ${period} ${year}"</span></pre>
+      </div>
+      <div style="background:var(--cyan-dim);border:1px solid var(--cyan-border);border-radius:8px;padding:14px 18px;margin-top:16px">
+        <div style="font-family:var(--mono);font-size:10px;color:var(--cyan);letter-spacing:.08em;margin-bottom:6px">TRADE-OFFS — HYBRID</div>
+        <p style="font-size:13.5px;color:var(--silver);line-height:1.65">✅ In-product validation · ✅ calculateModel via epmautomate() — no REST polling · ✅ Pipeline-callable · ✅ Cube write-back for status · ✅ No external server needed · ⚠️ Requires Groovy + EPM Automate knowledge on the team · ⚠️ epmAutomate() call is synchronous — blocks until complete</p>
+      </div>
+    </div>
+  </div><!-- /pipeline -->
+
+  <!-- ══ TAB 3: DECISION MATRIX ══ -->
+  <div id="tab-matrix" class="tab-panel">
+    <h2 style="font-family:var(--serif);font-size:24px;margin-bottom:8px;letter-spacing:-.01em">Decision Matrix — When to Use Which</h2>
+    <p style="color:var(--silver);font-size:15px;margin-bottom:28px;line-height:1.7">Not a preference question. A requirements question. Each scenario has a right answer.</p>
+    <table class="matrix-table">
+      <thead><tr><th>Scenario</th><th>Recommended</th><th>Reason</th></tr></thead>
+      <tbody>
+        <tr><td>Scheduled nightly close (Day 1 of month-end)</td><td><span class="tag tag-cli">EPM AUTOMATE</span></td><td>Cron-schedulable, DevOps-managed, <code>calculateModel</code> is native. No Groovy needed.</td></tr>
+        <tr><td>Trigger model calculation from a Pipeline job step</td><td><span class="tag tag-groovy">GROOVY</span></td><td>Pipeline only supports Calculation Manager rules. Groovy wrapper calling REST API is the documented workaround.</td></tr>
+        <tr><td>Finance Controller submits driver data — recalculate immediately</td><td><span class="tag tag-groovy">GROOVY</span></td><td>Form "After Save" event handler. EPM Automate has no event awareness.</td></tr>
+        <tr><td>Recalculate only the entities whose headcount changed</td><td><span class="tag tag-groovy">GROOVY</span></td><td>Dynamic FIX statement from <code>dataCellIterator().findAll{it.changed}</code>. EPM Automate runs the full model only.</td></tr>
+        <tr><td>Add 5 new Customer dimension members before close</td><td><span class="tag tag-cli">EPM AUTOMATE</span></td><td><code>importMetadata</code> + <code>refreshCube</code>. Pure admin — Groovy overhead is unnecessary.</td></tr>
+        <tr><td>Bulk provision 20 new analyst User accounts</td><td><span class="tag tag-cli">EPM AUTOMATE</span></td><td><code>addUsers</code> + <code>assignRole</code> from CSV. The only practical approach for bulk provisioning.</td></tr>
+        <tr><td>Pre-calculation validation (pool totals, driver sanity)</td><td><span class="tag tag-groovy">GROOVY</span></td><td>Reads live cube data. Can abort the pipeline with a meaningful error before wasting a full model run.</td></tr>
+        <tr><td>Environment clone (test → production promotion)</td><td><span class="tag tag-cli">EPM AUTOMATE</span></td><td><code>cloneEnvironment</code>. Purely administrative, no Groovy equivalent.</td></tr>
+        <tr><td>Snapshot before any major change</td><td><span class="tag tag-both">EITHER</span></td><td>EPM Automate: <code>exportSnapshot</code> in a Bash script. Groovy hybrid: <code>epmAutomate("exportSnapshot",...)</code> inline. Both work.</td></tr>
+        <tr><td>Write computation results back to cube cells</td><td><span class="tag tag-groovy">GROOVY</span></td><td><code>operation.grid.dataCellIterator()</code>. EPM Automate cannot write individual cell values.</td></tr>
+        <tr><td>Full close pipeline (load + calc + publish + aggregate)</td><td><span class="tag tag-both">HYBRID</span></td><td>Groovy handles validation and status write-back. EPM Automate (inline or external) handles the bulk steps.</td></tr>
+        <tr><td>Export calc statistics before auto-purge</td><td><span class="tag tag-cli">EPM AUTOMATE</span></td><td><code>exportData</code> + <code>downloadFile</code>. Groovy has no file download capability.</td></tr>
+        <tr><td>Validate data in a form before the user can submit</td><td><span class="tag tag-groovy">GROOVY</span></td><td>Groovy "Before Save" event. EPM Automate is blind to form interactions.</td></tr>
+        <tr><td>Run model calculation every 15 minutes during close window</td><td><span class="tag tag-cli">EPM AUTOMATE</span></td><td>External cron schedule. No need for Groovy unless you want in-product status visibility.</td></tr>
+      </tbody>
+    </table>
+  </div><!-- /matrix -->
+
+  <!-- ══ TAB 4: REFERENCE ══ -->
+  <div id="tab-reference" class="tab-panel">
+    <h2 style="font-family:var(--serif);font-size:24px;margin-bottom:8px;letter-spacing:-.01em">Command Reference</h2>
+    <p style="color:var(--silver);font-size:15px;margin-bottom:20px">EPM Automate commands + Groovy API equivalents — search or filter by category.</p>
+    <input type="text" class="ref-search" id="ref-search" placeholder="Search commands and API methods…" oninput="filterRef()">
+    <div class="ref-filter" id="ref-filter">
+      <button class="rf-btn active" data-cat="all" onclick="filterRefCat('all',this)">ALL</button>
+      <button class="rf-btn" data-cat="calc" onclick="filterRefCat('calc',this)">CALCULATION</button>
+      <button class="rf-btn" data-cat="data" onclick="filterRefCat('data',this)">DATA</button>
+      <button class="rf-btn" data-cat="meta" onclick="filterRefCat('meta',this)">METADATA</button>
+      <button class="rf-btn" data-cat="admin" onclick="filterRefCat('admin',this)">ADMIN</button>
+      <button class="rf-btn" data-cat="security" onclick="filterRefCat('security',this)">SECURITY</button>
+    </div>
+    <div class="ref-grid" id="ref-grid"></div>
+  </div><!-- /reference -->
+
+  <!-- ══ TAB 5: EXAM TRAPS ══ -->
+  <div id="tab-traps" class="tab-panel">
+    <h2 style="font-family:var(--serif);font-size:24px;margin-bottom:8px;letter-spacing:-.01em">Exam Traps — Automation &amp; Groovy</h2>
+    <p style="color:var(--silver);font-size:15px;margin-bottom:28px">The 1Z0-1082-25 exam tests automation knowledge through scenario questions. These are the traps.</p>
+
+    <div class="trap-card">
+      <div class="trap-title">Trap 1 — "Native EPCM rule sets can be called from a Pipeline job step directly."</div>
+      <div class="trap-body">FALSE. Pipeline only supports <strong>Calculation Manager business rules</strong> as job steps — not native EPCM rule sets. The workaround is a Groovy business rule in Calculation Manager that calls the EPCM REST API to trigger <code>calculateModel</code>. The Pipeline calls the Groovy rule; the Groovy rule calls the model.</div>
+    </div>
+    <div class="trap-card">
+      <div class="trap-title">Trap 2 — "Use copyPov to publish EPCM results from PCM_CLC to PCM_REP."</div>
+      <div class="trap-body">FALSE. <code>copyPov</code> is the Planning command. EPCM uses <code>copyDataByPointOfView</code>. Easy to confuse when candidates study both products. The Groovy equivalent calls <code>jobType: "CopyData"</code> via REST.</div>
+    </div>
+    <div class="trap-card">
+      <div class="trap-title">Trap 3 — "refreshCube must run after every data load to make new data visible."</div>
+      <div class="trap-body">FALSE. <code>refreshCube</code> is required after <em>metadata</em> changes (importing new dimension members, structure changes). Data loads do not require a cube refresh. Running it unnecessarily adds 2–5 minutes to the close pipeline for no benefit.</div>
+    </div>
+    <div class="trap-card">
+      <div class="trap-title">Trap 4 — "Groovy rules can only be used for calculation logic — not for calling external APIs."</div>
+      <div class="trap-body">FALSE. Groovy rules can call any REST API — internal EPM REST APIs (via <code>getConnection("Local")</code>) or external APIs (Google, Slack, approval systems). The <code>connection(url, user, password)</code> method enables any HTTP call. This is Groovy's most powerful feature beyond calc scripting.</div>
+    </div>
+    <div class="trap-card">
+      <div class="trap-title">Trap 5 — "EPM Automate can respond to in-application events like form saves."</div>
+      <div class="trap-body">FALSE. EPM Automate is event-blind — it runs on a schedule or when manually invoked from outside Oracle Cloud. It has no access to user interface events. Only Groovy business rules assigned to form events (Before Save, After Save) can respond to user actions in real time.</div>
+    </div>
+    <div class="trap-card">
+      <div class="trap-title">Trap 6 — "The epmAutomate() method in Groovy is asynchronous."</div>
+      <div class="trap-body">FALSE. When called from within a Groovy script, <code>epmAutomate()</code> is <em>synchronous</em> — the script waits for the EPM Automate command to complete before continuing. This is why the hybrid approach can safely call <code>epmAutomate("calculateModel",...)</code> and then immediately read the results — the model is guaranteed complete when the next line executes.</div>
+    </div>
+    <div class="trap-card">
+      <div class="trap-title">Trap 7 — "You need EPM Automate installed on a server to use it from a Groovy script."</div>
+      <div class="trap-body">FALSE. The <code>epmAutomate()</code> method in Groovy invokes EPM Automate commands without requiring a local EPM Automate installation. This is described in Oracle documentation as "Running Commands without Installing EPM Automate." The Groovy runtime handles the execution inside Oracle Cloud.</div>
+    </div>
+  </div><!-- /traps -->
+
+</div><!-- /wrap -->
+
+<footer class="wrap">
+  BRAINSPRING · ORACLE EPM CLOUD LEARNING HUB · <a href="/epcm/">epm.brainspring.ai/epcm/</a><br>
+  Source: <a href="https://docs.oracle.com/en/cloud/saas/enterprise-performance-management-common/cepma/epm_automate_command_links_epcm.html" target="_blank" rel="noopener">Oracle EPM Automate EPCM Commands</a> ·
+  <a href="https://docs.oracle.com/en/cloud/saas/enterprise-performance-management-common/groov/" target="_blank" rel="noopener">Groovy Rules API Reference</a> · Updated March 2026
+</footer>
+
+<script>
+/* ── Tabs ── */
+function switchTab(id,btn){
+  document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.remove('active')});
+  document.querySelectorAll('.tab-nav-btn').forEach(function(b){b.classList.remove('active')});
+  document.getElementById('tab-'+id).classList.add('active');
+  btn.classList.add('active');
+}
+
+/* ── Pipeline toggle ── */
+function switchPipeline(id){
+  ['cli','groovy','hybrid'].forEach(function(v){
+    document.getElementById('pv-'+v).classList.remove('active');
+    var btn=document.getElementById('pt-'+v);
+    btn.classList.remove('active');
+  });
+  document.getElementById('pv-'+id).classList.add('active');
+  var btn=document.getElementById('pt-'+id);
+  btn.classList.add('active',''+id);
+}
+
+/* ── Reference data ── */
+var REFS=[
+  {cat:'calc',name:'calculateModel',type:'EPM AUTOMATE',
+   desc:'Runs the full EPCM model calculation — all assigned rule sets in ascending sequence order.',
+   syntax:'epmautomate calculateModel "<appName>" "<modelName>"',
+   groovy:'epmAutomate("calculateModel",[appName:"...",modelName:"M01"]) — or REST: jobType:"CalculateModel"'},
+  {cat:'calc',name:'copyDataByPointOfView',type:'EPM AUTOMATE',
+   desc:'Copies a POV slice from PCM_CLC to PCM_REP (publishes results). NOT copyPov — that is Planning.',
+   syntax:'epmautomate copyDataByPointOfView "PCM_CLC" "PCM_REP" "Actual#Working#Q1#FY2025"',
+   groovy:'REST: jobType:"CopyData", parameters:{sourceCube:"PCM_CLC",targetCube:"PCM_REP",POV:"..."}'},
+  {cat:'calc',name:'clearDataByPointOfView',type:'EPM AUTOMATE',
+   desc:'Clears a POV slice in an EPCM cube. Use before reloading actuals.',
+   syntax:'epmautomate clearDataByPointOfView "PCM_CLC" "Actual#Working#Q1#FY2025"',
+   groovy:'REST: jobType:"ClearCube" — or Groovy dataCellIterator to zero specific members'},
+  {cat:'calc',name:'executeAggregationProcess',type:'EPM AUTOMATE',
+   desc:'Runs ASO aggregation on a cube. Run after copyDataByPointOfView for Smart View performance.',
+   syntax:'epmautomate executeAggregationProcess "PCM_REP"',
+   groovy:'REST: jobType:"AggregateData", jobName:"PCM_REP"'},
+  {cat:'calc',name:'operation.grid.dataCellIterator()',type:'GROOVY API',
+   desc:'Iterates over data cells in the current form/grid. Can filter by changed cells, write values, read values.',
+   syntax:'operation.grid.dataCellIterator("MemberName").each { it.data = 0 }',
+   groovy:'No EPM Automate equivalent — Groovy-only'},
+  {cat:'calc',name:'throwCalcException()',type:'GROOVY API',
+   desc:'Aborts a Groovy rule with a user-visible error message that appears in the job console and Task Manager.',
+   syntax:'throwCalcException("IT pool validation failed: ${actual}M vs expected 52M")',
+   groovy:'No EPM Automate equivalent — EPM Automate uses exit codes'},
+  {cat:'calc',name:'epmAutomate()',type:'GROOVY API',
+   desc:'Calls an EPM Automate command inline from Groovy. Synchronous. No local EPM Automate installation required.',
+   syntax:'epmAutomate("calculateModel",[appName:"NovaPrism_EPCM_PROD",modelName:"M01"])',
+   groovy:'Hybrid approach — Groovy wrapper calling EPM Automate without installing it'},
+  {cat:'data',name:'uploadFile',type:'EPM AUTOMATE',
+   desc:'Uploads a file to the EPM Cloud inbox/profitinbox. Required before importData or importMetadata.',
+   syntax:'epmautomate uploadFile "NovaPrism_Actuals_Q1.csv"',
+   groovy:'No direct Groovy equivalent for file upload from external source'},
+  {cat:'data',name:'downloadFile',type:'EPM AUTOMATE',
+   desc:'Downloads a file from EPM Cloud outbox to local machine. Use to archive calc stats or exports.',
+   syntax:'epmautomate downloadFile "CalcStats.zip" "./archive/"',
+   groovy:'No Groovy equivalent for file download to external location'},
+  {cat:'data',name:'runDataRule',type:'EPM AUTOMATE',
+   desc:'Runs a Data Integration (Data Management) rule to load actuals from ERP into EPCM.',
+   syntax:'epmautomate runDataRule "NovaPrism_GL_Load" "Q1" "Q1" "REPLACE" "STORE_DATA"',
+   groovy:'REST: POST /dataintegration/rest/v1/jobs/{jobName} — or connection.post() in Groovy'},
+  {cat:'data',name:'exportData',type:'EPM AUTOMATE',
+   desc:'Exports application data using a configured export job. Use to archive calc stats before auto-purge.',
+   syntax:'epmautomate exportData "CalcStats_Q1_Export"',
+   groovy:'REST: jobType:"ExportData", jobName:"CalcStats_Q1_Export"'},
+  {cat:'data',name:'mergeDataSlices',type:'EPM AUTOMATE',
+   desc:'Merges incremental ASO data slices into the main slice. Improves query performance over time.',
+   syntax:'epmautomate mergeDataSlices "PCM_CLC" true',
+   groovy:'REST: jobType:"MergeDataSlices" or epmAutomate() inline'},
+  {cat:'meta',name:'importMetadata',type:'EPM AUTOMATE',
+   desc:'Imports dimension metadata using a configured job. Run refreshCube after this — not after data loads.',
+   syntax:'epmautomate importMetadata "NovaPrism_Dim_Import"',
+   groovy:'Groovy metadata API: operation.application.dimension("Customer").addMember(...)'},
+  {cat:'meta',name:'exportMetadata',type:'EPM AUTOMATE',
+   desc:'Exports metadata using a configured job. Use to baseline dimension structure before changes.',
+   syntax:'epmautomate exportMetadata "NovaPrism_Dim_Export"',
+   groovy:'Groovy metadata API: read dimensions/members programmatically'},
+  {cat:'meta',name:'refreshCube',type:'EPM AUTOMATE',
+   desc:'Refreshes the application cube after metadata changes. NOT needed after data loads.',
+   syntax:'epmautomate refreshCube',
+   groovy:'REST: jobType:"RefreshCube" — or epmAutomate("refreshCube") inline after importMetadata'},
+  {cat:'admin',name:'exportSnapshot',type:'EPM AUTOMATE',
+   desc:'Creates a full application snapshot (metadata + data + config). Run before any major change.',
+   syntax:'epmautomate exportSnapshot "NovaPrism_Backup_Q1_FY25"',
+   groovy:'epmAutomate("exportSnapshot",[name:"NovaPrism_Backup_Q1_FY25"]) — hybrid pattern'},
+  {cat:'admin',name:'importSnapshot',type:'EPM AUTOMATE',
+   desc:'Restores a snapshot. Used for environment recovery and test-to-prod promotion.',
+   syntax:'epmautomate importSnapshot "NovaPrism_Backup_Q1_FY25"',
+   groovy:'No Groovy equivalent — administrative operation only'},
+  {cat:'admin',name:'cloneEnvironment',type:'EPM AUTOMATE',
+   desc:'Clones current environment to another. The standard test-to-production promotion mechanism.',
+   syntax:'epmautomate cloneEnvironment targetUrl targetUser targetPwd',
+   groovy:'No Groovy equivalent — administrative only'},
+  {cat:'admin',name:'applicationAdminMode',type:'EPM AUTOMATE',
+   desc:'Places EPCM in admin-only mode during maintenance. Blocks all non-admin access.',
+   syntax:'epmautomate applicationAdminMode true',
+   groovy:'epmAutomate("applicationAdminMode",[enable:true]) — inline during maintenance Groovy rule'},
+  {cat:'security',name:'assignRole',type:'EPM AUTOMATE',
+   desc:'Bulk-assigns a predefined or application role to users listed in a CSV file.',
+   syntax:'epmautomate assignRole "analysts.csv" "User"',
+   groovy:'No Groovy equivalent — identity domain administration only'},
+  {cat:'security',name:'addUsers',type:'EPM AUTOMATE',
+   desc:'Bulk-creates user accounts in the identity domain from a CSV file.',
+   syntax:'epmautomate addUsers "new_analysts.csv"',
+   groovy:'No Groovy equivalent'},
+  {cat:'security',name:'provisionReport',type:'EPM AUTOMATE',
+   desc:'Generates a Role Assignment Report — all users and their current roles. SOX audit control.',
+   syntax:'epmautomate provisionReport',
+   groovy:'No Groovy equivalent — run monthly for compliance'},
+];
+
+var currentRefCat='all';
+function renderRef(){
+  var search=document.getElementById('ref-search').value.toLowerCase();
+  var grid=document.getElementById('ref-grid');
+  var html='';
+  REFS.forEach(function(r){
+    var matchCat=currentRefCat==='all'||r.cat===currentRefCat;
+    var matchSearch=!search||r.name.toLowerCase().includes(search)||r.desc.toLowerCase().includes(search);
+    if(!matchCat||!matchSearch) return;
+    var typeClass=r.type==='GROOVY API'?'tag-groovy':'tag-cli';
+    html+='<div class="ref-card">';
+    html+='<div class="ref-card-head">';
+    html+='<span class="ref-cmd">'+r.name+'</span>';
+    html+='<span class="ref-type '+typeClass+'">'+r.type+'</span>';
+    html+='</div>';
+    html+='<div class="ref-card-body">';
+    html+='<p>'+r.desc+'</p>';
+    html+='<pre>'+r.syntax+'</pre>';
+    if(r.groovy) html+='<p style="font-size:11.5px;color:var(--dim);margin-top:6px;padding-top:6px;border-top:1px solid var(--border)">'+r.groovy+'</p>';
+    html+='</div></div>';
+  });
+  grid.innerHTML=html||'<p style="color:var(--dim);font-family:var(--mono);font-size:12px">No results.</p>';
+}
+function filterRef(){ renderRef(); }
+function filterRefCat(cat,btn){
+  currentRefCat=cat;
+  document.querySelectorAll('.rf-btn').forEach(function(b){b.classList.remove('active')});
+  btn.classList.add('active');
+  renderRef();
+}
+renderRef();
+</script>
+</body>
+</html>

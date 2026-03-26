@@ -616,6 +616,13 @@ body::after {
                 <div class="exam-rule"><div class="exam-rule-icon">🔄</div><div class="exam-rule-text">Navigate forward and backward freely</div></div>
                 <div class="exam-rule"><div class="exam-rule-icon">📊</div><div class="exam-rule-text">Full topic breakdown in results</div></div>
               </div>
+              <div style="margin:20px 0 4px;display:flex;align-items:center;gap:12px;justify-content:center">
+                <label style="display:flex;align-items:center;gap:10px;cursor:pointer;font-family:var(--font-mono);font-size:11px;color:var(--silver2);letter-spacing:.05em;padding:10px 16px;background:rgba(255,255,255,.03);border:1px solid var(--border2);border-radius:8px">
+                  <input type="checkbox" id="sim-mode-toggle" style="width:16px;height:16px;accent-color:var(--accent);cursor:pointer">
+                  <span>SIMULATION MODE — hide explanations until review</span>
+                </label>
+              </div>
+              <div style="font-family:var(--font-mono);font-size:10px;color:var(--dim);text-align:center;margin-bottom:16px;letter-spacing:.04em">Simulation mode mirrors real exam conditions. Use learning mode (default) to study.</div>
               <button class="exam-start-btn" onclick="startExam()">Begin Exam →</button>
             </div>
 
@@ -665,6 +672,14 @@ body::after {
                 <div id="rtb-rows"></div>
               </div>
               <button class="results-review-btn" onclick="enterReview()">Review All Questions →</button>
+              <div id="share-card" style="display:none;margin-top:20px;background:linear-gradient(135deg,var(--navy3),var(--navy2));border:1px solid var(--accent-border);border-radius:12px;padding:20px 22px">
+                <div style="font-family:var(--font-display);font-size:13px;letter-spacing:.08em;color:var(--accent);margin-bottom:12px">SHARE YOUR RESULT</div>
+                <div id="share-text-display" style="font-family:var(--font-mono);font-size:12px;color:var(--silver2);line-height:1.7;background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:8px;padding:12px 14px;margin-bottom:12px;white-space:pre-wrap"></div>
+                <div style="display:flex;gap:10px;flex-wrap:wrap">
+                  <button onclick="copyShareText()" style="flex:1;min-width:120px;padding:10px;background:var(--accent-dim);border:1px solid var(--accent-border);border-radius:8px;font-family:var(--font-mono);font-size:11px;color:var(--accent);cursor:pointer;letter-spacing:.06em;transition:all .2s" id="copy-btn">📋 Copy to Clipboard</button>
+                  <a id="share-linkedin" href="#" target="_blank" rel="noopener" style="flex:1;min-width:120px;padding:10px;background:rgba(56,189,248,.08);border:1px solid rgba(56,189,248,.2);border-radius:8px;font-family:var(--font-mono);font-size:11px;color:var(--sky);cursor:pointer;letter-spacing:.06em;text-decoration:none;text-align:center;display:block;transition:all .2s">🔗 Share on LinkedIn</a>
+                </div>
+              </div>
               <button class="results-restart-btn" onclick="restartExam()">Start New Attempt</button>
             </div>
 
@@ -976,6 +991,7 @@ var examState={
   secondsRemaining:90*60,
   started:false,
   finished:false,
+  simMode:false,
 };
 
 function startExam(){
@@ -986,6 +1002,7 @@ function startExam(){
   examState.secondsRemaining=90*60;
   examState.started=true;
   examState.finished=false;
+  examState.simMode=document.getElementById('sim-mode-toggle').checked;
 
   document.getElementById('exam-start').style.display='none';
   document.getElementById('exam-running').style.display='block';
@@ -1066,7 +1083,7 @@ function renderQuestion(){
   document.getElementById('exam-options').innerHTML=optsHtml;
 
   var expEl=document.getElementById('exam-explanation');
-  if(examState.answers[idx]!==undefined){
+  if(examState.answers[idx]!==undefined && !examState.simMode){
     expEl.innerHTML='<strong>'+(examState.answers[idx]===q.correct?'✓ Correct':'✗ Incorrect')+'</strong> — '+q.explain;
     expEl.classList.add('show');
   } else {
@@ -1159,6 +1176,49 @@ function renderResults(){
     rowsHtml+='</div>';
   });
   document.getElementById('rtb-rows').innerHTML=rowsHtml;
+
+  // Simulation mode note
+  var simNoteId='sim-mode-results-note';
+  var existing=document.getElementById(simNoteId);
+  if(existing) existing.remove();
+  if(examState.simMode){
+    var note=document.createElement('div');
+    note.id=simNoteId;
+    note.style.cssText='margin-top:16px;padding:12px 16px;background:rgba(163,230,53,.06);border:1px solid rgba(163,230,53,.2);border-radius:8px;font-family:var(--font-mono);font-size:11px;color:rgba(163,230,53,.8);letter-spacing:.04em;text-align:center';
+    note.textContent='SIMULATION MODE — Explanations hidden during exam. Click "Review All Questions" to see every explanation.';
+    document.getElementById('exam-results').insertBefore(note, document.getElementById('exam-results').querySelector('button'));
+  }
+
+  // Share card
+  var shareCard=document.getElementById('share-card');
+  var shareMsg;
+  if(pass){
+    shareMsg='I scored '+correct+'/'+total+' ('+pct+'%) on the BrainSpring Oracle EPCM mock exam (1Z0-1082-25).\n\nFree exam prep — 9 halls, 50 questions, AI guide:\nepm.brainspring.ai/epcm/';
+  } else {
+    shareMsg='Scored '+correct+'/'+total+' ('+pct+'%) on the BrainSpring Oracle EPCM practice exam.\nNeed '+34+' to pass — back to the books!\n\nFree exam prep: epm.brainspring.ai/epcm/';
+  }
+  document.getElementById('share-text-display').textContent=shareMsg;
+  var liText=encodeURIComponent(shareMsg);
+  document.getElementById('share-linkedin').href='https://www.linkedin.com/sharing/share-offsite/?url='+encodeURIComponent('https://epm.brainspring.ai/epcm/')+'&summary='+liText;
+  shareCard.style.display='block';
+}
+
+function copyShareText(){
+  var text=document.getElementById('share-text-display').textContent;
+  var btn=document.getElementById('copy-btn');
+  if(navigator.clipboard){
+    navigator.clipboard.writeText(text).then(function(){
+      btn.textContent='✅ Copied!';
+      setTimeout(function(){btn.textContent='📋 Copy to Clipboard';},2000);
+    });
+  } else {
+    var ta=document.createElement('textarea');
+    ta.value=text; ta.style.position='fixed'; ta.style.opacity='0';
+    document.body.appendChild(ta); ta.select();
+    try{document.execCommand('copy'); btn.textContent='✅ Copied!';}catch(e){}
+    document.body.removeChild(ta);
+    setTimeout(function(){btn.textContent='📋 Copy to Clipboard';},2000);
+  }
 }
 
 function enterReview(){
@@ -1302,7 +1362,7 @@ async function sbCall(typingEl){
         model:'claude-sonnet-4-20250514',
         max_tokens:500,
         system:buildSystemPrompt(),
-        messages:sbHistory
+        messages:sbHistory.slice(-8)
       })
     });
     var data=await resp.json();

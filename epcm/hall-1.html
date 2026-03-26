@@ -1223,6 +1223,66 @@ body::after {
             </div>
           </div>
 
+          <div class="exam-box">
+            <div class="exam-box-header">⚠️ Exam trap — the most common wrong answer in this section</div>
+            <div class="exam-box-body">
+              <strong>"EPCM Standard uses BSO (Block Storage) for its calculation engine."</strong><br><br>
+              This is wrong. EPCM Standard uses <strong>ASO (Aggregate Storage)</strong>. This matters because ASO and BSO have fundamentally different dimension design rules, calculation methods, and performance characteristics. Every dimension design decision in Hall 2 flows from the fact that it is ASO. The exam will test this. Do not confuse EPCM with Planning (which uses BSO for its calculation cube).
+            </div>
+          </div>
+
+          <div class="exam-box">
+            <div class="exam-box-header">🔐 Security model — two layers, one exam topic</div>
+            <div class="exam-box-body">
+              The 1Z0-1082-25 exam asks multi-select security questions: <em>"You want to limit the slices of data users can view. Which two mechanisms can you use?"</em> The answer is always a combination from the two-layer model below.<br><br>
+
+              <strong>Layer 1 — Predefined roles (identity domain level)</strong><br>
+              Four roles, hierarchical — each inherits everything below it:<br><br>
+              <table style="width:100%;border-collapse:collapse;font-size:13px;margin-bottom:12px">
+                <thead><tr style="border-bottom:1px solid rgba(200,212,224,.15)">
+                  <th style="text-align:left;padding:6px 8px;color:var(--white);font-weight:500">Role</th>
+                  <th style="text-align:left;padding:6px 8px;color:var(--white);font-weight:500">What they can do in EPCM</th>
+                  <th style="text-align:left;padding:6px 8px;color:var(--white);font-weight:500">NovaPrism</th>
+                </tr></thead>
+                <tbody>
+                  <tr style="border-bottom:1px solid rgba(200,212,224,.06)">
+                    <td style="padding:6px 8px;color:var(--accent)"><strong>Service Administrator</strong></td>
+                    <td style="padding:6px 8px;color:var(--silver2)">Full access. Create/administer application, manage security, create data grants, assign roles. Only role that can create an EPCM application.</td>
+                    <td style="padding:6px 8px;color:var(--silver2)">Implementation lead</td>
+                  </tr>
+                  <tr style="border-bottom:1px solid rgba(200,212,224,.06)">
+                    <td style="padding:6px 8px;color:var(--silver)"><strong>Power User</strong></td>
+                    <td style="padding:6px 8px;color:var(--silver2)">Create POVs, load data, create/run rules and calculations, define profit curves, run Rule Balancing. Access to all data — cannot be restricted by data grants.</td>
+                    <td style="padding:6px 8px;color:var(--silver2)">Finance Controller</td>
+                  </tr>
+                  <tr style="border-bottom:1px solid rgba(200,212,224,.06)">
+                    <td style="padding:6px 8px;color:var(--silver2)"><strong>User</strong></td>
+                    <td style="padding:6px 8px;color:var(--silver2)">Analyse data, create reports and dashboards, view profit curves. Can be restricted to specific data slices via data grants.</td>
+                    <td style="padding:6px 8px;color:var(--silver2)">Division analysts</td>
+                  </tr>
+                  <tr>
+                    <td style="padding:6px 8px;color:var(--dim)"><strong>Viewer</strong></td>
+                    <td style="padding:6px 8px;color:var(--silver2)">View reports and dashboards only — read-only. Can be restricted via data grants.</td>
+                    <td style="padding:6px 8px;color:var(--silver2)">CFO, board recipients</td>
+                  </tr>
+                </tbody>
+              </table>
+
+              <strong>Layer 2 — Data grants (application level)</strong><br>
+              Data grants restrict <strong>which data slices</strong> a User or Viewer can see — e.g. only their own division's costs, only their region, only specific engagements. Created by Service Administrators and assigned to native groups (not to predefined groups directly).<br><br>
+
+              Key rules the exam tests:<br>
+              • <strong>Service Administrators and Power Users always see all data</strong> — data grants cannot restrict them<br>
+              • Data grants apply only to <strong>User and Viewer</strong> roles<br>
+              • Assign data grants to <strong>native groups</strong>, not directly to predefined groups<br>
+              • Privileges are <strong>additive only</strong> — application roles can extend but never reduce a predefined role's access<br>
+              • Application roles (e.g. Data Integration - Create) can grant Users extra capabilities beyond their predefined role<br><br>
+
+              <strong>The exam answer to "which two mechanisms limit data access?"</strong><br>
+              → <strong>Application roles</strong> (extend functional access) + <strong>Security filters / Data grants</strong> (restrict data slices). User groups alone do not restrict data — they are a container for assigning grants efficiently.
+            </div>
+          </div>
+
           <!-- Quiz -->
           <div id="quiz-container"></div>
           <div class="quiz-score" id="quiz-score">
@@ -1622,7 +1682,7 @@ async function sbCall(typingEl){
         model:'claude-sonnet-4-20250514',
         max_tokens:500,
         system: buildSystemPrompt(),
-        messages: sbHistory
+        messages: sbHistory.slice(-8)
       })
     });
     var data = await resp.json();

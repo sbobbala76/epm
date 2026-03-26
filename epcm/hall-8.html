@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Pipeline Lab — Academy of Profit Center · EPCM Study Tour · BrainSpring</title>
-<meta name="description" content="Data Integration is how EPCM connects to the world. Hall 8 covers pipelines, actuals load, ERP writeback, REST APIs, and the integration patterns that make profitability models production-ready.">
+<title>Oracle EPCM Hall 8: Data Integration, Pipelines & ERP Writeback | 1Z0-1082-25 | BrainSpring</title>
+<meta name="description" content="Master EPCM data integration: registration types, member mapping, ERP writeback, Smart View driver submission, pipeline orchestration, and Groovy workarounds. Free Oracle 1Z0-1082-25 exam prep.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Pro:ital,wght@0,300;0,400;0,500;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 
@@ -630,7 +630,7 @@ body::after {
       <a href="hall-4.html" class="sb-hall"><div class="sb-hall-num">4</div><div class="sb-hall-info"><div class="sb-hall-name">Hall of Logic</div><div class="sb-hall-title">Rule Sets &amp; Sequences</div></div><div class="sb-status"></div></a>
       <a href="hall-5.html" class="sb-hall"><div class="sb-hall-num">5</div><div class="sb-hall-info"><div class="sb-hall-name">Workshop of Precision</div><div class="sb-hall-title">Custom Calculations</div></div><div class="sb-status"></div></a>
       <a href="hall-6.html" class="sb-hall"><div class="sb-hall-num">6</div><div class="sb-hall-info"><div class="sb-hall-name">Control Tower</div><div class="sb-hall-title">Calc Analysis Chamber</div></div><div class="sb-status"></div></a>
-      <a href="hall-7.html" class="sb-hall"><div class="sb-hall-num">7</div><div class="sb-hall-info"><div class="sb-hall-name">Profit Curve Observatory</div><div class="sb-hall-title">Rule Balancing</div></div><div class="sb-status"></div></a>
+      <a href="hall-7.html" class="sb-hall"><div class="sb-hall-num">7</div><div class="sb-hall-info"><div class="sb-hall-name">Observatory</div><div class="sb-hall-title">Rule Balancing</div></div><div class="sb-status"></div></a>
       <a href="hall-8.html" class="sb-hall current"><div class="sb-hall-num">8</div><div class="sb-hall-info"><div class="sb-hall-name">Pipeline Lab</div><div class="sb-hall-title">Data Integration Workshop</div></div><div class="sb-status current"></div></a>
       <a href="hall-9.html" class="sb-hall"><div class="sb-hall-num">9</div><div class="sb-hall-info"><div class="sb-hall-name">Examination Hall</div><div class="sb-hall-title">Graduation</div></div><div class="sb-status"></div></a>
 
@@ -1489,6 +1489,28 @@ function submitQuiz(idx){
     document.getElementById('quiz-score-msg').textContent = msg;
   }
 }
+
+/* ── Progress persistence ── */
+(function(){
+  var HALL = 8;
+  try { localStorage.setItem('epcm_h'+HALL,'1'); } catch(e){}
+  // patch campus map after it renders
+  setTimeout(function(){
+    document.querySelectorAll('.campus-building.locked').forEach(function(el){
+      var n = parseInt(el.textContent,10);
+      if(!n) return;
+      try {
+        if(localStorage.getItem('epcm_h'+n)==='1'){
+          el.classList.remove('locked');
+          el.classList.add('done');
+          var stop=el.closest('.campus-stop');
+          if(stop){ stop.classList.remove('campus-stop'); stop.classList.add('campus-stop','done-stop'); }
+        }
+      } catch(e){}
+    });
+  }, 150);
+})();
+
 </script>
 </body>
 </html>

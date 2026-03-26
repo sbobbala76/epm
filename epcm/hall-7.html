@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Observatory — Academy of Profit Center · EPCM Study Tour · BrainSpring</title>
-<meta name="description" content="Rule Balancing and Profit Curves reveal where value flows and where it vanishes. Hall 7 covers the PCM_Balance dimension, Rule Balancing reports, profit curve analysis, and the decision framework for NovaPrism's 60 engagements.">
+<title>Oracle EPCM Hall 7: Rule Balancing, Profit Curves & Reporting | 1Z0-1082-25 | BrainSpring</title>
+<meta name="description" content="Learn EPCM Rule Balancing, PCM_Balance dimension, profit curve analysis, Scatter Analysis, Financial Reporting Studio, Smart View output, and ASO extraction anomalies. Free 1Z0-1082-25 study guide.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Pro:ital,wght@0,300;0,400;0,500;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 
@@ -1989,7 +1989,7 @@ async function sbCall(typingEl){
         model:'claude-sonnet-4-20250514',
         max_tokens:500,
         system:buildSystemPrompt(),
-        messages:sbHistory
+        messages:sbHistory.slice(-8)
       })
     });
     var data=await resp.json();
@@ -2013,6 +2013,28 @@ document.querySelectorAll('a[href^="#"]').forEach(function(a){
 
 // Initialize engagement simulator
 calculateEngagement();
+
+/* ── Progress persistence ── */
+(function(){
+  var HALL = 7;
+  try { localStorage.setItem('epcm_h'+HALL,'1'); } catch(e){}
+  // patch campus map after it renders
+  setTimeout(function(){
+    document.querySelectorAll('.campus-building.locked').forEach(function(el){
+      var n = parseInt(el.textContent,10);
+      if(!n) return;
+      try {
+        if(localStorage.getItem('epcm_h'+n)==='1'){
+          el.classList.remove('locked');
+          el.classList.add('done');
+          var stop=el.closest('.campus-stop');
+          if(stop){ stop.classList.remove('campus-stop'); stop.classList.add('campus-stop','done-stop'); }
+        }
+      } catch(e){}
+    });
+  }, 150);
+})();
+
 </script>
 </body>
 </html>

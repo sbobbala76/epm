@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Models Pavilion — Academy of Profit Center · EPCM Study Tour · BrainSpring</title>
-<meta name="description" content="Four models. One POV selector. Every calculation run in EPCM requires a model — understanding what a model is and how POVs, Scenarios and Versions intersect is Hall 3's mission.">
+<title>Oracle EPCM Hall 3: POVs, Models & Copy POV | 1Z0-1082-25 Exam Prep | BrainSpring</title>
+<meta name="description" content="Understand EPCM models, POV selectors, Copy POV direction (PCM_CLC → PCM_REP), Logical vs Physical Clear, and model property locking. Free Oracle 1Z0-1082-25 exam study material.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Pro:ital,wght@0,300;0,400;0,500;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 
@@ -577,11 +577,7 @@ body::after {
       <a href="hall-1.html" class="tb-link">Foundations</a>
       <a href="hall-2.html" class="tb-link">Dimensions</a>
       <a href="hall-3.html" class="tb-link current">Models</a>
-      <a href="hall-4.html" class="tb-link">Logic</a>
-      <a href="hall-5.html" class="tb-link">Workshop</a>
-      <a href="hall-6.html" class="tb-link">Control</a>
-      <a href="hall-7.html" class="tb-link">Observatory</a>
-      <a href="hall-8.html" class="tb-link">Pipeline</a>
+      <a href="hall-4.html" class="tb-link">Hall of Logic</a>
       <a href="hall-9.html" class="tb-link">Exam Hall</a>
     </nav>
     <span class="tb-hall-badge">Hall 3 of 9 · Models Pavilion</span>
@@ -1386,7 +1382,7 @@ async function sbCall(typingEl){
         model:'claude-sonnet-4-20250514',
         max_tokens:500,
         system:buildSystemPrompt(),
-        messages:sbHistory
+        messages:sbHistory.slice(-8)
       })
     });
     var data=await resp.json();
@@ -1407,6 +1403,28 @@ document.querySelectorAll('a[href^="#"]').forEach(function(a){
     if(el){e.preventDefault();el.scrollIntoView({behavior:'smooth',block:'start'});}
   });
 });
+
+/* ── Progress persistence ── */
+(function(){
+  var HALL = 3;
+  try { localStorage.setItem('epcm_h'+HALL,'1'); } catch(e){}
+  // patch campus map after it renders
+  setTimeout(function(){
+    document.querySelectorAll('.campus-building.locked').forEach(function(el){
+      var n = parseInt(el.textContent,10);
+      if(!n) return;
+      try {
+        if(localStorage.getItem('epcm_h'+n)==='1'){
+          el.classList.remove('locked');
+          el.classList.add('done');
+          var stop=el.closest('.campus-stop');
+          if(stop){ stop.classList.remove('campus-stop'); stop.classList.add('campus-stop','done-stop'); }
+        }
+      } catch(e){}
+    });
+  }, 150);
+})();
+
 </script>
 </body>
 </html>
