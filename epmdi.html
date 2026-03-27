@@ -457,27 +457,37 @@ body{font-family:var(--fn);background:var(--bg);color:var(--text);font-size:14px
       <span class="sbn-icon">⚡</span>
       <span class="sbn-label">Scenarios</span>
     </button>
+    <button class="sbn" onclick="go(9)">
+      <span class="sbn-num">10</span>
+      <span class="sbn-icon">🗄️</span>
+      <span class="sbn-label">DI Deep Dive I</span>
+    </button>
+    <button class="sbn" onclick="go(10)">
+      <span class="sbn-num">11</span>
+      <span class="sbn-icon">🗺️</span>
+      <span class="sbn-label">DI Deep Dive II</span>
+    </button>
   </div>
 
   <div class="sb-section practice">Practice</div>
   <div class="sb-nav">
-    <button class="sbn practice-item" onclick="go(9)">
-      <span class="sbn-num">10</span>
+    <button class="sbn practice-item" onclick="go(11)">
+      <span class="sbn-num">12</span>
       <span class="sbn-icon">🃏</span>
       <span class="sbn-label">Flashcards</span>
     </button>
-    <button class="sbn practice-item" onclick="go(10)">
-      <span class="sbn-num">11</span>
+    <button class="sbn practice-item" onclick="go(12)">
+      <span class="sbn-num">13</span>
       <span class="sbn-icon">🎯</span>
       <span class="sbn-label">Quiz</span>
     </button>
-    <button class="sbn practice-item" onclick="go(11)">
-      <span class="sbn-num">12</span>
+    <button class="sbn practice-item" onclick="go(13)">
+      <span class="sbn-num">14</span>
       <span class="sbn-icon">✅</span>
       <span class="sbn-label">True / False</span>
     </button>
-    <button class="sbn practice-item" onclick="go(12)">
-      <span class="sbn-num">13</span>
+    <button class="sbn practice-item" onclick="go(14)">
+      <span class="sbn-num">15</span>
       <span class="sbn-icon">📖</span>
       <span class="sbn-label">Glossary</span>
     </button>
@@ -489,6 +499,15 @@ body{font-family:var(--fn);background:var(--bg);color:var(--text);font-size:14px
 <div class="panels">
 <!-- ══ P0 · OVERVIEW ══ -->
 <div class="panel on" id="p0"><div class="pi">
+
+  <!-- ⚠️ 25.09 ACTION REQUIRED BANNER -->
+  <div class="hb danger" style="margin-bottom:24px">
+    <span class="hb-i">🚨</span>
+    <div>
+      <strong>Action Required — 25.09 Scheduler Migration Deadline</strong><br>
+      The "Migrate Schedules to Platform Job Scheduler" utility is <strong>removed in the September 2025 (25.09) update</strong>. Any Data Management scheduled jobs not migrated before then will be permanently lost. See <button onclick="go(7)" style="background:none;border:none;color:var(--rl);text-decoration:underline;cursor:pointer;padding:0;font-size:inherit">Module 08 → Job Scheduler Migration</button> for steps. <em>Not applicable to Account Reconciliation or Profitability &amp; Cost Management.</em>
+    </div>
+  </div>
   <div class="eliot">
     <div style="flex-shrink:0"><div class="eliot-name">Eliot — your guide</div><div class="eliot-avatar">👤</div></div>
     <div class="eliot-txt">Look, I'm going to break this down for you the way I see systems — not the way Oracle's marketing team does. <strong>Data Integration</strong> is the pipe. Your EPM apps are the tank. Your ERP, your SAP, your flat files — those are the water source. The question isn't whether data moves. The question is: <strong>do you control how it moves, or does it control you?</strong> That's what this course is about.</div>
@@ -588,6 +607,48 @@ body{font-family:var(--fn);background:var(--bg);color:var(--text);font-size:14px
   </table>
 
   <div class="hb tip"><span class="hb-i">💡</span><div><strong>Launch from Groovy:</strong> Define a Connection object in Data Integration, then call the Data Integration REST API from a Groovy Business Rule using <code>operation.application.getConnection("DM").post()</code>. Pair with an Action Menu item in Planning — users click a button on a form, and the integration fires automatically.</div></div>
+
+  <div class="sl">Agent installation — step by step</div>
+  <div class="steps">
+    <div class="step"><div class="sn">1</div><div class="sb"><h4>Download from EPM Cloud console</h4><p>In Cloud EPM: <strong>Navigator → Data Integration → Actions → Agent</strong>. Download the installer for your OS (Windows or Linux). The installer is version-matched to your Cloud EPM instance — always re-download after a Cloud update if the Agent version is out of sync.</p></div></div>
+    <div class="step"><div class="sn">2</div><div class="sb"><h4>Run the installer</h4><p>Interactive or silent mode. Default install path: <code>C:\Oracle\EPMAgent</code> (Windows) or <code>/home/oracle/EPMAgent</code> (Linux). Creates three key folders: <code>bin</code> (executables), <code>appdata</code> (configs and logs), <code>epmagent.log</code> (root log file).</p></div></div>
+    <div class="step"><div class="sn">3</div><div class="sb"><h4>Encrypt credentials</h4><p>Run <code>encryptpassword.bat</code> (Windows) or <code>encryptpassword.sh</code> (Linux) from the <code>bin</code> folder. This generates an encrypted password string to use in <code>agentparams.ini</code> — never store plaintext passwords in the config file.</p></div></div>
+    <div class="step"><div class="sn">4</div><div class="sb"><h4>Configure agentparams.ini</h4><p>Edit <code>EPMAgent/appdata/agentparams.ini</code>. Set the required parameters (see table below). This is the single configuration file that controls all Agent behaviour.</p></div></div>
+    <div class="step"><div class="sn">5</div><div class="sb"><h4>Create the Cluster in Cloud EPM</h4><p>In Data Integration: <strong>Actions → Agent → Clusters → + Add</strong>. Set Cluster Name (must match <code>AGENT_NAME</code> in agentparams.ini exactly), select connection mode (Async recommended), and save. The Cluster is how Cloud EPM routes jobs to the correct Agent instance.</p></div></div>
+    <div class="step"><div class="sn">6</div><div class="sb"><h4>Start the Agent and verify</h4><p>Run <code>epmagent.bat start</code> or <code>epmagent.sh start</code>. Check <code>epmagent.log</code> for a <code>Connected to EPM Cloud</code> confirmation line. In Cloud EPM, the Cluster status should show <strong>Active</strong>.</p></div></div>
+  </div>
+
+  <div class="sl">agentparams.ini key parameters</div>
+  <table class="tbl">
+    <thead><tr><th>Parameter</th><th>Description</th><th>Example</th></tr></thead>
+    <tbody>
+      <tr><td><code>AGENT_NAME</code></td><td>Must match the Cluster Name created in Cloud EPM exactly (case-sensitive)</td><td><code>PROD_AGENT_01</code></td></tr>
+      <tr><td><code>EPM_AGENT_HOME</code></td><td>Root install directory of the Agent</td><td><code>C:\Oracle\EPMAgent</code></td></tr>
+      <tr><td><code>EPM_APP_DATA_HOME</code></td><td>Location of the appdata folder (configs, logs, scripts)</td><td><code>C:\Oracle\EPMAgent\appdata</code></td></tr>
+      <tr><td><code>CUSTOM_CLASS_PATH</code></td><td>Path to additional JDBC driver jars (Snowflake, SQL Server, etc.)</td><td><code>C:\Oracle\EPMAgent\jdbc\snowflake-jdbc-3.13.jar</code></td></tr>
+      <tr><td><code>POLL_INTERVAL</code></td><td>Seconds between Cloud EPM polls for queued jobs. Default: 5</td><td><code>5</code></td></tr>
+      <tr><td><code>MAX_PARALLEL_JOBS</code></td><td>Maximum concurrent jobs the Agent will execute simultaneously</td><td><code>3</code></td></tr>
+    </tbody>
+  </table>
+
+  <div class="sl">Synchronous vs asynchronous connection modes</div>
+  <div class="cg cg2">
+    <div class="card amber"><div class="ci">⬅️</div><h3>Synchronous (Web URL)</h3><p>Cloud EPM makes a <strong>direct inbound call</strong> to the Agent via a published URL. Faster response — no polling delay. <strong>Requires inbound network access</strong> from Oracle Cloud to your Agent server (firewall rule, reverse proxy, or DMZ). Rarely used in practice.</p></div>
+    <div class="card teal"><div class="ci">🔄</div><h3>Asynchronous (Poll — recommended)</h3><p>Agent polls Cloud EPM at intervals (default 5s) for queued jobs. <strong>No inbound ports required</strong> — the Agent initiates all connections outbound. Credentials never touch the local machine. This is the security-first architecture and the recommended mode for all production deployments.</p></div>
+  </div>
+
+  <div class="sl">Event script hooks (BefExtract / AftExtract)</div>
+  <p class="prose">The Agent supports Jython (Python) or Groovy pre/post-process scripts that execute around each integration run. Scripts receive job context variables including job type, session ID, and bind variable values.</p>
+  <table class="tbl">
+    <thead><tr><th>Event</th><th>Timing</th><th>Common use</th></tr></thead>
+    <tbody>
+      <tr><td><code>BefExtract</code></td><td>Before SQL query runs against source</td><td>Validate source DB connectivity, pre-stage data, set session variables</td></tr>
+      <tr><td><code>AftExtract</code></td><td>After SQL query, before file sent to Cloud</td><td>Transform or filter the extracted file, add audit header rows</td></tr>
+      <tr><td><code>BefExport</code></td><td>Before writeback export data sent to Agent</td><td>Prepare target table for incoming data (truncate staging table)</td></tr>
+      <tr><td><code>AftExport</code></td><td>After writeback INSERT statements complete</td><td>Send Slack/email notification, trigger downstream process, log completion</td></tr>
+    </tbody>
+  </table>
+  <div class="hb tip"><span class="hb-i">💡</span><div><strong>Slack notification example (AftExtract Groovy):</strong> Use the <code>new URL("https://hooks.slack.com/...").openConnection()</code> pattern in an AftExtract Groovy script to post a completion message to a Slack channel after every successful Agent job. The script receives <code>jobName</code>, <code>startPeriod</code>, and <code>endPeriod</code> as context variables — include them in the notification body for instant traceability.</div></div>
 </div></div>
 
 <!-- ══ P2 · ERP CONNECTION ══ -->
@@ -731,36 +792,315 @@ body{font-family:var(--fn);background:var(--bg);color:var(--text);font-size:14px
 <div class="panel" id="p5"><div class="pi">
   <div class="eliot">
     <div style="flex-shrink:0"><div class="eliot-name">Eliot</div><div class="eliot-avatar">👤</div></div>
-    <div class="eliot-txt">Writeback is the integration running in reverse. Most people treat it as an afterthought — <strong>data goes from ERP to EPM, that's the direction.</strong> But the GL Journal Interface table doesn't care about your assumptions. When you push budget data back to ERP and the pre-validation errors tell you the currency is invalid, that's not an EPM problem. <strong>That's the ERP saying your mapping doesn't match reality.</strong> Check the Correct Budget Import Errors screen in ERP first, not the EPM log.</div>
+    <div class="eliot-txt">Three writeback patterns. Three completely different destinations. <strong>Actuals go to GL_INTERFACE. Budget goes to the ERP Essbase cube. On-premises writeback goes through the Agent into a database table.</strong> The number one mistake is treating them as variations of the same thing. They're not. The ERP pre-validation for budgets runs in a different system from the ImportJournals job for actuals. Misdiagnose the destination and you'll be reading the wrong log, contacting the wrong team, and wondering why fixing the mapping didn't change anything.</div>
   </div>
-  <div class="ph"><div class="ph-tag">Module 06 · Writeback</div><h1>Writing Back <em>to Oracle Cloud ERP</em></h1><p class="ph-sub">Pushing EPM budget and actual data back into Oracle Fusion GL. Two distinct mechanisms, each with different ERP destinations.</p></div>
+  <div class="ph"><div class="ph-tag">Module 06 · Writeback</div><h1>Writing Back — <em>All Three Patterns</em></h1><p class="ph-sub">Actuals to GL Journal Interface, Budget to ERP Essbase cube, on-premises to database via EPM Agent. Each has its own architecture, prerequisites, configuration path, and failure modes.</p></div>
 
-  <div class="sl">Two writeback types — completely different destinations</div>
-  <div class="cg cg2">
-    <div class="card red"><div class="ci">📋</div><h3>Writeback — Actuals</h3><p>Extracts actual values from EPM and writes to the <strong>GL Journal Interface table (GL_INTERFACE)</strong> in ERP. ImportJournals ESS job then creates actual journal entries in Oracle GL. Balance Type = <code>Actual</code>.</p></div>
-    <div class="card amber"><div class="ci">📊</div><h3>Writeback — Budget</h3><p>Writes budget data <strong>directly to the ERP Essbase cube</strong> — not via the journal interface. ERP-side Essbase cube and budget scenarios must already exist. Source Budget Type = <code>EPM Financials module</code>.</p></div>
+  <!-- ═══ WRITEBACK TYPE COMPARISON ═══ -->
+  <div class="sl">The three writeback patterns — side by side</div>
+
+  <!-- SVG: writeback destination map -->
+  <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--rl2);padding:18px 12px;margin:0 0 18px;overflow-x:auto">
+  <svg width="100%" viewBox="0 0 820 260" xmlns="http://www.w3.org/2000/svg" style="display:block;min-width:600px">
+    <defs>
+      <marker id="wb-arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+        <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </marker>
+    </defs>
+
+    <!-- EPM SOURCE — left column -->
+    <rect x="20" y="30" width="160" height="200" rx="10" fill="rgba(12,109,181,0.08)" stroke="rgba(12,109,181,0.35)" stroke-width="1"/>
+    <text x="100" y="52" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" font-weight="600" fill="#3a9de8" letter-spacing=".06em">EPM SOURCE</text>
+    <rect x="36" y="62" width="128" height="36" rx="6" fill="rgba(12,109,181,0.15)" stroke="rgba(12,109,181,0.4)" stroke-width="0.8"/>
+    <text x="100" y="84" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" font-weight="500" fill="#b0d4f0">EPBCS / FCCS</text>
+    <rect x="36" y="108" width="128" height="36" rx="6" fill="rgba(12,109,181,0.15)" stroke="rgba(12,109,181,0.4)" stroke-width="0.8"/>
+    <text x="100" y="130" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" font-weight="500" fill="#b0d4f0">Actuals Scenario</text>
+    <rect x="36" y="154" width="128" height="36" rx="6" fill="rgba(12,109,181,0.15)" stroke="rgba(12,109,181,0.4)" stroke-width="0.8"/>
+    <text x="100" y="176" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" font-weight="500" fill="#b0d4f0">Budget / Plan</text>
+    <rect x="36" y="200" width="128" height="22" rx="5" fill="rgba(12,109,181,0.15)" stroke="rgba(12,109,181,0.4)" stroke-width="0.8"/>
+    <text x="100" y="215" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" font-weight="500" fill="#b0d4f0">Any EPM Value</text>
+
+    <!-- ARROW 1 — Actuals → GL_INTERFACE (red) -->
+    <line x1="184" y1="130" x2="290" y2="110" stroke="#e8705a" stroke-width="1.5" marker-end="url(#wb-arr)"/>
+    <text x="237" y="108" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" fill="#e8705a">Actuals</text>
+
+    <!-- ARROW 2 — Budget → ERP Essbase (amber) -->
+    <line x1="184" y1="172" x2="290" y2="172" stroke="#e0a040" stroke-width="1.5" marker-end="url(#wb-arr)"/>
+    <text x="237" y="167" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" fill="#e0a040">Budget</text>
+
+    <!-- ARROW 3 — Any value → Agent → DB (teal) -->
+    <line x1="184" y1="211" x2="290" y2="230" stroke="#38c8a8" stroke-width="1.5" marker-end="url(#wb-arr)"/>
+    <text x="237" y="236" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" fill="#38c8a8">Agent WB</text>
+
+    <!-- DATA INTEGRATION middle box -->
+    <rect x="290" y="60" width="140" height="120" rx="8" fill="rgba(199,70,52,0.08)" stroke="rgba(199,70,52,0.3)" stroke-width="1"/>
+    <text x="360" y="82" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" font-weight="600" fill="#e8705a" letter-spacing=".06em">DATA INTEGRATION</text>
+    <rect x="306" y="90" width="108" height="26" rx="5" fill="rgba(199,70,52,0.12)" stroke="rgba(199,70,52,0.3)" stroke-width="0.8"/>
+    <text x="360" y="107" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" font-weight="500" fill="#e8705a">Export step</text>
+    <rect x="306" y="124" width="108" height="26" rx="5" fill="rgba(199,70,52,0.12)" stroke="rgba(199,70,52,0.3)" stroke-width="0.8"/>
+    <text x="360" y="141" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" font-weight="500" fill="#e8705a">Flat file → UCM</text>
+    <rect x="306" y="158" width="108" height="14" rx="4" fill="rgba(199,70,52,0.08)" stroke="rgba(199,70,52,0.2)" stroke-width="0.6"/>
+    <text x="360" y="169" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" fill="#c87868">EPM → ERP</text>
+
+    <!-- ARROWS out of Data Integration -->
+    <line x1="430" y1="103" x2="510" y2="80" stroke="#e8705a" stroke-width="1.5" marker-end="url(#wb-arr)"/>
+    <line x1="430" y1="137" x2="510" y2="160" stroke="#e0a040" stroke-width="1.5" marker-end="url(#wb-arr)"/>
+
+    <!-- Agent box (teal) -->
+    <rect x="290" y="210" width="140" height="38" rx="8" fill="rgba(26,174,144,0.10)" stroke="rgba(26,174,144,0.35)" stroke-width="1"/>
+    <text x="360" y="224" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" font-weight="600" fill="#38c8a8" letter-spacing=".06em">EPM AGENT</text>
+    <text x="360" y="239" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" fill="#38c8a8">INSERT statements</text>
+    <line x1="430" y1="229" x2="510" y2="229" stroke="#38c8a8" stroke-width="1.5" marker-end="url(#wb-arr)"/>
+
+    <!-- ERP DESTINATIONS — right column -->
+    <!-- GL_INTERFACE box -->
+    <rect x="510" y="55" width="180" height="50" rx="8" fill="rgba(199,70,52,0.12)" stroke="rgba(199,70,52,0.45)" stroke-width="1.2"/>
+    <text x="600" y="74" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" font-weight="600" fill="#e8705a">GL_INTERFACE table</text>
+    <text x="600" y="92" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" fill="#c87868">→ ImportJournals ESS job → GL</text>
+
+    <!-- ERP Essbase cube box -->
+    <rect x="510" y="135" width="180" height="50" rx="8" fill="rgba(184,124,32,0.12)" stroke="rgba(184,124,32,0.45)" stroke-width="1.2"/>
+    <text x="600" y="154" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" font-weight="600" fill="#e0a040">ERP Essbase cube</text>
+    <text x="600" y="172" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" fill="#c8a050">→ Budgetary Control</text>
+
+    <!-- On-prem DB box -->
+    <rect x="510" y="210" width="180" height="38" rx="8" fill="rgba(26,174,144,0.10)" stroke="rgba(26,174,144,0.35)" stroke-width="1"/>
+    <text x="600" y="227" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" font-weight="600" fill="#38c8a8">On-premises database</text>
+    <text x="600" y="241" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" fill="#38c8a8">Any JDBC-compatible table</text>
+
+    <!-- Legend -->
+    <line x1="700" y1="62" x2="730" y2="62" stroke="#e8705a" stroke-width="1.5" marker-end="url(#wb-arr)"/>
+    <text x="734" y="66" font-family="Inter,sans-serif" font-size="10" fill="#e8705a">Actuals WB</text>
+    <line x1="700" y1="82" x2="730" y2="82" stroke="#e0a040" stroke-width="1.5" marker-end="url(#wb-arr)"/>
+    <text x="734" y="86" font-family="Inter,sans-serif" font-size="10" fill="#e0a040">Budget WB</text>
+    <line x1="700" y1="102" x2="730" y2="102" stroke="#38c8a8" stroke-width="1.5" marker-end="url(#wb-arr)"/>
+    <text x="734" y="106" font-family="Inter,sans-serif" font-size="10" fill="#38c8a8">Agent WB</text>
+  </svg>
   </div>
 
-  <div class="hb info"><span class="hb-i">ℹ️</span><div><strong>ERP prerequisites:</strong> ERP Essbase cube must exist. Budget scenarios must be configured in ERP. Integration user needs Journal Source authorisation (Actuals) or Budget write access (Budget writeback).</div></div>
-
-  <div class="sl">Configuration steps</div>
-  <div class="steps">
-    <div class="step"><div class="sn">1</div><div class="sb"><h4>Create the writeback integration — reversed direction</h4><p>Source = EPM application (e.g. <code>Vision</code>), Target = ERP Ledger (e.g. <code>InFusionLedger</code>). This reverses the normal direction — EPM is source, ERP is target.</p></div></div>
-    <div class="step"><div class="sn">2</div><div class="sb"><h4>Set writeback-specific options</h4><p>Configure: <strong>Balance Type</strong> (Actual / Budget), <strong>Journal Source</strong> (e.g. "Other"), <strong>Journal Category</strong>, <strong>Source Budget Type</strong>. Enable Purge Data File as appropriate.</p></div></div>
-    <div class="step"><div class="sn">3</div><div class="sb"><h4>Map dimensions in reverse</h4><p>Map EPM dimensions back to ERP GL segments. ERP member values must be valid — ERP pre-validation rejects rows with invalid currency, invalid account values, or missing budget names.</p></div></div>
-  </div>
-
-  <div class="sl">Process log reading guide</div>
-  <table class="tbl">
-    <thead><tr><th>Log pattern</th><th>Meaning</th><th>Action</th></tr></thead>
+  <!-- comparison table -->
+  <table class="tbl" style="margin-bottom:22px">
+    <thead><tr><th>Attribute</th><th style="color:var(--rl)">Actuals Writeback</th><th style="color:var(--al)">Budget Writeback</th><th style="color:var(--tel)">Agent Writeback</th></tr></thead>
     <tbody>
-      <tr><td><span class="ctag">status is: SUCCEEDED</span></td><td>ESS job completed, data written</td><td>Verify in ERP Scheduled Processes or GL Balances</td></tr>
-      <tr><td><span class="ctag">ORA-01400: cannot insert NULL</span></td><td>Required GL_INTERFACE column is null</td><td>Check dimension mappings — required ERP field not populated</td></tr>
-      <tr><td><span class="ctag">BEGIN: Process Log From the Ess Job</span></td><td>Error originated in ERP, not EPM</td><td>Contact ERP Support first</td></tr>
-      <tr><td><span class="ctag">Error in Validating the Budget Load</span></td><td>ERP pre-validation failed</td><td>ERP → General Accounting Dashboard → Correct Budget Import Errors</td></tr>
-      <tr><td><span class="ctag">Rows not loaded due to data errors</span></td><td>Systematic mapping problem</td><td>Download .log from ERP Scheduled Processes for row-level detail</td></tr>
+      <tr><td><strong>ERP Destination</strong></td><td>GL_INTERFACE table</td><td>ERP Essbase cube</td><td>Any on-prem DB table</td></tr>
+      <tr><td><strong>Downstream process</strong></td><td>ImportJournals ESS job → GL journal entries</td><td>Transfer Budget Balances to Essbase → Budgetary Control</td><td>None — INSERT directly to target table</td></tr>
+      <tr><td><strong>Balance Type setting</strong></td><td><code>Actual</code></td><td><code>Budget</code></td><td>N/A (export application)</td></tr>
+      <tr><td><strong>ERP prerequisite</strong></td><td>Journal Source + Category defined in ERP; integration user has journal authorisation</td><td>ERP Essbase cube created via "Create GL Balances Cube"; scenarios deployed via "Create Scenario Dimension Members"</td><td>Agent installed; target table registered as export application</td></tr>
+      <tr><td><strong>Error location</strong></td><td>ERP Scheduled Processes log (GL side)</td><td>ERP → General Accounting Dashboard → Correct Budget Import Errors</td><td>Agent process log + EPM Process Details</td></tr>
+      <tr><td><strong>Period range rule</strong></td><td>Start/end must be within a single fiscal year — cross-year = duplicate data</td><td>Map fiscal calendar if ERP and EPM calendars differ</td><td>No restriction — controlled by EPM export filter</td></tr>
     </tbody>
   </table>
+
+  <!-- ═══ ACTUALS WRITEBACK ═══ -->
+  <div class="sl">Pattern 1 — Actuals writeback to Oracle GL</div>
+
+  <!-- SVG: actuals flow -->
+  <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--rl2);padding:14px 12px;margin:0 0 14px;overflow-x:auto">
+  <svg width="100%" viewBox="0 0 820 110" xmlns="http://www.w3.org/2000/svg" style="display:block;min-width:560px">
+    <defs>
+      <marker id="a-arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+        <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </marker>
+    </defs>
+    <!-- Boxes -->
+    <rect x="10" y="32" width="120" height="44" rx="7" fill="rgba(12,109,181,0.12)" stroke="rgba(12,109,181,0.4)" stroke-width="0.8"/>
+    <text x="70" y="52" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" font-weight="600" fill="#3a9de8">EPM Application</text>
+    <text x="70" y="68" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" fill="#72728a">Actuals Scenario</text>
+
+    <rect x="170" y="32" width="120" height="44" rx="7" fill="rgba(199,70,52,0.10)" stroke="rgba(199,70,52,0.35)" stroke-width="0.8"/>
+    <text x="230" y="52" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" font-weight="600" fill="#e8705a">Data Integration</text>
+    <text x="230" y="68" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" fill="#72728a">Export → flat file → UCM</text>
+
+    <rect x="330" y="32" width="130" height="44" rx="7" fill="rgba(199,70,52,0.12)" stroke="rgba(199,70,52,0.45)" stroke-width="1"/>
+    <text x="395" y="52" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" font-weight="600" fill="#e8705a">GL_INTERFACE</text>
+    <text x="395" y="68" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" fill="#72728a">ERP staging table</text>
+
+    <rect x="500" y="32" width="130" height="44" rx="7" fill="rgba(184,124,32,0.10)" stroke="rgba(184,124,32,0.4)" stroke-width="0.8"/>
+    <text x="565" y="52" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" font-weight="600" fill="#e0a040">ImportJournals</text>
+    <text x="565" y="68" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" fill="#72728a">ESS job in ERP</text>
+
+    <rect x="670" y="32" width="120" height="44" rx="7" fill="rgba(90,122,42,0.12)" stroke="rgba(90,122,42,0.4)" stroke-width="0.8"/>
+    <text x="730" y="52" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" font-weight="600" fill="#8ab44a">Oracle GL</text>
+    <text x="730" y="68" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" fill="#72728a">Posted journals</text>
+
+    <!-- Arrows -->
+    <line x1="130" y1="54" x2="168" y2="54" stroke="#e8705a" stroke-width="1.5" marker-end="url(#a-arr)"/>
+    <line x1="290" y1="54" x2="328" y2="54" stroke="#e8705a" stroke-width="1.5" marker-end="url(#a-arr)"/>
+    <line x1="460" y1="54" x2="498" y2="54" stroke="#e8705a" stroke-width="1.5" marker-end="url(#a-arr)"/>
+    <line x1="630" y1="54" x2="668" y2="54" stroke="#8ab44a" stroke-width="1.5" marker-end="url(#a-arr)"/>
+
+    <!-- Step labels -->
+    <text x="149" y="28" text-anchor="middle" font-family="Inter,sans-serif" font-size="9" fill="#9898b0">1 · extract</text>
+    <text x="309" y="28" text-anchor="middle" font-family="Inter,sans-serif" font-size="9" fill="#9898b0">2 · populate</text>
+    <text x="479" y="28" text-anchor="middle" font-family="Inter,sans-serif" font-size="9" fill="#9898b0">3 · trigger</text>
+    <text x="649" y="28" text-anchor="middle" font-family="Inter,sans-serif" font-size="9" fill="#9898b0">4 · post</text>
+  </svg>
+  </div>
+
+  <div class="sl">Actuals writeback — ERP prerequisites checklist</div>
+  <div class="card" style="margin-bottom:16px">
+    <ul class="chk">
+      <li><span class="ck-y">✓</span><div><strong>ERP Essbase cube exists</strong> — created via "Create General Ledger Balances Cube" ESS job. This cube underlies all GL balance integration in both directions.</div></li>
+      <li><span class="ck-y">✓</span><div><strong>Journal Source defined in ERP</strong> — navigate to ERP: General Ledger → Journal → Manage Journal Sources. Must match exactly what you enter in the Data Integration Application Options. Case-sensitive.</div></li>
+      <li><span class="ck-y">✓</span><div><strong>Journal Category defined in ERP</strong> — navigate to ERP: General Ledger → Journal → Manage Journal Categories. Same exact-match requirement.</div></li>
+      <li><span class="ck-y">✓</span><div><strong>Integration user has Journal Source authorisation</strong> — in ERP security, the service account must be authorised to post journals from the specific Journal Source you defined.</div></li>
+      <li><span class="ck-n">✗</span><div><strong>Do NOT cross fiscal years in a single run</strong> — start and end periods must be within the same fiscal year. Cross-year date ranges cause duplicate data. Run as two separate integrations if spanning year-end.</div></li>
+    </ul>
+  </div>
+
+  <div class="sl">Actuals writeback — step-by-step configuration</div>
+  <div class="steps">
+    <div class="step"><div class="sn">1</div><div class="sb"><h4>Application Options — set Balance Type</h4><p>In Data Integration: <strong>Actions → Applications</strong> → click the EPM source application → <strong>Application Detail → Options tab</strong>. Set <strong>Balance Type = Actual</strong>. Enter <strong>Journal Source</strong> (must match ERP exactly). Enter <strong>Journal Category</strong> (must match ERP exactly). Click Save.</p></div></div>
+    <div class="step"><div class="sn">2</div><div class="sb"><h4>Create the integration — reversed direction</h4><p>Click <strong>+ → Integration</strong>. In General tab: Source = EPM application (e.g. <code>Vision</code>), Target = ERP Ledger application (e.g. <code>InFusionLedger</code>). Category = <code>Actual</code>. Note: this reverses the normal direction — EPM is the source, ERP is the target.</p></div></div>
+    <div class="step"><div class="sn">3</div><div class="sb"><h4>Map dimensions in reverse</h4><p>On the Map Dimensions tab: map EPM dimensions back to ERP GL segments. <code>Entity → Company segment</code>, <code>Account → Account segment</code>, <code>Cost Centre → Department segment</code>. All mapped ERP values must be valid in ERP — pre-validation rejects any row with an invalid segment value.</p></div></div>
+    <div class="step"><div class="sn">4</div><div class="sb"><h4>Period mapping — Application Mapping tab</h4><p>Navigate to <strong>Actions → Period Mapping → Application Mapping tab</strong>. Select the ERP GL target application. Add one row per period: set <strong>Period Key</strong> (last day of month, MM/DD/YY format in US locale), <strong>Target Period Month</strong> (must match ERP accounting calendar exactly), and <strong>Target Period Year</strong>. Periods crossing fiscal years require separate integrations.</p></div></div>
+    <div class="step"><div class="sn">5</div><div class="sb"><h4>Run and verify</h4><p>Execute the integration. In Process Details, a successful run shows <code>status is: SUCCEEDED</code> from the ERP ESS job. Verify in ERP: <strong>Scheduled Processes</strong> → find the ImportJournals job → output shows journals created. Or navigate to <strong>General Ledger → Journals → Manage Journals</strong> and filter by your Journal Source.</p></div></div>
+  </div>
+
+  <!-- ═══ BUDGET WRITEBACK ═══ -->
+  <div class="sl">Pattern 2 — Budget writeback to ERP Essbase / Budgetary Control</div>
+
+  <!-- SVG: budget flow -->
+  <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--rl2);padding:14px 12px;margin:0 0 14px;overflow-x:auto">
+  <svg width="100%" viewBox="0 0 820 130" xmlns="http://www.w3.org/2000/svg" style="display:block;min-width:560px">
+    <defs>
+      <marker id="b-arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+        <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </marker>
+    </defs>
+    <rect x="10" y="40" width="120" height="44" rx="7" fill="rgba(12,109,181,0.12)" stroke="rgba(12,109,181,0.4)" stroke-width="0.8"/>
+    <text x="70" y="60" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" font-weight="600" fill="#3a9de8">EPM Planning</text>
+    <text x="70" y="76" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" fill="#72728a">Budget / Plan scenario</text>
+
+    <rect x="170" y="40" width="120" height="44" rx="7" fill="rgba(199,70,52,0.10)" stroke="rgba(199,70,52,0.35)" stroke-width="0.8"/>
+    <text x="230" y="60" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" font-weight="600" fill="#e8705a">Data Integration</text>
+    <text x="230" y="76" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" fill="#72728a">Import Budget Amounts</text>
+
+    <rect x="330" y="40" width="140" height="44" rx="7" fill="rgba(184,124,32,0.12)" stroke="rgba(184,124,32,0.45)" stroke-width="1"/>
+    <text x="400" y="58" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" font-weight="600" fill="#e0a040">ERP Essbase Cube</text>
+    <text x="400" y="75" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" fill="#72728a">Control Budget dimension</text>
+
+    <rect x="510" y="40" width="140" height="44" rx="7" fill="rgba(184,124,32,0.10)" stroke="rgba(184,124,32,0.4)" stroke-width="0.8"/>
+    <text x="580" y="58" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" font-weight="600" fill="#e0a040">Budgetary Control</text>
+    <text x="580" y="75" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" fill="#72728a">Funds Available check</text>
+
+    <rect x="690" y="40" width="110" height="44" rx="7" fill="rgba(90,122,42,0.12)" stroke="rgba(90,122,42,0.4)" stroke-width="0.8"/>
+    <text x="745" y="60" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" font-weight="600" fill="#8ab44a">PO / AP</text>
+    <text x="745" y="76" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" fill="#72728a">Commitment control</text>
+
+    <line x1="130" y1="62" x2="168" y2="62" stroke="#e0a040" stroke-width="1.5" marker-end="url(#b-arr)"/>
+    <line x1="290" y1="62" x2="328" y2="62" stroke="#e0a040" stroke-width="1.5" marker-end="url(#b-arr)"/>
+    <line x1="470" y1="62" x2="508" y2="62" stroke="#e0a040" stroke-width="1.5" marker-end="url(#b-arr)"/>
+    <line x1="650" y1="62" x2="688" y2="62" stroke="#8ab44a" stroke-width="1.5" marker-end="url(#b-arr)"/>
+
+    <!-- ERP prerequisite note -->
+    <text x="400" y="110" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" fill="#9898b0">ERP prerequisite: "Create GL Balances Cube" + "Create Scenario Dimension Members" jobs must be run first</text>
+  </svg>
+  </div>
+
+  <div class="sl">Budget writeback — ERP prerequisites checklist</div>
+  <div class="card" style="margin-bottom:16px">
+    <ul class="chk">
+      <li><span class="ck-y">✓</span><div><strong>"Create General Ledger Balances Cube" ESS job run in ERP</strong> — creates the underlying ERP Essbase cube that holds both GL actuals balances and budget balances. Without this, there is no target cube for budget writeback.</div></li>
+      <li><span class="ck-y">✓</span><div><strong>Budget/Forecast scenarios added to Chart of Accounts</strong> — in ERP: navigate to <strong>Setup and Maintenance → Manage Chart of Accounts Value Sets</strong>. Add the budget scenario as a value in the Scenario value set.</div></li>
+      <li><span class="ck-y">✓</span><div><strong>"Create Scenario Dimension Members" ESS job run in ERP</strong> — deploys the scenario values added above to the ERP Essbase cube. Verify in Smart View: the new budget scenario should appear under the ERP Scenario dimension.</div></li>
+      <li><span class="ck-y">✓</span><div><strong>Control Budget created with Source Budget Type = "EPM Financials module"</strong> — in ERP Budgetary Control. <em>Not</em> "Hyperion Planning" — that is a different type. Currency must match the EPM Planning application currency. The Control Budget name is case-sensitive.</div></li>
+      <li><span class="ck-y">✓</span><div><strong>Budgetary Control module enabled in ERP</strong> — required if you are pushing budget data for commitment control. The Budgetary Control work area must be accessible by the integration service account.</div></li>
+    </ul>
+  </div>
+
+  <div class="sl">Budget writeback — step-by-step configuration</div>
+  <div class="steps">
+    <div class="step"><div class="sn">1</div><div class="sb"><h4>Register Budgetary Control as a target application</h4><p>In Data Integration: <strong>Actions → Applications → + Add → Data Export</strong>. Import the Budgetary Control Essbase cube — this generates a target application appended with <strong>"BAR"</strong> in the application name (Budget Adjustment Request). Do <em>not</em> change, add, or delete dimension details on this system-generated application.</p></div></div>
+    <div class="step"><div class="sn">2</div><div class="sb"><h4>Application Options — set Balance Type = Budget</h4><p>On the EPM source application: <strong>Application Detail → Options tab</strong>. Set <strong>Balance Type = Budget</strong>. Set <strong>Source Budget Type = EPM Financials module</strong> (not Hyperion Planning). Set the Control Budget Name exactly as configured in ERP — case-sensitive.</p></div></div>
+    <div class="step"><div class="sn">3</div><div class="sb"><h4>Create the integration and map dimensions</h4><p>Source = EPM Planning application, Target = Budgetary Control BAR application. Map EPM dimensions to ERP Control Budget segments. If the EPM and ERP calendars differ, map Year and Period dimensions explicitly. Set default values for any Budget Segments not present in EPM.</p></div></div>
+    <div class="step"><div class="sn">4</div><div class="sb"><h4>Run and verify in ERP</h4><p>Execute. In ERP, navigate to: <strong>Budgetary Control → Review Budget Balances</strong>. Verify the budget amounts have loaded against the correct Control Budget and periods. If the ERP system is not configured for continuous balance transfer, first submit the <strong>"Transfer Control Budget Balances to Essbase"</strong> process to update the cube.</p></div></div>
+  </div>
+
+  <div class="hb warn"><span class="hb-i">⚠️</span><div><strong>Budgetary Control writeback vs standard budget writeback:</strong> Writing budget data to the standard ERP GL Balances cube (for reporting) is different from writing to a Budgetary Control cube (for commitment control enforcement). The standard GL route uses Balance Type = Budget and targets the GL Essbase cube directly. The Budgetary Control route uses the BAR application type and targets Budgetary Control specifically. Mixing up the target application type causes silent data routing failures.</div></div>
+
+  <!-- ═══ AGENT WRITEBACK ═══ -->
+  <div class="sl">Pattern 3 — On-premises writeback via EPM Integration Agent</div>
+
+  <!-- SVG: agent writeback flow -->
+  <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--rl2);padding:14px 12px;margin:0 0 14px;overflow-x:auto">
+  <svg width="100%" viewBox="0 0 820 130" xmlns="http://www.w3.org/2000/svg" style="display:block;min-width:560px">
+    <defs>
+      <marker id="ag-arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+        <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </marker>
+    </defs>
+    <rect x="10" y="40" width="120" height="44" rx="7" fill="rgba(12,109,181,0.12)" stroke="rgba(12,109,181,0.4)" stroke-width="0.8"/>
+    <text x="70" y="60" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" font-weight="600" fill="#3a9de8">EPM Cloud</text>
+    <text x="70" y="76" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" fill="#72728a">Any EPM application</text>
+
+    <rect x="170" y="40" width="130" height="44" rx="7" fill="rgba(199,70,52,0.10)" stroke="rgba(199,70,52,0.35)" stroke-width="0.8"/>
+    <text x="235" y="58" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" font-weight="600" fill="#e8705a">Data Integration</text>
+    <text x="235" y="75" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" fill="#72728a">Export → TDATASEGW</text>
+
+    <rect x="340" y="40" width="130" height="44" rx="7" fill="rgba(26,174,144,0.10)" stroke="rgba(26,174,144,0.35)" stroke-width="1"/>
+    <text x="405" y="58" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" font-weight="600" fill="#38c8a8">EPM Agent</text>
+    <text x="405" y="76" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" fill="#72728a">BefExport / AftExport</text>
+
+    <rect x="510" y="40" width="140" height="44" rx="7" fill="rgba(26,174,144,0.12)" stroke="rgba(26,174,144,0.45)" stroke-width="1"/>
+    <text x="580" y="58" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" font-weight="600" fill="#38c8a8">On-prem DB table</text>
+    <text x="580" y="76" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" fill="#72728a">INSERT (auto or custom)</text>
+
+    <rect x="690" y="40" width="110" height="44" rx="7" fill="rgba(90,122,42,0.10)" stroke="rgba(90,122,42,0.35)" stroke-width="0.8"/>
+    <text x="745" y="58" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" font-weight="600" fill="#8ab44a">AftExport script</text>
+    <text x="745" y="75" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" fill="#72728a">Notify / trigger next</text>
+
+    <line x1="130" y1="62" x2="168" y2="62" stroke="#38c8a8" stroke-width="1.5" marker-end="url(#ag-arr)"/>
+    <line x1="300" y1="62" x2="338" y2="62" stroke="#38c8a8" stroke-width="1.5" marker-end="url(#ag-arr)"/>
+    <line x1="470" y1="62" x2="508" y2="62" stroke="#38c8a8" stroke-width="1.5" marker-end="url(#ag-arr)"/>
+    <line x1="650" y1="62" x2="688" y2="62" stroke="#8ab44a" stroke-width="1.5" marker-end="url(#ag-arr)"/>
+    <text x="405" y="110" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" fill="#9898b0">Simple mode: Agent auto-generates INSERT. Advanced mode: you supply the INSERT statement with column mappings.</text>
+  </svg>
+  </div>
+
+  <div class="steps">
+    <div class="step"><div class="sn">1</div><div class="sb"><h4>Create a CSV with target table column headers</h4><p>Create a CSV file whose headers exactly match the column names of the target on-premises database table. The filename becomes the application name in Data Integration. This is the column contract — every header must be an exact, case-sensitive match.</p></div></div>
+    <div class="step"><div class="sn">2</div><div class="sb"><h4>Register a Data Export application</h4><p>In Data Integration: <strong>Actions → Applications → + Add → Data Export → On Premise Database</strong>. Upload the CSV. Change the Amount dimension class to <code>Amount</code> and clear the Data Table Column Name for numeric columns. Enter database credentials and table name in the Application Options tab.</p></div></div>
+    <div class="step"><div class="sn">3</div><div class="sb"><h4>Choose Simple or Advanced INSERT mode</h4><p><strong>Simple:</strong> Agent auto-generates <code>INSERT INTO table (col1, col2…) VALUES (?,?…)</code> statements. Use when EPM dimension names match DB column names exactly. <strong>Advanced:</strong> You supply a custom INSERT statement with SQL expressions. Use when transformation is needed — e.g. concatenating EPM dimensions, applying functions, or inserting constants.</p></div></div>
+    <div class="step"><div class="sn">4</div><div class="sb"><h4>Create the integration — EPM source → Export target</h4><p>Source = EPM application, Target = the Data Export application you registered. Map EPM dimensions to the export application's column definitions. Run the integration — the Agent downloads the export file, executes INSERT statements, and logs completion.</p></div></div>
+    <div class="step"><div class="sn">5</div><div class="sb"><h4>Add BefExport / AftExport event scripts (optional)</h4><p><strong>BefExport</strong>: runs before INSERT — use to TRUNCATE the target table or validate connectivity. <strong>AftExport</strong>: runs after INSERT — use to send a Slack/email notification, trigger a downstream process, or log a completion record. Scripts are Jython or Groovy, placed in the Agent's <code>appdata/scripts</code> folder.</p></div></div>
+  </div>
+
+  <!-- ═══ TROUBLESHOOTING ═══ -->
+  <div class="sl">Writeback troubleshooting — all three patterns</div>
+  <table class="tbl">
+    <thead><tr><th>Error / symptom</th><th>Pattern</th><th>Root cause</th><th>Resolution</th></tr></thead>
+    <tbody>
+      <tr><td><span class="ctag">ORA-01400: cannot insert NULL</span></td><td style="color:var(--rl)">Actuals</td><td>A required GL_INTERFACE column is null — a mandatory ERP GL segment has no mapping</td><td>Check dimension mappings. Every required ERP segment (Ledger ID, Currency, Accounting Date, ACTUAL_FLAG) must be populated. Use an Expression to set a constant value for non-EPM segments.</td></tr>
+      <tr><td><span class="ctag">ORA-06502: character to number conversion</span></td><td style="color:var(--rl)">Actuals</td><td>A numeric GL_INTERFACE column is receiving a text value — typically Data Access Set ID = -1</td><td>Verify the ERP connection's Data Access Set configuration. A -1 Data Access Set ID indicates the service account doesn't have data access to the target ledger.</td></tr>
+      <tr><td><span class="ctag">EP01: date not in open/future period</span></td><td style="color:var(--rl)">Actuals</td><td>The Accounting Date mapped into GL_INTERFACE falls in a closed ERP period</td><td>ERP GL period must be open or future-enterable. Ask ERP admin to open the period, or map the Accounting Date to a valid open date using an Expression.</td></tr>
+      <tr><td><span class="ctag">EM01: Invalid journal entry category</span></td><td style="color:var(--rl)">Actuals</td><td>Journal Category in DI Application Options doesn't match the ERP-defined category — case mismatch or typo</td><td>In ERP: General Ledger → Journal → Manage Journal Categories. Copy the exact name including capitalisation and paste into DI Application Options.</td></tr>
+      <tr><td><span class="ctag">Error in Validating the Budget Load</span></td><td style="color:var(--al)">Budget</td><td>ERP pre-validation rejected one or more budget rows — invalid currency, account value, or budget name</td><td>ERP: General Accounting Dashboard → <strong>Correct Budget Import Errors</strong>. Review each error row. Most common: Control Budget Name mismatch (case-sensitive), currency not matching, or ERP segment value that doesn't exist.</td></tr>
+      <tr><td><span class="ctag">Scenarios not visible in ERP Essbase</span></td><td style="color:var(--al)">Budget</td><td">"Create Scenario Dimension Members" ESS job hasn't been run after adding the budget scenario to the CoA value set</td><td>In ERP Scheduled Processes: run "Create Scenario Dimension Members". Verify the scenario appears in Smart View under the ERP Essbase cube before re-running the writeback.</td></tr>
+      <tr><td>Agent writeback inserts 0 rows silently</td><td style="color:var(--tel)">Agent</td><td>Column name mismatch between CSV header and actual database table columns</td><td>Open the Agent process log — it logs each column mapping. Compare the header column names to the DB table DDL. Even a single character difference causes that column to silently receive no data.</td></tr>
+      <tr><td>Agent writeback: ORA-00942 table not found</td><td style="color:var(--tel)">Agent</td><td>The table name in Application Options either doesn't exist or the DB user lacks SELECT/INSERT privilege</td><td>Verify the exact schema-qualified table name (e.g. <code>HR.ACTUALS_STAGING</code>). Grant INSERT privilege to the DB user configured in the Application Options credentials.</td></tr>
+    </tbody>
+  </table>
+
+  <!-- ═══ DIMENSION MAPPING REFERENCE ═══ -->
+  <div class="sl">GL_INTERFACE required fields — mapping reference</div>
+  <p class="prose">These are the non-nullable GL_INTERFACE columns that the ImportJournals ESS job validates before posting. Missing any one of them causes ORA-01400 NULL errors. Confirm each is mapped explicitly in your dimension mappings or set via an Expression.</p>
+  <table class="tbl">
+    <thead><tr><th>GL_INTERFACE column</th><th>Required?</th><th>Typical EPM source</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td><code>LEDGER_ID</code></td><td><span class="etag">Required</span></td><td>ERP Connection / source system</td><td>Auto-populated from the ERP target application — don't manually map</td></tr>
+      <tr><td><code>ACTUAL_FLAG</code></td><td><span class="etag">Required</span></td><td>Set by Balance Type = Actual</td><td>Must be <code>A</code> for actuals, <code>B</code> for budgets, <code>E</code> for encumbrances</td></tr>
+      <tr><td><code>CURRENCY_CODE</code></td><td><span class="etag">Required</span></td><td>EPM Currency dimension → mapped to ISO code</td><td>Must be a valid ISO 4217 currency code. A common failure: EPM stores "USD" but mapping sends "US Dollar"</td></tr>
+      <tr><td><code>ACCOUNTING_DATE</code></td><td><span class="etag">Required</span></td><td>Derived from Period mapping</td><td>Must fall within an open or future-enterable ERP GL period. Use period last-day convention.</td></tr>
+      <tr><td><code>JOURNAL_ENTRY_SOURCE_NAME</code></td><td><span class="etag">Required</span></td><td>Application Options → Journal Source field</td><td>Exact match to the source defined in ERP. Integration user must be authorised for this source.</td></tr>
+      <tr><td><code>JOURNAL_ENTRY_CATEGORY_NAME</code></td><td><span class="etag">Required</span></td><td>Application Options → Journal Category field</td><td>Exact match to the category defined in ERP. Common failure: trailing space.</td></tr>
+      <tr><td><code>ENTERED_DR</code> / <code>ENTERED_CR</code></td><td><span class="etag">Required</span></td><td>EPM amount value</td><td>Debit and Credit amounts must balance per journal entry. Unbalanced journals are rejected unless suspense posting is enabled in ERP.</td></tr>
+      <tr><td><code>SEGMENT1–SEGMENT30</code></td><td>Conditional</td><td>EPM dimensions → ERP CoA segments</td><td>Map all active Chart of Accounts segments. Unmapped active segments default to NULL and fail validation.</td></tr>
+    </tbody>
+  </table>
+
+  <div class="hb tip"><span class="hb-i">💡</span><div><strong>Suspense posting diagnostic:</strong> If journals are being created but amounts are landing in the wrong accounts, check whether ERP Suspense Posting is enabled. With suspense posting enabled, GL_INTERFACE accepts journals with invalid account combinations by routing them to the suspense account — the data appears to load successfully but lands in the wrong place. Disable suspense posting during testing to surface account combination errors explicitly.</div></div>
+
 </div></div>
 
 <!-- ══ P6 · TROUBLESHOOTING ══ -->
@@ -818,6 +1158,22 @@ body{font-family:var(--fn);background:var(--bg);color:var(--text);font-size:14px
   </table>
 
   <div class="hb tip"><span class="hb-i">💡</span><div><strong>Which support team?</strong> Log line contains <em>"BEGIN: Process Log From the Ess Job"</em> or references <code>XXXXXXX.log</code> → <strong>ERP Support first</strong>. Error directly in DI log lines → <strong>EPM Data Integration Support</strong>. Always include: Process Log, ESS log, and whether CSV was generated.</div></div>
+
+  <div class="sl">F — Unmapped member handling</div>
+  <p class="prose">Unmapped members are the most frequent cause of Validate-step failures. The Process Log surfaces the first batch of unmapped values, but diagnosing and preventing them requires a systematic approach.</p>
+
+  <table class="tbl">
+    <thead><tr><th>Symptom</th><th>Cause</th><th>Resolution</th></tr></thead>
+    <tbody>
+      <tr><td>Validate step fails — "No mapping found for [source value]"</td><td>Source member exists in staging but has no matching rule in any active mapping type</td><td>Open Workbench, identify red-highlighted rows. Add the missing Explicit, Between, In, or Like rule. Re-run Validate only (no need to re-import).</td></tr>
+      <tr><td>Load aborts on first unmapped member (Planning/EPBCS)</td><td>Default Essbase load behaviour — stops on first bad row</td><td>Implement <strong>Unclassified_Actuals catch-all</strong> (Like rule, source=*, highest Processing Order) to prevent rejections. Or use FCCS Partial Loading if available.</td></tr>
+      <tr><td>FCCS partial load — valid rows load, invalid rows appear in Process Details</td><td>FCCS via OLU supports partial loading — valid data proceeds, invalid rows are reported not rejected</td><td>Review the rejected row list in Process Details. Add mappings and re-run for the missing values only.</td></tr>
+      <tr><td>New GL accounts appear mid-year with no mapping</td><td>Finance added accounts in ERP without notifying the EPM team</td><td>Implement <strong>Unclassified_Actuals catch-all</strong> pattern. Configure monitoring alert when any balance appears in <code>Unclassified_Actuals</code>.</td></tr>
+      <tr><td>Dry Run shows 99 errors then stops</td><td>FCCS Dry Run mode stops after 99 errors — not a bug</td><td>Fix the first batch of errors and re-run Dry Run. Repeat until Dry Run completes cleanly before running the real load.</td></tr>
+    </tbody>
+  </table>
+
+  <div class="hb tip"><span class="hb-i">💡</span><div><strong>Workbench re-validate shortcut:</strong> When you find unmapped members in Workbench and add the missing rules, you don't need to re-run the full integration. Click <strong>Validate</strong> in the integration run dialog without re-importing — this re-applies all mapping rules against the already-staged data in <code>TDATASEG_T</code>. Saves significant time on large data sets during close.</div></div>
 </div></div>
 
 <!-- ══ P7 · ADVANCED ══ -->
@@ -883,6 +1239,21 @@ body{font-family:var(--fn);background:var(--bg);color:var(--text);font-size:14px
       </ul>
     </div>
   </div>
+
+  <div class="sl">Job Scheduler migration — 25.09 hard deadline</div>
+  <div class="hb danger"><span class="hb-i">🚨</span><div><strong>Action Required before September 2025 (25.09 update):</strong> The "Migrate Schedules to Platform Job Scheduler" utility is removed in the 25.09 update. Any Data Management scheduled jobs not migrated will be <strong>permanently lost</strong>. The old scheduling UI in Data Management was deprecated in 24.09 — jobs must now be scheduled via the EPM Platform Job Scheduler.</div></div>
+
+  <div class="sl">Migration steps</div>
+  <div class="steps">
+    <div class="step"><div class="sn">1</div><div class="sb"><h4>Option A — from Data Management</h4><p>Navigate to <strong>Data Management → System Settings → System Maintenance Tasks</strong>. Run the <strong>"Migrate Schedules to Platform Job Scheduler"</strong> script. Use Preview mode first to see which schedules will be migrated without committing.</p></div></div>
+    <div class="step"><div class="sn">2</div><div class="sb"><h4>Option B — from EPM Platform Job Scheduler</h4><p>Open the EPM Platform Job Scheduler console. Create an <strong>Integration Maintenance Script</strong> job. Select the migration option from the available script list. Same preview-before-commit approach available.</p></div></div>
+    <div class="step"><div class="sn">3</div><div class="sb"><h4>Verify migration</h4><p>After running: open <strong>Process Details → Workflow tab → Monitor</strong>. The process log shows a report of all migrated schedules. Spot-check critical close-day schedules to confirm they appear in the EPM Platform Job Scheduler with correct timing.</p></div></div>
+  </div>
+
+  <div class="cg cg2" style="margin-top:8px">
+    <div class="card teal"><div class="ci">✅</div><h3>Products that must migrate</h3><p>Planning (EPBCS), Financial Consolidation &amp; Close (FCCS), Tax Reporting, Strategic Modeling, Narrative Reporting. Any product where the EPM Platform Job Scheduler is available.</p></div>
+    <div class="card"><div class="ci">ℹ️</div><h3>Products NOT affected</h3><p><strong>Account Reconciliation</strong> and <strong>Profitability &amp; Cost Management</strong> — the EPM Platform Job Scheduler is not available for these products. Use EPMAutomate or the REST API for scheduling instead.</p></div>
+  </div>
 </div></div>
 
 <!-- ══ P8 · SCENARIOS ══ -->
@@ -936,12 +1307,203 @@ body{font-family:var(--fn);background:var(--bg);color:var(--text);font-size:14px
 </div></div>
 
 
-<!-- ══ P9 · FLASHCARDS ══ -->
+<!-- ══ P9 · DI DEEP DIVE I ══ -->
 <div class="panel" id="p9"><div class="pi">
+  <div class="eliot">
+    <div style="flex-shrink:0"><div class="eliot-name">Eliot</div><div class="eliot-avatar">👤</div></div>
+    <div class="eliot-txt">You can configure integrations for months without ever understanding what's actually happening inside the database. <strong>But the moment you hit a production crisis at 11pm on close day, you'll wish you knew the staging table chain.</strong> TDATASEG isn't just a technical detail — it's the audit trail, the drill source, and the performance bottleneck, all in one table. Know it.</div>
+  </div>
+  <div class="ph"><div class="ph-tag">Module 10 · Deep Dive</div><h1>Data Integration <em>Deep Dive I</em></h1><p class="ph-sub">The TDATASEG staging chain, workflow mode decisions, Workbench anatomy, and the full import→validate→export lifecycle — what actually happens inside the database on every load.</p></div>
+
+  <div class="sl">The staging table family</div>
+  <p class="prose">Every Data Integration load writes to a family of internal database tables before any data ever reaches your EPM cube. Understanding this chain explains every workflow mode trade-off.</p>
+  <div class="cg cg2">
+    <div class="card blue"><div class="ci">📋</div><h3>TDATASEG_T (temporary)</h3><p>Raw source data lands here after Import. Mappings are applied <strong>in-place</strong> during Validate — this table is overwritten. If the load fails during Validate, this table holds the partial state. Cleared at load start.</p></div>
+    <div class="card teal"><div class="ci">🗃️</div><h3>TDATASEG (permanent)</h3><p>Copied from <code>TDATASEG_T</code> only on <strong>successful</strong> Validate. This is the table powering Workbench and drill-through. Persists between loads. <code>Full No Archive</code> deletes it after Export.</p></div>
+    <div class="card amber"><div class="ci">🗺️</div><h3>TDATAMAP_T / TDATAMAPSEG</h3><p>Mapping audit tables. Store the source→target member mapping decisions applied during Validate. Used when investigating why a source value mapped to an unexpected target member.</p></div>
+    <div class="card red"><div class="ci">↩️</div><h3>TDATASEGW (writeback)</h3><p>Writeback-specific staging table. When EPM data is written back to an on-premises target via the EPM Agent, export data is downloaded and loaded into this table before the Agent constructs INSERT statements for the destination.</p></div>
+  </div>
+
+  <div class="sl">The full pipeline — what happens on every load</div>
+  <div class="flow" style="flex-direction:column;gap:16px;align-items:stretch;padding:22px">
+    <div style="display:flex;align-items:flex-start;gap:12px;flex-wrap:wrap">
+      <div class="fs" style="border-color:var(--bb);min-width:110px"><div class="fsn" style="color:var(--bll)">Step 1</div><div class="fsl">Import</div></div>
+      <div style="flex:1;font-size:12.5px;color:var(--muted);padding-top:8px">Source data extracted from ERP/Agent/file. Written raw into <code>TDATASEG_T</code>. No mapping applied yet. Status = 1 (Imported).</div>
+    </div>
+    <div style="display:flex;align-items:flex-start;gap:12px;flex-wrap:wrap">
+      <div class="fs" style="border-color:var(--al);min-width:110px"><div class="fsn" style="color:var(--al)">Step 2</div><div class="fsl">Validate</div></div>
+      <div style="flex:1;font-size:12.5px;color:var(--muted);padding-top:8px">Member mapping rules evaluated. Source values in <code>TDATASEG_T</code> replaced with mapped target values. Unmapped members surface as errors here. On success: copied to <code>TDATASEG</code>. Status = 2 (Validated).</div>
+    </div>
+    <div style="display:flex;align-items:flex-start;gap:12px;flex-wrap:wrap">
+      <div class="fs" style="border-color:var(--rl);min-width:110px"><div class="fsn" style="color:var(--rl)">Step 3</div><div class="fsl">Export</div></div>
+      <div style="flex:1;font-size:12.5px;color:var(--muted);padding-top:8px">Mapped data pushed from staging into the Essbase cube. Load method (Replace/Merge/Subtract) applied at this step. Status = 3 (Exported). <code>Full No Archive</code> purges <code>TDATASEG</code> after this step.</div>
+    </div>
+    <div style="display:flex;align-items:flex-start;gap:12px;flex-wrap:wrap">
+      <div class="fs" style="border-color:var(--tel);min-width:110px"><div class="fsn" style="color:var(--tel)">Step 4</div><div class="fsl">Check</div></div>
+      <div style="flex:1;font-size:12.5px;color:var(--muted);padding-top:8px">Optional Business Rule execution (e.g. consolidation trigger). Status = 5 (Calculated and Exported) if Check runs. Configurable via positions: Before Extract, Before/After Import, Before/After Load, Before/After Check.</div>
+    </div>
+  </div>
+
+  <div class="sl">TDATASEG key columns</div>
+  <table class="tbl">
+    <thead><tr><th>Column</th><th>Description</th><th>Practitioner use</th></tr></thead>
+    <tbody>
+      <tr><td><code>DATAKEY</code></td><td>Unique integer row identifier auto-assigned on import</td><td>Use in SQL Mapping expressions to inject unique identifiers into export files — common FCCS audit pattern</td></tr>
+      <tr><td><code>STATUS</code></td><td>1=Imported, 2=Validated, 3=Exported, 5=Calc+Exported</td><td>Query to understand where a load stopped or to verify completion state</td></tr>
+      <tr><td><code>AMOUNT</code></td><td>The numeric data value (source → mapped)</td><td>Check for unexpected sign reversals or scaling issues post-Validate</td></tr>
+      <tr><td>Source segment columns</td><td>Raw source dimension values before mapping</td><td>Visible in Workbench "Source" columns — compare to target to verify mappings fired correctly</td></tr>
+      <tr><td>Target dimension columns</td><td>Mapped EPM dimension values after Validate</td><td>These are the values that land in the cube. If wrong, your mapping rules need adjustment.</td></tr>
+    </tbody>
+  </table>
+
+  <div class="sl">Workflow mode decision guide</div>
+  <table class="tbl">
+    <thead><tr><th>Mode</th><th>TDATASEG populated?</th><th>Drill-through?</th><th>Workbench?</th><th>Speed</th><th>Use when</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Full</strong></td><td>✅ Yes — retained</td><td>✅ Yes</td><td>✅ Yes</td><td>Slowest</td><td>Close-day actuals, audit required, drill-back needed</td></tr>
+      <tr><td><strong>Full No Archive</strong></td><td>⚡ Yes — deleted post-export</td><td>❌ No</td><td>❌ No</td><td>Medium</td><td>Daily refreshes where audit isn't needed but Validate step is still required</td></tr>
+      <tr><td><strong>Simple</strong></td><td>❌ No Validate step</td><td>❌ No</td><td>❌ No</td><td>Fast</td><td>Internal moves, dimension-only loads, scenarios with clean pre-mapped data</td></tr>
+      <tr><td><strong>Quick Mode</strong></td><td>❌ Bypassed entirely</td><td>❌ No</td><td>❌ No</td><td>Fastest</td><td>High-volume ASO/BSO loads where speed is critical and audit isn't needed</td></tr>
+    </tbody>
+  </table>
+  <div class="hb warn"><span class="hb-i">⚠️</span><div><strong>Quick Mode + Change Sign:</strong> The Change Sign option in member mappings is <strong>not supported in Quick Mode</strong>. If your integration relies on sign reversal for income statement accounts, you must use a workflow mode that runs Validate, or handle the sign reversal in your SQL mapping expression instead.</div></div>
+
+  <div class="sl">Workbench — reading the audit</div>
+  <p class="prose">The Workbench reads directly from <code>TDATASEG</code>. It shows you the raw source value alongside the mapped target value for every staging row — this is how you diagnose silent mapping errors before they reach the cube.</p>
+  <div class="steps">
+    <div class="step"><div class="sn">1</div><div class="sb"><h4>Open Workbench</h4><p>In Data Integration, open the integration → click the <strong>Workbench</strong> icon. Available only when Workflow Mode = Full or Full No Archive (before archive purge).</p></div></div>
+    <div class="step"><div class="sn">2</div><div class="sb"><h4>Compare Source vs Target columns</h4><p>Every row shows the original source value (e.g. <code>4001-GBP</code>) next to the mapped target (e.g. <code>Revenue_UK</code>). Rows highlighted in red have no valid mapping — these are the unmapped members that will fail Export.</p></div></div>
+    <div class="step"><div class="sn">3</div><div class="sb"><h4>Fix mappings in-place</h4><p>Add the missing mapping rule, then re-run Validate only (don't re-import from source). The Workbench re-evaluates the new rule against the already-imported staging data — faster than a full re-run.</p></div></div>
+  </div>
+
+  <div class="hb tip"><span class="hb-i">💡</span><div><strong>Using DATAKEY in SQL Mapping:</strong> <code>DATAKEY</code> is a unique integer assigned to every staging row. You can reference it in a SQL Mapping expression to append a row-level unique identifier to your export file — used in FCCS implementations where the downstream reconciliation system needs a traceable ID per loaded record.</div></div>
+</div></div>
+
+<!-- ══ P10 · DI DEEP DIVE II ══ -->
+<div class="panel" id="p10"><div class="pi">
+  <div class="eliot">
+    <div style="flex-shrink:0"><div class="eliot-name">Eliot</div><div class="eliot-avatar">👤</div></div>
+    <div class="eliot-txt">The mapping rule table looks simple. Four types, a priority order. <strong>But that alphanumeric Processing Order sort has broken more close-day loads than any bug I've ever seen.</strong> You set rules 1, 2, 10, 20. The system sorts them 1, 10, 2, 20. Rule 10 fires before Rule 2. Your carefully designed exception logic runs in the wrong order. And the cure is just as simple: use 001, 002, 010, 020.</div>
+  </div>
+  <div class="ph"><div class="ph-tag">Module 11 · Deep Dive</div><h1>Data Integration <em>Deep Dive II</em></h1><p class="ph-sub">Member mapping rule cookbook, period mapping configuration depth, the Unclassified_Actuals catch-all pattern, rejection handling, and parallel processing with 25.08+ Pipeline features.</p></div>
+
+  <div class="sl">Member mapping rule cookbook</div>
+  <p class="prose">Four rule types, one priority order. But each type has its own gotchas. Here is each one with a realistic GL account example and the failure mode to avoid.</p>
+
+  <div class="cg" style="gap:12px">
+    <div class="card" style="border-color:var(--rl)">
+      <div class="ci">🥇</div>
+      <h3>Explicit — exact one-to-one <span class="etag" style="float:right;font-size:10px">Priority 1</span></h3>
+      <p>Source value matches exactly. <strong>Always wins</strong> regardless of any other matching rule.<br><br>
+      <strong>Example:</strong> <code>4001-GBP → Revenue_UK_Hedged</code><br>
+      <strong>Use when:</strong> A specific code needs a different target than its range-mates.<br>
+      <strong>Gotcha:</strong> Explicit is case-sensitive. <code>ACCRUAL</code> ≠ <code>accrual</code> — if the ERP source sends mixed case, add rules for both variants or use a Like rule as fallback.</p>
+    </div>
+    <div class="card" style="border-color:var(--al)">
+      <div class="ci">📋</div>
+      <h3>In — discrete list <span class="etag" style="float:right;font-size:10px">Priority 2</span></h3>
+      <p>Comma-separated list of exact source values mapping to one target.<br><br>
+      <strong>Example:</strong> <code>5001,5003,5007,5012 → DirectCosts</code><br>
+      <strong>Use when:</strong> Non-contiguous GL codes that share a target but aren't in a range.<br>
+      <strong>Gotcha:</strong> No spaces around commas. <code>5001, 5003</code> (with space) will not match <code>5003</code> — the space becomes part of the match string.</p>
+    </div>
+    <div class="card" style="border-color:var(--bll)">
+      <div class="ci">📏</div>
+      <h3>Between — numeric range <span class="etag" style="float:right;font-size:10px">Priority 3</span></h3>
+      <p>Maps a contiguous range of source values. Inclusive of both endpoints.<br><br>
+      <strong>Example:</strong> <code>4000 – 4999 → Revenue</code><br>
+      <strong>Use when:</strong> Standard CoA ranges (revenue 4000–4999, expenses 5000–5999).<br>
+      <strong>Gotcha:</strong> Between uses <strong>alphanumeric sort</strong> for text values. For numeric GL codes, ensure leading-zero consistency: <code>04000–04999</code> sorts correctly; mixing <code>4000</code> and <code>04001</code> creates gap/overlap surprises.</p>
+    </div>
+    <div class="card" style="border-color:var(--tel)">
+      <div class="ci">🔍</div>
+      <h3>Like — wildcard pattern <span class="etag" style="float:right;font-size:10px">Priority 4 (lowest)</span></h3>
+      <p>Pattern matching with <code>*</code> as wildcard. Runs last — catch-all use cases.<br><br>
+      <strong>Example:</strong> <code>IC_* → ICElimAcct</code> (all intercompany accounts)<br>
+      <strong>Use when:</strong> Prefix/suffix patterns, fallback mappings, catch-all rules.<br>
+      <strong>Gotcha:</strong> <code>*</code> alone matches <em>everything</em>. A Like rule with source = <code>*</code> at the lowest Processing Order is the <strong>Unclassified_Actuals pattern</strong> — see below.</p>
+    </div>
+    <div class="card" style="border-color:var(--muted2)">
+      <div class="ci">🔀</div>
+      <h3>Multi-Dimension — combined dimension match</h3>
+      <p>Maps based on a <strong>combination</strong> of source dimension values simultaneously.<br><br>
+      <strong>Example:</strong> Account = <code>5000–5999</code> AND Entity = <code>DE_*</code> → <code>GermanDirectCosts</code><br>
+      <strong>Use when:</strong> The same GL account maps to a different EPM member depending on which subsidiary it comes from — common in multi-entity consolidations.<br>
+      <strong>Gotcha:</strong> Multi-Dimension rules don't have a fixed position in the four-type priority order — they're evaluated as explicit rules against the combined key. Add them before your range rules.</p>
+    </div>
+  </div>
+
+  <div class="sl">Processing Order — the alphanumeric trap</div>
+  <div class="hb danger"><span class="hb-i">🚨</span><div><strong>The most common mapping bug in production:</strong> Processing Order is sorted <strong>alphanumerically</strong>, not numerically. Numbering rules as 1, 2, 10, 20 results in execution order: 1 → 10 → 2 → 20. Rule 10 fires before Rule 2 — your exception logic runs before the base rule it was meant to override.</div></div>
+  <div class="cg cg2" style="margin-top:12px">
+    <div class="card red"><h3>❌ Wrong — numeric names</h3><p>Rules numbered: 1, 2, 10, 20<br>Execution order: <strong>1 → 10 → 2 → 20</strong><br>Rule 10 fires before Rule 2.</p></div>
+    <div class="card teal"><h3>✅ Correct — zero-padded names</h3><p>Rules numbered: 001, 002, 010, 020<br>Execution order: <strong>001 → 002 → 010 → 020</strong><br>Correct logical sequence preserved.</p></div>
+  </div>
+  <p class="prose" style="margin-top:12px">Always use zero-padded Processing Order values. For integrations with more than 9 rules, use three-digit padding (001–999). For more than 99 rules, use four-digit padding.</p>
+
+  <div class="sl">The Unclassified_Actuals catch-all pattern</div>
+  <p class="prose">In production, new GL accounts appear mid-year without warning. Without a catch-all rule, those records are <strong>rejected at Validate</strong> — your load fails or the account goes missing from the cube with no visibility. The industry-standard solution:</p>
+  <div class="steps">
+    <div class="step"><div class="sn">1</div><div class="sb"><h4>Create a dedicated EPM member: <code>Unclassified_Actuals</code></h4><p>Add a visible member to the Account dimension (or equivalent) at a level where Finance can see it. It should roll up in a place that's obvious — not hidden inside a total.</p></div></div>
+    <div class="step"><div class="sn">2</div><div class="sb"><h4>Add a Like rule: source = <code>*</code>, target = <code>Unclassified_Actuals</code></h4><p>Set the Processing Order to the <strong>highest number</strong> in the Account dimension mapping (e.g. 999). This rule fires last — only records that matched no other rule reach it.</p></div></div>
+    <div class="step"><div class="sn">3</div><div class="sb"><h4>Monitor <code>Unclassified_Actuals</code> after every load</h4><p>Any balance appearing in this member signals an unmapped GL account that needs a proper mapping rule. Zero balance = all accounts mapped correctly. This turns silent rejections into visible data quality alerts.</p></div></div>
+  </div>
+  <div class="hb tip"><span class="hb-i">💡</span><div><strong>Zero rejected records.</strong> The catch-all pattern guarantees the load never fails due to unmapped members. Finance sees the balance flagged for investigation rather than the load failing at 11pm. This pattern is standard practice in all production EPBCS implementations.</div></div>
+
+  <div class="sl">Period mapping configuration — the full picture</div>
+  <div class="cg cg2">
+    <div class="card"><h3>🌐 Global calendar (Default type)</h3><p>Auto-imported when you register the ERP application. Applies to all integrations using <strong>Default period mapping type</strong>. New fiscal years require running <strong>Application Update</strong> to import the new periods — they don't appear automatically.</p></div>
+    <div class="card amber"><h3>📅 Source Mapping (Explicit type)</h3><p>Created manually via <code>Actions → Period Mapping → Source Mapping</code>. Maps ERP period names to EPM period keys one-to-one. Integration must be set to <code>Explicit</code> type in Options tab. Required for SAP, JDE, and any non-Oracle fiscal calendar.</p></div>
+  </div>
+  <div class="hb danger"><span class="hb-i">🚨</span><div><strong>Adjustment period duplication bug:</strong> Oracle Cloud ERP generates adjustment period variants (e.g. <code>17 Dec-25</code> alongside <code>Dec-25</code>) for year-end adjustments. If both are included in the Source Mapping with the same EPM period key, <strong>data duplicates on every load</strong> AND causes import failures. Always exclude adjustment periods from Source Mapping, or map them to a dedicated Adjustment scenario member.</div></div>
+
+  <table class="tbl" style="margin-top:16px">
+    <thead><tr><th>Source system</th><th>Period naming</th><th>EPM mapping approach</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Oracle Cloud ERP</strong></td><td><code>Dec-25</code>, <code>Jan-26</code></td><td>Default type (auto-imported). Run Application Update for new fiscal years.</td></tr>
+      <tr><td><strong>Oracle EBS</strong></td><td>Varies by calendar config</td><td>Usually Default. Verify period key format matches EPM calendar exactly.</td></tr>
+      <tr><td><strong>SAP</strong></td><td>Period 001–012 + special periods 013–016</td><td>Explicit Source Mapping required. Map SAP period numbers to EPM month members. Exclude special periods or map to Adjustment scenario.</td></tr>
+      <tr><td><strong>JDE</strong></td><td>Fiscal month numbers (1–12)</td><td>Explicit Source Mapping. Map numeric period to EPM month member names.</td></tr>
+    </tbody>
+  </table>
+
+  <div class="sl">Pipeline — parallel mode depth (25.08+)</div>
+  <div class="hb info"><span class="hb-i">📋</span><div><strong>New in 25.08:</strong> Individual jobs within a Stage can now be toggled to Parallel mode independently, not just at the Stage level. The <code>Maximum Parallel Jobs</code> field on the Pipeline definition sets the ceiling (1–25).</div></div>
+  <div class="cg cg2" style="margin-top:12px">
+    <div class="card blue"><div class="ci">⚡</div><h3>Job-level parallel toggle</h3><p>Select 1–25 jobs to run simultaneously within a Stage. Use when jobs are truly independent — no shared dimension locks or Essbase concurrency conflicts.</p></div>
+    <div class="card amber"><div class="ci">⏱️</div><h3>30-minute timeout behaviour</h3><p>If a job runs longer than 30 minutes, the Pipeline auto-advances to the next job — they run concurrently even without the Parallel toggle. Design for this: long-running jobs should be in their own Stage.</p></div>
+    <div class="card teal"><div class="ci">🔀</div><h3>On Success / On Failure routing</h3><p>Each Stage can be configured to proceed, stop, or skip to a nominated Stage on failure. Use for close-day resilience: a failed metadata load skips to an alert Stage rather than aborting the entire close.</p></div>
+    <div class="card"><div class="ci">🔤</div><h3>Pipeline Code uniqueness</h3><p>The Pipeline <strong>Code</strong> field must be unique across the environment — separate from the Pipeline Name. A common "why won't it save" issue on new Pipeline creation.</p></div>
+  </div>
+
+  <div class="sl">Pipeline variables reference</div>
+  <table class="tbl">
+    <thead><tr><th>Variable</th><th>Type</th><th>Usage</th></tr></thead>
+    <tbody>
+      <tr><td><code>STARTPERIOD</code></td><td>System</td><td>Start period for integration jobs in the Pipeline. Pass at REST API call time.</td></tr>
+      <tr><td><code>ENDPERIOD</code></td><td>System</td><td>End period for integration jobs. Enables multi-period range loads via single Pipeline trigger.</td></tr>
+      <tr><td><code>IMPORTMODE</code></td><td>System</td><td>Replace / Append — passed to all Integration jobs in the Pipeline.</td></tr>
+      <tr><td><code>EXPORTMODE</code></td><td>System</td><td>Store Data / Add Data / Subtract / Replace — passed to all Integration jobs.</td></tr>
+      <tr><td><code>SEND_TO</code></td><td>System</td><td>Email address for Pipeline notification jobs. Override the static address at runtime.</td></tr>
+      <tr><td>Custom text variables</td><td>User-defined</td><td>Define in Pipeline Options. Reference as <code>$VariableName$</code> in job configurations. Use for environment-specific values (e.g. target EPM URL for cross-instance Pipelines).</td></tr>
+    </tbody>
+  </table>
+
+  <div class="sl">Rejection handling automation</div>
+  <p class="prose">When a load fails due to unmapped members, the Process Log contains the rejection detail — but only for the first batch of errors. For production automation, use the REST API pattern to capture and alert on all rejections.</p>
+  <div class="steps">
+    <div class="step"><div class="sn">1</div><div class="sb"><h4>Use REST API instead of EPMAutomate for triggered loads</h4><p><code>runDataRule</code> in EPMAutomate returns a simple success/fail exit code. The REST API <code>POST /aif/rest/V1/jobs</code> returns a process ID that you can use to download the full Process Log programmatically.</p></div></div>
+    <div class="step"><div class="sn">2</div><div class="sb"><h4>Download and parse the Process Log</h4><p>REST: <code>GET /aif/rest/V1/jobs/{processId}/logs</code> returns the full log. Parse for lines containing <code>UNMAPPED</code> or <code>No mapping found</code> to extract the specific source values that failed.</p></div></div>
+    <div class="step"><div class="sn">3</div><div class="sb"><h4>Alert and action</h4><p>If unmapped values are found: send an alert (email/Slack via Groovy post-process script), log the values to a tracking table, and optionally trigger a Dry Run for the next load. The <strong>Unclassified_Actuals pattern</strong> (above) handles this more gracefully in-load without requiring external automation.</p></div></div>
+  </div>
+</div></div>
+
+<!-- ══ P11 · FLASHCARDS (was P9) ══ -->
+<div class="panel" id="p11"><div class="pi">
   <div class="ph">
-    <div class="ph-tag">Practice · 10 · Flashcards</div>
+    <div class="ph-tag">Practice · 12 · Flashcards</div>
     <h1>Flashcards — <em>Click to Flip</em></h1>
-    <p class="ph-sub">30 cards. Navigate with arrows or dots. Mark cards you know — track your progress as you go.</p>
+    <p class="ph-sub">34 cards. Navigate with arrows or dots. Mark cards you know — track your progress as you go.</p>
   </div>
 
   <div class="fc-toolbar">
@@ -980,16 +1542,16 @@ body{font-family:var(--fn);background:var(--bg);color:var(--text);font-size:14px
 </div></div>
 
 <!-- ══ P10 · QUIZ ══ -->
-<div class="panel" id="p10"><div class="pi">
+<div class="panel" id="p12"><div class="pi">
   <div class="ph">
-    <div class="ph-tag">Practice · 11 · Multiple Choice Quiz</div>
-    <h1>Quiz — <em>12 Questions</em></h1>
+    <div class="ph-tag">Practice · 13 · Multiple Choice Quiz</div>
+    <h1>Quiz — <em>15 Questions</em></h1>
     <p class="ph-sub">Select the best answer. Immediate feedback after each question.</p>
   </div>
   <div class="quiz-header">
     <div class="quiz-score-pill">
       <span class="qsp-num" id="q-correct">0</span>
-      <span class="qsp-total">correct · <span id="q-answered">0</span> of 12 answered</span>
+      <span class="qsp-total">correct · <span id="q-answered">0</span> of 15 answered</span>
     </div>
   </div>
   <div class="quiz-progress-bar"><div class="quiz-progress-fill" id="q-progress"></div></div>
@@ -998,16 +1560,16 @@ body{font-family:var(--fn);background:var(--bg);color:var(--text);font-size:14px
 </div></div>
 
 <!-- ══ P11 · TRUE/FALSE ══ -->
-<div class="panel" id="p11"><div class="pi">
+<div class="panel" id="p13"><div class="pi">
   <div class="ph">
-    <div class="ph-tag">Practice · 12 · True / False</div>
-    <h1>True / False — <em>20 Statements</em></h1>
+    <div class="ph-tag">Practice · 14 · True / False</div>
+    <h1>True / False — <em>23 Statements</em></h1>
     <p class="ph-sub">Some are common misconceptions. Trust your instincts — then read the explanation.</p>
   </div>
   <div class="tf-header">
     <div class="tf-score-pill">
       <span class="qsp-num" id="tf-correct">0</span>
-      <span class="qsp-total">correct · <span id="tf-answered">0</span> of 20 answered</span>
+      <span class="qsp-total">correct · <span id="tf-answered">0</span> of 23 answered</span>
     </div>
   </div>
   <div class="tf-progress-bar"><div class="tf-progress-fill" id="tf-progress"></div></div>
@@ -1016,11 +1578,11 @@ body{font-family:var(--fn);background:var(--bg);color:var(--text);font-size:14px
 </div></div>
 
 <!-- ══ P12 · GLOSSARY ══ -->
-<div class="panel" id="p12"><div class="pi">
+<div class="panel" id="p14"><div class="pi">
   <div class="ph">
-    <div class="ph-tag">Practice · 13 · Glossary</div>
+    <div class="ph-tag">Practice · 15 · Glossary</div>
     <h1>Glossary — <em>Eliot's Definitions</em></h1>
-    <p class="ph-sub">20 key terms. What they mean under the hood, and why they matter in practice. Search or browse — click any term to expand.</p>
+    <p class="ph-sub">23 key terms. What they mean under the hood, and why they matter in practice. Search or browse — click any term to expand.</p>
   </div>
   <div class="gl-search-wrap">
     <span class="gl-search-icon">🔍</span>
@@ -1082,7 +1644,11 @@ const fcData=[
   {q:"What is the Drill Region in Data Integration?",a:"A defined set of dimension members within which drill-through queries will execute. Defining a <strong>Custom Drill Region</strong> limits query scope — prevents timeouts when the application has too many members in the drill path."},
   {q:"What is the 'copysource' expression used for?",a:"A performance optimisation that copies the source value to a target dimension <strong>without going through the full mapping evaluation engine</strong>. Faster than wildcard mapping for dimensions where source and target member names are identical."},
   {q:"What does 'Application Update' do for ERP applications?",a:"Re-synchronises the registered ERP application — re-imports Period Mappings and refreshes the application metadata from ERP. <strong>Required any time new periods are added in ERP</strong> to make them available in Data Integration."},
-  {q:"In FCCS, what happens when Business Rules are configured in the 'Check' position of a data load?",a:"<strong>Consolidation executes for each entity</strong> after data loads. This can be very slow if many entities are loading. Better practice: configure consolidation as a separate Pipeline Stage that runs after all entities complete loading."}
+  {q:"In FCCS, what happens when Business Rules are configured in the 'Check' position of a data load?",a:"<strong>Consolidation executes for each entity</strong> after data loads. This can be very slow if many entities are loading. Better practice: configure consolidation as a separate Pipeline Stage that runs after all entities complete loading."},
+  {q:"What is the TDATASEG_T table and how does it differ from TDATASEG?",a:"<strong>TDATASEG_T</strong> is the temporary staging table where raw source data lands after Import. Mappings are applied in-place during Validate. <strong>TDATASEG</strong> is the permanent table — data is only copied here after a successful Validate. TDATASEG powers Workbench and drill-through."},
+  {q:"What is the correct way to number Processing Order values to ensure rules 1, 2, 10, 20 execute in that logical order?",a:"Use <strong>zero-padded values: 001, 002, 010, 020</strong>. Processing Order sorts alphanumerically — without padding, 10 sorts before 2. Zero-padding enforces the correct numeric execution sequence."},
+  {q:"What is the Unclassified_Actuals catch-all pattern?",a:"A <strong>Like mapping rule with source = * at the highest Processing Order number</strong>. Any record matching no other rule maps to a visible EPM member (e.g. Unclassified_Actuals) instead of being rejected. Turns silent load failures into visible data quality alerts."},
+  {q:"What is the 25.09 scheduler migration deadline and what happens if it is missed?",a:"The <strong>'Migrate Schedules to Platform Job Scheduler' utility is removed in the September 2025 (25.09) update</strong>. Data Management scheduled jobs not migrated before then are permanently lost. Migrate via System Maintenance Tasks or EPM Platform Job Scheduler before the 25.09 update. Not applicable to Account Reconciliation or PCM."}
 ];
 
 
@@ -1093,7 +1659,7 @@ let fcIdx=0;
 const fcKnown=new Set();
 let fcOrder=[...Array(fcData.length).keys()];
 
-const categories=['Architecture','Architecture','ERP Setup','ERP Setup','Mapping','Extracts','Extracts','Writeback','Writeback','Performance','Troubleshooting','Extracts','FCCS','Advanced','Troubleshooting','Core Concept','Pipeline','Performance','Architecture','Extracts','FCCS','Architecture','Performance','Architecture','ERP Setup','Pipeline','Troubleshooting','Performance','ERP Setup','FCCS'];
+const categories=['Architecture','Architecture','ERP Setup','ERP Setup','Mapping','Extracts','Extracts','Writeback','Writeback','Performance','Troubleshooting','Extracts','FCCS','Advanced','Troubleshooting','Core Concept','Pipeline','Performance','Architecture','Extracts','FCCS','Architecture','Performance','Architecture','ERP Setup','Pipeline','Troubleshooting','Performance','ERP Setup','FCCS','DI Internals','DI Internals','DI Internals','Advanced'];
 
 function fcRender(){
   const idx=fcOrder[fcIdx];
@@ -1147,7 +1713,7 @@ function fcShuffle(){
 }
 function fcReset(){fcKnown.clear();fcOrder=[...Array(fcData.length).keys()];fcIdx=0;fcRender();}
 // init flashcards when first entering panel
-document.querySelector('[onclick="go(9)"]').addEventListener('click',()=>setTimeout(fcRender,50));
+document.querySelector('[onclick="go(11)"]').addEventListener('click',()=>setTimeout(fcRender,50));
 fcRender();
 
 /* ═══════════════════════════════════
@@ -1165,7 +1731,10 @@ const quizData=[
   {n:'Q09',mod:'Module 02',q:'The EPM Integration Agent stores connectivity credentials where?',opts:['A) In agentparams.ini on the local server','B) Securely in Cloud EPM — not on the agent server','C) In an encrypted file in EPMAgentData folder','D) In Oracle Vault service'],ans:1,fb:{c:'Correct. Credentials are stored securely in Cloud EPM. The Agent polls cloud — credentials never touch the local server. Deliberate security design.',w:'Credentials are stored in Cloud EPM, not on the agent server. This is a deliberate security architecture choice.'}},
   {n:'Q10',mod:'Module 08',q:'Which EPMAutomate command supports Quick Mode (Direct Load)?',opts:['A) runDataRule with --quickMode flag','B) runBatch with DIRECT import mode','C) Neither — use the runIntegration REST API with importMode: DIRECT','D) runIntegration EPMAutomate command with QUICK flag'],ans:2,fb:{c:'Correct. EPMAutomate\'s runDataRule does not support Quick Mode. Use the runIntegration REST API with importMode: DIRECT.',w:'No EPMAutomate command supports Quick Mode. You must use the runIntegration REST API.'}},
   {n:'Q11',mod:'Module 04',q:'Period Mappings for Oracle Cloud ERP are automatically imported on registration. Which statement is TRUE?',opts:['A) You can still manually add Application Period Mappings in the new UI','B) Application Mappings cannot be added manually — create Source Mappings for custom alignment','C) Period mappings are never automatic — always manual','D) Period mappings only apply to budget scenarios'],ans:1,fb:{c:'Correct. Application Period Mappings auto-import and cannot be manually added in the new Data Integration UI. Use Source Mappings for custom period alignment.',w:'Application Mappings for ERP Periods are auto-imported and cannot be manually added in the new UI.'}},
-  {n:'Q12',mod:'Module 07',q:'Process Log shows "BEGIN: Process Log From the Ess Job" referencing a .log file. Which support team do you contact FIRST?',opts:['A) EPM Data Integration Support','B) ERP Support — error originated in Oracle Fusion, not EPM','C) Oracle Identity Cloud Service Support','D) Oracle Integration Cloud Support'],ans:1,fb:{c:'Correct. That log pattern means the error originated in Oracle Fusion\'s ESS job. Contact ERP Support first — not EPM DI Support.',w:'"BEGIN: Process Log From the Ess Job" = ERP-side error. Contact ERP Support first.'}}
+  {n:'Q12',mod:'Module 07',q:'Process Log shows "BEGIN: Process Log From the Ess Job" referencing a .log file. Which support team do you contact FIRST?',opts:['A) EPM Data Integration Support','B) ERP Support — error originated in Oracle Fusion, not EPM','C) Oracle Identity Cloud Service Support','D) Oracle Integration Cloud Support'],ans:1,fb:{c:'Correct. That log pattern means the error originated in Oracle Fusion\'s ESS job. Contact ERP Support first — not EPM DI Support.',w:'"BEGIN: Process Log From the Ess Job" = ERP-side error. Contact ERP Support first.'}},
+  {n:'Q13',mod:'Module 11',q:'Processing Order values 1, 2, 10, 20 are assigned to four mapping rules. In what order do they execute?',opts:['A) 1 → 2 → 10 → 20 (numeric order)','B) 1 → 10 → 2 → 20 (alphanumeric order)','C) 20 → 10 → 2 → 1 (reverse order)','D) Random — Processing Order is advisory only'],ans:1,fb:{c:'Correct. Processing Order sorts alphanumerically, not numerically. So 10 sorts before 2. Always use zero-padded values: 001, 002, 010, 020 to get the intended numeric sequence.',w:'Processing Order is alphanumeric. 10 sorts before 2. Use 001, 002, 010, 020 to enforce the correct order.'}},
+  {n:'Q14',mod:'Module 11',q:'What is the purpose of a Like rule with source = "*" at the highest Processing Order number?',opts:['A) It maps all members to the first target in the list','B) It acts as a catch-all — unmapped members land in a visible EPM member instead of being rejected','C) It disables all other mapping rules','D) It is invalid — * cannot be used alone as a source value'],ans:1,fb:{c:'Correct. This is the Unclassified_Actuals pattern. Any record matching no other rule is caught here and lands in a visible EPM member, turning silent rejections into visible data quality alerts.',w:'A Like rule with source = * at the highest Processing Order is the Unclassified_Actuals catch-all. It guarantees zero rejected records while flagging unmapped data.'}},
+  {n:'Q15',mod:'Module 10',q:'In TDATASEG, what STATUS value indicates a record has been successfully exported to the cube?',opts:['A) STATUS = 1','B) STATUS = 2','C) STATUS = 3','D) STATUS = 5'],ans:2,fb:{c:'Correct. STATUS = 3 means Exported. The chain is: 1 = Imported, 2 = Validated, 3 = Exported, 5 = Calculated and Exported (when the Check step runs).',w:'STATUS = 3 = Exported. Full chain: 1 Imported → 2 Validated → 3 Exported → 5 Calculated+Exported.'}}
 ];
 
 const qState={};let qCorrect=0,qAnswered=0;
@@ -1215,7 +1784,7 @@ function qAnswer(qi,oi){
   qAnswered++;if(isC)qCorrect++;
   document.getElementById('q-correct').textContent=qCorrect;
   document.getElementById('q-answered').textContent=qAnswered;
-  document.getElementById('q-progress').style.width=(qAnswered/12*100)+'%';
+  document.getElementById('q-progress').style.width=(qAnswered/15*100)+'%';
 }
 buildQuiz();
 
@@ -1242,7 +1811,10 @@ const tfData=[
   {s:"FCCS Dry Run mode actually loads data to the cube while checking for errors.",a:false,f:"False. Dry Run mode validates WITHOUT loading to the cube. It uses the importdataslice API in validation-only mode and stops after 99 errors are detected. Use it before the real load to surface problems safely."},
   {s:"The EPM Integration Agent's pre/post process scripting supports both Python (Jython) and Groovy.",a:true,f:"True. The Agent's scripting engine supports both Jython (Python) and Groovy scripts. This enables complex logic, REST API calls, file manipulation, and custom pre/post-processing without external middleware."},
   {s:"New features in Oracle EPM Data Integration are back-ported to Data Management for parity.",a:false,f:"False. Oracle has confirmed that all new features ship only in Data Integration and will NOT be back-ported to Data Management. Only critical bug fixes and security patches are still applied to Data Management."},
-  {s:"In FCCS, loading data to YTD_Input in the View dimension is the correct approach for YTD Income Statement data.",a:true,f:"True. For Income Statement YTD data in FCCS, load to YTD_Input in the View dimension. For DSO-enabled applications, YTD is computed via Member Formulas on-the-fly. For non-DSO, YTD is computed during consolidation."}
+  {s:"In FCCS, loading data to YTD_Input in the View dimension is the correct approach for YTD Income Statement data.",a:true,f:"True. For Income Statement YTD data in FCCS, load to YTD_Input in the View dimension. For DSO-enabled applications, YTD is computed via Member Formulas on-the-fly. For non-DSO, YTD is computed during consolidation."},
+  {s:"Processing Order values in member mapping rules are sorted numerically, so rule 10 executes after rule 2.",a:false,f:"False. Processing Order is sorted alphanumerically. Rule '10' sorts before rule '2' because '1' comes before '2' alphabetically. Always use zero-padded values (001, 002, 010, 020) to enforce the correct numeric execution sequence."},
+  {s:"Adjustment periods in an ERP Source Mapping that share the same EPM period key as regular periods can cause data duplication.",a:true,f:"True. Oracle ERP generates adjustment period variants (e.g. '17 Dec-25' alongside 'Dec-25'). Including both with the same EPM period key results in data being loaded twice for that period, plus import failures. Exclude adjustment periods from Source Mapping or map them to a dedicated Adjustment scenario."},
+  {s:"The Change Sign option in member mapping rules is supported in Quick Mode (Direct Load).",a:false,f:"False. Change Sign is not supported in Quick Mode. Quick Mode bypasses the Validate step where mapping transformations including sign reversal are applied. If sign reversal is needed, use a workflow mode that runs Validate, or handle it in a SQL Mapping expression."}
 ];
 
 
@@ -1288,7 +1860,7 @@ function tfAnswer(i,choice){
   tfAnswered++;if(isC)tfCorrect++;
   document.getElementById('tf-correct').textContent=tfCorrect;
   document.getElementById('tf-answered').textContent=tfAnswered;
-  document.getElementById('tf-progress').style.width=(tfAnswered/20*100)+'%';
+  document.getElementById('tf-progress').style.width=(tfAnswered/23*100)+'%';
 }
 buildTF();
 
@@ -1315,7 +1887,10 @@ const glData=[
   {t:"BIP (BI Publisher)",d:"Oracle's embedded reporting tool in Fusion Cloud. Used in Data Integration for custom data extracts beyond the standard GL balance queries. Reports must be saved in the Custom folder, output as CSV, and have at least one bind parameter. Used in sync (direct) or async (ESS Job) mode.",e:"BIP is the query tool Oracle gave you because they knew you'd eventually need data they didn't package for you. Use it, but understand the timeout constraints."},
   {t:"DAD (Data Access Driver)",d:"The connectivity driver used by the EPM Integration Agent to connect to JD Edwards EnterpriseOne. A specific JDBC adapter that accesses JDE's business data without requiring direct SQL access to the underlying Oracle database.",e:"JDE doesn't let you just write SQL against its tables. DAD is the polite door. The JDE database is the locked one you don't go through directly."},
   {t:"Application Update",d:"An operation in Data Integration that re-synchronises a registered ERP application — re-imports Period Mappings and refreshes application metadata from ERP. Must be run any time new periods are added in ERP Fusion to make them available in Data Integration.",e:"If your periods are missing in DI, run Application Update before you do anything else. It's the 'sync' button."},
-  {t:"copysource Expression",d:"A performance optimisation expression in Data Integration that copies the source dimension value directly to the target without going through the full mapping evaluation engine. Faster than wildcard matching for dimensions where source and target member names are identical.",e:"When source and target dimension values are the same, why run the matching engine? copysource tells it to skip the logic and just copy. It's the fastest mapping there is."}
+  {t:"copysource Expression",d:"A performance optimisation expression in Data Integration that copies the source dimension value directly to the target without going through the full mapping evaluation engine. Faster than wildcard matching for dimensions where source and target member names are identical.",e:"When source and target dimension values are the same, why run the matching engine? copysource tells it to skip the logic and just copy. It's the fastest mapping there is."},
+  {t:"TDATASEG_T (Temporary Staging)",d:"The temporary staging table where raw source data is written after the Import step. Member mapping rules are applied in-place during Validate — the table is overwritten with mapped values. Data is only promoted to the permanent TDATASEG table after a successful Validate step. Cleared at the start of each load.",e:"Think of TDATASEG_T as the scratchpad. It's working memory. If Validate fails, you see the half-mapped state here. TDATASEG is the clean copy that only exists when everything worked."},
+  {t:"Processing Order",d:"A numeric field on each member mapping rule that controls the sequence in which rules are evaluated. Sorted alphanumerically — not numerically. Rules numbered 1, 2, 10, 20 execute in order 1, 10, 2, 20. Best practice: always use zero-padded values (001, 002, 010, 020) to enforce correct numeric sequencing.",e:"The alphanumeric trap has broken more close-day loads than any other configuration mistake. One day you will number rules 1 through 20 and be confused why your exceptions run before your base rules. Now you know why."},
+  {t:"Unclassified_Actuals Pattern",d:"A production best-practice mapping pattern: a Like rule with source = * mapped to a visible EPM member (e.g. Unclassified_Actuals) placed at the highest Processing Order number. Any source record matching no other rule maps here instead of being rejected, ensuring zero load failures while making unmapped data visible for investigation.",e:"Rejections at 11pm on close day are a crisis. Balances sitting in Unclassified_Actuals are a to-do list. Same data quality problem, totally different operational outcome. Always implement the catch-all."}
 ];
 
 
